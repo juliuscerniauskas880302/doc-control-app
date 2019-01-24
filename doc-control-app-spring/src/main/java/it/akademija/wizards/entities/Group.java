@@ -4,7 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.lang.reflect.Type;
+
 import java.util.List;
 
 @Entity
@@ -19,10 +19,14 @@ public class Group {
 
 //    Types that this group can submit
     @ManyToMany
+    @JoinTable(name = "submission_type", joinColumns = {@JoinColumn(name="group")},
+            inverseJoinColumns = {@JoinColumn(name="submission_type_id")} )
     List <Type> submissionType;
 
 //    Types that this group can review
     @ManyToMany
+    @JoinTable(name = "review_type", joinColumns = {@JoinColumn(name="group")},
+            inverseJoinColumns = {@JoinColumn(name="review_type_id")} )
     List <Type> reviewType;
 
     public Group() {
