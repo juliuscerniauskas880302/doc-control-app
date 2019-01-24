@@ -31,14 +31,19 @@ public class User {
     boolean isAdmin;
 
     @OneToMany
-    List <Document> documents;
+    List<Document> documents;
 
     public User() {
     }
 
-    public User(String username, @NotNull String password, @NotNull String firstname,
-                @NotNull String lastname, @NotNull String email,
-                List<Group> groups, boolean isAdmin, List<Document> documents) {
+    public User(String username,
+                @NotNull String password,
+                @NotNull String firstname,
+                @NotNull String lastname,
+                @NotNull String email,
+                List<Group> groups,
+                boolean isAdmin,
+                List<Document> documents) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
@@ -99,6 +104,10 @@ public class User {
 
     public List<Group> getGroups() {
         return groups;
+    }
+
+    public void addGroup(Group group){
+        this.groups.add(group);
     }
 
     public void setGroups(List<Group> groups) {
