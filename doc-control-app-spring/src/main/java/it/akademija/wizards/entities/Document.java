@@ -166,20 +166,5 @@ public class Document {
         this.type = type;
     }
 
-    //
-//    @ManyToOne
-//    String type
-//
-//    String title
-//
-//    String description
-//    Date creationDate
-//    Date submissionDate [jei pateiktas]
-//    Date approvalDate [jei patvirtintas]
-//    Date rejectionDate [jei atmestas]
-//    @ManyToOne
-//    User reviewer [jei patvirtintas arba atmestas]
-//    String rejectionReason [jei atmestas]
-//    String path (vieną ar daugiau pdf tipo bylų) [jei prisegta]
 
 }
