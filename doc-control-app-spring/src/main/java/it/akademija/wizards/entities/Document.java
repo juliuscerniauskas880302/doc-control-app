@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-public class Documents {
+public class Document {
 
     @Id
     @GeneratedValue(generator ="uuid")
@@ -34,8 +34,8 @@ public class Documents {
     private Date approvalDate;
     private Date rejectionDate;
 
-    public Documents(User author, State state, @NotNull String title,
-                     @NotNull String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate) {
+    public Document(User author, State state, @NotNull String title,
+                    @NotNull String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate) {
         this.author = author;
         this.state = state;
         this.title = title;
@@ -46,7 +46,7 @@ public class Documents {
         this.rejectionDate = rejectionDate;
     }
 
-    public Documents() {
+    public Document() {
     }
 
 
