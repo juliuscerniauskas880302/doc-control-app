@@ -1,5 +1,7 @@
 package it.akademija.wizards.entities;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Type;
@@ -9,9 +11,9 @@ import java.util.List;
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+    @GeneratedValue(generator ="uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
     @NotNull
     private String title;
 
@@ -32,11 +34,11 @@ public class Group {
         this.reviewType = reviewType;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
