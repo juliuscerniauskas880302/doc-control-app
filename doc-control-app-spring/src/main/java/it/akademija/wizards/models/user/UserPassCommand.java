@@ -2,16 +2,16 @@ package it.akademija.wizards.models.user;
 
 import javax.validation.constraints.NotNull;
 
-public class UserAuthCommand {
+public class UserPassCommand {
 
     @NotNull
     private String password;
 
-    public UserAuthCommand() {
+    public UserPassCommand() {
 
     }
 
-    public UserAuthCommand(@NotNull String password) {
+    public UserPassCommand(@NotNull String password) {
         this.password = password;
     }
 

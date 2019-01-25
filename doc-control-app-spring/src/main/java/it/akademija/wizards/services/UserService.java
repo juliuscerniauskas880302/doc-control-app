@@ -1,7 +1,7 @@
 package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.User;
-import it.akademija.wizards.models.user.UserAuthCommand;
+import it.akademija.wizards.models.user.UserPassCommand;
 import it.akademija.wizards.models.user.UserCreateCommand;
 import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.user.UserUpdateCommand;
@@ -57,12 +57,12 @@ public class UserService {
         BeanUtils.copyProperties(userCreateCommand, user);
         PBKDF2 pbkdf2 = new PBKDF2();
         byte[] encodedPass = null;
-        byte[] salt = null;
+        byte[] passwordSalt = null;
         PassAndSalt passAndSalt = pbkdf2.hashPassword(userCreateCommand.getPassword());
         if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
-                && (salt = passAndSalt.getSalt()) != null) {
+                && (passwordSalt= passAndSalt.getSalt()) != null) {
             user.setPassword(encodedPass);
-            user.setSalt(salt);
+            user.setPassWordSalt(passwordSalt);
             userRepository.save(user);
         } else {
             throw new NullPointerException();
@@ -82,11 +82,29 @@ public class UserService {
     }
 
     @Transactional
-    public boolean authUser(String username, UserAuthCommand userAuthCommand) {
+    public boolean authUser(String username, UserPassCommand userPassCommand) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             PasswordChecker passwordChecker = new PasswordChecker();
-            return passwordChecker.checkPasswordMatching(userAuthCommand.getPassword(), user.getPassword(), user.getSalt());
+            return passwordChecker.checkPasswordMatching(userPassCommand.getPassword(), user.getPassword(), user.getPasswordSalt());
+        }
+        return false;
+    }
+
+    @Transactional
+    public boolean updateUserPassword(String username, UserPassCommand userPassCommand) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            PBKDF2 pbkdf2 = new PBKDF2();
+            byte[] encodedPass = null;
+            byte[] passwordSalt = null;
+            PassAndSalt passAndSalt =  pbkdf2.hashPassword(userPassCommand.getPassword());
+            if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
+                    && (passwordSalt = passAndSalt.getSalt()) != null) {
+                user.setPassword(encodedPass);
+                user.setPassWordSalt(passwordSalt);
+                return true;
+            }
         }
         return false;
     }
