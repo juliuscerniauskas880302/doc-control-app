@@ -85,6 +85,4 @@ public class UserController {
     public boolean updateUserPassword(@RequestBody UserPassCommand userPassCommand, @PathVariable(value = "username") String username) {
         return userService.updateUserPassword(username, userPassCommand);
     }
-
-
 }

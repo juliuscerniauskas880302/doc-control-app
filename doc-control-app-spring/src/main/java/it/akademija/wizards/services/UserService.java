@@ -1,5 +1,6 @@
 package it.akademija.wizards.services;
 
+
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.models.user.UserPassCommand;
 import it.akademija.wizards.models.user.UserCreateCommand;
@@ -108,4 +109,5 @@ public class UserService {
         }
         return false;
     }
+
 }

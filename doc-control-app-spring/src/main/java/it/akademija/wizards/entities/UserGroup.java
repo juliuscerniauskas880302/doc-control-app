@@ -19,14 +19,14 @@ public class UserGroup {
 
 //    Types that this group can submit
     @ManyToMany
-//    @JoinTable(name = "submission_type", joinColumns = {@JoinColumn(name="group")},
-//            inverseJoinColumns = {@JoinColumn(name="submission_type_id")} )
+    @JoinTable(name = "submission_type", joinColumns = @JoinColumn(name="user_group"),
+            inverseJoinColumns = @JoinColumn(name="submission_type_id") )
     private List <DocumentType> submissionDocumentType;
 
 //    Types that this group can review
     @ManyToMany
-//    @JoinTable(name = "review_type", joinColumns = {@JoinColumn(name="group")},
-//            inverseJoinColumns = {@JoinColumn(name="review_type_id")} )
+    @JoinTable(name = "review_type", joinColumns = @JoinColumn(name="user_group"),
+        inverseJoinColumns = @JoinColumn(name="review_type_id") )
     private List <DocumentType> reviewDocumentType;
 
     public UserGroup() {}
