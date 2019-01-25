@@ -12,7 +12,7 @@ const Navigation = props => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/providers/add">
+          <NavLink to="/users/add">
             <div>New user</div>
           </NavLink>
         </li>
