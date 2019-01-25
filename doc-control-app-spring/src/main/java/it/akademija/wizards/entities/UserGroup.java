@@ -29,8 +29,7 @@ public class UserGroup {
 //            inverseJoinColumns = {@JoinColumn(name="review_type_id")} )
     private List <DocumentType> reviewDocumentType;
 
-    public UserGroup() {
-    }
+    public UserGroup() {}
 
     public UserGroup(@NotNull String title, List<DocumentType> submissionDocumentType, List<DocumentType> reviewDocumentType) {
         this.title = title;
