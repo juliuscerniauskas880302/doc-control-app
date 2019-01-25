@@ -74,6 +74,4 @@ public class UserController {
     public void deleteUserByUsername(@PathVariable String username){
 
     }
-
-
 }
