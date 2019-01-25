@@ -1,5 +1,6 @@
 package it.akademija.wizards.services;
 
+import it.akademija.wizards.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
