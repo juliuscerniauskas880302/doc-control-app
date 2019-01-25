@@ -1,5 +1,5 @@
 package it.akademija.wizards.enums;
 
-public enum State {
+public enum DocumentState {
     CREATED, SUBMITTED, ACCEPTED, REJECTED
 }

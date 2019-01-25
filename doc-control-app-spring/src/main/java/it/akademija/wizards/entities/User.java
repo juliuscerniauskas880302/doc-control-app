@@ -14,27 +14,27 @@ public class User {
     private String id;
 
     @Column(unique = true)
-    String username;
+    private String username;
 
     @NotNull
-    String password;
+    private String password;
 
     @NotNull
-    String firstname;
+    private String firstname;
 
     @NotNull
-    String lastname;
+    private String lastname;
 
     @NotNull
-    String email;
+    private String email;
 
     @ManyToMany
-    List<Group> groups;
+    private List<UserGroup> userGroups;
 
-    boolean isAdmin;
+    private boolean isAdmin;
 
     @OneToMany
-    List<Document> documents;
+    private List<Document> documents;
 
     public User() {
     }
@@ -44,7 +44,7 @@ public class User {
                 @NotNull String firstname,
                 @NotNull String lastname,
                 @NotNull String email,
-                List<Group> groups,
+                List<UserGroup> userGroups,
                 boolean isAdmin,
                 List<Document> documents) {
         this.username = username;
@@ -52,7 +52,7 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.groups = groups;
+        this.userGroups = userGroups;
         this.isAdmin = isAdmin;
         this.documents = documents;
     }
@@ -105,16 +105,16 @@ public class User {
         this.email = email;
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
     }
 
-    public void addGroup(Group group){
-        this.groups.add(group);
+    public void addGroup(UserGroup userGroup){
+        this.userGroups.add(userGroup);
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
+    public void setUserGroups(List<UserGroup> userGroups) {
+        this.userGroups = userGroups;
     }
 
     public boolean isAdmin() {

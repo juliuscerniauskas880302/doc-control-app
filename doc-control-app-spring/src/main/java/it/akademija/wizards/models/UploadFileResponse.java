@@ -1,4 +1,4 @@
-package it.akademija.wizards.dto;
+package it.akademija.wizards.models;
 
 public class UploadFileResponse {
 
