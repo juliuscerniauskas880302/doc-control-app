@@ -5,7 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-public class Type {
+public class DocumentType {
 
     @Id
     @GeneratedValue(generator ="uuid")
@@ -15,10 +15,10 @@ public class Type {
     @Column(unique = true)
     private String title;
 
-    public Type() {
+    public DocumentType() {
     }
 
-    public Type(String title) {
+    public DocumentType(String title) {
         this.title = title;
     }
 

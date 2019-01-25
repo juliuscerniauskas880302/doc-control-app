@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-public class Group {
+public class UserGroup {
 
     @Id
     @GeneratedValue(generator ="uuid")
@@ -19,23 +19,23 @@ public class Group {
 
 //    Types that this group can submit
     @ManyToMany
-    @JoinTable(name = "submission_type", joinColumns = {@JoinColumn(name="group")},
-            inverseJoinColumns = {@JoinColumn(name="submission_type_id")} )
-    List <Type> submissionType;
+//    @JoinTable(name = "submission_type", joinColumns = {@JoinColumn(name="group")},
+//            inverseJoinColumns = {@JoinColumn(name="submission_type_id")} )
+    private List <DocumentType> submissionDocumentType;
 
 //    Types that this group can review
     @ManyToMany
-    @JoinTable(name = "review_type", joinColumns = {@JoinColumn(name="group")},
-            inverseJoinColumns = {@JoinColumn(name="review_type_id")} )
-    List <Type> reviewType;
+//    @JoinTable(name = "review_type", joinColumns = {@JoinColumn(name="group")},
+//            inverseJoinColumns = {@JoinColumn(name="review_type_id")} )
+    private List <DocumentType> reviewDocumentType;
 
-    public Group() {
+    public UserGroup() {
     }
 
-    public Group(@NotNull String title, List<Type> submissionType, List<Type> reviewType) {
+    public UserGroup(@NotNull String title, List<DocumentType> submissionDocumentType, List<DocumentType> reviewDocumentType) {
         this.title = title;
-        this.submissionType = submissionType;
-        this.reviewType = reviewType;
+        this.submissionDocumentType = submissionDocumentType;
+        this.reviewDocumentType = reviewDocumentType;
     }
 
     public String getId() {
@@ -54,26 +54,26 @@ public class Group {
         this.title = title;
     }
 
-    public List<Type> getSubmissionType() {
-        return submissionType;
+    public List<DocumentType> getSubmissionDocumentType() {
+        return submissionDocumentType;
     }
 
-    public void addSubmissionType (Type type){
-        this.submissionType.add(type);
+    public void addSubmissionType (DocumentType documentType){
+        this.submissionDocumentType.add(documentType);
     }
-    public void setSubmissionType (List<Type> submissionType) {
-        this.submissionType = submissionType;
-    }
-
-    public List<Type> getReviewType() {
-        return reviewType;
+    public void setSubmissionDocumentType(List<DocumentType> submissionDocumentType) {
+        this.submissionDocumentType = submissionDocumentType;
     }
 
-    public void addReviewType (Type type){
-        this.submissionType.add(type);
+    public List<DocumentType> getReviewDocumentType() {
+        return reviewDocumentType;
     }
 
-    public void setReviewType(List<Type> reviewType) {
-        this.reviewType = reviewType;
+    public void addReviewType (DocumentType documentType){
+        this.submissionDocumentType.add(documentType);
+    }
+
+    public void setReviewDocumentType(List<DocumentType> reviewDocumentType) {
+        this.reviewDocumentType = reviewDocumentType;
     }
 }

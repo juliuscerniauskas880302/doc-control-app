@@ -1,6 +1,6 @@
 package it.akademija.wizards.entities;
 
-import it.akademija.wizards.enums.State;
+import it.akademija.wizards.enums.DocumentState;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,13 +15,15 @@ public class Document {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
+    private String documentId;
+
     @ManyToOne
     private User author;
 
-    private State state;
+    private DocumentState documentState;
 
     @ManyToOne
-    private Type type;
+    private DocumentType documentType;
 
     @NotNull
     private String title;
@@ -30,8 +32,11 @@ public class Document {
     private String description;
 
     private Date creationDate;
+
     private Date submissionDate;
+
     private Date approvalDate;
+
     private Date rejectionDate;
 
     @ManyToOne
@@ -45,8 +50,8 @@ public class Document {
     }
 
     public Document(User author,
-                    State state,
-                    Type type,
+                    DocumentState documentState,
+                    DocumentType documentType,
                     @NotNull String title,
                     @NotNull String description,
                     Date creationDate,
@@ -57,8 +62,8 @@ public class Document {
                     String rejectionReason,
                     String path) {
         this.author = author;
-        this.state = state;
-        this.type = type;
+        this.documentState = documentState;
+        this.documentType = documentType;
         this.title = title;
         this.description = description;
         this.creationDate = creationDate;
@@ -68,6 +73,7 @@ public class Document {
         this.reviewer = reviewer;
         this.rejectionReason = rejectionReason;
         this.path = path;
+        this.documentId = author.getUsername() + title + System.currentTimeMillis();
     }
 
     public User getAuthor() {
@@ -78,12 +84,12 @@ public class Document {
         this.author = author;
     }
 
-    public State getState() {
-        return state;
+    public DocumentState getDocumentState() {
+        return documentState;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setDocumentState(DocumentState documentState) {
+        this.documentState = documentState;
     }
 
     public String getTitle() {
@@ -158,12 +164,12 @@ public class Document {
         this.path = path;
     }
 
-    public Type getType() {
-        return type;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
 
 
