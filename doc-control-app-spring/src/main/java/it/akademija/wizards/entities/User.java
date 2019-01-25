@@ -17,7 +17,7 @@ public class User {
     private String username;
 
     @NotNull
-    private String password;
+    private byte[] password;
 
     @NotNull
     private String firstname;
@@ -33,6 +33,8 @@ public class User {
 
     private boolean isAdmin;
 
+    private byte[] passwordSalt;
+
     @OneToMany
     private List<Document> documents;
 
@@ -40,12 +42,13 @@ public class User {
     }
 
     public User(String username,
-                @NotNull String password,
+                @NotNull byte[] password,
                 @NotNull String firstname,
                 @NotNull String lastname,
                 @NotNull String email,
                 List<UserGroup> userGroups,
                 boolean isAdmin,
+                byte[] salt,
                 List<Document> documents) {
         this.username = username;
         this.password = password;
@@ -73,11 +76,11 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 
@@ -132,4 +135,8 @@ public class User {
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
     }
+
+    public byte[] getSalt() { return passwordSalt; }
+
+    public void setSalt(byte[] passwordSalt) { this.passwordSalt = passwordSalt; }
 }

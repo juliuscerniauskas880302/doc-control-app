@@ -3,6 +3,9 @@ package it.akademija.wizards.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import it.akademija.wizards.entities.User;
+import it.akademija.wizards.models.user.UserAuthCommand;
+import it.akademija.wizards.models.user.UserCreateCommand;
+import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.services.DocumentService;
 import it.akademija.wizards.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +39,8 @@ public class UserController {
     @ApiOperation(value = "get user by username")
     @RequestMapping(value = "/{username}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public User getUserByUsername(@PathVariable String username){
-        return null;
+    public UserGetCommand getUserByUsername(@PathVariable String username){
+        return userService.getUser(username);
     }
 
 //    @ApiOperation(value = "get user's documents")
@@ -47,18 +50,19 @@ public class UserController {
 //        return null;
 //    }
 
-//    @ApiOperation(value = "create user")
-//    @RequestMapping(method = RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void createUser(@RequestBody UserCreateCommand userCreateCommand){
-//
-//    }
+    @ApiOperation(value = "create user")
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createUser(@RequestBody UserCreateCommand userCreateCommand){
+        userService.createUser(userCreateCommand);
+
+    }
 
     @ApiOperation(value = "check if user exists by username")
-    @RequestMapping(value = "/auth/{username}", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/{username}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.FOUND)
-    public boolean userExists(){
-        return false;
+    public boolean userExists(@RequestBody UserAuthCommand userAuthCommand, @PathVariable(value = "username") String username){
+        return userService.authUser(username, userAuthCommand);
     }
 
     @ApiOperation(value = "update user by username")
