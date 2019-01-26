@@ -3,10 +3,7 @@ package it.akademija.wizards.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import it.akademija.wizards.models.document.DocumentGetCommand;
-import it.akademija.wizards.models.user.UserPassCommand;
-import it.akademija.wizards.models.user.UserCreateCommand;
-import it.akademija.wizards.models.user.UserGetCommand;
-import it.akademija.wizards.models.user.UserUpdateCommand;
+import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.services.DocumentService;
 import it.akademija.wizards.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +82,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public boolean updateUserPassword(@RequestBody UserPassCommand userPassCommand, @PathVariable(value = "username") String username) {
         return userService.updateUserPassword(username, userPassCommand);
+    }
+
+    @ApiOperation(value = "add group list to user")
+    @RequestMapping(value = "/{username}/groups", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addGroupsToUser(@RequestBody UserAddGroupsCommand userAddGroupsCommand, @PathVariable(value = "{username}") String username) {
+        userService.addGroupsToUser(userAddGroupsCommand, username);
     }
 }

@@ -2,11 +2,10 @@ package it.akademija.wizards.services;
 
 
 import it.akademija.wizards.entities.User;
+import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.models.document.DocumentGetCommand;
-import it.akademija.wizards.models.user.UserPassCommand;
-import it.akademija.wizards.models.user.UserCreateCommand;
-import it.akademija.wizards.models.user.UserGetCommand;
-import it.akademija.wizards.models.user.UserUpdateCommand;
+import it.akademija.wizards.models.user.*;
+import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.security.PBKDF2Hash;
 import it.akademija.wizards.security.PassAndSalt;
@@ -16,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +24,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository userRepository;
+    private UserGroupRepository userGroupRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository) {
         this.userRepository = userRepository;
+        this.userGroupRepository = userGroupRepository;
     }
 
     public UserRepository getUserRepository() {
@@ -36,6 +39,7 @@ public class UserService {
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     @Transactional(readOnly = true)
     public List<UserGetCommand> getUsers() {
@@ -127,6 +131,16 @@ public class UserService {
             }).collect(Collectors.toList());
         } else {
             throw new NullPointerException();
+        }
+    }
+
+    @Transactional
+    public void addGroupsToUser(UserAddGroupsCommand userAddGroupsCommand, String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            List<String> userGroupIdList = Arrays.asList(userAddGroupsCommand.getGroupIdList());
+            List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupId(userGroupIdList);
+            user.setUserGroups(userGroupList);
         }
     }
 }
