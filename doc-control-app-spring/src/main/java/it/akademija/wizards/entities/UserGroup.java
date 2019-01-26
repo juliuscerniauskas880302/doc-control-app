@@ -15,6 +15,8 @@ public class UserGroup {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     @NotNull
+    private String userGroupId;
+    @NotNull
     private String title;
 
 //    Types that this group can submit
@@ -31,7 +33,8 @@ public class UserGroup {
 
     public UserGroup() {}
 
-    public UserGroup(@NotNull String title, List<DocumentType> submissionDocumentType, List<DocumentType> reviewDocumentType) {
+    public UserGroup(@NotNull String userGroupId, @NotNull String title, List<DocumentType> submissionDocumentType, List<DocumentType> reviewDocumentType) {
+        this.userGroupId = userGroupId;
         this.title = title;
         this.submissionDocumentType = submissionDocumentType;
         this.reviewDocumentType = reviewDocumentType;
@@ -43,6 +46,14 @@ public class UserGroup {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserGroupId() {
+        return userGroupId;
+    }
+
+    public void setUserGroupId(String userGroupId) {
+        this.userGroupId = userGroupId;
     }
 
     public String getTitle() {
