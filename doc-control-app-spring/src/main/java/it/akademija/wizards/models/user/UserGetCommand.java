@@ -10,6 +10,10 @@ public class UserGetCommand {
     private String lastname;
     private String email;
 
+    public UserGetCommand() {
+
+    }
+
     public UserGetCommand(String username, String firstname, String lastname, String email) {
         this.username = username;
         this.firstname = firstname;

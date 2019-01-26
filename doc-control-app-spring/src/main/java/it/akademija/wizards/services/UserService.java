@@ -39,9 +39,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserGetCommand> getUsers() {
-        return userRepository.findAll().stream().map(user ->
-            new UserGetCommand(user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail())
-        ).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(user -> {
+            UserGetCommand userGetCommand = new UserGetCommand();
+            BeanUtils.copyProperties(user, userGetCommand);
+            return userGetCommand;
+        }).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
