@@ -35,6 +35,9 @@ public class DocumentService {
         return documentRepository.findAll().stream().filter(document -> !document.getDocumentState().equals(DocumentState.CREATED)).map(document -> {
             DocumentGetCommand documentGetCommand = new DocumentGetCommand();
             BeanUtils.copyProperties(document, documentGetCommand);
+            documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
+            if (document.getReviewer() != null) documentGetCommand.setReviewerUsername(document.getReviewer().getUsername());
+            documentGetCommand.setDocumentTypeTitle(document.getDocumentType().getTitle());
             return documentGetCommand;
         }).collect(Collectors.toList());
     }
@@ -44,6 +47,9 @@ public class DocumentService {
         return documentRepository.findAll().stream().filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED)).map(document -> {
             DocumentGetCommand documentGetCommand = new DocumentGetCommand();
             BeanUtils.copyProperties(document, documentGetCommand);
+            documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
+            if (document.getReviewer() != null) documentGetCommand.setReviewerUsername(document.getReviewer().getUsername());
+            documentGetCommand.setDocumentTypeTitle(document.getDocumentType().getTitle());
             return documentGetCommand;
         }).collect(Collectors.toList());
     }

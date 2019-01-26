@@ -9,40 +9,36 @@ import java.util.Date;
 public class DocumentGetCommand {
 
     private String documentId;
-    private User author;
+    private String authorUsername;
     private DocumentState documentState;
-    private DocumentType documentType;
+    private String documentTypeTitle;
     private String title;
     private String description;
     private Date creationDate;
     private Date submissionDate;
     private Date approvalDate;
     private Date rejectionDate;
-    private User reviewer;
+    private String reviewerUsername;
     private String rejectionReason;
 
     public DocumentGetCommand() {
 
     }
 
-    public DocumentGetCommand(String documentId, User author, DocumentState documentState,
-                              DocumentType documentType, String title, String description,
-                              Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate,
-                              User reviewer, String rejectionReason) {
+    public DocumentGetCommand(String documentId, String authorUsername, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, String reviewerUsername, String rejectionReason) {
         this.documentId = documentId;
-        this.author = author;
+        this.authorUsername = authorUsername;
         this.documentState = documentState;
-        this.documentType = documentType;
+        this.documentTypeTitle = documentTypeTitle;
         this.title = title;
         this.description = description;
         this.creationDate = creationDate;
         this.submissionDate = submissionDate;
         this.approvalDate = approvalDate;
         this.rejectionDate = rejectionDate;
-        this.reviewer = reviewer;
+        this.reviewerUsername = reviewerUsername;
         this.rejectionReason = rejectionReason;
     }
-
 
     public String getDocumentId() {
         return documentId;
@@ -52,28 +48,37 @@ public class DocumentGetCommand {
         this.documentId = documentId;
     }
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
 
     public DocumentState getDocumentState() {
         return documentState;
     }
 
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
+    public String getDocumentTypeTitle() {
+        return documentTypeTitle;
+    }
+
+    public void setDocumentTypeTitle(String documentTypeTitle) {
+        this.documentTypeTitle = documentTypeTitle;
+    }
+
+    public String getReviewerUsername() {
+        return reviewerUsername;
+    }
+
+    public void setReviewerUsername(String reviewerUsername) {
+        this.reviewerUsername = reviewerUsername;
+    }
+
     public void setDocumentState(DocumentState documentState) {
         this.documentState = documentState;
-    }
-
-    public DocumentType getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(DocumentType documentType) {
-        this.documentType = documentType;
     }
 
     public String getTitle() {
@@ -124,13 +129,6 @@ public class DocumentGetCommand {
         this.rejectionDate = rejectionDate;
     }
 
-    public User getReviewer() {
-        return reviewer;
-    }
-
-    public void setReviewer(User reviewer) {
-        this.reviewer = reviewer;
-    }
 
     public String getRejectionReason() {
         return rejectionReason;
