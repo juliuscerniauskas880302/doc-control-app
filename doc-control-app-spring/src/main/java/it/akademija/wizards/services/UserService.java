@@ -1,5 +1,6 @@
 package it.akademija.wizards.services;
 
+
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.UserPassCommand;
@@ -110,7 +111,7 @@ public class UserService {
         }
         return false;
     }
-
+  
     @Transactional
     public List<DocumentGetCommand> getUserDocuments(String username) {
         User user = userRepository.findByUsername(username);

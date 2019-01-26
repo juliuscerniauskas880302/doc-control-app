@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class DocumentTypeService {
 
+    @Autowired
     private DocumentTypeRepository documentTypeRepository;
 
-    @Autowired
+
     public DocumentTypeService(DocumentTypeRepository documentTypeRepository) {
         this.documentTypeRepository = documentTypeRepository;
     }
