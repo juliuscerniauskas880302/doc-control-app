@@ -33,8 +33,8 @@ const User = props => {
         <div className="card-front text-white bg-primary">
           <div className="card-body">
             <i className="fas fa-user fa-5x float-right" />
-            <h4 className="card-title">{props.firstName}</h4>
-            <h4 className="card-title">{props.lastName}</h4>
+            <h4 className="card-title">{props.firstname}</h4>
+            <h4 className="card-title">{props.lastname}</h4>
             <p className="card-text">
               <i className="fas fa-at mx-1" />
               {props.email}
