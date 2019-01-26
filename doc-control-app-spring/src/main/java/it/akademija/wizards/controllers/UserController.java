@@ -2,6 +2,7 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.UserPassCommand;
 import it.akademija.wizards.models.user.UserCreateCommand;
 import it.akademija.wizards.models.user.UserGetCommand;
@@ -43,12 +44,12 @@ public class UserController {
         return userService.getUser(username);
     }
 
-//    @ApiOperation(value = "get user's documents")
-//    @RequestMapping(value = "/{username}/docs", method = RequestMethod.GET)
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    public List <DocumentGetCommand> getDocumentsByUsername(@PathVariable String username){
-//        return null;
-//    }
+    @ApiOperation(value = "get user's documents")
+    @RequestMapping(value = "/{username}/docs", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List <DocumentGetCommand> getDocumentsByUsername(@PathVariable String username){
+        return userService.getUserDocuments(username);
+    }
 
     @ApiOperation(value = "create user")
     @RequestMapping(method = RequestMethod.POST)

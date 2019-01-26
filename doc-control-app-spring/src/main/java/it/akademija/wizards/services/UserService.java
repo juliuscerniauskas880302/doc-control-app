@@ -2,6 +2,7 @@ package it.akademija.wizards.services;
 
 
 import it.akademija.wizards.entities.User;
+import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.UserPassCommand;
 import it.akademija.wizards.models.user.UserCreateCommand;
 import it.akademija.wizards.models.user.UserGetCommand;
@@ -48,8 +49,9 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             return new UserGetCommand(user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail());
+        } else {
+            throw new NullPointerException();
         }
-        return null;
     }
 
     @Transactional
@@ -109,5 +111,18 @@ public class UserService {
         }
         return false;
     }
-
+  
+    @Transactional
+    public List<DocumentGetCommand> getUserDocuments(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getDocuments().stream().map(document -> {
+                DocumentGetCommand documentGetCommand = new DocumentGetCommand();
+                BeanUtils.copyProperties(document, documentGetCommand);
+                return documentGetCommand;
+            }).collect(Collectors.toList());
+        } else {
+            throw new NullPointerException();
+        }
+    }
 }
