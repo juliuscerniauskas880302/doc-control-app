@@ -50,7 +50,9 @@ public class UserService {
     public UserGetCommand getUser(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            return new UserGetCommand(user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail());
+            UserGetCommand userGetCommand = new UserGetCommand();
+            BeanUtils.copyProperties(user, userGetCommand);
+            return userGetCommand;
         } else {
             throw new NullPointerException();
         }
