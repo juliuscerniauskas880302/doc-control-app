@@ -8,7 +8,7 @@ import it.akademija.wizards.models.user.UserCreateCommand;
 import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.user.UserUpdateCommand;
 import it.akademija.wizards.repositories.UserRepository;
-import it.akademija.wizards.security.PBKDF2;
+import it.akademija.wizards.security.PBKDF2Hash;
 import it.akademija.wizards.security.PassAndSalt;
 import it.akademija.wizards.security.PasswordChecker;
 import org.springframework.beans.BeanUtils;
@@ -62,10 +62,10 @@ public class UserService {
     public void createUser(UserCreateCommand userCreateCommand) {
         User user = new User();
         BeanUtils.copyProperties(userCreateCommand, user);
-        PBKDF2 pbkdf2 = new PBKDF2();
+        PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
         byte[] encodedPass = null;
         byte[] passwordSalt = null;
-        PassAndSalt passAndSalt = pbkdf2.hashPassword(userCreateCommand.getPassword());
+        PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userCreateCommand.getPassword());
         if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
                 && (passwordSalt= passAndSalt.getSalt()) != null) {
             user.setPassword(encodedPass);
@@ -102,10 +102,10 @@ public class UserService {
     public boolean updateUserPassword(String username, UserPassCommand userPassCommand) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            PBKDF2 pbkdf2 = new PBKDF2();
+            PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
             byte[] encodedPass = null;
             byte[] passwordSalt = null;
-            PassAndSalt passAndSalt =  pbkdf2.hashPassword(userPassCommand.getPassword());
+            PassAndSalt passAndSalt =  pbkdf2Hash.hashPassword(userPassCommand.getPassword());
             if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
                     && (passwordSalt = passAndSalt.getSalt()) != null) {
                 user.setPassword(encodedPass);
