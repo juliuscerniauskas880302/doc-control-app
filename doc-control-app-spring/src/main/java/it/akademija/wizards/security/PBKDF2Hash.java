@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
-public class PBKDF2 {
+public class PBKDF2Hash {
     private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
     private static final int ITERATIONS = 10000;
     private static final int SALT_SIZE = 32;
