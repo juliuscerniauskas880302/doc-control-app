@@ -76,6 +76,14 @@ public class Document {
         this.documentId = author.getUsername() + title + System.currentTimeMillis();
     }
 
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
     public User getAuthor() {
         return author;
     }

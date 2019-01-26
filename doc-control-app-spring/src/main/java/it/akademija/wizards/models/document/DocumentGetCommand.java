@@ -43,6 +43,7 @@ public class DocumentGetCommand {
         this.rejectionReason = rejectionReason;
     }
 
+
     public String getDocumentId() {
         return documentId;
     }

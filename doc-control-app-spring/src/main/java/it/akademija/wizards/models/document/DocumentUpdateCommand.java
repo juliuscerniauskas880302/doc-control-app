@@ -7,25 +7,25 @@ import it.akademija.wizards.entities.User;
 
 public class DocumentUpdateCommand {
 
-    private DocumentType documentType;
+    private String documentTypeTitle;
     private String title;
     private String description;
 
     public DocumentUpdateCommand() {
     }
 
-    public DocumentUpdateCommand(DocumentType documentType, String title, String description) {
-        this.documentType = documentType;
+    public DocumentUpdateCommand(String documentTypeTitle, String title, String description) {
+        this.documentTypeTitle = documentTypeTitle;
         this.title = title;
         this.description = description;
     }
 
-    public DocumentType getDocumentType() {
-        return documentType;
+    public String getDocumentTypeTitle() {
+        return documentTypeTitle;
     }
 
-    public void setDocumentType(DocumentType documentType) {
-        this.documentType = documentType;
+    public void setDocumentTypeTitle(String documentTypeTitle) {
+        this.documentTypeTitle = documentTypeTitle;
     }
 
     public String getTitle() {
