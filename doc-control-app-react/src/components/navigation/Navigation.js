@@ -12,13 +12,28 @@ const Navigation = props => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/users/add">
+          <NavLink to="/users2/add">
             <div>New user</div>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/login">
-            <div>Login</div>
+          <NavLink to="/users/update/lol">
+            <div>Update by username</div>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/groups/add">
+            <div>New Group Form</div>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/document_types/add">
+            <div>New Document Type Form</div>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/document_types/groups">
+            <div>Types In Groups </div>
           </NavLink>
         </li>
         <li>

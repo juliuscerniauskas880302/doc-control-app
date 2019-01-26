@@ -4,24 +4,24 @@ import Axios from "axios";
 
 var userData = [
   {
-    firstName: "Julius",
-    lastName: "Cerniauskas",
+    firstname: "Julius",
+    lastname: "Cerniauskas",
     email: "hoperis@gmail.cm",
     passwrod: "123",
     username: "namekas",
     isAdmin: false
   },
   {
-    firstName: "Paulius",
-    lastName: "Cepulis",
+    firstname: "Paulius",
+    lastname: "Cepulis",
     email: "namekas@gmail.cm",
     passwrod: "4568",
     username: "kamehame",
     isAdmin: true
   },
   {
-    firstName: "Saulius",
-    lastName: "Svkerelis",
+    firstname: "Saulius",
+    lastname: "Svkerelis",
     email: "ssnelis@gmail.cm",
     passwrod: "123456789",
     username: "svierchas",
@@ -36,12 +36,12 @@ export class UserContainer extends Component {
   }
 
   componentDidMount = () => {
-    this.setState({ users: userData });
-    //this.getAllUsersFromServer();
+    //this.setState({ users: userData });
+    this.getAllUsersFromServer();
   };
 
   getAllUsersFromServer = () => {
-    Axios.get("http://localhost:8080/api/users")
+    Axios.get("http://localhost:8081/api/users")
       .then(res => {
         this.setState({ users: res.data });
       })
@@ -51,13 +51,14 @@ export class UserContainer extends Component {
   };
 
   showAllUsers = () => {
+    console.log(this.state.users);
     let users = this.state.users.map(user => {
       let isAdmin = user.isAdmin === false ? "Simple user" : "Administrator";
       return (
         <User
           key={user.username}
-          firstName={user.firstName}
-          lastName={user.lastName}
+          firstname={user.firstname}
+          lastname={user.lastname}
           email={user.email}
           isAdmin={isAdmin}
           delete={() => this.onDeleteClickHandler(user.username)}
@@ -76,7 +77,7 @@ export class UserContainer extends Component {
     }
     this.setState({ users: userData });
 
-    Axios.delete("http://localhost:8080/api/users/" + id)
+    Axios.delete("http://localhost:8081/api/users/" + id)
       .then(() => this.getAllUsersFromServer())
       .catch(err => {
         console.log(err);
@@ -84,13 +85,15 @@ export class UserContainer extends Component {
   };
 
   onUpdateClickHandler = id => {
-    //todo: update logic here
+    this.props.history.push("/users/update/" + id);
   };
 
   render() {
     return (
-      <div className="container">
-        <div className="row">{this.showAllUsers()}</div>
+      <div className="container-fluid my-5">
+        <div className="row justify-content-center border rounded py-3 mx-3">
+          {this.showAllUsers()}
+        </div>
       </div>
     );
   }
