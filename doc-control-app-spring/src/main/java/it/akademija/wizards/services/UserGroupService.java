@@ -26,8 +26,4 @@ public class UserGroupService {
         this.userGroupRepository = userGroupRepository;
     }
 
-    @Transactional
-    public List<UserGroup> findUserGroupsByUserGroupId(Iterable<String> userGroupIdList) {
-       return  userGroupRepository.findAllByUserGroupId(userGroupIdList);
-    }
 }
