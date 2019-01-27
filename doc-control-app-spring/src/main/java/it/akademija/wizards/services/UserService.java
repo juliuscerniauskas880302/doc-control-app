@@ -5,6 +5,7 @@ import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.*;
+import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.security.PBKDF2Hash;
@@ -69,12 +70,12 @@ public class UserService {
         byte[] passwordSalt = null;
         PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userCreateCommand.getPassword());
         if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
-                && (passwordSalt= passAndSalt.getSalt()) != null) {
+                && (passwordSalt = passAndSalt.getSalt()) != null) {
             user.setPassword(encodedPass);
             user.setPassWordSalt(passwordSalt);
             userRepository.save(user);
         } else {
-            throw new NullPointerException();
+            throw new NullPointerException("Error encoding password");
         }
     }
 
@@ -128,7 +129,7 @@ public class UserService {
                 return documentGetCommand;
             }).collect(Collectors.toList());
         } else {
-            throw new NullPointerException();
+            throw new NullPointerException("User does not exist");
         }
     }
 
@@ -137,8 +138,22 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             List<String> userGroupIdList = Arrays.asList(userAddGroupsCommand.getGroupIdList());
-            List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupId(userGroupIdList);
+            List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupIdIn(userGroupIdList);
             user.setUserGroups(userGroupList);
+            userRepository.save(user);
+        }
+    }
+
+    public List<UserGroupGetCommand> getUsersGroups(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getUserGroups().stream().map(userGroup -> {
+                UserGroupGetCommand userGroupGetCommand = new UserGroupGetCommand();
+                BeanUtils.copyProperties(userGroup, userGroupGetCommand);
+                return userGroupGetCommand;
+            }).collect(Collectors.toList());
+        } else {
+            throw new NullPointerException("User does not exist");
         }
     }
 }

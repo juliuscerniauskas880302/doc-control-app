@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.*;
+import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.services.DocumentService;
 import it.akademija.wizards.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class UserController {
 
     @ApiOperation(value = "check if user exists by username")
     @RequestMapping(value = "/auth/{username}", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.CREATED)
     public boolean userExists(@RequestBody UserPassCommand userPassCommand, @PathVariable(value = "username") String username){
         return userService.authUser(username, userPassCommand);
     }
@@ -87,7 +88,14 @@ public class UserController {
     @ApiOperation(value = "add group list to user")
     @RequestMapping(value = "/{username}/groups", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addGroupsToUser(@RequestBody UserAddGroupsCommand userAddGroupsCommand, @PathVariable(value = "{username}") String username) {
+    public void addGroupsToUser(@RequestBody UserAddGroupsCommand userAddGroupsCommand, @PathVariable(value = "username") String username) {
         userService.addGroupsToUser(userAddGroupsCommand, username);
+    }
+
+    @ApiOperation(value = "get user groups")
+    @RequestMapping(value = "/{username}/groups", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<UserGroupGetCommand> getUsersGroups(@PathVariable(value = "username") String username) {
+        return userService.getUsersGroups(username);
     }
 }

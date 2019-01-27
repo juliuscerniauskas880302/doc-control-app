@@ -7,6 +7,10 @@ public class UserGroupCreateCommand {
     @NotNull(message = "group title is required")
     private String title;
 
+    public UserGroupCreateCommand() {
+
+    }
+
     public UserGroupCreateCommand(@NotNull(message = "group title is required") String title) {
         this.title = title;
     }

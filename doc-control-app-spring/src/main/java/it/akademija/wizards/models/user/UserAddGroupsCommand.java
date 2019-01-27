@@ -7,6 +7,10 @@ public class UserAddGroupsCommand {
     @NotNull
     private String[] groupIdList;
 
+    public UserAddGroupsCommand() {
+
+    }
+
     public UserAddGroupsCommand(@NotNull String[] groupIdList) {
         this.groupIdList = groupIdList;
     }

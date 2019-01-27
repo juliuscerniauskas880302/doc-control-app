@@ -66,6 +66,6 @@ public class UserGroupService {
 
     @Transactional
     public void deleteUserGroup(String groupId) {
-        userGroupRepository.deleteByGroupId(groupId);
+        userGroupRepository.deleteByUserGroupId(groupId);
     }
 }
