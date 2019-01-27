@@ -29,9 +29,31 @@ export default class NewDocumentForm extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  onFileSelectHandler = event => {
+    console.log(event.target.files[0]);
+
+    this.setState({ [event.target.name]: event.target.files[0] });
+  };
+
   onSubmitDocumentHandler = e => {
     e.preventDefault();
-    console.log(this.state);
+    let file = new FormData();
+    file.append(
+      "file",
+      this.state.selectedFiles,
+      this.state.selectedFiles.name
+    );
+    Axios.post("http://localhost:8081/api/files/upload", file, {
+      onUploadProgress: progressEvent => {
+        console.log(
+          "Upload progress: " +
+            (progressEvent.loaded / progressEvent.total) * 100 +
+            "%"
+        );
+      }
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
   };
 
   showAvailableDocumentTypes = () => {
@@ -97,8 +119,8 @@ export default class NewDocumentForm extends Component {
                     onChange={this.onValueChangeHandler}
                     id="select type"
                     name="selectedDocumentType"
-                    type="file"
-                    required
+                    type="text"
+                    // required
                   >
                     {this.showAvailableDocumentTypes()}
                   </select>
@@ -111,7 +133,7 @@ export default class NewDocumentForm extends Component {
                 </label>
                 <div className="input-group mb-1">
                   <input
-                    onChange={this.onValueChangeHandler}
+                    onChange={this.onFileSelectHandler}
                     id="Upload file"
                     name="selectedFiles"
                     className="input-file"
