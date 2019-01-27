@@ -5,6 +5,10 @@ public class UserGroupGetCommand {
     private String userGroupId;
     private String title;
 
+    public UserGroupGetCommand() {
+
+    }
+
     public UserGroupGetCommand(String userGroupId, String title) {
         this.userGroupId = userGroupId;
         this.title = title;

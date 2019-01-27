@@ -28,21 +28,21 @@ public class UserGroupController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<UserGroupGetCommand> getUserGroups() {
-        return null;
+        return userGroupService.getUserGroups();
     }
 
     @ApiOperation(value = "get group")
     @RequestMapping(value = "/{groupId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserGroupGetCommand getUserGroup(@PathVariable(value = "groupIdgit ") String groupId) {
-        return null;
+    public UserGroupGetCommand getUserGroup(@PathVariable(value = "groupId") String groupId) {
+        return userGroupService.getUserGroup(groupId);
     }
 
-    @ApiOperation(value = "add group")
+    @ApiOperation(value = "create user group")
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void getUserGroup(@RequestBody UserGroupCreateCommand userGroupCreateCommand) {
-
+    public void createUserGroup(@RequestBody UserGroupCreateCommand userGroupCreateCommand) {
+        userGroupService.createUserGroup(userGroupCreateCommand);
     }
 
     @ApiOperation(value = "add document types to group")
@@ -56,14 +56,14 @@ public class UserGroupController {
     @RequestMapping(value = "/{groupId}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateUserGroup(@RequestBody UserGroupCreateCommand userGroupCreateCommand, @PathVariable(value = "groupId") String groupId) {
-
+        userGroupService.updateUserGroup(userGroupCreateCommand, groupId);
     }
 
     @ApiOperation(value = "delete user group")
     @RequestMapping(value = "/{groupId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteUserGroup(@PathVariable(value = "groupId") String groupId) {
-
+        userGroupService.deleteUserGroup(groupId);
     }
 
 }
