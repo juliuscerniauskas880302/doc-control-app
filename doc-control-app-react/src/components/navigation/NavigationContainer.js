@@ -11,6 +11,7 @@ import NewDocumentTypeForm from "../admin/Document_types/NewDocumentTypeForm";
 import TypesInGroups from "../admin/Types_in_groups/TypesInGroups";
 import EditUserGroups from "../admin/Groups/EditUserGroups";
 import LoginContainer from "../admin/LoginContainer";
+import ResourceNotFound from "../errors/ResourceNotFound";
 
 export default class NavigationContainer extends Component {
   render() {
@@ -45,6 +46,7 @@ export default class NavigationContainer extends Component {
                 component={UpdateUser}
                 exact
               />
+              <Route component={ResourceNotFound} />
 
               {/* <Route path="/create" component={UserDocuments} exact />
               <Route path="/submitted" component={SubmittedDocuments} exact /> */}
