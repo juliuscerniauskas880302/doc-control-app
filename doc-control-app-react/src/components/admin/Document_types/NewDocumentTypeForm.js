@@ -5,9 +5,9 @@ export default class NewDocumentTypeForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newDocumentTypeTitle: "",
-      selectedDocumentType: "",
-      newDocumentTypeTitleToUpdate: "",
+      title: "",
+      selectedDocTypeTitle: "",
+      newTitle: "",
       allDocumentTypes: []
     };
   }
@@ -17,19 +17,10 @@ export default class NewDocumentTypeForm extends Component {
   };
 
   getAllDocumentTypes = () => {
-    Axios.get("http://localhost:8080/api/documentTypes")
+    Axios.get("http://localhost:8081/api/doctypes")
       .then(res => {
         this.setState({ allDocumentTypes: res.data });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  addNewGroupToTheServer = () => {
-    Axios.post("http://localhost:8080/api/documentTypes", this.state.newTitle)
-      .then(() => {
-        this.getAllDocumentTypes();
+        console.log(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -38,26 +29,14 @@ export default class NewDocumentTypeForm extends Component {
 
   onValueChangeHandler = event => {
     console.log(event.target.name + " " + event.target.value);
-    if (event.target.name === "selectedDocumentType") {
-      this.setState({ newDocumentTypeTitleToUpdate: event.target.value });
+    if (event.target.name === "selectedDocTypeTitle") {
+      this.setState({ newTitle: event.target.value });
     }
     this.setState({ [event.target.name]: event.target.value });
   };
 
   goBack = () => {
-    console.log("eik nx");
     this.props.history.goBack();
-  };
-
-  onSumbitHandler = event => {
-    event.preventDefault();
-    Axios.put(
-      "http://localhost:8080/api/documentTypes/" +
-        this.props.match.params.username,
-      this.state
-    )
-      .then(res => {})
-      .catch(err => {});
   };
 
   showAllDocumentTypes = () => {
@@ -80,22 +59,39 @@ export default class NewDocumentTypeForm extends Component {
     }
   };
 
-  onClickAddNewGroupHandler = () => {
-    Axios.post("http://localhost:8080/api/documentTypes" + this.state.newTitle)
+  onCLickAddNewDocTypeHandler = e => {
+    e.preventDefault();
+    let title = { title: "" };
+    title.title = this.state.title;
+    Axios.post("http://localhost:8081/api/doctypes", title)
       .then(res => {
+        this.setState({ title: "" });
         this.getAllDocumentTypes();
       })
       .catch(err => {
         console.log(err);
       });
+  };
+
+  getSelectedDocTypeID = () => {
+    let id = "";
+    for (let i = 0; i < this.state.allDocumentTypes.length; i++) {
+      if (
+        this.state.allDocumentTypes[i].title === this.state.selectedDocTypeTitle
+      ) {
+        id = this.state.allDocumentTypes[i].id;
+        break;
+      }
+    }
+    return id;
   };
 
   onDeleteCLickHandler = () => {
     Axios.delete(
-      "http://localhost:8080/api/documentTypes" +
-        this.state.selectedDocumentType
+      "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID()
     )
       .then(res => {
+        this.setState({ newTitle: "" });
         this.getAllDocumentTypes();
       })
       .catch(err => {
@@ -103,13 +99,16 @@ export default class NewDocumentTypeForm extends Component {
       });
   };
 
-  onClickUpdateHandler = () => {
+  onClickUpdateHandler = e => {
+    e.preventDefault();
+    let title = { title: "" };
+    title.title = this.state.newTitle;
     Axios.put(
-      "http://localhost:8080/api/documentTypes" +
-        this.state.selectedDocumentType,
-      this.newDocumentTypeTitleToUpdate
+      "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID(),
+      title
     )
       .then(res => {
+        this.setState({ newTitle: "" });
         this.getAllDocumentTypes();
       })
       .catch(err => {
@@ -126,15 +125,16 @@ export default class NewDocumentTypeForm extends Component {
                 <strong className="text-uppercase"> New Doc Type </strong>
               </h3>
               <div className="mx-1">
-                <form onSubmit={e => this.onSumbitHandler(e)}>
+                <form onSubmit={e => this.onCLickAddNewDocTypeHandler(e)}>
                   <div className="input-group mb-1">
                     <div className="input-group-prepend">
                       <span className="input-group-text">Title</span>
                     </div>
                     <input
                       onChange={event => this.onValueChangeHandler(event)}
+                      value={this.state.title}
                       type="text"
-                      name="newTitle"
+                      name="title"
                       className="form-control"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                       required
@@ -142,11 +142,7 @@ export default class NewDocumentTypeForm extends Component {
                   </div>
 
                   <div className="input-group mb-1">
-                    <button
-                      type="buton"
-                      className="btn btn-success"
-                      onClick={this.onClickAddNewGroupHandler}
-                    >
+                    <button type="buton" className="btn btn-success">
                       Add
                     </button>
                   </div>
@@ -184,7 +180,7 @@ export default class NewDocumentTypeForm extends Component {
                     className="form-control"
                     size="5"
                     onChange={this.onValueChangeHandler}
-                    name="selectedDocumentType"
+                    name="selectedDocTypeTitle"
                   >
                     {this.showAllDocumentTypes()}
                   </select>
@@ -192,7 +188,7 @@ export default class NewDocumentTypeForm extends Component {
               </div>
               <br />
               <div className="mx-1">
-                <form onSubmit={e => this.onSumbitHandler(e)}>
+                <form onSubmit={e => this.onClickUpdateHandler(e)}>
                   <div className="input-group mb-1">
                     <div className="input-group-prepend">
                       <span className="input-group-text">New title</span>
@@ -200,8 +196,8 @@ export default class NewDocumentTypeForm extends Component {
                     <input
                       onChange={event => this.onValueChangeHandler(event)}
                       type="text"
-                      name="newDocumentTypeTitleToUpdate"
-                      value={this.state.newDocumentTypeTitleToUpdate}
+                      name="newTitle"
+                      value={this.state.newTitle}
                       className="form-control"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                       required
@@ -209,11 +205,7 @@ export default class NewDocumentTypeForm extends Component {
                   </div>
 
                   <div className="input-group mb-1">
-                    <button
-                      type="buton"
-                      className="btn btn-info"
-                      onClick={() => this.onClickUpdateHandler()}
-                    >
+                    <button type="buton" className="btn btn-info">
                       Update
                     </button>
                   </div>
