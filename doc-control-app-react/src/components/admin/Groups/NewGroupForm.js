@@ -164,7 +164,6 @@ export default class NewGroupForm extends Component {
           </div>
         </div>
 
-        {/*  */}
         <div className="row justify-content-center">
           <div className="panel panel-primary">
             <div className="panel-body">
@@ -226,7 +225,6 @@ export default class NewGroupForm extends Component {
             </div>
           </div>
         </div>
-        {/*  */}
       </div>
     );
   }

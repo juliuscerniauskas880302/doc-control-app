@@ -40,6 +40,22 @@ export default class UpdateUser extends Component {
       .catch(err => {});
   };
 
+  onUpdatePasswordHandler = event => {
+    event.preventDefault();
+    Axios.put(
+      "http://localhost:8081/api/users/" +
+        this.props.match.params.username +
+        "/changepassword",
+      this.state.passwrod
+    )
+      .then(res => {
+        console.log("Password has been changed");
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   onValueChangeHandler = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -123,22 +139,6 @@ export default class UpdateUser extends Component {
                       required
                     />
                   </div>
-
-                  <div className="input-group mb-1">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">New Passwrod</span>
-                    </div>
-                    <input
-                      onChange={event => this.onValueChangeHandler(event)}
-                      type="password"
-                      name="password"
-                      className="form-control"
-                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                      title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
-                      required
-                    />
-                  </div>
-
                   <br />
                   <div className="input-group mb-1">
                     <button type="buton" className="btn btn-success">
@@ -168,11 +168,56 @@ export default class UpdateUser extends Component {
               </div>
             </div>
           </div>
+          {/* end of row */}
         </div>
-        {/* //////////////////////End of User Info Update table */}
-        {/* //////////////////////User add groups table */}
+        <div className="row justify-content-center">
+          {/* Passwrod change table begin */}
+          <div className="panel panel-primary">
+            <div className="panel-body">
+              <h3 className="text-on-pannel text-primary">
+                <strong className="text-uppercase"> Password</strong>
+              </h3>
+              <div className="mx-1">
+                <form onSubmit={event => this.onUpdatePasswordHandler(event)}>
+                  <div className="input-group mb-1">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">New Passwrod</span>
+                    </div>
+                    <input
+                      onChange={event => this.onValueChangeHandler(event)}
+                      type="password"
+                      name="password"
+                      className="form-control"
+                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                      title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                      required
+                    />
+                  </div>
 
-        {/* //////////////////////End of user add groups table */}
+                  <br />
+                  <div className="input-group mb-1">
+                    <button type="buton" className="btn btn-success">
+                      Save changes
+                    </button>
+                  </div>
+                </form>
+                <br />
+                <div className="input-group mb-1">
+                  <button
+                    type="buton"
+                    className="btn btn-warning"
+                    onClick={() => this.goBack()}
+                  >
+                    Go back
+                  </button>
+                </div>
+              </div>
+            </div>
+            {/* Password change end */}
+          </div>
+          {/* end of row */}
+        </div>
+        {/* end of container */}
       </div>
     );
   }

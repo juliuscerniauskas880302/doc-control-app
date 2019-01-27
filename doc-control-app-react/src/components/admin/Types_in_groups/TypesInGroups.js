@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import Picky from "react-picky";
-import "react-picky/dist/picky.css";
+
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" }
+];
 
 const bigList = [];
 
 for (var i = 1; i <= 10; i++) {
-  // bigList.push({ id: i, name: `Item ${i}`, isSelected: true });
-  bigList.push(`Item ${i}`);
+  bigList.push({ id: i, name: `Item ${i}` });
 }
 
 export default class TypesInGroups extends Component {
@@ -17,9 +20,15 @@ export default class TypesInGroups extends Component {
       groups: [],
       selectedGroup: "",
       sendDocsArray: [],
-      reviewDocsArray: []
+      reviewDocsArray: [],
+      selectedOption: null
     };
   }
+
+  handleChange = selectedOption => {
+    this.setState({ selectedOption });
+    console.log(`Option selected:`, selectedOption);
+  };
 
   selectSendDocsMultipleOption = value => {
     console.log("Val", value);
@@ -92,57 +101,21 @@ export default class TypesInGroups extends Component {
                   </select>
                 </div>
                 {/*  */}
-
-                <div className="row">
-                  <div className="col">
-                    <h3 className="text-primary">
-                      <strong>Send docs</strong>
-                    </h3>
-                    <Picky
-                      value={this.state.sendDocsArray}
-                      options={bigList}
-                      onChange={this.selectSendDocsMultipleOption}
-                      open={false}
-                      valueKey="id"
-                      labelKey="name"
-                      multiple={true}
-                      includeFilter={true}
-                      dropdownHeight={200}
-                    />
-                  </div>
-                  <div className="col">
-                    <h3 className="text-primary">
-                      <strong>Review docs</strong>
-                    </h3>
-                    <Picky
-                      value={this.state.reviewDocsArray}
-                      options={bigList}
-                      onChange={this.selectReviewDocsMultipleOption}
-                      open={false}
-                      valueKey="id"
-                      labelKey="name"
-                      multiple={true}
-                      includeSelectAll={true}
-                      includeFilter={true}
-                      dropdownHeight={200}
-                    />
-                  </div>
-                </div>
-              </div>
-              {/*  */}
-              <br />
-              <div className="input-group mb-1">
-                <button
-                  type="buton"
-                  className="btn btn-warning"
-                  onClick={() => this.goBack()}
-                >
-                  Go back
-                </button>
               </div>
             </div>
-            <div className="mx-1" />
+            {/*  */}
+            <br />
+            <div className="input-group mb-1">
+              <button
+                type="buton"
+                className="btn btn-warning"
+                onClick={() => this.goBack()}
+              >
+                Go back
+              </button>
+            </div>
           </div>
+          <div className="mx-1" />
         </div>
       </div>
     );
