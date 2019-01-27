@@ -19,6 +19,7 @@ export default class TypesInGroups extends Component {
     this.state = {
       groups: [],
       selectedGroup: "",
+      singleGroup: null,
       sendDocsArray: [],
       reviewDocsArray: [],
       selectedOption: null
@@ -75,6 +76,13 @@ export default class TypesInGroups extends Component {
 
   onValueChangeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
+    Axios.get(
+      "http://localhost:8081/api/groups/" + this.state.selectedGroup
+    ).then(res => {
+      this.setState({ singleGroup: res.data }).catch(err => {
+        console.log(err);
+      });
+    });
   };
 
   render() {
@@ -100,22 +108,23 @@ export default class TypesInGroups extends Component {
                     {this.showAllGroups()}
                   </select>
                 </div>
-                {/*  */}
+                <div className="row justify-content-center text-center">
+                  <div className="col">Test2</div>
+                  <div className="col">Test3</div>
+                </div>
+                <br />
+                <div className="input-group mb-1">
+                  <button
+                    type="buton"
+                    className="btn btn-warning"
+                    onClick={() => this.goBack()}
+                  >
+                    Go back
+                  </button>
+                </div>
               </div>
             </div>
-            {/*  */}
-            <br />
-            <div className="input-group mb-1">
-              <button
-                type="buton"
-                className="btn btn-warning"
-                onClick={() => this.goBack()}
-              >
-                Go back
-              </button>
-            </div>
           </div>
-          <div className="mx-1" />
         </div>
       </div>
     );
