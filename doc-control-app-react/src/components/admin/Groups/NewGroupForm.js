@@ -5,9 +5,9 @@ export default class NewGroupForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      title: "",
+      selectedGroupTitle: "",
       newTitle: "",
-      selectedGroup: "",
-      newTitleToUpdate: "",
       allGroups: []
     };
   }
@@ -17,7 +17,7 @@ export default class NewGroupForm extends Component {
   };
 
   getAllGroups = () => {
-    Axios.get("http://localhost:8080/api/groups")
+    Axios.get("http://localhost:8081/api/groups")
       .then(res => {
         this.setState({ allGroups: res.data });
       })
@@ -27,7 +27,7 @@ export default class NewGroupForm extends Component {
   };
 
   addNewGroupToTheServer = () => {
-    Axios.post("http://localhost:8080/api/groups", this.state.newTitle)
+    Axios.post("http://localhost:8081/api/groups", this.state.title)
       .then(() => {
         this.getAllGroups();
       })
@@ -36,10 +36,21 @@ export default class NewGroupForm extends Component {
       });
   };
 
+  getSelectedGroupID = () => {
+    let id = "";
+    for (let i = 0; i < this.state.allGroups.length; i++) {
+      if (this.state.allGroups[i].title === this.state.selectedGroupTitle) {
+        id = this.state.allGroups[i].id;
+        break;
+      }
+    }
+    return id;
+  };
+
   onValueChangeHandler = event => {
     console.log(event.target.name + " " + event.target.value);
-    if (event.target.name === "selectedGroup") {
-      this.setState({ newTitleToUpdate: event.target.value });
+    if (event.target.name === "selectedGroupTitle") {
+      this.setState({ newTitle: event.target.value });
     }
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -79,9 +90,13 @@ export default class NewGroupForm extends Component {
     }
   };
 
-  onClickAddNewGroupHandler = () => {
-    Axios.post("http://localhost:8080/api/groups" + this.state.newTitle)
+  onClickAddNewGroupHandler = e => {
+    e.preventDefault();
+    let title = { title: "" };
+    title.title = this.state.title;
+    Axios.post("http://localhost:8081/api/groups" + title)
       .then(res => {
+        this.setState({ title: "" });
         this.getAllGroups();
       })
       .catch(err => {
@@ -90,8 +105,9 @@ export default class NewGroupForm extends Component {
   };
 
   onDeleteCLickHandler = () => {
-    Axios.delete("http://localhost:8080/api/groups" + this.state.selectedGroup)
+    Axios.delete("http://localhost:8081/api/groups" + this.getSelectedGroupID())
       .then(res => {
+        this.setState({ newTitle: "" });
         this.getAllGroups();
       })
       .catch(err => {
@@ -99,12 +115,16 @@ export default class NewGroupForm extends Component {
       });
   };
 
-  onClickUpdateHandler = () => {
+  onClickUpdateHandler = e => {
+    e.preventDefault();
+    let title = { title: "" };
+    title.title = this.state.newTitle;
     Axios.put(
-      "http://localhost:8080/api/groups" + this.state.selectedGroup,
-      this.newTitleToUpdate
+      "http://localhost:8081/api/groups" + this.getSelectedGroupID(),
+      title
     )
       .then(res => {
+        this.setState({ newTitle: "" });
         this.getAllGroups();
       })
       .catch(err => {
@@ -122,7 +142,7 @@ export default class NewGroupForm extends Component {
                 <strong className="text-uppercase"> New Group </strong>
               </h3>
               <div className="mx-1">
-                <form onSubmit={e => this.onSumbitHandler(e)}>
+                <form onSubmit={e => this.onClickAddNewGroupHandler(e)}>
                   <div className="input-group mb-1">
                     <div className="input-group-prepend">
                       <span className="input-group-text">Title</span>
@@ -130,7 +150,7 @@ export default class NewGroupForm extends Component {
                     <input
                       onChange={event => this.onValueChangeHandler(event)}
                       type="text"
-                      name="newTitle"
+                      name="title"
                       className="form-control"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                       required
@@ -138,11 +158,7 @@ export default class NewGroupForm extends Component {
                   </div>
 
                   <div className="input-group mb-1">
-                    <button
-                      type="buton"
-                      className="btn btn-success"
-                      onClick={this.onClickAddNewGroupHandler}
-                    >
+                    <button type="buton" className="btn btn-success">
                       Add
                     </button>
                   </div>
@@ -174,10 +190,11 @@ export default class NewGroupForm extends Component {
                 <span className="input-group-text group">All groups</span>
                 <div className="input-group mb-1">
                   <select
+                    value={this.state.selectedGroupTitle}
                     className="form-control"
                     size="5"
                     onChange={this.onValueChangeHandler}
-                    name="selectedGroup"
+                    name="selectedGroupTitle"
                   >
                     {this.showAllGroups()}
                   </select>
@@ -185,7 +202,7 @@ export default class NewGroupForm extends Component {
               </div>
               <br />
               <div className="mx-1">
-                <form onSubmit={e => this.onSumbitHandler(e)}>
+                <form onSubmit={e => this.onClickUpdateHandler(e)}>
                   <div className="input-group mb-1">
                     <div className="input-group-prepend">
                       <span className="input-group-text">New title</span>
@@ -193,8 +210,8 @@ export default class NewGroupForm extends Component {
                     <input
                       onChange={event => this.onValueChangeHandler(event)}
                       type="text"
-                      name="newTitleToUpdate"
-                      value={this.state.newTitleToUpdate}
+                      name="newTitle"
+                      value={this.state.newTitle}
                       className="form-control"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                       required
@@ -202,11 +219,7 @@ export default class NewGroupForm extends Component {
                   </div>
 
                   <div className="input-group mb-1">
-                    <button
-                      type="buton"
-                      className="btn btn-info"
-                      onClick={() => this.onClickUpdateHandler()}
-                    >
+                    <button type="buton" className="btn btn-info">
                       Update
                     </button>
                   </div>

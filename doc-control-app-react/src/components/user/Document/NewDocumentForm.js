@@ -16,7 +16,7 @@ export default class NewDocumentForm extends Component {
   }
 
   componentDidMount = () => {
-    Axios.get("http://localhost:8081/api/documentTypes")
+    Axios.get("http://localhost:8081/api/doctypes")
       .then(res => {
         this.setState({ documentTypes: res.data });
       })
