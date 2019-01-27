@@ -32,6 +32,11 @@ const Navigation = props => {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/userdocument/add">
+            <div>New User Document Form</div>
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/document_types/groups">
             <div>Types In Groups </div>
           </NavLink>

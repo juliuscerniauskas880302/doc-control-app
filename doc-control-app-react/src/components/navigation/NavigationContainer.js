@@ -12,6 +12,7 @@ import TypesInGroups from "../admin/Types_in_groups/TypesInGroups";
 import EditUserGroups from "../admin/Groups/EditUserGroups";
 import LoginContainer from "../admin/LoginContainer";
 import ResourceNotFound from "../errors/ResourceNotFound";
+import NewDocumentForm from "../user/Document/NewDocumentForm";
 
 export default class NavigationContainer extends Component {
   render() {
@@ -25,6 +26,11 @@ export default class NavigationContainer extends Component {
               <Route path="/users" component={UserContainer} exact />
               <Route path="/users2/add" component={NewUserForm2} exact />
               <Route path="/groups/add" component={NewGroupForm} exact />
+              <Route
+                path="/userdocument/add"
+                component={NewDocumentForm}
+                exact
+              />
               <Route path="/login" component={LoginContainer} exact />
               <Route
                 path="/document_types/groups"
