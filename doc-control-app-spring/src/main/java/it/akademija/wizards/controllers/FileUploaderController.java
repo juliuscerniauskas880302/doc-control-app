@@ -26,9 +26,15 @@ public class FileUploaderController {
             produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(
             @ApiParam(name = "file", value = "Select the file to Upload", required = true)
-            @RequestPart("file") MultipartFile file) throws IOException {
-        fileUploaderService.uploadFile(file);
-
+            @RequestPart("file") MultipartFile[] file) {
+        for (int i = 0; i < file.length; i++) {
+            System.out.println("File size: " + file[i].getSize() + "\nFile name: " + file[i].getOriginalFilename());
+        }
+        try {
+            fileUploaderService.uploadFile(file);
+        } catch (IOException ex) {
+            return new ResponseEntity<String>("Failed to upload", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<String>("Done", HttpStatus.OK);
     }
 }
