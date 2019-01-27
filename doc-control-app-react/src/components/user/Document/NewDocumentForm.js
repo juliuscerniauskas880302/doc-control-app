@@ -30,30 +30,56 @@ export default class NewDocumentForm extends Component {
   };
 
   onFileSelectHandler = event => {
-    console.log(event.target.files[0]);
+    console.log(event.target.files);
 
-    this.setState({ [event.target.name]: event.target.files[0] });
+    this.setState({ [event.target.name]: event.target.files });
   };
 
   onSubmitDocumentHandler = e => {
+    console.log();
     e.preventDefault();
     let file = new FormData();
-    file.append(
-      "file",
-      this.state.selectedFiles,
-      this.state.selectedFiles.name
-    );
-    Axios.post("http://localhost:8081/api/files/upload", file, {
-      onUploadProgress: progressEvent => {
-        console.log(
-          "Upload progress: " +
-            (progressEvent.loaded / progressEvent.total) * 100 +
-            "%"
+    console.log(this.state.selectedFiles.length);
+    if (this.state.selectedFiles.length === 1) {
+      file.append(
+        "file",
+        this.state.selectedFiles[0],
+        this.state.selectedFiles[0].name
+      );
+      Axios.post("http://localhost:8081/api/files/upload", file, {
+        onUploadProgress: progressEvent => {
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+    } else {
+      for (let i = 0; i < this.state.selectedFiles.length; i++) {
+        file.append(
+          "file",
+          this.state.selectedFiles[i],
+          this.state.selectedFiles[i].name
         );
+        console.log(this.state.selectedFiles[i]);
+        console.log(this.state.selectedFiles[i].name);
       }
-    })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      Axios.post("http://localhost:8081/api/files/upload", file, {
+        onUploadProgress: progressEvent => {
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+    }
+    console.log(file);
   };
 
   showAvailableDocumentTypes = () => {
@@ -133,6 +159,7 @@ export default class NewDocumentForm extends Component {
                 </label>
                 <div className="input-group mb-1">
                   <input
+                    multiple
                     onChange={this.onFileSelectHandler}
                     id="Upload file"
                     name="selectedFiles"
