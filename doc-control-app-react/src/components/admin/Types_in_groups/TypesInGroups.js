@@ -1,48 +1,33 @@
 import React, { Component } from "react";
 import Axios from "axios";
-
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" }
-];
-
-const bigList = [];
-
-for (var i = 1; i <= 10; i++) {
-  bigList.push({ id: i, name: `Item ${i}` });
-}
+import Select from "./Select";
 
 export default class TypesInGroups extends Component {
   constructor(props) {
     super(props);
     this.state = {
       groups: [],
-      selectedGroup: "",
-      singleGroup: null,
-      sendDocsArray: [],
-      reviewDocsArray: [],
-      selectedOption: null
+      doctypes: [],
+      selectedGroup: null,
+      selectedCanSend: "",
+      selectedRemoveCanSend: "",
+      selectedCanReview: "",
+      selectedRemoveCanReview: ""
     };
   }
 
-  handleChange = selectedOption => {
-    this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
+  getAllDocTypes = () => {
+    Axios.get("http://localhost:8081/api/doctypes")
+      .then(res => {
+        this.setState({ doctypes: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
-  selectSendDocsMultipleOption = value => {
-    console.log("Val", value);
-    this.setState({ sendDocsArray: value });
-  };
-
-  selectReviewDocsMultipleOption = value => {
-    console.log("Val", value);
-    this.setState({ reviewDocsArray: value });
-  };
-
-  componentDidMount = () => {
-    Axios.get("http://localhost:8080/api/groups")
+  getAllGroups = () => {
+    Axios.get("http://localhost:8081/api/groups")
       .then(res => {
         this.setState({ groups: res.data });
       })
@@ -50,11 +35,17 @@ export default class TypesInGroups extends Component {
         console.log(err);
       });
   };
+
+  componentDidMount = () => {
+    this.getAllDocTypes();
+    this.getAllGroups();
+  };
   goBack = () => {
     this.props.history.goBack();
   };
 
   showAllGroups = () => {
+    console.log(this.state.groups);
     if (this.state.groups.length === 0) {
       return (
         <option value="" disabled>
@@ -64,25 +55,63 @@ export default class TypesInGroups extends Component {
     } else {
       let groupList = this.state.groups.map(g => {
         return (
-          <option key={g.title} value={g.title}>
+          <option key={g.title} value={g.userGroupId}>
             {g.title}
           </option>
         );
       });
-
       return groupList;
     }
   };
 
-  onValueChangeHandler = e => {
-    this.setState({ [e.target.name]: e.target.value });
-    Axios.get(
-      "http://localhost:8081/api/groups/" + this.state.selectedGroup
-    ).then(res => {
-      this.setState({ singleGroup: res.data }).catch(err => {
+  loadSelectedGroup = e => {
+    Axios.get("http://localhost:8081/api/groups/" + e.target.value)
+      .then(res => {
+        this.setState({ selectedGroup: res.data });
+        console.log(res.data);
+      })
+      .catch(err => {
         console.log(err);
       });
-    });
+  };
+
+  showCanReviewDocs = () => {
+    let review = this.state.doctypes;
+    if (review === 0) {
+      return (
+        <option value="" disabled>
+          No available doc types...
+        </option>
+      );
+    } else {
+      let typeList = review.map(t => {
+        return (
+          <option key={t.title} value={t.userGroupId}>
+            {t.title}
+          </option>
+        );
+      });
+      return typeList;
+    }
+  };
+  showCanSendDocs = () => {
+    let send = this.state.doctypes;
+    if (send === 0) {
+      return (
+        <option value="" disabled>
+          No available doc types...
+        </option>
+      );
+    } else {
+      let typeList = send.map(t => {
+        return (
+          <option key={t.title} value={t.userGroupId}>
+            {t.title}
+          </option>
+        );
+      });
+      return typeList;
+    }
   };
 
   render() {
@@ -102,15 +131,55 @@ export default class TypesInGroups extends Component {
                   <select
                     className="form-control"
                     size="5"
-                    onChange={this.onValueChangeHandler}
+                    onChange={this.loadSelectedGroup}
                     name="selectedGroup"
                   >
                     {this.showAllGroups()}
                   </select>
                 </div>
+                <br />
                 <div className="row justify-content-center text-center">
-                  <div className="col">Test2</div>
-                  <div className="col">Test3</div>
+                  <div className="col">
+                    <Select
+                      buttonTitle="Add |send|"
+                      buttonType="btn btn-success"
+                      title="Send types"
+                      options={this.showCanReviewDocs()}
+                      onChange={this.onValueChangeHandler}
+                      onClick={() => this.onClickAddGroupToUserHandler()}
+                      name="selectedAddGroup"
+                    />
+                    <Select
+                      buttonTitle="Remove |send|"
+                      buttonType="btn btn-danger"
+                      title="Can Send types"
+                      options={<option>Send</option>}
+                      onChange={this.onValueChangeHandler}
+                      onClick={() => this.onClickAddGroupToUserHandler()}
+                      name="selectedAddGroup"
+                    />
+                  </div>
+                  <div className="col">
+                    <Select
+                      buttonTitle="Add |review|"
+                      buttonType="btn btn-success"
+                      title="Review types"
+                      options={this.showCanSendDocs()}
+                      onChange={this.onValueChangeHandler}
+                      onClick={() => this.onClickAddGroupToUserHandler()}
+                      name="selectedAddGroup"
+                    />
+                    <Select
+                      buttonTitle="Remove |review|"
+                      buttonType="btn btn-danger"
+                      title="Can review"
+                      options={<option>Review</option>}
+                      onChange={this.onValueChangeHandler}
+                      onClick={() => this.onClickAddGroupToUserHandler()}
+                      name="selectedAddGroup"
+                    />
+                    <br />
+                  </div>
                 </div>
                 <br />
                 <div className="input-group mb-1">
