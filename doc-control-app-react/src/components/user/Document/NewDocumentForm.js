@@ -146,7 +146,7 @@ export default class NewDocumentForm extends Component {
                     id="select type"
                     name="selectedDocumentType"
                     type="text"
-                    // required
+                    required
                   >
                     {this.showAvailableDocumentTypes()}
                   </select>

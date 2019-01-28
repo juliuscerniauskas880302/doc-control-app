@@ -26,21 +26,11 @@ export default class NewGroupForm extends Component {
       });
   };
 
-  addNewGroupToTheServer = () => {
-    Axios.post("http://localhost:8081/api/groups", this.state.title)
-      .then(() => {
-        this.getAllGroups();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
   getSelectedGroupID = () => {
     let id = "";
     for (let i = 0; i < this.state.allGroups.length; i++) {
       if (this.state.allGroups[i].title === this.state.selectedGroupTitle) {
-        id = this.state.allGroups[i].id;
+        id = this.state.allGroups[i].userGroupId;
         break;
       }
     }
@@ -48,7 +38,6 @@ export default class NewGroupForm extends Component {
   };
 
   onValueChangeHandler = event => {
-    console.log(event.target.name + " " + event.target.value);
     if (event.target.name === "selectedGroupTitle") {
       this.setState({ newTitle: event.target.value });
     }
@@ -56,18 +45,7 @@ export default class NewGroupForm extends Component {
   };
 
   goBack = () => {
-    console.log("eik nx");
     this.props.history.goBack();
-  };
-
-  onSumbitHandler = event => {
-    event.preventDefault();
-    Axios.put(
-      "http://localhost:8080/api/groups/" + this.props.match.params.username,
-      this.state
-    )
-      .then(res => {})
-      .catch(err => {});
   };
 
   showAllGroups = () => {
@@ -77,24 +55,22 @@ export default class NewGroupForm extends Component {
           No available groups...
         </option>
       );
-    } else {
-      let groups = this.state.allGroups.map(group => {
-        return (
-          <option key={group.title} value={group.title}>
-            {group.title}
-          </option>
-        );
-      });
-
-      return groups;
     }
+    let groups = this.state.allGroups.map(group => {
+      return (
+        <option key={group.title} value={group.title}>
+          {group.title}
+        </option>
+      );
+    });
+    return groups;
   };
 
   onClickAddNewGroupHandler = e => {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
-    Axios.post("http://localhost:8081/api/groups" + title)
+    Axios.post("http://localhost:8081/api/groups", title)
       .then(res => {
         this.setState({ title: "" });
         this.getAllGroups();
@@ -105,7 +81,9 @@ export default class NewGroupForm extends Component {
   };
 
   onDeleteCLickHandler = () => {
-    Axios.delete("http://localhost:8081/api/groups" + this.getSelectedGroupID())
+    Axios.delete(
+      "http://localhost:8081/api/groups/" + this.getSelectedGroupID()
+    )
       .then(res => {
         this.setState({ newTitle: "" });
         this.getAllGroups();
@@ -120,7 +98,7 @@ export default class NewGroupForm extends Component {
     let title = { title: "" };
     title.title = this.state.newTitle;
     Axios.put(
-      "http://localhost:8081/api/groups" + this.getSelectedGroupID(),
+      "http://localhost:8081/api/groups/" + this.getSelectedGroupID(),
       title
     )
       .then(res => {
@@ -151,6 +129,7 @@ export default class NewGroupForm extends Component {
                       onChange={event => this.onValueChangeHandler(event)}
                       type="text"
                       name="title"
+                      value={this.state.title}
                       className="form-control"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                       required
@@ -190,7 +169,6 @@ export default class NewGroupForm extends Component {
                 <span className="input-group-text group">All groups</span>
                 <div className="input-group mb-1">
                   <select
-                    value={this.state.selectedGroupTitle}
                     className="form-control"
                     size="5"
                     onChange={this.onValueChangeHandler}
