@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -108,7 +109,7 @@ public class UserService {
             PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
             byte[] encodedPass = null;
             byte[] passwordSalt = null;
-            PassAndSalt passAndSalt =  pbkdf2Hash.hashPassword(userPassCommand.getPassword());
+            PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userPassCommand.getPassword());
             if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
                     && (passwordSalt = passAndSalt.getSalt()) != null) {
                 user.setPassword(encodedPass);
@@ -118,7 +119,7 @@ public class UserService {
         }
         return false;
     }
-  
+
     @Transactional
     public List<DocumentGetCommand> getUserDocuments(String username) {
         User user = userRepository.findByUsername(username);
@@ -139,7 +140,27 @@ public class UserService {
         if (user != null) {
             List<String> userGroupIdList = Arrays.asList(userAddGroupsCommand.getGroupIdList());
             List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupIdIn(userGroupIdList);
-            user.setUserGroups(userGroupList);
+            for (UserGroup userGroup : userGroupList) {
+                if (!user.getUserGroups().contains(userGroup)) {
+                    user.getUserGroups().add(userGroup);
+                }
+            }
+            //user.setUserGroups(userGroupList);
+            userRepository.save(user);
+        }
+    }
+    @Transactional
+    public void removeGroupsFromUser(UserRemoveGroupsCommand userRemoveGroupsCommand, String username){
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            List<String> userGroupIdList = Arrays.asList(userRemoveGroupsCommand.getGroupIdList());
+            List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupIdIn(userGroupIdList);
+            for (UserGroup userGroup : userGroupList) {
+                if (user.getUserGroups().contains(userGroup)) {
+                    user.getUserGroups().remove(userGroup);
+                }
+            }
+            //user.setUserGroups(userGroupList);
             userRepository.save(user);
         }
     }

@@ -92,6 +92,13 @@ public class UserController {
         userService.addGroupsToUser(userAddGroupsCommand, username);
     }
 
+    @ApiOperation(value = "remove group list from user")
+    @RequestMapping(value = "/{username}/groups", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void removeGroupsFromUser(@RequestBody UserRemoveGroupsCommand userRemoveGroupsCommand, @PathVariable(value = "username") String username) {
+        userService.removeGroupsFromUser(userRemoveGroupsCommand, username);
+    }
+
     @ApiOperation(value = "get user groups")
     @RequestMapping(value = "/{username}/groups", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.CREATED)

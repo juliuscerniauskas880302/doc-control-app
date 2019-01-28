@@ -156,11 +156,21 @@ export default class EditUserGroups extends Component {
   };
 
   onClickRemoveGroupFromUserHandler = () => {
+    console.log(this.props.match.params.username);
+    if (this.state.selectedRemoveGroup === "") {
+      return;
+    }
+    let groupIdList = {
+      groupIdList: []
+    };
+    this.state.selectedRemoveGroup.forEach(el => {
+      groupIdList.groupIdList.push(el);
+    });
     Axios.delete(
       "http://localhost:8081/api/users/" +
         this.props.match.params.username +
         "/groups",
-      this.state.selectedRemoveGroup
+      { data: groupIdList }
     )
       .then(res => {
         this.getAllUserGroups();
