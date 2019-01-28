@@ -17,7 +17,7 @@ const Navigation = props => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/users/update/lol">
+          <NavLink to="/users/update/hoperis">
             <div>Update by username</div>
           </NavLink>
         </li>

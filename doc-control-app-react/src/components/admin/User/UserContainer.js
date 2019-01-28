@@ -1,34 +1,6 @@
 import React, { Component } from "react";
 import User from "./User";
 import Axios from "axios";
-
-var userData = [
-  {
-    firstname: "Julius",
-    lastname: "Cerniauskas",
-    email: "hoperis@gmail.cm",
-    passwrod: "123",
-    username: "namekas",
-    isAdmin: false
-  },
-  {
-    firstname: "Paulius",
-    lastname: "Cepulis",
-    email: "namekas@gmail.cm",
-    passwrod: "4568",
-    username: "kamehame",
-    isAdmin: true
-  },
-  {
-    firstname: "Saulius",
-    lastname: "Svkerelis",
-    email: "ssnelis@gmail.cm",
-    passwrod: "123456789",
-    username: "svierchas",
-    isAdmin: false
-  }
-];
-
 export class UserContainer extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +23,9 @@ export class UserContainer extends Component {
   };
 
   showAllUsers = () => {
-    console.log(this.state.users);
+    if (this.state.users.length === 0) {
+      return <h2 className="">No users available at the moment</h2>;
+    }
     let users = this.state.users.map(user => {
       let isAdmin = user.isAdmin === false ? "Simple user" : "Administrator";
       return (
@@ -70,13 +44,6 @@ export class UserContainer extends Component {
   };
 
   onDeleteClickHandler = id => {
-    for (var i = userData.length - 1; i >= 0; i--) {
-      if (userData[i].username === id) {
-        userData.splice(i, 1);
-      }
-    }
-    this.setState({ users: userData });
-
     Axios.delete("http://localhost:8081/api/users/" + id)
       .then(() => this.getAllUsersFromServer())
       .catch(err => {

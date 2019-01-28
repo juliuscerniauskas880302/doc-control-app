@@ -20,7 +20,6 @@ export default class NewDocumentTypeForm extends Component {
     Axios.get("http://localhost:8081/api/doctypes")
       .then(res => {
         this.setState({ allDocumentTypes: res.data });
-        console.log(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -28,7 +27,6 @@ export default class NewDocumentTypeForm extends Component {
   };
 
   onValueChangeHandler = event => {
-    console.log(event.target.name + " " + event.target.value);
     if (event.target.name === "selectedDocTypeTitle") {
       this.setState({ newTitle: event.target.value });
     }

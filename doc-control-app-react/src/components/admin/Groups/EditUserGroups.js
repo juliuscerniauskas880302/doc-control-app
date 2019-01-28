@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
+import "./EditGroups.css";
 
 export default class EditUserGroups extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export default class EditUserGroups extends Component {
 
   componentDidMount = () => {
     this.getAllGroups();
-    //this.getAllUserGroups();
+    this.getAllUserGroups();
     this.getUser();
   };
 
@@ -65,7 +66,7 @@ export default class EditUserGroups extends Component {
     } else {
       let groups = this.state.userGroups.map(group => {
         return (
-          <option key={group.title} value={group.title}>
+          <option key={group.title} value={group.userGroupId}>
             {group.title}
           </option>
         );
@@ -82,18 +83,37 @@ export default class EditUserGroups extends Component {
         </option>
       );
     } else {
-      let groups = this.state.allGroups.map(group => {
-        if (!this.state.userGroups.includes(group.title))
-          return (
-            <option key={group.title} value={group.title}>
-              {group.title}
-            </option>
-          );
-        else {
-          return null;
-        }
-      });
-      return groups;
+      let groups = this.state.allGroups
+        .map(group => {
+          // console.log(this.state.userGroups);
+          // console.log(this.state.userGroups.includes("group.title"));
+
+          let shouldShow = true;
+
+          this.state.userGroups.forEach(g => {
+            if (g.title === group.title) {
+              shouldShow = false;
+            }
+          });
+
+          if (shouldShow)
+            return (
+              <option key={group.title} value={group.userGroupId}>
+                {group.title}
+              </option>
+            );
+          else {
+            return null;
+          }
+        })
+        .filter(g => g !== null);
+      if (groups.length === 0) {
+        return (
+          <option value="" disabled>
+            Already in all groups...
+          </option>
+        );
+      } else return groups;
     }
   };
 
@@ -112,13 +132,24 @@ export default class EditUserGroups extends Component {
   };
 
   onClickAddGroupToUserHandler = () => {
+    if (this.state.selectedAddGroup === "") {
+      return;
+    }
+    let groupIdList = {
+      groupIdList: []
+    };
+    this.state.selectedAddGroup.forEach(el => {
+      groupIdList.groupIdList.push(el);
+    });
+
     Axios.put(
       "http://localhost:8081/api/users/" +
         this.props.match.params.username +
         "/groups",
-      this.state.selectedAddGroup
+      groupIdList
     )
       .then(res => {
+        console.log("should load user groups");
         this.getAllUserGroups();
       })
       .catch(err => console.log(err));
@@ -148,7 +179,9 @@ export default class EditUserGroups extends Component {
               </h3>
               <div className="mx-1">
                 {/*  */}
-                <span className="input-group-text goups">Available groups</span>
+                <span className="input-group-text groups">
+                  Available groups
+                </span>
                 <div className="input-group mb-1">
                   <select
                     multiple
@@ -171,7 +204,7 @@ export default class EditUserGroups extends Component {
                 </div>
                 <br />
                 {/*  */}
-                <span className="input-group-text goups">
+                <span className="input-group-text groups">
                   <h2>{this.state.user.username}</h2> &nbsp; in groups
                 </span>
                 <div className="input-group mb-1">
