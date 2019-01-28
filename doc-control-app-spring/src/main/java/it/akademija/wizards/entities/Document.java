@@ -15,6 +15,8 @@ public class Document {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
+    @NotNull
+    @Column(unique = true)
     private String documentId;
 
     @ManyToOne
@@ -80,8 +82,8 @@ public class Document {
         return documentId;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+    public void setDocumentId() {
+        this.documentId = author.getUsername() + title + System.currentTimeMillis();
     }
 
     public User getAuthor() {
@@ -178,6 +180,13 @@ public class Document {
 
     public void setDocumentType(DocumentType documentType) {
         this.documentType = documentType;
+    }
+
+    public void setReviewDate() {
+        if (this.documentState.equals(DocumentState.ACCEPTED)) this.approvalDate = new Date();
+        else if (this.documentState.equals(DocumentState.REJECTED)) {
+            this.rejectionDate = new Date();
+        }
     }
 
 

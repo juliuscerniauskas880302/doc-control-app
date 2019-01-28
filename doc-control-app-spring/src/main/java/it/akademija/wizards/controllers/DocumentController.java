@@ -22,7 +22,6 @@ public class DocumentController {
     @Autowired
     private DocumentService documentService;
 
-
     @ApiOperation(value = "get all submitted documents")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -52,17 +51,17 @@ public class DocumentController {
     }
 
     @ApiOperation(value = "submit document by document Id")
-    @RequestMapping(value = "/{documentId}/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/{documentId}/submit", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.CREATED)
     public void submitDocument(@PathVariable String documentId){
         documentService.submitDocument(documentId);
     }
 
     @ApiOperation(value = "review document by document Id")
-    @RequestMapping(value = "/review/{documentId}/{state}", method = RequestMethod.POST)
+    @RequestMapping(value = "/review/{documentId}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewDocument(@PathVariable String documentId, @PathVariable(value="state") DocumentState documentState, @RequestBody DocumentReviewCommand documentReviewCommand){
-        documentService.reviewDocument(documentId, documentState, documentReviewCommand);
+    public void reviewDocument(@PathVariable String documentId, @RequestBody DocumentReviewCommand documentReviewCommand){
+        documentService.reviewDocument(documentId, documentReviewCommand);
     }
 
     @ApiOperation(value = "update document by document Id")
