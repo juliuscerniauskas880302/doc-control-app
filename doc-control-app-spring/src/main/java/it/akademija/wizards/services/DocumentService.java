@@ -28,7 +28,6 @@ public class DocumentService {
     @Autowired
     private UserRepository userRepository;
 
-    //TODO exceptions for not found resources?
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getSubmittedDocuments() {
         return documentRepository.findAll().stream().filter(document -> !document.getDocumentState().equals(DocumentState.CREATED)).map(document -> mapEntityToGetCommand(document)
@@ -42,11 +41,15 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentGetCommand getDocumentsById(String documentId) {
+        //TODO DocumentNotFoundException
         return mapEntityToGetCommand(documentRepository.findByDocumentId(documentId));
     }
 
     @Transactional
     public void createDocument(DocumentCreateCommand documentCreateCommand){
+        //TODO find author's group
+        //TODO check if the found group can create this type of document
+        //TODO UserCannotCreateDocumentException
         Document document = mapCreateCommandToEntity(documentCreateCommand);
         documentRepository.save(document);
         addToUserList(document);
@@ -54,6 +57,7 @@ public class DocumentService {
 
     @Transactional
     public void submitDocument(String documentId) {
+        // DocumentNotFoundException
         Document document = documentRepository.findByDocumentId(documentId);
         document.setSubmissionDate(new Date());
         document.setDocumentState(DocumentState.SUBMITTED);
@@ -61,6 +65,10 @@ public class DocumentService {
 
     @Transactional
     public void reviewDocument(String documentId, DocumentReviewCommand documentReviewCommand) {
+        //TODO check reviewer's group
+        //TODO check if the found group can review this type of document
+        //TODO UserCannotReviewDocumentException
+        //DocumentNotFoundException
         Document document = documentRepository.findByDocumentId(documentId);
         document.setDocumentState(documentReviewCommand.getDocumentState());
         document.setReviewer(userRepository.findByUsername(documentReviewCommand.getReviewerUsername()));
@@ -70,19 +78,20 @@ public class DocumentService {
 
     @Transactional
     public void updateDocumentById(String documentId, DocumentUpdateCommand documentUpdateCommand) {
+        // DocumentNotFoundException
         Document document = documentRepository.findByDocumentId(documentId);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
-            BeanUtils.copyProperties(documentUpdateCommand, document);
-            document.setDocumentType(documentTypeRepository.findByTitle(documentUpdateCommand.getDocumentTypeTitle()));
-            documentRepository.save(document);
+            documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
         } else {
-            //TODO new DocumentUpdateNotAllowedException
+            //TODO SubmittedDocumentUpdateNotAllowedException
             throw new IllegalArgumentException();
         }
     }
 
     @Transactional
     public void deleteDocumentById(String documentId) {
+        //only admin can delete documents? spring security?
+        // DocumentNotFoundException
         documentRepository.deleteByDocumentId(documentId);
     }
 
@@ -101,11 +110,22 @@ public class DocumentService {
         BeanUtils.copyProperties(documentCreateCommand, document);
         document.setDocumentState(DocumentState.CREATED);
         document.setCreationDate(new Date());
+        //TODO DocumentTypeNotFoundException
         document.setDocumentType(documentTypeRepository.findByTitle(documentCreateCommand.getDocumentTypeTitle()));
+        //TODO UserNotFoundException
         document.setAuthor(userRepository.findByUsername(documentCreateCommand.getUsername()));
         document.setDocumentId();
         return document;
     }
+
+    @Transactional(readOnly = true)
+    private Document mapUpdateCommandToEntity(DocumentUpdateCommand documentUpdateCommand, Document document) {
+        BeanUtils.copyProperties(documentUpdateCommand, document);
+        //DocumentTypeNotFoundException
+        document.setDocumentType(documentTypeRepository.findByTitle(documentUpdateCommand.getDocumentTypeTitle()));
+        return document;
+    }
+
 
     @Transactional
     private void addToUserList(Document document) {
