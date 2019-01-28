@@ -10,14 +10,16 @@ public class DocumentReviewCommand {
 
     private String reviewerUsername;
     private String rejectionReason;
+    private DocumentState documentState;
 
     public DocumentReviewCommand() {
 
     }
 
-    public DocumentReviewCommand(String reviewerUsername, String rejectionReason) {
+    public DocumentReviewCommand(String reviewerUsername, String rejectionReason, String documentState) {
         this.reviewerUsername = reviewerUsername;
         this.rejectionReason = rejectionReason;
+        this.documentState = DocumentState.valueOf(documentState);
     }
 
     public String getReviewerUsername() {
@@ -34,5 +36,13 @@ public class DocumentReviewCommand {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public DocumentState getDocumentState() {
+        return documentState;
+    }
+
+    public void setDocumentState(String documentState) {
+        this.documentState = DocumentState.valueOf(documentState);
     }
 }

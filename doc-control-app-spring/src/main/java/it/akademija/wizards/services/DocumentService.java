@@ -9,7 +9,6 @@ import it.akademija.wizards.models.document.DocumentUpdateCommand;
 import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.repositories.DocumentTypeRepository;
 import it.akademija.wizards.repositories.UserRepository;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,68 +31,46 @@ public class DocumentService {
     //TODO exceptions for not found resources?
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getSubmittedDocuments() {
-        return documentRepository.findAll().stream().filter(document -> !document.getDocumentState().equals(DocumentState.CREATED)).map(document -> {
-            DocumentGetCommand documentGetCommand = new DocumentGetCommand();
-            BeanUtils.copyProperties(document, documentGetCommand);
-            documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
-            if (document.getReviewer() != null) documentGetCommand.setReviewerUsername(document.getReviewer().getUsername());
-            documentGetCommand.setDocumentTypeTitle(document.getDocumentType().getTitle());
-            return documentGetCommand;
-        }).collect(Collectors.toList());
+        return documentRepository.findAll().stream().filter(document -> !document.getDocumentState().equals(DocumentState.CREATED)).map(document -> mapEntityToGetCommand(document)
+        ).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getDocumentsToReview() {
-        return documentRepository.findAll().stream().filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED)).map(document -> {
-            DocumentGetCommand documentGetCommand = new DocumentGetCommand();
-            BeanUtils.copyProperties(document, documentGetCommand);
-            documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
-            if (document.getReviewer() != null) documentGetCommand.setReviewerUsername(document.getReviewer().getUsername());
-            documentGetCommand.setDocumentTypeTitle(document.getDocumentType().getTitle());
-            return documentGetCommand;
-        }).collect(Collectors.toList());
+        return documentRepository.findAll().stream().filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED)).map(document -> mapEntityToGetCommand(document)).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public DocumentGetCommand getDocumentsById(String documentId) {
-        DocumentGetCommand documentGetCommand = new DocumentGetCommand();
-        BeanUtils.copyProperties(documentRepository.findById(documentId).orElse(null), documentGetCommand);
-        return documentGetCommand;
+        return mapEntityToGetCommand(documentRepository.findByDocumentId(documentId));
     }
 
     @Transactional
     public void createDocument(DocumentCreateCommand documentCreateCommand){
-        Document document = new Document();
-        BeanUtils.copyProperties(documentCreateCommand, document);
-        document.setDocumentState(DocumentState.CREATED);
-        document.setCreationDate(new Date());
-        document.setDocumentType(documentTypeRepository.findByTitle(documentCreateCommand.getDocumentTypeTitle()));
-        document.setAuthor(userRepository.findByUsername(documentCreateCommand.getUsername()));
+        Document document = mapCreateCommandToEntity(documentCreateCommand);
         documentRepository.save(document);
+        addToUserList(document);
     }
 
     @Transactional
     public void submitDocument(String documentId) {
-        Document document = documentRepository.findById(documentId).orElse(null);
+        Document document = documentRepository.findByDocumentId(documentId);
         document.setSubmissionDate(new Date());
         document.setDocumentState(DocumentState.SUBMITTED);
     }
 
     @Transactional
-    public void reviewDocument(String documentId, DocumentState documentState, DocumentReviewCommand documentReviewCommand) {
-        Document document = documentRepository.findById(documentId).orElse(null);
-        document.setDocumentState(documentState);
+    public void reviewDocument(String documentId, DocumentReviewCommand documentReviewCommand) {
+        Document document = documentRepository.findByDocumentId(documentId);
+        document.setDocumentState(documentReviewCommand.getDocumentState());
         document.setReviewer(userRepository.findByUsername(documentReviewCommand.getReviewerUsername()));
-        if (documentState.equals(DocumentState.ACCEPTED)) document.setApprovalDate(new Date());
-        else if (documentState.equals(DocumentState.REJECTED)) {
-            document.setRejectionReason(documentReviewCommand.getRejectionReason());
-            document.setRejectionDate(new Date());
-        }
+        document.setReviewDate();
+        if (document.getDocumentState().equals(DocumentState.REJECTED)) document.setRejectionReason(documentReviewCommand.getRejectionReason());
     }
 
     @Transactional
     public void updateDocumentById(String documentId, DocumentUpdateCommand documentUpdateCommand) {
-        Document document = documentRepository.findById(documentId).orElse(null);
+        Document document = documentRepository.findByDocumentId(documentId);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
             BeanUtils.copyProperties(documentUpdateCommand, document);
             document.setDocumentType(documentTypeRepository.findByTitle(documentUpdateCommand.getDocumentTypeTitle()));
@@ -106,6 +83,34 @@ public class DocumentService {
 
     @Transactional
     public void deleteDocumentById(String documentId) {
-        documentRepository.deleteById(documentId);
+        documentRepository.deleteByDocumentId(documentId);
     }
+
+    private DocumentGetCommand mapEntityToGetCommand(Document document) {
+        DocumentGetCommand documentGetCommand = new DocumentGetCommand();
+        BeanUtils.copyProperties(document, documentGetCommand);
+        documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
+        if (document.getReviewer() != null) documentGetCommand.setReviewerUsername(document.getReviewer().getUsername());
+        documentGetCommand.setDocumentTypeTitle(document.getDocumentType().getTitle());
+        return documentGetCommand;
+    }
+
+    @Transactional(readOnly = true)
+    private Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
+        Document document = new Document();
+        BeanUtils.copyProperties(documentCreateCommand, document);
+        document.setDocumentState(DocumentState.CREATED);
+        document.setCreationDate(new Date());
+        document.setDocumentType(documentTypeRepository.findByTitle(documentCreateCommand.getDocumentTypeTitle()));
+        document.setAuthor(userRepository.findByUsername(documentCreateCommand.getUsername()));
+        document.setDocumentId();
+        return document;
+    }
+
+    @Transactional
+    private void addToUserList(Document document) {
+        userRepository.findByUsername(document.getAuthor().getUsername()).getDocuments().add(document);
+    }
+
+
 }

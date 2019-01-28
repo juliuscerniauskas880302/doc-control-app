@@ -9,6 +9,7 @@ public class DocumentCreateCommand {
     private String documentTypeTitle;
     private String title;
     private String description;
+    //TODO upload files (path?)
 
     public DocumentCreateCommand() {
     }
