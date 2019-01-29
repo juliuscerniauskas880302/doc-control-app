@@ -2,9 +2,7 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import it.akademija.wizards.models.usergroup.UserGroupAddDocTypesCommand;
-import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
-import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
+import it.akademija.wizards.models.usergroup.*;
 import it.akademija.wizards.services.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,6 +62,20 @@ public class UserGroupController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteUserGroup(@PathVariable(value = "id") String id) {
         userGroupService.deleteUserGroup(id);
+    }
+
+    @ApiOperation(value = "add user list to group")
+    @RequestMapping(value = "/{id}/users", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addUsersToGroup(@RequestBody GroupAddUsersCommand groupAddUsersCommand, @PathVariable(value = "id") String id) {
+        userGroupService.addUsersToGroup(groupAddUsersCommand, id);
+    }
+
+    @ApiOperation(value = "remove user list from group")
+    @RequestMapping(value = "/{id}/users", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void removeUsersFromGroup(@RequestBody GroupRemoveUsersCommand groupRemoveUsersCommand, @PathVariable(value = "id") String id) {
+        userGroupService.removeUsersFromGroup(groupRemoveUsersCommand, id);
     }
 
 }

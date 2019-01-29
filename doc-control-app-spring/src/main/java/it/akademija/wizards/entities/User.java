@@ -4,7 +4,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -28,8 +30,8 @@ public class User {
     @NotNull
     private String email;
 
-    @ManyToMany
-    private List<UserGroup> userGroups;
+    @ManyToMany(mappedBy = "users")
+    private Set<UserGroup> userGroups;
 
     private boolean isAdmin;
 
@@ -46,7 +48,6 @@ public class User {
                 @NotNull String firstname,
                 @NotNull String lastname,
                 @NotNull String email,
-                List<UserGroup> userGroups,
                 boolean isAdmin,
                 byte[] passwordSalt,
                 List<Document> documents) {
@@ -55,7 +56,7 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.userGroups = userGroups;
+        this.userGroups = new HashSet<>();
         this.isAdmin = isAdmin;
         this.passwordSalt = passwordSalt;
         this.documents = documents;
@@ -109,16 +110,22 @@ public class User {
         this.email = email;
     }
 
-    public List<UserGroup> getUserGroups() {
+    public Set<UserGroup> getUserGroups() {
         return userGroups;
+    }
+
+    public void setUserGroups(Set<UserGroup> userGroups) {
+        this.userGroups = userGroups;
     }
 
     public void addGroup(UserGroup userGroup){
         this.userGroups.add(userGroup);
+        userGroup.getUsers().add(this);
     }
 
-    public void setUserGroups(List<UserGroup> userGroups) {
-        this.userGroups = userGroups;
+    public void removeGroup(UserGroup userGroup) {
+        this.userGroups.remove(userGroup);
+        userGroup.getUsers().remove(this);
     }
 
     public boolean isAdmin() {
