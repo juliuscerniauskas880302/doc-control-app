@@ -55,7 +55,7 @@ public class UserService {
             BeanUtils.copyProperties(user, userGetCommand);
             return userGetCommand;
         } else {
-            throw new NullPointerException();
+            throw new NullPointerException("User does not exist");
         }
     }
 
