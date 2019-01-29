@@ -42,8 +42,8 @@ public class UserGroupService {
     }
 
     @Transactional(readOnly = true)
-    public UserGroupGetCommand getUserGroup(String groupId) {
-        UserGroup userGroup = userGroupRepository.findByUserGroupId(groupId);
+    public UserGroupGetCommand getUserGroup(String id) {
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
         UserGroupGetCommand userGroupGetCommand = new UserGroupGetCommand();
         BeanUtils.copyProperties(userGroup, userGroupGetCommand);
         return userGroupGetCommand;
@@ -53,19 +53,18 @@ public class UserGroupService {
     public void createUserGroup(UserGroupCreateCommand userGroupCreateCommand) {
         UserGroup userGroup = new UserGroup();
         BeanUtils.copyProperties(userGroupCreateCommand, userGroup);
-        userGroup.setUserGroupId(UUID.randomUUID().toString());
         userGroupRepository.save(userGroup);
     }
 
     @Transactional
-    public void updateUserGroup(UserGroupCreateCommand userGroupCreateCommand, String groupId) {
-        UserGroup userGroup = userGroupRepository.findByUserGroupId(groupId);
+    public void updateUserGroup(UserGroupCreateCommand userGroupCreateCommand, String id) {
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
         BeanUtils.copyProperties(userGroupCreateCommand, userGroup);
         userGroupRepository.save(userGroup);
     }
 
     @Transactional
-    public void deleteUserGroup(String groupId) {
-        userGroupRepository.deleteByUserGroupId(groupId);
+    public void deleteUserGroup(String id) {
+        userGroupRepository.deleteById(id);
     }
 }

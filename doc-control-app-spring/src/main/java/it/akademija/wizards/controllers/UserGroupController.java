@@ -32,10 +32,10 @@ public class UserGroupController {
     }
 
     @ApiOperation(value = "get group")
-    @RequestMapping(value = "/{groupId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserGroupGetCommand getUserGroup(@PathVariable(value = "groupId") String groupId) {
-        return userGroupService.getUserGroup(groupId);
+    public UserGroupGetCommand getUserGroup(@PathVariable(value = "id") String id) {
+        return userGroupService.getUserGroup(id);
     }
 
     @ApiOperation(value = "create user group")
@@ -46,24 +46,24 @@ public class UserGroupController {
     }
 
     @ApiOperation(value = "add document types to group")
-    @RequestMapping(value = "/{groupId}/doctypes", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/doctypes", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addDocTypesToGroup(@RequestBody UserGroupAddDocTypesCommand userGroupAddDocTypesCommand, @PathVariable(value = "groupId") String groupId) {
+    public void addDocTypesToGroup(@RequestBody UserGroupAddDocTypesCommand userGroupAddDocTypesCommand, @PathVariable(value = "id") String id) {
 
     }
 
     @ApiOperation(value = "update user group")
-    @RequestMapping(value = "/{groupId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateUserGroup(@RequestBody UserGroupCreateCommand userGroupCreateCommand, @PathVariable(value = "groupId") String groupId) {
-        userGroupService.updateUserGroup(userGroupCreateCommand, groupId);
+    public void updateUserGroup(@RequestBody UserGroupCreateCommand userGroupCreateCommand, @PathVariable(value = "id") String id) {
+        userGroupService.updateUserGroup(userGroupCreateCommand, id);
     }
 
     @ApiOperation(value = "delete user group")
-    @RequestMapping(value = "/{groupId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUserGroup(@PathVariable(value = "groupId") String groupId) {
-        userGroupService.deleteUserGroup(groupId);
+    public void deleteUserGroup(@PathVariable(value = "id") String id) {
+        userGroupService.deleteUserGroup(id);
     }
 
 }

@@ -1,6 +1,5 @@
 package it.akademija.wizards.services;
 
-
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.models.document.DocumentGetCommand;
@@ -15,8 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,14 +135,12 @@ public class UserService {
     public void addGroupsToUser(UserAddGroupsCommand userAddGroupsCommand, String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            List<String> userGroupIdList = Arrays.asList(userAddGroupsCommand.getGroupIdList());
-            List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupIdIn(userGroupIdList);
+            List<UserGroup> userGroupList = userGroupRepository.findAllById(userAddGroupsCommand.getId());
             for (UserGroup userGroup : userGroupList) {
                 if (!user.getUserGroups().contains(userGroup)) {
                     user.getUserGroups().add(userGroup);
                 }
             }
-            //user.setUserGroups(userGroupList);
             userRepository.save(user);
         }
     }
@@ -153,14 +148,12 @@ public class UserService {
     public void removeGroupsFromUser(UserRemoveGroupsCommand userRemoveGroupsCommand, String username){
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            List<String> userGroupIdList = Arrays.asList(userRemoveGroupsCommand.getGroupIdList());
-            List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupIdIn(userGroupIdList);
+            List<UserGroup> userGroupList = userGroupRepository.findAllById(userRemoveGroupsCommand.getId());
             for (UserGroup userGroup : userGroupList) {
                 if (user.getUserGroups().contains(userGroup)) {
                     user.getUserGroups().remove(userGroup);
                 }
             }
-            //user.setUserGroups(userGroupList);
             userRepository.save(user);
         }
     }
