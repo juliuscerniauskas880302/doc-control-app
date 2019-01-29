@@ -40,9 +40,9 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public DocumentGetCommand getDocumentsById(String documentId) {
+    public DocumentGetCommand getDocumentsById(String id) {
         //TODO DocumentNotFoundException
-        return mapEntityToGetCommand(documentRepository.findByDocumentId(documentId));
+        return mapEntityToGetCommand(documentRepository.findById(id).orElse(null));
     }
 
     @Transactional
@@ -56,20 +56,20 @@ public class DocumentService {
     }
 
     @Transactional
-    public void submitDocument(String documentId) {
+    public void submitDocument(String id) {
         // DocumentNotFoundException
-        Document document = documentRepository.findByDocumentId(documentId);
+        Document document = documentRepository.findById(id).orElse(null);
         document.setSubmissionDate(new Date());
         document.setDocumentState(DocumentState.SUBMITTED);
     }
 
     @Transactional
-    public void reviewDocument(String documentId, DocumentReviewCommand documentReviewCommand) {
+    public void reviewDocument(String id, DocumentReviewCommand documentReviewCommand) {
         //TODO check reviewer's group
         //TODO check if the found group can review this type of document
         //TODO UserCannotReviewDocumentException
         //DocumentNotFoundException
-        Document document = documentRepository.findByDocumentId(documentId);
+        Document document = documentRepository.findById(id).orElse(null);
         document.setDocumentState(documentReviewCommand.getDocumentState());
         document.setReviewer(userRepository.findByUsername(documentReviewCommand.getReviewerUsername()));
         document.setReviewDate();
@@ -77,9 +77,9 @@ public class DocumentService {
     }
 
     @Transactional
-    public void updateDocumentById(String documentId, DocumentUpdateCommand documentUpdateCommand) {
+    public void updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand) {
         // DocumentNotFoundException
-        Document document = documentRepository.findByDocumentId(documentId);
+        Document document = documentRepository.findById(id).orElse(null);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
             documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
         } else {
@@ -89,10 +89,10 @@ public class DocumentService {
     }
 
     @Transactional
-    public void deleteDocumentById(String documentId) {
+    public void deleteDocumentById(String id) {
         //only admin can delete documents? spring security?
         // DocumentNotFoundException
-        documentRepository.deleteByDocumentId(documentId);
+        documentRepository.deleteById(id);
     }
 
     private DocumentGetCommand mapEntityToGetCommand(Document document) {

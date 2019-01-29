@@ -1,14 +1,13 @@
 package it.akademija.wizards.models.document;
 
-import it.akademija.wizards.entities.DocumentType;
-import it.akademija.wizards.entities.User;
 import it.akademija.wizards.enums.DocumentState;
 
 import java.util.Date;
 
 public class DocumentGetCommand {
 
-    private String documentId;
+    private String id;
+    private String prefix;
     private String authorUsername;
     private DocumentState documentState;
     private String documentTypeTitle;
@@ -25,8 +24,9 @@ public class DocumentGetCommand {
 
     }
 
-    public DocumentGetCommand(String documentId, String authorUsername, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, String reviewerUsername, String rejectionReason) {
-        this.documentId = documentId;
+    public DocumentGetCommand(String id, String prefix, String authorUsername, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, String reviewerUsername, String rejectionReason) {
+        this.id = id;
+        this.prefix = prefix;
         this.authorUsername = authorUsername;
         this.documentState = documentState;
         this.documentTypeTitle = documentTypeTitle;
@@ -40,12 +40,20 @@ public class DocumentGetCommand {
         this.rejectionReason = rejectionReason;
     }
 
-    public String getDocumentId() {
-        return documentId;
+    public String getId() {
+        return id;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
 

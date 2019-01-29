@@ -37,10 +37,10 @@ public class DocumentController {
     }
 
     @ApiOperation(value = "get document by document Id")
-    @RequestMapping(value = "/{documentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public DocumentGetCommand getDocumentsById(@PathVariable String documentId){
-        return documentService.getDocumentsById(documentId);
+    public DocumentGetCommand getDocumentsById(@PathVariable String id){
+        return documentService.getDocumentsById(id);
     }
 
     @ApiOperation(value = "create a document")
@@ -51,30 +51,30 @@ public class DocumentController {
     }
 
     @ApiOperation(value = "submit document by document Id")
-    @RequestMapping(value = "/{documentId}/submit", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/submit", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.CREATED)
-    public void submitDocument(@PathVariable String documentId){
-        documentService.submitDocument(documentId);
+    public void submitDocument(@PathVariable String id){
+        documentService.submitDocument(id);
     }
 
     @ApiOperation(value = "review document by document Id")
-    @RequestMapping(value = "/review/{documentId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/review/{id}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewDocument(@PathVariable String documentId, @RequestBody DocumentReviewCommand documentReviewCommand){
-        documentService.reviewDocument(documentId, documentReviewCommand);
+    public void reviewDocument(@PathVariable String id, @RequestBody DocumentReviewCommand documentReviewCommand){
+        documentService.reviewDocument(id, documentReviewCommand);
     }
 
     @ApiOperation(value = "update document by document Id")
-    @RequestMapping(value = "/{documentId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateDocumentById(@PathVariable String documentId, @RequestBody DocumentUpdateCommand documentUpdateCommand){
-        documentService.updateDocumentById(documentId, documentUpdateCommand);
+    public void updateDocumentById(@PathVariable String id, @RequestBody DocumentUpdateCommand documentUpdateCommand){
+        documentService.updateDocumentById(id, documentUpdateCommand);
     }
 
     @ApiOperation(value = "delete document by document Id")
-    @RequestMapping(value = "/{documentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteDocumentById(@PathVariable String documentId){
-        documentService.deleteDocumentById(documentId);
+    public void deleteDocumentById(@PathVariable String id){
+        documentService.deleteDocumentById(id);
     }
 }
