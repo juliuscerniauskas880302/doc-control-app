@@ -56,11 +56,7 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentGetCommand getDocumentsById(String id) {
-        try {
-            return mapEntityToGetCommand(this.getDocumentByIdDB(id));
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException(e.getMessage());
-        }
+        return mapEntityToGetCommand(this.getDocumentByIdDB(id));
     }
 
     @Transactional
@@ -92,12 +88,7 @@ public class DocumentService {
 
     @Transactional
     public void submitDocument(String id) {
-        Document document;
-        try {
-            document = this.getDocumentByIdDB(id);
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException(e.getMessage());
-        }
+        Document document = this.getDocumentByIdDB(id);
         document.setSubmissionDate(new Date());
         document.setDocumentState(DocumentState.SUBMITTED);
     }
