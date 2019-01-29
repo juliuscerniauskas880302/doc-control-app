@@ -62,7 +62,7 @@ public class DocumentTypeService {
     @Transactional
     public void addSubmissionGroupsToDocType(String id, UserAddGroupsCommand userAddGroupsCommand) {
         DocumentType documentType = documentTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("resource not found"));
-        List<UserGroup> userGroups = userGroupRepository.findAllByUserGroupIdIn(userAddGroupsCommand.getGroupIdList());
+        List<UserGroup> userGroups = userGroupRepository.findAllById(userAddGroupsCommand.getId());
         for (UserGroup userGroup : userGroups) {
                 if (!documentType.getSubmissionUserGroups().contains(userGroup)) {
                     documentType.getSubmissionUserGroups().add(userGroup);
@@ -74,7 +74,7 @@ public class DocumentTypeService {
     @Transactional
     public void addReviewGroupsToDocType(String id, UserAddGroupsCommand userAddGroupsCommand) {
         DocumentType documentType = documentTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("resource not found"));
-        List<UserGroup> userGroups = userGroupRepository.findAllByUserGroupIdIn(userAddGroupsCommand.getGroupIdList());
+        List<UserGroup> userGroups = userGroupRepository.findAllById(userAddGroupsCommand.getId());
         for (UserGroup userGroup : userGroups) {
             if (!documentType.getReviewUserGroups().contains(userGroup)) {
                 documentType.getReviewUserGroups().add(userGroup);
