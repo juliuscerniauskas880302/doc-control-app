@@ -122,6 +122,8 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             return user.getDocuments().stream().map(document -> {
+                //TODO pastebejimas nuo migles. nesumapina normaliai username ir document type title, as documentService turiu privatu metoda mapEntitytoGetCommand kur viska padaro,
+                // bet galvoju gal sitas visas reikalas isvis turetu but document servise
                 DocumentGetCommand documentGetCommand = new DocumentGetCommand();
                 BeanUtils.copyProperties(document, documentGetCommand);
                 return documentGetCommand;
