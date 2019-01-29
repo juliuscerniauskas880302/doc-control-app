@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ResourceNotFound.css";
 
-export default function ResourceNotFound() {
+export default function ResourceNotFoundCompoentn() {
   return (
     <div class="container">
       <div class="row">

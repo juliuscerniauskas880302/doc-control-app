@@ -1,33 +1,44 @@
 import React, { Component } from "react";
 import Axios from "axios";
 
-export default class NewDocumentTypeForm extends Component {
+export default class NewGroupForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: "",
-      selectedDocTypeTitle: "",
+      selectedGroupTitle: "",
       newTitle: "",
-      allDocumentTypes: []
+      allGroups: []
     };
   }
 
   componentDidMount = () => {
-    this.getAllDocumentTypes();
+    this.getAllGroups();
   };
 
-  getAllDocumentTypes = () => {
-    Axios.get("http://localhost:8081/api/doctypes")
+  getAllGroups = () => {
+    Axios.get("http://localhost:8081/api/groups")
       .then(res => {
-        this.setState({ allDocumentTypes: res.data });
+        this.setState({ allGroups: res.data });
       })
       .catch(err => {
         console.log(err);
       });
   };
 
+  getSelectedGroupID = () => {
+    let id = "";
+    for (let i = 0; i < this.state.allGroups.length; i++) {
+      if (this.state.allGroups[i].title === this.state.selectedGroupTitle) {
+        id = this.state.allGroups[i].id;
+        break;
+      }
+    }
+    return id;
+  };
+
   onValueChangeHandler = event => {
-    if (event.target.name === "selectedDocTypeTitle") {
+    if (event.target.name === "selectedGroupTitle") {
       this.setState({ newTitle: event.target.value });
     }
     this.setState({ [event.target.name]: event.target.value });
@@ -37,61 +48,46 @@ export default class NewDocumentTypeForm extends Component {
     this.props.history.goBack();
   };
 
-  showAllDocumentTypes = () => {
-    if (this.state.allDocumentTypes.length === 0) {
+  showAllGroups = () => {
+    if (this.state.allGroups.length === 0) {
       return (
         <option value="" disabled>
-          No available document types...
+          No available groups...
         </option>
       );
-    } else {
-      let docTypes = this.state.allDocumentTypes.map(t => {
-        return (
-          <option key={t.title} value={t.title}>
-            {t.title}
-          </option>
-        );
-      });
-
-      return docTypes;
     }
+    let groups = this.state.allGroups.map(group => {
+      return (
+        <option key={group.title} value={group.title}>
+          {group.title}
+        </option>
+      );
+    });
+    return groups;
   };
 
-  onCLickAddNewDocTypeHandler = e => {
+  onClickAddNewGroupHandler = e => {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
-    Axios.post("http://localhost:8081/api/doctypes", title)
+    Axios.post("http://localhost:8081/api/groups", title)
       .then(res => {
         this.setState({ title: "" });
-        this.getAllDocumentTypes();
+        this.getAllGroups();
       })
       .catch(err => {
         console.log(err);
       });
   };
 
-  getSelectedDocTypeID = () => {
-    let id = "";
-    for (let i = 0; i < this.state.allDocumentTypes.length; i++) {
-      if (
-        this.state.allDocumentTypes[i].title === this.state.selectedDocTypeTitle
-      ) {
-        id = this.state.allDocumentTypes[i].id;
-        break;
-      }
-    }
-    return id;
-  };
-
   onDeleteCLickHandler = () => {
-    console.log(this.getSelectedDocTypeID());
+    console.log(this.getSelectedGroupID());
     Axios.delete(
-      "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID()
+      "http://localhost:8081/api/groups/" + this.getSelectedGroupID()
     )
       .then(res => {
         this.setState({ newTitle: "" });
-        this.getAllDocumentTypes();
+        this.getAllGroups();
       })
       .catch(err => {
         console.log(err);
@@ -103,17 +99,18 @@ export default class NewDocumentTypeForm extends Component {
     let title = { title: "" };
     title.title = this.state.newTitle;
     Axios.put(
-      "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID(),
+      "http://localhost:8081/api/groups/" + this.getSelectedGroupID(),
       title
     )
       .then(res => {
         this.setState({ newTitle: "" });
-        this.getAllDocumentTypes();
+        this.getAllGroups();
       })
       .catch(err => {
         console.log(err);
       });
   };
+
   render() {
     return (
       <div className="container-fluid">
@@ -121,19 +118,19 @@ export default class NewDocumentTypeForm extends Component {
           <div className="panel panel-primary">
             <div className="panel-body">
               <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase"> New Doc Type </strong>
+                <strong className="text-uppercase"> New Group </strong>
               </h3>
               <div className="mx-1">
-                <form onSubmit={e => this.onCLickAddNewDocTypeHandler(e)}>
+                <form onSubmit={e => this.onClickAddNewGroupHandler(e)}>
                   <div className="input-group mb-1">
                     <div className="input-group-prepend">
                       <span className="input-group-text">Title</span>
                     </div>
                     <input
                       onChange={event => this.onValueChangeHandler(event)}
-                      value={this.state.title}
                       type="text"
                       name="title"
+                      value={this.state.title}
                       className="form-control"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                       required
@@ -163,25 +160,22 @@ export default class NewDocumentTypeForm extends Component {
           </div>
         </div>
 
-        {/*  */}
         <div className="row justify-content-center">
           <div className="panel panel-primary">
             <div className="panel-body">
               <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase"> Update Doc Type </strong>
+                <strong className="text-uppercase"> Update Group </strong>
               </h3>
               <div className="mx-1">
-                <span className="input-group-text group">
-                  All document types
-                </span>
+                <span className="input-group-text group">All groups</span>
                 <div className="input-group mb-1">
                   <select
                     className="form-control"
                     size="5"
                     onChange={this.onValueChangeHandler}
-                    name="selectedDocTypeTitle"
+                    name="selectedGroupTitle"
                   >
-                    {this.showAllDocumentTypes()}
+                    {this.showAllGroups()}
                   </select>
                 </div>
               </div>

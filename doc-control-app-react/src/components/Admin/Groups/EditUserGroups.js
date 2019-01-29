@@ -66,7 +66,7 @@ export default class EditUserGroups extends Component {
     } else {
       let groups = this.state.userGroups.map(group => {
         return (
-          <option key={group.title} value={group.userGroupId}>
+          <option key={group.title} value={group.id}>
             {group.title}
           </option>
         );
@@ -98,7 +98,7 @@ export default class EditUserGroups extends Component {
 
           if (shouldShow)
             return (
-              <option key={group.title} value={group.userGroupId}>
+              <option key={group.title} value={group.id}>
                 {group.title}
               </option>
             );

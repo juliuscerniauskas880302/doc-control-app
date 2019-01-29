@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import User from "./User";
+import UserComponent from "./UserComponent";
 import Axios from "axios";
 export class UserContainer extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ export class UserContainer extends Component {
     let users = this.state.users.map(user => {
       let isAdmin = user.isAdmin === false ? "Simple user" : "Administrator";
       return (
-        <User
+        <UserComponent
           key={user.username}
           firstname={user.firstname}
           lastname={user.lastname}
