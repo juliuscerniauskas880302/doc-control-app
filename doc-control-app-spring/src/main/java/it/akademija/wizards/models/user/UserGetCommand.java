@@ -1,8 +1,5 @@
 package it.akademija.wizards.models.user;
 
-import it.akademija.wizards.entities.UserGroup;
-import java.util.List;
-
 public class UserGetCommand {
 
     private String username;

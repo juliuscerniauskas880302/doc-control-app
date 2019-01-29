@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,7 +66,7 @@ public class DocumentService {
         User author = userRepository.findByUsername(documentCreateCommand.getUsername());
         if (author.equals(null)) throw new IllegalArgumentException("user not found");
         //TODO find author's groups
-        List <UserGroup> userGroups = author.getUserGroups();
+        Set<UserGroup> userGroups = author.getUserGroups();
         //TODO check if the found group can create this type of document
         boolean isAllowed = false;
         for (UserGroup userGroup: userGroups) {
@@ -104,7 +105,7 @@ public class DocumentService {
         if (reviewer.equals(null)) throw new IllegalArgumentException("user not found");
         else {
             //TODO check reviewer's groups
-            List <UserGroup> userGroups = reviewer.getUserGroups();
+            Set<UserGroup> userGroups = reviewer.getUserGroups();
             //TODO check if the found group can review this type of document
             boolean isAllowed = false;
             for (UserGroup userGroup: userGroups) {
