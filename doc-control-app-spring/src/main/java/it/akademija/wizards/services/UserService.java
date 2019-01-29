@@ -138,7 +138,7 @@ public class UserService {
     public void addGroupsToUser(UserAddGroupsCommand userAddGroupsCommand, String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            List<String> userGroupIdList = Arrays.asList(userAddGroupsCommand.getGroupIdList());
+            List<String> userGroupIdList = userAddGroupsCommand.getGroupIdList();
             List<UserGroup> userGroupList = userGroupRepository.findAllByUserGroupIdIn(userGroupIdList);
             for (UserGroup userGroup : userGroupList) {
                 if (!user.getUserGroups().contains(userGroup)) {
