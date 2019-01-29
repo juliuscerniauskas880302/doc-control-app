@@ -85,6 +85,7 @@ export default class NewDocumentTypeForm extends Component {
   };
 
   onDeleteCLickHandler = () => {
+    console.log(this.getSelectedDocTypeID());
     Axios.delete(
       "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID()
     )

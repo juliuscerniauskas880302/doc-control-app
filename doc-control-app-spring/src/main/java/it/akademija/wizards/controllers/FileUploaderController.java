@@ -1,15 +1,17 @@
 package it.akademija.wizards.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import io.swagger.annotations.*;
+import it.akademija.wizards.models.document.DocumentCreateCommand;
+import it.akademija.wizards.services.DocumentService;
 import it.akademija.wizards.services.FileUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,22 +20,39 @@ import java.io.IOException;
 @RequestMapping("/api/files")
 public class FileUploaderController {
 
+
     @Autowired
     private FileUploaderService fileUploaderService;
 
+    /*   First argument requires string in the form of :
+    {
+      "description": "string",
+      "documentTypeTitle": "string",
+      "title": "string",
+      "username": "string"
+    }
+    */
     @PostMapping("/upload")
+    @ResponseBody
     @ApiOperation(value = "Make a POST request to upload the file",
-            produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+            produces = "application/json", consumes = "multipart/form-data")
+
+
     public ResponseEntity<String> uploadFile(
-            @ApiParam(name = "file", value = "Select the file to Upload", required = true)
-            @RequestPart("file") MultipartFile[] file) {
-        for (int i = 0; i < file.length; i++) {
-            System.out.println("File size: " + file[i].getSize() + "\nFile name: " + file[i].getOriginalFilename());
-        }
+            @RequestPart String model,
+            @RequestPart MultipartFile multipartFile
+    ) {
+
+        System.out.println(model);
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            fileUploaderService.uploadFile(file);
-        } catch (IOException ex) {
-            return new ResponseEntity<String>("Failed to upload", HttpStatus.BAD_REQUEST);
+            DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
+            fileUploaderService.uploadFile(multipartFile, documentCreateCommand);
+
+        } catch(IOException ex) {
+            System.out.println(ex);
+            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
+
         }
         return new ResponseEntity<String>("Done", HttpStatus.OK);
     }

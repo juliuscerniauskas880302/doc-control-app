@@ -158,7 +158,7 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    private Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
+    public Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
         Document document = new Document();
         DocumentType documentType = documentTypeRepository.findByTitle(documentCreateCommand.getDocumentTypeTitle());
         User author = userRepository.findByUsername(documentCreateCommand.getUsername());
@@ -187,7 +187,7 @@ public class DocumentService {
 
 
     @Transactional
-    private void addToUserList(Document document) {
+    public void addToUserList(Document document) {
         User author = userRepository.findByUsername(document.getAuthor().getUsername());
         //TODO UserNotFoundException
         if (author.equals(null)) throw new IllegalArgumentException("user not found");

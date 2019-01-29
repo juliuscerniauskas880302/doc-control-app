@@ -11,7 +11,7 @@ import java.util.Date;
 public class Document {
 
     @Id
-    @GeneratedValue(generator ="uuid")
+    @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
@@ -75,7 +75,6 @@ public class Document {
         this.reviewer = reviewer;
         this.rejectionReason = rejectionReason;
         this.path = path;
-        this.prefix = author.getUsername() + title + System.currentTimeMillis();
     }
 
     public String getPrefix() {
@@ -83,7 +82,7 @@ public class Document {
     }
 
     public void setPrefix() {
-        this.prefix = author.getUsername() + title + System.currentTimeMillis();
+      this.prefix = "_" + author.getUsername() + "_" + System.currentTimeMillis();
     }
 
     public User getAuthor() {

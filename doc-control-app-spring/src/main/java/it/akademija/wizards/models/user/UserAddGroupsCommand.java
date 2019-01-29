@@ -6,21 +6,22 @@ import java.util.List;
 public class UserAddGroupsCommand {
 
     @NotNull
-    private List<String> groupIdList;
+
+    private List<String> id;
 
     public UserAddGroupsCommand() {
 
     }
 
-    public UserAddGroupsCommand(@NotNull List<String> groupIdList) {
-        this.groupIdList = groupIdList;
+    public UserAddGroupsCommand(@NotNull List<String> id) {
+        this.id = id;
     }
 
-    public List<String> getGroupIdList() {
-        return groupIdList;
+    public List<String> getId() {
+        return id;
     }
 
-    public void setGroupIdList(List<String> groupIdList) {
-        this.groupIdList = groupIdList;
+    public void setId(List<String> id) {
+        this.id = id;
     }
 }
