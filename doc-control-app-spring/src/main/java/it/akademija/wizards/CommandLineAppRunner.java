@@ -44,8 +44,8 @@ public class CommandLineAppRunner implements CommandLineRunner {
         List<String> allGroups = new ArrayList<>();
         List<String> administration = new ArrayList<>();
         for (UserGroupGetCommand userGroupGetCommand: userGroups) {
-            allGroups.add(userGroupGetCommand.getUserGroupId());
-            if(userGroupGetCommand.getTitle().equals("administracija")) administration.add(userGroupGetCommand.getUserGroupId());
+            allGroups.add(userGroupGetCommand.getId());
+            if(userGroupGetCommand.getTitle().equals("administracija")) administration.add(userGroupGetCommand.getId());
         }
         //add all groups to username migle
         userService.addGroupsToUser(new UserAddGroupsCommand(allGroups), "migle");
