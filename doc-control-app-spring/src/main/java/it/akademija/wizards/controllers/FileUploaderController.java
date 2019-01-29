@@ -1,5 +1,8 @@
 package it.akademija.wizards.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import io.swagger.annotations.*;
 import it.akademija.wizards.models.document.DocumentCreateCommand;
 import it.akademija.wizards.services.DocumentService;
@@ -17,23 +20,40 @@ import java.io.IOException;
 @RequestMapping("/api/files")
 public class FileUploaderController {
 
+
     @Autowired
     private FileUploaderService fileUploaderService;
 
-    @PostMapping("/upload/{id}")
+    /*   First argument requires string in the form of :
+    {
+      "description": "string",
+      "documentTypeTitle": "string",
+      "title": "string",
+      "username": "string"
+    }
+    */
+    @PostMapping("/upload")
+    @ResponseBody
     @ApiOperation(value = "Make a POST request to upload the file",
-            produces = "application/json", consumes = "multipart/form-data, application/json")
+            produces = "application/json", consumes = "multipart/form-data")
 
 
     public ResponseEntity<String> uploadFile(
-            @RequestBody DocumentCreateCommand command,
-            @RequestPart("file") MultipartFile multipartFile
+            @RequestPart String model,
+            @RequestPart MultipartFile multipartFile
     ) {
-//        try {
-//            fileUploaderService.uploadFile(file);
-//        } catch (IOException ex) {
-//            return new ResponseEntity<String>("Failed to upload", HttpStatus.BAD_REQUEST);
-//        }
+
+        System.out.println(model);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
+            fileUploaderService.uploadFile(multipartFile, documentCreateCommand);
+
+        } catch(IOException ex) {
+            System.out.println(ex);
+            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
+
+        }
         return new ResponseEntity<String>("Done", HttpStatus.OK);
     }
 }

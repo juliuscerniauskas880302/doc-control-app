@@ -37,8 +37,9 @@ public class FileUploaderService {
     public void uploadFile(MultipartFile multipartFile, DocumentCreateCommand documentCreateCommand) throws IOException {
         Document document = documentService.mapCreateCommandToEntity(documentCreateCommand);
         Document savedDocument = documentRepository.save(document);
+        documentService.addToUserList(document);
 
-
+        System.out.println(savedDocument);
         File path = new File("documents/" + savedDocument.getAuthor().getUsername());
         path.mkdirs();
         String originalFileName = multipartFile.getOriginalFilename();

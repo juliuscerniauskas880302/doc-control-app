@@ -128,7 +128,7 @@ public class DocumentService {
 
 
     @Transactional
-    private void addToUserList(Document document) {
+    public void addToUserList(Document document) {
         userRepository.findByUsername(document.getAuthor().getUsername()).getDocuments().add(document);
     }
 
