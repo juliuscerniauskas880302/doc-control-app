@@ -15,6 +15,7 @@ import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,23 +56,24 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentGetCommand getDocumentsById(String id) {
-        //TODO DocumentNotFoundException
-        return mapEntityToGetCommand(
-                documentRepository.findById(id)
-                        .orElseThrow(() -> new IllegalArgumentException("resource not found")));
+        try {
+            return mapEntityToGetCommand(this.getDocumentByIdDB(id));
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
     }
 
     @Transactional
     public void createDocument(DocumentCreateCommand documentCreateCommand){
-        User author = userRepository.findByUsername(documentCreateCommand.getUsername());
-        if (author.equals(null)) throw new IllegalArgumentException("user not found");
+        User author = this.getUserByUsernameDB(documentCreateCommand.getUsername());
+        DocumentType createdDocumentType = this.getDocTypeByTitleDB(documentCreateCommand.getDocumentTypeTitle());
         //TODO find author's groups
         Set<UserGroup> userGroups = author.getUserGroups();
         //TODO check if the found group can create this type of document
         boolean isAllowed = false;
         for (UserGroup userGroup: userGroups) {
-            for (DocumentType documentType: userGroup.getSubmissionDocumentType()) {
-                if (documentCreateCommand.getDocumentTypeTitle().equals(documentType.getTitle())) {
+            for (DocumentType allowedDocumentType: userGroup.getSubmissionDocumentType()) {
+                if (createdDocumentType.equals(allowedDocumentType)) {
                     isAllowed = true;
                     break;
                 }
@@ -90,27 +92,27 @@ public class DocumentService {
 
     @Transactional
     public void submitDocument(String id) {
-        // DocumentNotFoundException
-        Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("resource not found"));
+        Document document;
+        try {
+            document = this.getDocumentByIdDB(id);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
         document.setSubmissionDate(new Date());
         document.setDocumentState(DocumentState.SUBMITTED);
     }
 
     @Transactional
     public void reviewDocument(String id, DocumentReviewCommand documentReviewCommand) {
-        User reviewer = userRepository.findByUsername(documentReviewCommand.getReviewerUsername());
-        Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("document not found"));
-        if (reviewer.equals(null)) throw new IllegalArgumentException("user not found");
-        else {
-            //TODO check reviewer's groups
+        User reviewer = this.getUserByUsernameDB(documentReviewCommand.getReviewerUsername());
+        Document document = this.getDocumentByIdDB(id);
+        //TODO check reviewer's groups
             Set<UserGroup> userGroups = reviewer.getUserGroups();
             //TODO check if the found group can review this type of document
             boolean isAllowed = false;
             for (UserGroup userGroup: userGroups) {
-                for (DocumentType documentType: userGroup.getSubmissionDocumentType()) {
-                    if (document.getDocumentType().getTitle().equals(documentType.getTitle())) {
+                for (DocumentType allowedDocumentType: userGroup.getSubmissionDocumentType()) {
+                    if (document.getDocumentType().equals(allowedDocumentType)) {
                         isAllowed = true;
                         break;
                     }
@@ -127,25 +129,19 @@ public class DocumentService {
             }
         }
 
-    }
-
     @Transactional
     public void updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand) {
-        // DocumentNotFoundException
-        Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("document not found"));
+        Document document = this.getDocumentByIdDB(id);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
             documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
         } else {
             //TODO SubmittedDocumentUpdateNotAllowedException
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("submitted documents cannot be updated");
         }
     }
 
     @Transactional
     public void deleteDocumentById(String id) {
-        //only admin can delete documents? spring security?
-        // DocumentNotFoundException
         documentRepository.deleteById(id);
     }
 
@@ -160,40 +156,52 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
-        Document document = new Document();
-        DocumentType documentType = documentTypeRepository.findByTitle(documentCreateCommand.getDocumentTypeTitle());
-        User author = userRepository.findByUsername(documentCreateCommand.getUsername());
-        //TODO UserNotFoundException
-        if (author.equals(null)) throw new IllegalArgumentException("user not found");
-        //TODO DocumentTypeNotFoundException
-        if (documentType.equals(null)) throw new IllegalArgumentException("document type not found");
-        BeanUtils.copyProperties(documentCreateCommand, document);
-        document.setDocumentState(DocumentState.CREATED);
-        document.setCreationDate(new Date());
-        document.setDocumentType(documentType);
-        document.setAuthor(author);
-        document.setPrefix();
-        return document;
+            Document document = new Document();
+            DocumentType documentType = this.getDocTypeByTitleDB(documentCreateCommand.getDocumentTypeTitle());
+            User author = this.getUserByUsernameDB(documentCreateCommand.getUsername());
+            BeanUtils.copyProperties(documentCreateCommand, document);
+            document.setDocumentState(DocumentState.CREATED);
+            document.setCreationDate(new Date());
+            document.setDocumentType(documentType);
+            document.setAuthor(author);
+            document.setPrefix();
+            return document;
     }
 
     @Transactional(readOnly = true)
     private Document mapUpdateCommandToEntity(DocumentUpdateCommand documentUpdateCommand, Document document) {
-        DocumentType documentType = documentTypeRepository.findByTitle(documentUpdateCommand.getDocumentTypeTitle());
-        if (documentType.equals(null)) throw new IllegalArgumentException("document type not found");
-        BeanUtils.copyProperties(documentUpdateCommand, document);
-        //DocumentTypeNotFoundException
-        document.setDocumentType(documentType);
-        return document;
+            DocumentType documentType = this.getDocTypeByTitleDB(documentUpdateCommand.getDocumentTypeTitle());
+            BeanUtils.copyProperties(documentUpdateCommand, document);
+            document.setDocumentType(documentType);
+            return document;
     }
 
 
     @Transactional
     public void addToUserList(Document document) {
-        User author = userRepository.findByUsername(document.getAuthor().getUsername());
-        //TODO UserNotFoundException
-        if (author.equals(null)) throw new IllegalArgumentException("user not found");
+        User author = this.getUserByUsernameDB(document.getAuthor().getUsername());
         author.getDocuments().add(document);
     }
+
+    @Transactional
+    private User getUserByUsernameDB(String username) throws ResourceNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) throw new ResourceNotFoundException("user not found");
+        else return user;
+    }
+
+    @Transactional
+    private DocumentType getDocTypeByTitleDB(String title) throws ResourceNotFoundException {
+        DocumentType documentType = documentTypeRepository.findByTitle(title);
+        if (documentType == null) throw new ResourceNotFoundException("document type not found");
+        else return documentType;
+    }
+
+    @Transactional
+    private Document getDocumentByIdDB(String id) throws ResourceNotFoundException {
+        return documentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("document not found"));
+    }
+
 
 
 }
