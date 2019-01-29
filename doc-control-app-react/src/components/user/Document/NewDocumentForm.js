@@ -129,7 +129,7 @@ export default class NewDocumentForm extends Component {
                       placeholder="Title (Document title)"
                       className="form-control input-md"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                      required
+                      // required
                     />
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default class NewDocumentForm extends Component {
                     id="select type"
                     name="selectedDocumentType"
                     type="text"
-                    required
+                    // required
                   >
                     {this.showAvailableDocumentTypes()}
                   </select>
@@ -184,7 +184,7 @@ export default class NewDocumentForm extends Component {
                     rows="10"
                     id="Description (max 200 words)"
                     name="description (max 200 words)"
-                    required
+                    // required
                   />
                 </div>
               </div>
