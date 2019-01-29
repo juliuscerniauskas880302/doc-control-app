@@ -17,7 +17,7 @@ public class Document {
 
     @NotNull
     @Column(unique = true)
-    private String documentId;
+    private String prefix;
 
     @ManyToOne
     private User author;
@@ -75,15 +75,15 @@ public class Document {
         this.reviewer = reviewer;
         this.rejectionReason = rejectionReason;
         this.path = path;
-        this.documentId = author.getUsername() + title + System.currentTimeMillis();
+        this.prefix = author.getUsername() + title + System.currentTimeMillis();
     }
 
-    public String getDocumentId() {
-        return documentId;
+    public String getPrefix() {
+        return prefix;
     }
 
     public void setDocumentId() {
-        this.documentId = author.getUsername() + title + System.currentTimeMillis();
+        this.prefix = author.getUsername() + title + System.currentTimeMillis();
     }
 
     public User getAuthor() {
