@@ -1,6 +1,5 @@
 package it.akademija.wizards.security;
 
-import org.apache.commons.codec.binary.Hex;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
