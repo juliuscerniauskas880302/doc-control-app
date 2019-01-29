@@ -90,11 +90,9 @@ public class UserGroup {
 
     public void addUser(User user) {
         this.users.add(user);
-        user.getUserGroups().add(this);
     }
 
     public void removeUser(User user) {
         this.users.remove(user);
-        user.getUserGroups().remove(this);
     }
 }

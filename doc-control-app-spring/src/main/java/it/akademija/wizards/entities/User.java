@@ -120,12 +120,12 @@ public class User {
 
     public void addGroup(UserGroup userGroup){
         this.userGroups.add(userGroup);
-        userGroup.getUsers().add(this);
+        userGroup.addUser(this);
     }
 
     public void removeGroup(UserGroup userGroup) {
         this.userGroups.remove(userGroup);
-        userGroup.getUsers().remove(this);
+        userGroup.removeUser(this);
     }
 
     public boolean isAdmin() {
