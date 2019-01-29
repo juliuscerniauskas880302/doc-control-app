@@ -1,25 +1,26 @@
 package it.akademija.wizards.models.user;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class UserAddGroupsCommand {
 
     @NotNull
-    private String[] groupIdList;
+    private List<String> id;
 
     public UserAddGroupsCommand() {
 
     }
 
-    public UserAddGroupsCommand(@NotNull String[] groupIdList) {
-        this.groupIdList = groupIdList;
+    public UserAddGroupsCommand(@NotNull List<String> id) {
+        this.id = id;
     }
 
-    public String[] getGroupIdList() {
-        return groupIdList;
+    public List<String> getId() {
+        return id;
     }
 
-    public void setGroupIdList(String[] groupIdList) {
-        this.groupIdList = groupIdList;
+    public void setId(List<String> id) {
+        this.id = id;
     }
 }

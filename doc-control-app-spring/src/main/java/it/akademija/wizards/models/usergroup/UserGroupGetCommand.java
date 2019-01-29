@@ -2,24 +2,24 @@ package it.akademija.wizards.models.usergroup;
 
 public class UserGroupGetCommand {
 
-    private String userGroupId;
+    private String id;
     private String title;
 
     public UserGroupGetCommand() {
 
     }
 
-    public UserGroupGetCommand(String userGroupId, String title) {
-        this.userGroupId = userGroupId;
+    public UserGroupGetCommand(String id, String title) {
+        this.id = id;
         this.title = title;
     }
 
-    public String getUserGroupId() {
-        return userGroupId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserGroupId(String userGroupId) {
-        this.userGroupId = userGroupId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {

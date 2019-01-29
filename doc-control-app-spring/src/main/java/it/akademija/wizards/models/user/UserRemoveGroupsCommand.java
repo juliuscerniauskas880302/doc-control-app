@@ -1,25 +1,26 @@
 package it.akademija.wizards.models.user;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class UserRemoveGroupsCommand {
 
     @NotNull
-    private String[] groupIdList;
+    private List<String> id;
 
     public UserRemoveGroupsCommand() {
 
     }
 
-    public UserRemoveGroupsCommand(@NotNull String[] groupIdList) {
-        this.groupIdList = groupIdList;
+    public UserRemoveGroupsCommand(@NotNull List<String> id) {
+        this.id = id;
     }
 
-    public String[] getGroupIdList() {
-        return groupIdList;
+    public List<String> getId() {
+        return id;
     }
 
-    public void setGroupIdList(String[] groupIdList) {
-        this.groupIdList = groupIdList;
+    public void setId(List<String> id) {
+        this.id = id;
     }
 }
