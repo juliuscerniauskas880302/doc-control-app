@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import it.akademija.wizards.models.documenttype.DocumentTypeCreateCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
+import it.akademija.wizards.models.user.UserAddGroupsCommand;
 import it.akademija.wizards.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,20 @@ public class DocumentTypeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void deleteDocumentType(@PathVariable String id){
         documentTypeService.deleteDocumentType(id);
+    }
+
+    @ApiOperation(value = "add submission groups to doc type")
+    @RequestMapping(value="/{id}/submission", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addSubmissionGroupsToDocType(@PathVariable String id, @RequestBody UserAddGroupsCommand userAddGroupsCommand) {
+        documentTypeService.addSubmissionGroupsToDocType(id, userAddGroupsCommand);
+    }
+
+    @ApiOperation(value = "add review groups to doc type")
+    @RequestMapping(value="/{id}/review", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addReviewGroupsToDocType(@PathVariable String id, @RequestBody UserAddGroupsCommand userAddGroupsCommand) {
+        documentTypeService.addReviewGroupsToDocType(id, userAddGroupsCommand);
     }
 
 

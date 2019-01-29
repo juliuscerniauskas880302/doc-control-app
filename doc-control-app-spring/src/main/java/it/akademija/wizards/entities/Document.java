@@ -82,7 +82,7 @@ public class Document {
     }
 
     public void setPrefix() {
-        this.prefix = "_" + author.getUsername() + "_" + System.currentTimeMillis();
+      this.prefix = "_" + author.getUsername() + "_" + System.currentTimeMillis();
     }
 
     public User getAuthor() {

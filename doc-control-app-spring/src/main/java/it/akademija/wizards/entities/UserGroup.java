@@ -18,15 +18,11 @@ public class UserGroup {
     private String title;
 
 //    Types that this group can submit
-    @ManyToMany
-    @JoinTable(name = "submission_type", joinColumns = @JoinColumn(name="user_group"),
-            inverseJoinColumns = @JoinColumn(name="submission_type_id") )
+    @ManyToMany(mappedBy = "submissionUserGroups")
     private List <DocumentType> submissionDocumentType;
 
 //    Types that this group can review
-    @ManyToMany
-    @JoinTable(name = "review_type", joinColumns = @JoinColumn(name="user_group"),
-        inverseJoinColumns = @JoinColumn(name="review_type_id") )
+    @ManyToMany(mappedBy = "reviewUserGroups")
     private List <DocumentType> reviewDocumentType;
 
     public UserGroup() {}
