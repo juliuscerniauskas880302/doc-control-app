@@ -19,7 +19,6 @@ public class PBKDF2Hash {
         try {
             SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ALGORITHM);
             byte[] salt = generateSalt();
-            System.out.println("create salt: " + salt);
             byte[] hash = calculateHash(secretKeyFactory, password, salt);
             boolean correct = verifyPassword(secretKeyFactory, hash, password, salt);
             if (correct) {

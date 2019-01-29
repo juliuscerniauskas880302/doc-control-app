@@ -2,6 +2,7 @@ package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
+import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.usergroup.GroupAddUsersCommand;
 import it.akademija.wizards.models.usergroup.GroupRemoveUsersCommand;
 import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
@@ -95,6 +96,20 @@ public class UserGroupService {
                 userGroup.removeUser(user);
             }
             userGroupRepository.save(userGroup);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserGetCommand> getGroupsUsers(String id) {
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        if (userGroup != null) {
+            return userGroup.getUsers().stream().map(user -> {
+                UserGetCommand userGetCommand = new UserGetCommand();
+                BeanUtils.copyProperties(user, userGetCommand);
+                return userGetCommand;
+            }).collect(Collectors.toList());
+        } else {
+            throw new NullPointerException("User group does not exist");
         }
     }
 }

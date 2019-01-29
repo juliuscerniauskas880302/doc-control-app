@@ -2,6 +2,7 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.usergroup.*;
 import it.akademija.wizards.services.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,13 @@ public class UserGroupController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void removeUsersFromGroup(@RequestBody GroupRemoveUsersCommand groupRemoveUsersCommand, @PathVariable(value = "id") String id) {
         userGroupService.removeUsersFromGroup(groupRemoveUsersCommand, id);
+    }
+
+    @ApiOperation(value = "get users in group")
+    @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserGetCommand> getGroupsUsers(@PathVariable(value = "id") String id) {
+        return userGroupService.getGroupsUsers(id);
     }
 
 }

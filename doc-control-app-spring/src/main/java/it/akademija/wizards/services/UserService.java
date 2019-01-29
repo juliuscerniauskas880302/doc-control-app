@@ -137,9 +137,6 @@ public class UserService {
         if (user != null) {
             List<UserGroup> userGroupList = userGroupRepository.findAllById(userAddGroupsCommand.getId());
             for (UserGroup userGroup : userGroupList) {
-//                if (!user.getUserGroups().contains(userGroup)) {
-//                    user.getUserGroups().add(userGroup);
-//                }
                 user.addGroup(userGroup);
             }
             userRepository.save(user);
@@ -151,9 +148,6 @@ public class UserService {
         if (user != null) {
             List<UserGroup> userGroupList = userGroupRepository.findAllById(userRemoveGroupsCommand.getId());
             for (UserGroup userGroup : userGroupList) {
-//                if (user.getUserGroups().contains(userGroup)) {
-//                    user.getUserGroups().remove(userGroup);
-//                }
                 user.removeGroup(userGroup);
             }
             userRepository.save(user);

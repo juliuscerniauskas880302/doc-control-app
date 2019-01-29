@@ -101,7 +101,7 @@ public class UserController {
 
     @ApiOperation(value = "get user groups")
     @RequestMapping(value = "/{username}/groups", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public List<UserGroupGetCommand> getUsersGroups(@PathVariable(value = "username") String username) {
         return userService.getUsersGroups(username);
     }
