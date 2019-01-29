@@ -1,9 +1,14 @@
 package it.akademija.wizards.services;
 
+import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
+import it.akademija.wizards.models.user.UserGetCommand;
+import it.akademija.wizards.models.usergroup.GroupAddUsersCommand;
+import it.akademija.wizards.models.usergroup.GroupRemoveUsersCommand;
 import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.UserGroupRepository;
+import it.akademija.wizards.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +23,12 @@ import java.util.stream.Collectors;
 public class UserGroupService {
 
     private UserGroupRepository userGroupRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserGroupService(UserGroupRepository userGroupRepository) {
+    public UserGroupService(UserGroupRepository userGroupRepository, UserRepository userRepository) {
         this.userGroupRepository = userGroupRepository;
+        this.userRepository = userRepository;
     }
 
     public UserGroupRepository getUserGroupRepository() {
@@ -66,5 +73,43 @@ public class UserGroupService {
     @Transactional
     public void deleteUserGroup(String id) {
         userGroupRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void addUsersToGroup(GroupAddUsersCommand groupAddUsersCommand, String id) {
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        if (userGroup != null) {
+            List<User> userList = userRepository.findAllByUsernameIn(groupAddUsersCommand.getUsers());
+            for (User user: userList) {
+                userGroup.addUser(user);
+            }
+            userGroupRepository.save(userGroup);
+        }
+    }
+
+    @Transactional
+    public void removeUsersFromGroup(GroupRemoveUsersCommand groupRemoveUsersCommand, String id) {
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        if (userGroup != null) {
+            List<User> userList = userRepository.findAllByUsernameIn(groupRemoveUsersCommand.getUsers());
+            for (User user: userList) {
+                userGroup.removeUser(user);
+            }
+            userGroupRepository.save(userGroup);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserGetCommand> getGroupsUsers(String id) {
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        if (userGroup != null) {
+            return userGroup.getUsers().stream().map(user -> {
+                UserGetCommand userGetCommand = new UserGetCommand();
+                BeanUtils.copyProperties(user, userGetCommand);
+                return userGetCommand;
+            }).collect(Collectors.toList());
+        } else {
+            throw new NullPointerException("User group does not exist");
+        }
     }
 }
