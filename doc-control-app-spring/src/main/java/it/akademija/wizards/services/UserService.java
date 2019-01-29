@@ -120,7 +120,7 @@ public class UserService {
         return false;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<DocumentGetCommand> getUserDocuments(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
@@ -165,6 +165,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<UserGroupGetCommand> getUsersGroups(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
