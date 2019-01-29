@@ -105,7 +105,7 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    private Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
+    public Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
         Document document = new Document();
         BeanUtils.copyProperties(documentCreateCommand, document);
         document.setDocumentState(DocumentState.CREATED);
@@ -114,7 +114,7 @@ public class DocumentService {
         document.setDocumentType(documentTypeRepository.findByTitle(documentCreateCommand.getDocumentTypeTitle()));
         //TODO UserNotFoundException
         document.setAuthor(userRepository.findByUsername(documentCreateCommand.getUsername()));
-        document.setDocumentId();
+        document.setPrefix();
         return document;
     }
 

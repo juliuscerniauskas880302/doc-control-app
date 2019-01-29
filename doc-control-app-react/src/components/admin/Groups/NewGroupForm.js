@@ -81,6 +81,7 @@ export default class NewGroupForm extends Component {
   };
 
   onDeleteCLickHandler = () => {
+    console.log(this.getSelectedGroupID());
     Axios.delete(
       "http://localhost:8081/api/groups/" + this.getSelectedGroupID()
     )
