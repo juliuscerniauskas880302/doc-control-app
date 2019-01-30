@@ -55,7 +55,7 @@ const OneSubmittedDocumentComponent = (props) => {
         </div>
         <div className="row">
             <div className="col-3">
-                <a href="/" class="btn btn-dark" role="button" aria-pressed="true">Atgal</a>
+                <a href="/" className="btn btn-dark" role="button" aria-pressed="true">Atgal</a>
             </div>
         </div>
         </div >
