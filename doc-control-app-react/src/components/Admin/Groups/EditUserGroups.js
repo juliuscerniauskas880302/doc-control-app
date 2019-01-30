@@ -136,10 +136,10 @@ export default class EditUserGroups extends Component {
       return;
     }
     let groupIdList = {
-      groupIdList: []
+      id: []
     };
     this.state.selectedAddGroup.forEach(el => {
-      groupIdList.groupIdList.push(el);
+      groupIdList.id.push(el);
     });
 
     Axios.put(
@@ -161,10 +161,10 @@ export default class EditUserGroups extends Component {
       return;
     }
     let groupIdList = {
-      groupIdList: []
+      id: []
     };
     this.state.selectedRemoveGroup.forEach(el => {
-      groupIdList.groupIdList.push(el);
+      groupIdList.id.push(el);
     });
     Axios.delete(
       "http://localhost:8081/api/users/" +
