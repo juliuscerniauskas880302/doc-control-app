@@ -19,16 +19,16 @@ public class DocumentType {
     @ManyToMany
     @JoinTable(name = "submission_type", joinColumns = @JoinColumn(name="doc_type"),
             inverseJoinColumns = @JoinColumn(name="user_group_id") )
-    private List<UserGroup> submissionUserGroups;
+    private Set<UserGroup> submissionUserGroups;
     @ManyToMany
     @JoinTable(name = "review_type", joinColumns = @JoinColumn(name="doc_type"),
             inverseJoinColumns = @JoinColumn(name="user_group_id") )
-    private List<UserGroup> reviewUserGroups;
+    private Set<UserGroup> reviewUserGroups;
 
     public DocumentType() {
     }
 
-    public DocumentType(String title, List<UserGroup> submissionUserGroups, List<UserGroup> reviewUserGroups) {
+    public DocumentType(String title, Set<UserGroup> submissionUserGroups, Set<UserGroup> reviewUserGroups) {
         this.title = title;
         this.submissionUserGroups = submissionUserGroups;
         this.reviewUserGroups = reviewUserGroups;
@@ -50,19 +50,19 @@ public class DocumentType {
         this.title = title;
     }
 
-    public List<UserGroup> getSubmissionUserGroups() {
+    public Set<UserGroup> getSubmissionUserGroups() {
         return submissionUserGroups;
     }
 
-    public void setSubmissionUserGroups(List<UserGroup> submissionUserGroups) {
+    public void setSubmissionUserGroups(Set<UserGroup> submissionUserGroups) {
         this.submissionUserGroups = submissionUserGroups;
     }
 
-    public List<UserGroup> getReviewUserGroups() {
+    public Set<UserGroup> getReviewUserGroups() {
         return reviewUserGroups;
     }
 
-    public void setReviewUserGroups(List<UserGroup> reviewUserGroups) {
+    public void setReviewUserGroups(Set<UserGroup> reviewUserGroups) {
         this.reviewUserGroups = reviewUserGroups;
     }
 }
