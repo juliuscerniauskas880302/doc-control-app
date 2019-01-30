@@ -30,14 +30,14 @@ public class User {
     @NotNull
     private String email;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
     private Set<UserGroup> userGroups;
 
     private boolean isAdmin;
 
     private byte[] passwordSalt;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents;
 
     public User() {
@@ -60,6 +60,16 @@ public class User {
         this.isAdmin = isAdmin;
         this.passwordSalt = passwordSalt;
         this.documents = documents;
+    }
+
+    public void addDocument(Document document) {
+        documents.add(document);
+        document.setAuthor(this);
+    }
+
+    public void removeDocument(Document document) {
+        document.setAuthor(null);
+        documents.remove(document);
     }
 
     public String getId() {

@@ -48,6 +48,7 @@ public class Document {
 
     private String path;
 
+    //CONSTRUCTORS
     public Document() {
     }
 
@@ -77,6 +78,7 @@ public class Document {
         this.path = path;
     }
 
+    //GETTERS SETTERS
     public String getId() {
         return id;
     }
