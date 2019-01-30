@@ -11,13 +11,13 @@ export default class TypesInGroups extends Component {
       submission: [],
       review: [],
       selectedType: null,
-      selectedCanSend: "",
-      selectedRemoveCanSend: "",
-      selectedCanReview: "",
-      selectedRemoveCanReview: ""
+      selectedAddReviewGroups: [],
+      selectedRemoveReviewGroups: [],
+      selectedAddSubmissionGroups: [],
+      selectedRemoveSubmissionGroups: []
     };
   }
-
+  //Get all document types from server
   getAllDocTypes = () => {
     Axios.get("http://localhost:8081/api/doctypes")
       .then(res => {
@@ -27,7 +27,7 @@ export default class TypesInGroups extends Component {
         console.log(err);
       });
   };
-
+  //Get all groups from server
   getAllGroups = () => {
     Axios.get("http://localhost:8081/api/groups")
       .then(res => {
@@ -37,15 +37,16 @@ export default class TypesInGroups extends Component {
         console.log(err);
       });
   };
-
+  //Load data on component mount
   componentDidMount = () => {
     this.getAllDocTypes();
     this.getAllGroups();
   };
+  //Method to go back in history
   goBack = () => {
     this.props.history.goBack();
   };
-
+  //Show all document types received from server
   showAllDocTypes = () => {
     if (this.state.doctypes.length === 0) {
       return (
@@ -64,157 +65,161 @@ export default class TypesInGroups extends Component {
       return docTypeList;
     }
   };
-
-  loadSelectedDocType = e => {
-    this.setState({ selectedType: e.target.value });
-
-    Axios.get(
-      "http://localhost:8081/api/doctypes/" + e.target.value + "/groups/review"
-    )
+  //Load document's type "review" and "submmit" groups
+  loadReviewGroups(type) {
+    Axios.get("http://localhost:8081/api/doctypes/" + type + "/groups/review")
       .then(res => {
         this.setState({ review: res.data });
-        console.log(res.data);
       })
       .catch(err => console.log(err));
+  }
+
+  loadSubmmisionGroups(type) {
     Axios.get(
-      "http://localhost:8081/api/doctypes/" +
-        e.target.value +
-        "/groups/submission"
+      "http://localhost:8081/api/doctypes/" + type + "/groups/submission"
     )
       .then(res => {
         this.setState({ submission: res.data });
-        console.log(res.data);
+      })
+      .catch(err => console.log(err));
+  }
+
+  onSelectTypeHandler = e => {
+    this.setState({ selectedType: e.target.value });
+    this.loadReviewGroups(e.target.value);
+    this.loadSubmmisionGroups(e.target.value);
+  };
+  //Show asinged groups to document type
+  inGroups = groups => {
+    if (groups.length === 0) {
+      return (
+        <option value="" disabled>
+          No available groups...
+        </option>
+      );
+    } else {
+      let groupList = groups.map(g => {
+        return (
+          <option key={g.title} value={g.id}>
+            {g.title}
+          </option>
+        );
+      });
+      return groupList;
+    }
+  };
+
+  onSelectHandler = e => {
+    this.setState({
+      [e.target.name]: [].slice.call(e.target.selectedOptions).map(option => {
+        return option.value;
+      })
+    });
+  };
+
+  //Show not asinged and available groups to document type
+  availableGroups = groupType => {
+    if (this.state.selectedType === null) {
+      return (
+        <option value="" disabled>
+          No available groups...
+        </option>
+      );
+    }
+    if (this.state.groups.length === 0) {
+      return (
+        <option value="" disabled>
+          No available options...
+        </option>
+      );
+    } else {
+      let doctypeList = this.state.groups
+        .map(type => {
+          let shouldShow = true;
+          groupType.forEach(t => {
+            if (t.title === type.title) {
+              shouldShow = false;
+            }
+          });
+
+          if (shouldShow)
+            return (
+              <option key={type.title} value={type.id}>
+                {type.title}
+              </option>
+            );
+          else {
+            return null;
+          }
+        })
+        .filter(t => t !== null);
+      if (doctypeList.length === 0) {
+        return (
+          <option value="" disabled>
+            Already have all types...
+          </option>
+        );
+      } else return doctypeList;
+    }
+  };
+
+  onClickAddGroups = (selectedGroups, groupType) => {
+    if (selectedGroups.length === 0) {
+      return;
+    }
+    let groupIdList = {
+      id: []
+    };
+    selectedGroups.forEach(el => {
+      groupIdList.id.push(el);
+    });
+
+    Axios.post(
+      "http://localhost:8081/api/doctypes/" +
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
+      groupIdList
+    )
+      .then(res => {
+        if (groupType === "review") {
+          this.setState({ selectedAddReviewGroups: "" });
+          this.loadReviewGroups(this.state.selectedType);
+        } else {
+          this.setState({ selectedAddSubmissionGroups: "" });
+          this.loadSubmmisionGroups(this.state.selectedType);
+        }
       })
       .catch(err => console.log(err));
   };
 
-  reviewGroups = () => {
-    let review = this.state.review;
-    if (review === 0) {
-      return (
-        <option value="" disabled>
-          No available groups...
-        </option>
-      );
-    } else {
-      let groupList = review.map(g => {
-        return (
-          <option key={g.title} value={g.id}>
-            {g.title}
-          </option>
-        );
-      });
-      return groupList;
+  onClickRemoveGroups = (selectedGroups, groupType) => {
+    if (selectedGroups.length === 0) {
+      return;
     }
-  };
-  submissionGroups = () => {
-    let submmit = this.state.submission;
-    if (submmit === 0) {
-      return (
-        <option value="" disabled>
-          No available groups...
-        </option>
-      );
-    } else {
-      let groupList = submmit.map(g => {
-        return (
-          <option key={g.title} value={g.id}>
-            {g.title}
-          </option>
-        );
-      });
-      return groupList;
-    }
-  };
-
-  availableReviewGroups = () => {
-    if (this.state.selectedType === null) {
-      return (
-        <option value="" disabled>
-          No selection made...
-        </option>
-      );
-    }
-    if (this.state.groups.length === 0) {
-      return (
-        <option value="" disabled>
-          No available doc types...
-        </option>
-      );
-    } else {
-      let doctypeList = this.state.groups
-        .map(type => {
-          let shouldShow = true;
-          this.state.review.forEach(t => {
-            if (t.title === type.title) {
-              shouldShow = false;
-            }
-          });
-
-          if (shouldShow)
-            return (
-              <option key={type.title} value={type.id}>
-                {type.title}
-              </option>
-            );
-          else {
-            return null;
-          }
-        })
-        .filter(t => t !== null);
-      if (doctypeList.length === 0) {
-        return (
-          <option value="" disabled>
-            Already have all types...
-          </option>
-        );
-      } else return doctypeList;
-    }
-  };
-
-  availableSubmmitGroups = () => {
-    if (this.state.selectedType === null) {
-      return (
-        <option value="" disabled>
-          No selection made...
-        </option>
-      );
-    }
-    if (this.state.groups.length === 0) {
-      return (
-        <option value="" disabled>
-          No available doc types...
-        </option>
-      );
-    } else {
-      let doctypeList = this.state.groups
-        .map(type => {
-          let shouldShow = true;
-          this.state.submission.forEach(t => {
-            if (t.title === type.title) {
-              shouldShow = false;
-            }
-          });
-
-          if (shouldShow)
-            return (
-              <option key={type.title} value={type.id}>
-                {type.title}
-              </option>
-            );
-          else {
-            return null;
-          }
-        })
-        .filter(t => t !== null);
-      if (doctypeList.length === 0) {
-        return (
-          <option value="" disabled>
-            Already have all types...
-          </option>
-        );
-      } else return doctypeList;
-    }
+    let groupIdList = {
+      id: []
+    };
+    selectedGroups.forEach(el => {
+      groupIdList.id.push(el);
+    });
+    Axios.delete(
+      "http://localhost:8081/api/doctypes/" +
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
+      { data: groupIdList }
+    )
+      .then(res => {
+        if (groupType === "review") {
+          this.setState({ selectedRemoveReviewGroups: "" });
+          this.loadReviewGroups(this.state.selectedType);
+        } else {
+          this.setState({ selectedRemoveSubmissionGroups: "" });
+          this.loadSubmmisionGroups(this.state.selectedType);
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   render() {
@@ -234,7 +239,7 @@ export default class TypesInGroups extends Component {
                   <select
                     className="form-control"
                     size="5"
-                    onChange={this.loadSelectedDocType}
+                    onChange={this.onSelectTypeHandler}
                     name="selectedType"
                   >
                     {this.showAllDocTypes()}
@@ -242,25 +247,36 @@ export default class TypesInGroups extends Component {
                 </div>
                 {/* //////////////////////////////////////////////////////////////////// */}
                 <br />
+                <span className="input-group-text group">Groups</span>
                 <div className="row justify-content-center text-center">
                   <div className="col">
                     <Select
-                      buttonTitle="Add |submmit|"
+                      buttonTitle="Add |submmision|"
                       buttonType="btn btn-success"
                       title="For submmit"
-                      options={this.availableReviewGroups()}
-                      onChange={this.onValueChangeHandler}
-                      onClick={() => this.onClickAddGroupToUserHandler()}
-                      name="selectedAddGroup"
+                      options={this.availableGroups(this.state.submission)}
+                      onChange={this.onSelectHandler}
+                      onClick={() =>
+                        this.onClickAddGroups(
+                          this.state.selectedAddSubmissionGroups,
+                          "submission"
+                        )
+                      }
+                      name="selectedAddSubmissionGroups"
                     />
                     <Select
-                      buttonTitle="Remove |submmit|"
+                      buttonTitle="Remove |submmision|"
                       buttonType="btn btn-danger"
-                      title="Submmit"
-                      options={this.reviewGroups()}
-                      onChange={this.onValueChangeHandler}
-                      onClick={() => this.onClickAddGroupToUserHandler()}
-                      name="selectedAddGroup"
+                      title="Submission groups"
+                      options={this.inGroups(this.state.submission)}
+                      onChange={this.onSelectHandler}
+                      onClick={() =>
+                        this.onClickRemoveGroups(
+                          this.state.selectedRemoveSubmissionGroups,
+                          "submission"
+                        )
+                      }
+                      name="selectedRemoveSubmissionGroups"
                     />
                   </div>
                   <div className="col">
@@ -268,19 +284,29 @@ export default class TypesInGroups extends Component {
                       buttonTitle="Add |review|"
                       buttonType="btn btn-success"
                       title="For review"
-                      options={this.availableSubmmitGroups()}
-                      onChange={this.onValueChangeHandler}
-                      onClick={() => this.onClickAddGroupToUserHandler()}
-                      name="selectedAddGroup"
+                      options={this.availableGroups(this.state.review)}
+                      onChange={this.onSelectHandler}
+                      onClick={() =>
+                        this.onClickAddGroups(
+                          this.state.selectedAddReviewGroups,
+                          "review"
+                        )
+                      }
+                      name="selectedAddReviewGroups"
                     />
                     <Select
                       buttonTitle="Remove |review|"
                       buttonType="btn btn-danger"
-                      title="Review"
-                      options={this.submissionGroups()}
-                      onChange={this.onValueChangeHandler}
-                      onClick={() => this.onClickAddGroupToUserHandler()}
-                      name="selectedAddGroup"
+                      title="Review groups"
+                      options={this.inGroups(this.state.review)}
+                      onChange={this.onSelectHandler}
+                      onClick={() =>
+                        this.onClickRemoveGroups(
+                          this.state.selectedRemoveReviewGroups,
+                          "review"
+                        )
+                      }
+                      name="selectedRemoveReviewGroups"
                     />
                     <br />
                   </div>
