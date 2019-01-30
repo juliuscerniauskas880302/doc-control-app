@@ -2,6 +2,7 @@ package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
+import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
@@ -14,6 +15,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -128,16 +131,20 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<DocumentGetCommand> getUserDocuments(String username) {
+    public List<DocumentGetCommand> getUserDocuments(String username, String state) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            return user.getDocuments().stream().map(document -> {
-                //TODO pastebejimas nuo migles. nesumapina normaliai username ir document type title, as documentService turiu privatu metoda mapEntitytoGetCommand kur viska padaro,
-                // bet galvoju gal sitas visas reikalas isvis turetu but document servise
-//                DocumentGetCommand documentGetCommand = new DocumentGetCommand();
-//                BeanUtils.copyProperties(document, documentGetCommand);
-                return documentService.mapEntityToGetCommand(document);
-            }).collect(Collectors.toList());
+            List<DocumentGetCommand> documents = new ArrayList<>();
+            if (state.toLowerCase().equals("created")) {
+                documents = user.getDocuments().stream()
+                        .filter(document -> document.getDocumentState().equals(DocumentState.CREATED))
+                        .map(documentService::mapEntityToGetCommand).collect(Collectors.toList());
+            } else if (state.toLowerCase().equals("submitted")) {
+                documents = user.getDocuments().stream()
+                        .filter(document -> !document.getDocumentState().equals(DocumentState.CREATED))
+                        .map(documentService::mapEntityToGetCommand).collect(Collectors.toList());
+            }
+            return documents;
         } else {
             throw new NullPointerException("User does not exist");
         }

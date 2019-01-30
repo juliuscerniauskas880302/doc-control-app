@@ -22,7 +22,7 @@ const ReviewDocumentsComponent = (props) => {
                     <p>{props.type}</p>
                 </div>
                 <div className="col-1">
-                    <p>{props.submitionDate}</p>
+                    <p>{props.submissionDate}</p>
                 </div>
                 <div className="col-1">
                     <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link>

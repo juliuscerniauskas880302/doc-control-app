@@ -7,17 +7,17 @@ import it.akademija.wizards.entities.User;
 
 public class DocumentUpdateCommand {
 
-    private String documentTypeTitle;
     private String title;
+    private String documentTypeTitle;
     private String description;
 
     public DocumentUpdateCommand() {
     }
 
     public DocumentUpdateCommand(String documentTypeTitle, String title, String description) {
-        this.documentTypeTitle = documentTypeTitle;
         this.title = title;
         this.description = description;
+        this.documentTypeTitle = documentTypeTitle;
     }
 
     public String getDocumentTypeTitle() {

@@ -15,24 +15,24 @@ class UserSubmittedDocumentsContainer extends React.Component {
           title: "Title1",
           description: "Description1",
           documentTypeTitle: "Type1",
-          state: "State1",
-          submitionDate: "2019.01.26"
+          documentState: "State1",
+          submissionDate: "2019.01.26"
         },
         {
           id: "Kodas2",
           title: "Title2",
           description: "Description2",
-          tydocumentTypeTitlee: "Type2",
-          state: "State2",
-          submitionDate: "2019.01.27"
+          tydocumentTypeTitle: "Type2",
+          documentState: "State2",
+          submissionDate: "2019.01.27"
         },
         {
           id: "Kodas3",
           title: "Title3",
           description: "Description3",
           documentTypeTitle: "Type3",
-          state: "State3",
-          submitionDate: "2019.01.28"
+          documentState: "State3",
+          submissionDate: "2019.01.28"
         }
       ],
       loading: "Loading documents. Please wait..."
@@ -64,8 +64,9 @@ class UserSubmittedDocumentsContainer extends React.Component {
             title={document.title}
             description={document.description}
             type={document.documentTypeTitle}
-            state={document.state}
-            submitionDate={document.submitionDate}
+            //state={document.documentState}
+            state={document.documentState.toLowerCase().charAt(0).toUpperCase() + document.documentState.toLowerCase().slice(1)}
+            submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10): ""}
           />
         );
       });
@@ -77,26 +78,26 @@ class UserSubmittedDocumentsContainer extends React.Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-1">
-              <p>Numeris</p>
+            <div className="col-2">
+              <h5>Numeris</h5>
             </div>
             <div className="col-2">
-              <p>Pavadinimas</p>
+              <h5>Pavadinimas</h5>
             </div>
             <div className="col-2">
-              <p>Aprašymas</p>
+              <h5>Aprašymas</h5>
             </div>
             <div className="col-1">
-              <p>Tipas</p>
+              <h5>Tipas</h5>
             </div>
             <div className="col-1">
-              <p>Būsena</p>
+              <h5>Būsena</h5>
             </div>
             <div className="col-1">
-              <p>Pateikimo data</p>
+              <h5>Pateikimo data</h5>
             </div>
             <div className="col-1">
-              <p>Operacijos</p>
+              <h5>Operacijos</h5>
             </div>
           </div>
           <div className="row">{documentCard}</div>

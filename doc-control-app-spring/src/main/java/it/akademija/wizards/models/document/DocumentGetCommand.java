@@ -1,6 +1,7 @@
 package it.akademija.wizards.models.document;
 
 import it.akademija.wizards.enums.DocumentState;
+import it.akademija.wizards.models.user.UserGetCommand;
 
 import java.util.Date;
 
@@ -8,7 +9,7 @@ public class DocumentGetCommand {
 
     private String id;
     private String prefix;
-    private String authorUsername;
+    private UserGetCommand author;
     private DocumentState documentState;
     private String documentTypeTitle;
     private String title;
@@ -17,17 +18,16 @@ public class DocumentGetCommand {
     private Date submissionDate;
     private Date approvalDate;
     private Date rejectionDate;
-    private String reviewerUsername;
+    private UserGetCommand reviewer;
     private String rejectionReason;
+    private String path;
 
     public DocumentGetCommand() {
 
     }
 
-    public DocumentGetCommand(String id, String prefix, String authorUsername, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, String reviewerUsername, String rejectionReason) {
-        this.id = id;
-        this.prefix = prefix;
-        this.authorUsername = authorUsername;
+    public DocumentGetCommand(UserGetCommand author, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, UserGetCommand reviewer, String rejectionReason, String path) {
+        this.author = author;
         this.documentState = documentState;
         this.documentTypeTitle = documentTypeTitle;
         this.title = title;
@@ -36,8 +36,25 @@ public class DocumentGetCommand {
         this.submissionDate = submissionDate;
         this.approvalDate = approvalDate;
         this.rejectionDate = rejectionDate;
-        this.reviewerUsername = reviewerUsername;
+        this.reviewer = reviewer;
         this.rejectionReason = rejectionReason;
+        this.path = path;
+    }
+
+    public UserGetCommand getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserGetCommand author) {
+        this.author = author;
+    }
+
+    public UserGetCommand getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(UserGetCommand reviewer) {
+        this.reviewer = reviewer;
     }
 
     public String getId() {
@@ -61,14 +78,6 @@ public class DocumentGetCommand {
         return documentState;
     }
 
-    public String getAuthorUsername() {
-        return authorUsername;
-    }
-
-    public void setAuthorUsername(String authorUsername) {
-        this.authorUsername = authorUsername;
-    }
-
     public String getDocumentTypeTitle() {
         return documentTypeTitle;
     }
@@ -77,13 +86,6 @@ public class DocumentGetCommand {
         this.documentTypeTitle = documentTypeTitle;
     }
 
-    public String getReviewerUsername() {
-        return reviewerUsername;
-    }
-
-    public void setReviewerUsername(String reviewerUsername) {
-        this.reviewerUsername = reviewerUsername;
-    }
 
     public void setDocumentState(DocumentState documentState) {
         this.documentState = documentState;
@@ -144,5 +146,13 @@ public class DocumentGetCommand {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

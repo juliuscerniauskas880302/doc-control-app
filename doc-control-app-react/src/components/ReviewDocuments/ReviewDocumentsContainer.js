@@ -12,30 +12,27 @@ class ReviewDocumentsContainer extends React.Component {
             documents: [
                 {
                     id: "Kodas1r",
-                    author: "Autorius1r",
+                    authorUsername: "Autorius1r",
                     title: "Title1r",
                     description: "Description1r",
-                    type: "Type1r",
-                    state: "State1r",
-                    submitionDate: "2019.01.26"
+                    documentTypeTitle: "Type1r",
+                    submissionDate: "2019.01.26"
                 },
                 {
                     id: "Kodas2r",
-                    author: "Autorius2r",
+                    authorUsername: "Autorius2r",
                     title: "Title2r",
                     description: "Description2r",
-                    type: "Type2r",
-                    state: "State2r",
-                    submitionDate: "2019.01.27"
+                    documentTypeTitle: "Type2r",
+                    submissionDate: "2019.01.27"
                 },
                 {
                     id: "Kodas3r",
-                    author: "Autorius3r",
+                    authorUsername: "Autorius3r",
                     title: "Title3r",
                     description: "Description3r",
-                    type: "Type3r",
-                    state: "State3r",
-                    submitionDate: "2019.01.28"
+                    documentTypeTitle: "Type3r",
+                    submissionDate: "2019.01.28"
                 }
             ],
             loading: 'Kraunami dokumentai. Prašome palaukti...'
@@ -44,16 +41,16 @@ class ReviewDocumentsContainer extends React.Component {
 
     componentDidMount() {
         //TODO
-        //tikrame kode duomenis imsiu iš API serviso
-        /* axios.get('http://localhost:8080/api/docs')
+        
+        axios.get('http://localhost:8080/api/docs')
             .then((response) => {
                 this.setState({ documents: response.data });
-                console.log("Koks atiduodamas švenčių sąrašas?");
+                console.log("Koks atiduodamas dokumentų sąrašas?");
                 console.log(this.state.documents);
             })
             .catch((error) => {
                 console.log(error);
-            }); */
+            });
     }
 
     render() {
@@ -64,37 +61,36 @@ class ReviewDocumentsContainer extends React.Component {
                     <ReviewDocumentsComponent
                         key={index}
                         id={document.id}
-                        author={document.author}
+                        author={document.authorUsername}
                         title={document.title}
                         description={document.description}
-                        type={document.type}
-                        state={document.state}
-                        submitionDate={document.submitionDate}
+                        type={document.documentTypeTitle}
+                        submissionDate={document.submissionDate.substring(0, 10)}
                     />
                 );
             });
             return (<div className="container-fluid">
                 <div className="row">
                     <div className="col-2">
-                        <p>Autorius</p>
+                        <h5>Autorius</h5>
                     </div>
                     <div className="col-2">
-                        <p>Numeris</p>
+                        <h5>Numeris</h5>
                     </div>
                     <div className="col-2">
-                        <p>Pavadinimas</p>
+                        <h5>Pavadinimas</h5>
                     </div>
                     <div className="col-2">
-                        <p>Aprašymas</p>
+                        <h5>Aprašymas</h5>
                     </div>
                     <div className="col-1">
-                        <p>Tipas</p>
+                        <h5>Tipas</h5>
                     </div>
                     <div className="col-1">
-                        <p>Pateikimo data</p>
+                        <h5>Pateikimo data</h5>
                     </div>
                     <div className="col-1">
-                        <p>Operacijos</p>
+                        <h5>Operacijos</h5>
                     </div>
                 </div>
                 <div className="row">{documentCard}
