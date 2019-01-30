@@ -28,10 +28,6 @@ public class FileUploaderService {
     @Autowired
     private  DocumentRepository documentRepository;
 
-    public FileUploaderService(DocumentService documentService, DocumentRepository documentRepository) {
-        this.documentService = documentService;
-        this.documentRepository = documentRepository;
-    }
 
     @Transactional
     public void uploadFile(MultipartFile multipartFile, DocumentCreateCommand documentCreateCommand) throws IOException {
@@ -39,7 +35,6 @@ public class FileUploaderService {
         Document savedDocument = documentRepository.save(document);
         documentService.addToUserList(document);
 
-        System.out.println(savedDocument);
         File path = new File("documents/" + savedDocument.getAuthor().getUsername());
         path.mkdirs();
         String originalFileName = multipartFile.getOriginalFilename();

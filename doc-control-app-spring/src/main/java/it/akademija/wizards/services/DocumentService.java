@@ -65,9 +65,9 @@ public class DocumentService {
     public void createDocument(DocumentCreateCommand documentCreateCommand) {
         User author = this.getUserFromDB(documentCreateCommand.getUsername());
         DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
-        //TODO find author's groups
+        //find authors groups
         Set<UserGroup> userGroups = author.getUserGroups();
-        //TODO check if the found group can create this type of document
+        //check if the found group can create this type of document
         boolean isAllowed = false;
         for (UserGroup userGroup : userGroups) {
             for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
@@ -101,9 +101,9 @@ public class DocumentService {
     public void reviewDocument(String id, DocumentReviewCommand documentReviewCommand) {
         User reviewer = this.getUserFromDB(documentReviewCommand.getReviewerUsername());
         Document document = this.getDocumentFromDB(id);
-        //TODO check reviewer's groups
+        //find reviewer's groups
         Set<UserGroup> userGroups = reviewer.getUserGroups();
-        //TODO check if the found group can review this type of document
+        //check if the found group can review this type of document
         boolean isAllowed = false;
         for (UserGroup userGroup : userGroups) {
             for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
