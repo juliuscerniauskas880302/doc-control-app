@@ -35,20 +35,34 @@ public class CommandLineAppRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        //GROUPS
         if (!groupExists("administracija")) userGroupService.createUserGroup(new UserGroupCreateCommand("administracija"));
         if (!groupExists("darbuotojai")) userGroupService.createUserGroup(new UserGroupCreateCommand("darbuotojai"));
+        //DOCTYPES
         if(!docTypeExists("atostogu prasymas")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atostogu prasymas"));
+        //USERS
         if (!usernameExists("migle")) userService.createUser(new UserCreateCommand("migle", "captain", "Migle", "Babickaite", "captain@captain.lt", true));
+        if (!usernameExists("julius")) userService.createUser(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", true));
+
+
         //create lists of groups' ids
         List<UserGroupGetCommand> userGroups = userGroupService.getUserGroups();
         List<String> allGroups = new ArrayList<>();
         List<String> administration = new ArrayList<>();
+        List<String> employees = new ArrayList<>();
         for (UserGroupGetCommand userGroupGetCommand: userGroups) {
             allGroups.add(userGroupGetCommand.getId());
             if(userGroupGetCommand.getTitle().equals("administracija")) administration.add(userGroupGetCommand.getId());
+            if(userGroupGetCommand.getTitle().equals("darbuotojai")) employees.add(userGroupGetCommand.getId());
+
         }
+
+        //ADD GROUPS TO USERS
         //add all groups to username migle
         userService.addGroupsToUser(new UserAddGroupsCommand(allGroups), "migle");
+        //add darbuotojas to username julius
+        userService.addGroupsToUser(new UserAddGroupsCommand(employees), "julius");
+
         //get doctype id
         List<DocumentTypeGetCommand> documentTypes = documentTypeService.getDocumentTypes();
         String docTypeId = null;
@@ -59,9 +73,9 @@ public class CommandLineAppRunner implements CommandLineRunner {
             }
         }
         //add all groups to doctype submission
-        documentTypeService.addSubmissionGroupsToDocType(docTypeId, new UserAddGroupsCommand(allGroups));
+        documentTypeService.addGroupsToDocType(docTypeId, "submission", new UserAddGroupsCommand(allGroups));
         //add administracija to doctype review
-        documentTypeService.addReviewGroupsToDocType(docTypeId, new UserAddGroupsCommand(administration));
+        documentTypeService.addGroupsToDocType(docTypeId, "review", new UserAddGroupsCommand(administration));
     }
 
     private boolean docTypeExists(String title) {
