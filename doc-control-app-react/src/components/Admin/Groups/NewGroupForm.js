@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
+import NewGroupComponent from "./NewGroupComponent";
 
 export default class NewGroupForm extends Component {
   constructor(props) {
@@ -38,6 +39,7 @@ export default class NewGroupForm extends Component {
   };
 
   onValueChangeHandler = event => {
+    console.log(event.target.value);
     if (event.target.name === "selectedGroupTitle") {
       this.setState({ newTitle: event.target.value });
     }
@@ -113,111 +115,19 @@ export default class NewGroupForm extends Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <div className="row justify-content-center">
-          <div className="panel panel-primary">
-            <div className="panel-body">
-              <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase"> New Group </strong>
-              </h3>
-              <div className="mx-1">
-                <form onSubmit={e => this.onClickAddNewGroupHandler(e)}>
-                  <div className="input-group mb-1">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">Title</span>
-                    </div>
-                    <input
-                      onChange={event => this.onValueChangeHandler(event)}
-                      type="text"
-                      name="title"
-                      value={this.state.title}
-                      className="form-control"
-                      pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                      required
-                    />
-                  </div>
-
-                  <div className="input-group mb-1">
-                    <button type="buton" className="btn btn-success">
-                      Add
-                    </button>
-                  </div>
-                </form>
-
-                {/*  */}
-                <br />
-                <div className="input-group mb-1">
-                  <button
-                    type="buton"
-                    className="btn btn-warning"
-                    onClick={() => this.goBack()}
-                  >
-                    Go back
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row justify-content-center">
-          <div className="panel panel-primary">
-            <div className="panel-body">
-              <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase"> Update Group </strong>
-              </h3>
-              <div className="mx-1">
-                <span className="input-group-text group">All groups</span>
-                <div className="input-group mb-1">
-                  <select
-                    className="form-control"
-                    size="5"
-                    onChange={this.onValueChangeHandler}
-                    name="selectedGroupTitle"
-                  >
-                    {this.showAllGroups()}
-                  </select>
-                </div>
-              </div>
-              <br />
-              <div className="mx-1">
-                <form onSubmit={e => this.onClickUpdateHandler(e)}>
-                  <div className="input-group mb-1">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">New title</span>
-                    </div>
-                    <input
-                      onChange={event => this.onValueChangeHandler(event)}
-                      type="text"
-                      name="newTitle"
-                      value={this.state.newTitle}
-                      className="form-control"
-                      pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                      required
-                    />
-                  </div>
-
-                  <div className="input-group mb-1">
-                    <button type="buton" className="btn btn-info">
-                      Update
-                    </button>
-                  </div>
-                </form>
-                <br />
-                <div className="input-group mb-1">
-                  <button
-                    type="buton"
-                    className="btn btn-danger"
-                    onClick={() => this.onDeleteCLickHandler()}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <NewGroupComponent
+        showGroups={this.showAllGroups()}
+        onSubmitAdd={e => this.onClickAddNewGroupHandler(e)}
+        onChange={e => this.onValueChangeHandler(e)}
+        newTitle="title"
+        newTitleValue={this.state.title}
+        pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+        onClickGoBack={() => this.goBack()}
+        onDeleteClick={() => this.onDeleteCLickHandler()}
+        onSubmitUpdate={e => this.onClickUpdateHandler(e)}
+        nameForUpdate="newTitle"
+        valueForUpdate={this.state.newTitle}
+      />
     );
   }
 }
