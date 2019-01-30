@@ -14,7 +14,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,7 +90,15 @@ public class UserService {
 
     @Transactional
     public void deleteUser(String username) {
-        userRepository.deleteByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            for (UserGroup userGroup: user.getUserGroups()) {
+                userGroup.removeUser(user);
+            }
+            userRepository.delete(user);
+        } else {
+            throw new NullPointerException("User does not exist");
+        }
     }
 
     @Transactional
