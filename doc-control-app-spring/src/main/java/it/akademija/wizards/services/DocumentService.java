@@ -16,10 +16,21 @@ import it.akademija.wizards.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,7 +73,7 @@ public class DocumentService {
 
     //CREATE
     @Transactional
-    public void createDocument(DocumentCreateCommand documentCreateCommand) {
+    public ResponseEntity<String> createDocument (DocumentCreateCommand documentCreateCommand, MultipartFile multipartFile) {
         User author = this.getUserFromDB(documentCreateCommand.getUsername());
         DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
         //find authors groups
@@ -80,12 +91,17 @@ public class DocumentService {
         if (isAllowed) {
             Document document = mapCreateCommandToEntity(documentCreateCommand);
             author.addDocument(document);
+            try {
+                this.uploadFile(document, multipartFile);
+            } catch (IOException e) {
+                return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+            }
             documentRepository.save(document);
         } else {
             //TODO UserCannotCreateDocumentException
             throw new IllegalArgumentException("User doesn't have permission to create this type of document");
         }
-
+        return new ResponseEntity<>("Document was created", HttpStatus.CREATED);
     }
 
     //SUBMIT
@@ -128,14 +144,22 @@ public class DocumentService {
 
     //UPDATE
     @Transactional
-    public void updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand) {
+    public ResponseEntity<String> updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand, MultipartFile multipartFile)  {
         Document document = this.getDocumentFromDB(id);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
+            if (multipartFile != null) {
+                try {
+                    uploadFile(document, multipartFile);
+                } catch (IOException e) {
+                    return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+                }
+            }
             documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
         } else {
             //TODO SubmittedDocumentUpdateNotAllowedException
             throw new IllegalArgumentException("submitted documents cannot be updated");
         }
+        return new ResponseEntity<>("Document updated", HttpStatus.OK);
     }
 
     //DELETE
@@ -179,7 +203,7 @@ public class DocumentService {
             return document;
     }
 
-    //PRIVATE METHODS (GETTING ENTITIES FROM DB)
+    //PRIVATE METHODS
     @Transactional
     private User getUserFromDB(String username) throws ResourceNotFoundException {
         User user = userRepository.findByUsername(username);
@@ -197,6 +221,33 @@ public class DocumentService {
     @Transactional
     private Document getDocumentFromDB(String id) throws ResourceNotFoundException {
         return documentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("document not found"));
+    }
+
+    @Transactional
+    private void uploadFile(Document document, MultipartFile multipartFile) throws IOException {
+        File path = new File("documents/" + document.getAuthor().getUsername());
+        path.mkdirs();
+        String originalFileName = multipartFile.getOriginalFilename();
+        String updatedFileName = originalFileName + document.getPrefix();
+        document.setPath(updatedFileName);
+        byte[] buf = new byte[1024];
+        File file = new File(path.getPath(), updatedFileName);
+        try (InputStream inputStream = multipartFile.getInputStream();
+             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            int numRead = 0;
+            while ((numRead = inputStream.read(buf)) >= 0) {
+                fileOutputStream.write(buf, 0, numRead);
+            }
+        }
+        Set<PosixFilePermission> perms = new HashSet<>();
+        // add owners permission
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+        perms.add(PosixFilePermission.GROUP_READ);
+        perms.add(PosixFilePermission.GROUP_WRITE);
+        // add others permissions
+        perms.add(PosixFilePermission.OTHERS_READ);
+        Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
     }
 
 

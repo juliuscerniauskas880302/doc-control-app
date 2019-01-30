@@ -19,14 +19,13 @@ public class DocumentGetCommand {
     private Date rejectionDate;
     private String reviewerUsername;
     private String rejectionReason;
+    private String path;
 
     public DocumentGetCommand() {
 
     }
 
-    public DocumentGetCommand(String id, String prefix, String authorUsername, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, String reviewerUsername, String rejectionReason) {
-        this.id = id;
-        this.prefix = prefix;
+    public DocumentGetCommand(String authorUsername, DocumentState documentState, String documentTypeTitle, String title, String description, Date creationDate, Date submissionDate, Date approvalDate, Date rejectionDate, String reviewerUsername, String rejectionReason, String path) {
         this.authorUsername = authorUsername;
         this.documentState = documentState;
         this.documentTypeTitle = documentTypeTitle;
@@ -38,6 +37,7 @@ public class DocumentGetCommand {
         this.rejectionDate = rejectionDate;
         this.reviewerUsername = reviewerUsername;
         this.rejectionReason = rejectionReason;
+        this.path = path;
     }
 
     public String getId() {
@@ -144,5 +144,13 @@ public class DocumentGetCommand {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
