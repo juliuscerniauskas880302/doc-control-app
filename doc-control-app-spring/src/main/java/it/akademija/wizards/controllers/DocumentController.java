@@ -53,8 +53,8 @@ public class DocumentController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> createDocument(
-            @RequestPart String model,
-            @RequestPart MultipartFile multipartFile){
+            @RequestParam("model") String model,
+            @RequestParam("file") MultipartFile multipartFile){
             /*   String model:
     {
       "description": "string",
