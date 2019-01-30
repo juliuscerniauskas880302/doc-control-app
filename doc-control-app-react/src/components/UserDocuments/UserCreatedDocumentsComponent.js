@@ -6,7 +6,7 @@ const UserCreatedDocumentsComponent = (props) => {
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col-1">
+                <div className="col-2">
                     <p>{props.id}</p>
                 </div>
                 <div className="col-2">
@@ -32,6 +32,11 @@ const UserCreatedDocumentsComponent = (props) => {
                     <Link to={linkas}>&#128465;</Link> |&nbsp;
                     <Link to={linkas}>&#8505;</Link> |&nbsp;
                     <Link to={linkas}>&#128196; </Link> */}
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <hr/>
                 </div>
             </div>
         </div>
