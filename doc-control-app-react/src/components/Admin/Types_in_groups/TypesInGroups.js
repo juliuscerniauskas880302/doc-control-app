@@ -8,6 +8,8 @@ export default class TypesInGroups extends Component {
     this.state = {
       groups: [],
       doctypes: [],
+      submission: [],
+      review: [],
       selectedType: null,
       selectedCanSend: "",
       selectedRemoveCanSend: "",
@@ -64,52 +66,154 @@ export default class TypesInGroups extends Component {
   };
 
   loadSelectedDocType = e => {
-    Axios.get("http://localhost:8081/api/doctypes/" + e.target.value)
+    this.setState({ selectedType: e.target.value });
+
+    Axios.get(
+      "http://localhost:8081/api/doctypes/" + e.target.value + "/groups/review"
+    )
       .then(res => {
-        this.setState({ selectedGroup: res.data });
+        this.setState({ review: res.data });
         console.log(res.data);
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => console.log(err));
+    Axios.get(
+      "http://localhost:8081/api/doctypes/" +
+        e.target.value +
+        "/groups/submission"
+    )
+      .then(res => {
+        this.setState({ submission: res.data });
+        console.log(res.data);
+      })
+      .catch(err => console.log(err));
   };
 
-  showCanReviewDocs = () => {
-    let review = this.state.doctypes;
+  reviewGroups = () => {
+    let review = this.state.review;
     if (review === 0) {
       return (
         <option value="" disabled>
-          No available doc types...
+          No available groups...
         </option>
       );
     } else {
-      let typeList = review.map(t => {
+      let groupList = review.map(g => {
         return (
-          <option key={t.title} value={t.userGroupId}>
-            {t.title}
+          <option key={g.title} value={g.id}>
+            {g.title}
           </option>
         );
       });
-      return typeList;
+      return groupList;
     }
   };
-  showCanSendDocs = () => {
-    let send = this.state.doctypes;
-    if (send === 0) {
+  submissionGroups = () => {
+    let submmit = this.state.submission;
+    if (submmit === 0) {
+      return (
+        <option value="" disabled>
+          No available groups...
+        </option>
+      );
+    } else {
+      let groupList = submmit.map(g => {
+        return (
+          <option key={g.title} value={g.id}>
+            {g.title}
+          </option>
+        );
+      });
+      return groupList;
+    }
+  };
+
+  availableReviewGroups = () => {
+    if (this.state.selectedType === null) {
+      return (
+        <option value="" disabled>
+          No selection made...
+        </option>
+      );
+    }
+    if (this.state.groups.length === 0) {
       return (
         <option value="" disabled>
           No available doc types...
         </option>
       );
     } else {
-      let typeList = send.map(t => {
+      let doctypeList = this.state.groups
+        .map(type => {
+          let shouldShow = true;
+          this.state.review.forEach(t => {
+            if (t.title === type.title) {
+              shouldShow = false;
+            }
+          });
+
+          if (shouldShow)
+            return (
+              <option key={type.title} value={type.id}>
+                {type.title}
+              </option>
+            );
+          else {
+            return null;
+          }
+        })
+        .filter(t => t !== null);
+      if (doctypeList.length === 0) {
         return (
-          <option key={t.title} value={t.userGroupId}>
-            {t.title}
+          <option value="" disabled>
+            Already have all types...
           </option>
         );
-      });
-      return typeList;
+      } else return doctypeList;
+    }
+  };
+
+  availableSubmmitGroups = () => {
+    if (this.state.selectedType === null) {
+      return (
+        <option value="" disabled>
+          No selection made...
+        </option>
+      );
+    }
+    if (this.state.groups.length === 0) {
+      return (
+        <option value="" disabled>
+          No available doc types...
+        </option>
+      );
+    } else {
+      let doctypeList = this.state.groups
+        .map(type => {
+          let shouldShow = true;
+          this.state.submission.forEach(t => {
+            if (t.title === type.title) {
+              shouldShow = false;
+            }
+          });
+
+          if (shouldShow)
+            return (
+              <option key={type.title} value={type.id}>
+                {type.title}
+              </option>
+            );
+          else {
+            return null;
+          }
+        })
+        .filter(t => t !== null);
+      if (doctypeList.length === 0) {
+        return (
+          <option value="" disabled>
+            Already have all types...
+          </option>
+        );
+      } else return doctypeList;
     }
   };
 
@@ -141,19 +245,19 @@ export default class TypesInGroups extends Component {
                 <div className="row justify-content-center text-center">
                   <div className="col">
                     <Select
-                      buttonTitle="Add |send|"
+                      buttonTitle="Add |submmit|"
                       buttonType="btn btn-success"
-                      title="Send types"
-                      options={this.showCanReviewDocs()}
+                      title="For submmit"
+                      options={this.availableReviewGroups()}
                       onChange={this.onValueChangeHandler}
                       onClick={() => this.onClickAddGroupToUserHandler()}
                       name="selectedAddGroup"
                     />
                     <Select
-                      buttonTitle="Remove |send|"
+                      buttonTitle="Remove |submmit|"
                       buttonType="btn btn-danger"
-                      title="Can Send types"
-                      options={<option>Send</option>}
+                      title="Submmit"
+                      options={this.reviewGroups()}
                       onChange={this.onValueChangeHandler}
                       onClick={() => this.onClickAddGroupToUserHandler()}
                       name="selectedAddGroup"
@@ -163,8 +267,8 @@ export default class TypesInGroups extends Component {
                     <Select
                       buttonTitle="Add |review|"
                       buttonType="btn btn-success"
-                      title="Review types"
-                      options={this.showCanSendDocs()}
+                      title="For review"
+                      options={this.availableSubmmitGroups()}
                       onChange={this.onValueChangeHandler}
                       onClick={() => this.onClickAddGroupToUserHandler()}
                       name="selectedAddGroup"
@@ -172,8 +276,8 @@ export default class TypesInGroups extends Component {
                     <Select
                       buttonTitle="Remove |review|"
                       buttonType="btn btn-danger"
-                      title="Can review"
-                      options={<option>Review</option>}
+                      title="Review"
+                      options={this.submissionGroups()}
                       onChange={this.onValueChangeHandler}
                       onClick={() => this.onClickAddGroupToUserHandler()}
                       name="selectedAddGroup"
