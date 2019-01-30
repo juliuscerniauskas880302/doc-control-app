@@ -25,7 +25,7 @@ const UserSubmittedDocumentsComponent = (props) => {
                     <p>{props.submitionDate}</p>
                 </div>
                 <div className="col-1">
-                    <Link to={linkas}> <i class="fas fa-info-circle"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link>
                 </div>
             </div>
         </div>

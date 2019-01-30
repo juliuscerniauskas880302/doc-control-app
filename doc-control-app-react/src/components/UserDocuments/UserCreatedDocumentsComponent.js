@@ -22,10 +22,10 @@ const UserCreatedDocumentsComponent = (props) => {
                     <p>{props.creationDate}</p>
                 </div>
                 <div className="col-2">
-                    <Link to={linkas}> <i class="fas fa-info-circle"></i> </Link>
-                    <Link to={`/admin/Documents/${props.id}`}> <i class="far fa-edit"></i> </Link>
-                    <Link to={linkas}> <i class="fas fa-trash"></i> </Link>
-                    <Link to={linkas}> <i class="fas fa-file-signature"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link>
+                    <Link to={`/admin/Documents/${props.id}`}> <i className="far fa-edit"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-trash"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-file-signature"></i> </Link>
 
                      {/* Čia yra UTF simboliai-ikonos
                     <Link to={linkas}>&#9997;</Link> |&nbsp;

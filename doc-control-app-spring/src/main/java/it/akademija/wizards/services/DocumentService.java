@@ -145,6 +145,7 @@ public class DocumentService {
     }
 
     //package methods
+
     DocumentGetCommand mapEntityToGetCommand(Document document) {
         DocumentGetCommand documentGetCommand = new DocumentGetCommand();
         BeanUtils.copyProperties(document, documentGetCommand);

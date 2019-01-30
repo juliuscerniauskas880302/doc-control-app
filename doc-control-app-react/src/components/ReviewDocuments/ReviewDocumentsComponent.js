@@ -25,9 +25,9 @@ const ReviewDocumentsComponent = (props) => {
                     <p>{props.submitionDate}</p>
                 </div>
                 <div className="col-1">
-                    <Link to={linkas}> <i class="fas fa-info-circle"></i> </Link>
-                    <Link to={linkas}> <i class="fas fa-check-circle"></i> </Link>
-                    <Link to={linkas}> <i class="fas fa-times-circle"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-check-circle"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-times-circle"></i> </Link>
                 </div>
             </div>
         </div>
