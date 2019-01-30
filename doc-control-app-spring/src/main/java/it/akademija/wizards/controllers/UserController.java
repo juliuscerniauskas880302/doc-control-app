@@ -43,10 +43,11 @@ public class UserController {
     }
 
     @ApiOperation(value = "get user's documents")
-    @RequestMapping(value = "/{username}/docs", method = RequestMethod.GET)
+    @RequestMapping(value = "/{username}/docs/{state}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List <DocumentGetCommand> getDocumentsByUsername(@PathVariable String username){
-        return userService.getUserDocuments(username);
+    public List <DocumentGetCommand> getDocumentsByUsername(@PathVariable String username,
+                                                            @PathVariable(value = "state") String state){
+        return userService.getUserDocuments(username, state);
     }
 
     @ApiOperation(value = "create user")
