@@ -136,7 +136,7 @@ public class DocumentService {
         documentRepository.deleteById(id);
     }
 
-    private DocumentGetCommand mapEntityToGetCommand(Document document) {
+    DocumentGetCommand mapEntityToGetCommand(Document document) {
         DocumentGetCommand documentGetCommand = new DocumentGetCommand();
         BeanUtils.copyProperties(document, documentGetCommand);
         documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
