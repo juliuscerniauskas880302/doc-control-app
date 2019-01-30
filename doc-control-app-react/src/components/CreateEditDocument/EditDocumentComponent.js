@@ -35,9 +35,9 @@ const EditDocumentComponet = (props) => {
                 </div>
             </div>
 
-
             <button className="btn btn-primary" type="submit" onClick={props.handleSubmit}>Išsaugoti</button> &nbsp;
-            <button className="btn btn-danger" onClick={props.handleDelete}>Ištrinti</button>
+            <button className="btn btn-danger" onClick={props.handleDelete}>Ištrinti</button> &nbsp;
+            <a href="/createdDocuments" className="btn btn-dark" role="button" aria-pressed="true">Atmesti pakeitimus</a>
         </form>
     );
 }

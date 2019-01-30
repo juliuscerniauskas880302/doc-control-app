@@ -14,7 +14,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
           id: "Kodas1",
           title: "Title1",
           description: "Description1",
-          type: "Type1",
+          documentTypeTitle: "Type1",
           state: "State1",
           submitionDate: "2019.01.26"
         },
@@ -22,7 +22,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
           id: "Kodas2",
           title: "Title2",
           description: "Description2",
-          type: "Type2",
+          tydocumentTypeTitlee: "Type2",
           state: "State2",
           submitionDate: "2019.01.27"
         },
@@ -30,7 +30,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
           id: "Kodas3",
           title: "Title3",
           description: "Description3",
-          type: "Type3",
+          documentTypeTitle: "Type3",
           state: "State3",
           submitionDate: "2019.01.28"
         }
@@ -41,16 +41,17 @@ class UserSubmittedDocumentsContainer extends React.Component {
 
   componentDidMount() {
     //TODO
-    //tikrame kode duomenis imsiu iš API serviso
-    /* axios.get('http://localhost:8080/api/docs')
-            .then((response) => {
-                this.setState({ documents: response.data });
-                console.log("Koks atiduodamas dokumentų sąrašas?");
-                console.log(this.state.documents);
-            })
-            .catch((error) => {
-                console.log(error);
-            }); */
+    let currentUser = "migle";
+    let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs';
+    axios.get(resourcePath)
+      .then((response) => {
+        this.setState({ documents: response.data });
+        console.log("Koks atiduodamas dokumentų sąrašas?");
+        console.log(this.state.documents);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   render() {
@@ -62,7 +63,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
             id={document.id}
             title={document.title}
             description={document.description}
-            type={document.type}
+            type={document.documentTypeTitle}
             state={document.state}
             submitionDate={document.submitionDate}
           />
@@ -72,14 +73,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
         <div className="container-fluid">
           <div className="row">
             <div className="col-1">
-              <a
-                href="/admin/newDocument"
-                className="btn btn-info"
-                role="button"
-                aria-pressed="true"
-              >
-                Naujas dokumentas
-              </a>
+              <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
             </div>
           </div>
           <div className="row">
