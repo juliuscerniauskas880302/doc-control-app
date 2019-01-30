@@ -9,6 +9,7 @@ import it.akademija.wizards.models.document.DocumentCreateCommand;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.document.DocumentReviewCommand;
 import it.akademija.wizards.models.document.DocumentUpdateCommand;
+import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.repositories.DocumentTypeRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
@@ -175,8 +176,12 @@ public class DocumentService {
     DocumentGetCommand mapEntityToGetCommand(Document document) {
         DocumentGetCommand documentGetCommand = new DocumentGetCommand();
         BeanUtils.copyProperties(document, documentGetCommand);
-        documentGetCommand.setAuthorUsername(document.getAuthor().getUsername());
-        if (document.getReviewer() != null) documentGetCommand.setReviewerUsername(document.getReviewer().getUsername());
+        UserGetCommand author = this.mapUserEntityToGetCommand(document.getAuthor());
+        documentGetCommand.setAuthor(author);
+        if (document.getReviewer() != null) {
+            UserGetCommand reviewer = this.mapUserEntityToGetCommand(document.getReviewer());
+            documentGetCommand.setReviewer(reviewer);
+        }
         documentGetCommand.setDocumentTypeTitle(document.getDocumentType().getTitle());
         return documentGetCommand;
     }
@@ -201,6 +206,12 @@ public class DocumentService {
             BeanUtils.copyProperties(documentUpdateCommand, document);
             document.setDocumentType(documentType);
             return document;
+    }
+
+    UserGetCommand mapUserEntityToGetCommand(User user) {
+        UserGetCommand userGetCommand = new UserGetCommand();
+        BeanUtils.copyProperties(user, userGetCommand);
+        return userGetCommand;
     }
 
     //PRIVATE METHODS
