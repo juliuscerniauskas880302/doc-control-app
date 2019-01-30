@@ -14,7 +14,7 @@ class UserCreatedDocumentsContainer extends React.Component {
                     id: "kodas1s",
                     title: "Title1s",
                     description: "Description1s",
-                    type: "Type1s",
+                    documentTypeTitle: "Type1s",
                     state: "State1s",
                     creationDate: "2019.01.26"
                 },
@@ -22,7 +22,7 @@ class UserCreatedDocumentsContainer extends React.Component {
                     id: "kodas2s",
                     title: "Title2s",
                     description: "Description2s",
-                    type: "Type2s",
+                    documentTypeTitle: "Type2s",
                     state: "State2s",
                     creationDate: "2019.01.27"
                 },
@@ -30,7 +30,7 @@ class UserCreatedDocumentsContainer extends React.Component {
                     id: "kodas3s",
                     title: "Title3s",
                     description: "Description3s",
-                    type: "Type3s",
+                    documentTypeTitle: "Type3s",
                     state: "State3s",
                     creationDate: "2019.01.28"
                 }
@@ -41,16 +41,21 @@ class UserCreatedDocumentsContainer extends React.Component {
 
     componentDidMount() {
         //TODO
-        //tikrame kode duomenis imsiu iš API serviso
-        /* axios.get('http://localhost:8080/api/docs')
+        let currentUser = "migle";
+        let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs';
+        axios.get(resourcePath)
             .then((response) => {
                 this.setState({ documents: response.data });
-                console.log("Koks gautas dokumentų sąrašas?");
+                console.log("Koks gautas dokumentų sąrašas iš 'Sukurtų'?");
                 console.log(this.state.documents);
+                
+                /*let fff = new Date(this.state.documents[0].creationDate);
+                let ggg= fff.format("YYYY/MM/DD");
+                console.log("Data yra " + ggg);*/
             })
             .catch((error) => {
                 console.log(error);
-            }); */
+            });
     }
 
     render() {
@@ -63,36 +68,36 @@ class UserCreatedDocumentsContainer extends React.Component {
                         id={document.id}
                         title={document.title}
                         description={document.description}
-                        type={document.type}
+                        type={document.documentTypeTitle}
                         state={document.state}
-                        creationDate={document.creationDate}
+                        creationDate={document.creationDate.substring(0, 10)}
                     />
                 );
             });
             return (<div className="container-fluid">
                 <div className="row">
                     <div className="col-1">
-                        <a href="/admin/newDocument" class="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                        <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-1">
-                        <p>Numeris</p>
+                    <div className="col-2">
+                        <h5>Numeris</h5>
                     </div>
                     <div className="col-2">
-                        <p>Pavadinimas</p>
+                        <h5>Pavadinimas</h5>
                     </div>
                     <div className="col-2">
-                        <p>Aprašymas</p>
+                        <h5>Aprašymas</h5>
                     </div>
                     <div className="col-1">
-                        <p>Tipas</p>
+                        <h5>Tipas</h5>
                     </div>
                     <div className="col-1">
-                        <p>Sukūrimo data</p>
+                        <h5>Sukūrimo data</h5>
                     </div>
                     <div className="col-2">
-                        <p>Operacijos</p>
+                        <h5>Operacijos</h5>
                     </div>
                 </div>
                 <div className="row">{documentCard}
