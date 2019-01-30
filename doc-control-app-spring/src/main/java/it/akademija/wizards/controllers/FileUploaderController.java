@@ -32,7 +32,7 @@ public class FileUploaderController {
       "username": "string"
     }
     */
-    @PostMapping("/upload")
+    @RequestMapping(value= "/upload", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "Make a POST request to upload the file",
             produces = "application/json", consumes = "multipart/form-data")

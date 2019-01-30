@@ -16,15 +16,18 @@ public class DocumentType {
 
     @Column(unique = true)
     private String title;
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "submission_type", joinColumns = @JoinColumn(name="doc_type"),
             inverseJoinColumns = @JoinColumn(name="user_group_id") )
     private Set<UserGroup> submissionUserGroups;
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "review_type", joinColumns = @JoinColumn(name="doc_type"),
             inverseJoinColumns = @JoinColumn(name="user_group_id") )
     private Set<UserGroup> reviewUserGroups;
 
+    //CONSTRUCTORS
     public DocumentType() {
     }
 
@@ -34,6 +37,27 @@ public class DocumentType {
         this.reviewUserGroups = reviewUserGroups;
     }
 
+    //SUBMISSION GROUP - TYPE (ADD REMOVE)
+    public void addSubmissionUserGroup(UserGroup userGroup) {
+        submissionUserGroups.add(userGroup);
+        userGroup.getSubmissionDocumentType().add(this);
+    }
+    public void removeSubmissionUserGroup(UserGroup userGroup) {
+        submissionUserGroups.remove(userGroup);
+        userGroup.getSubmissionDocumentType().remove(this);
+    }
+    //REVIEW GROUP - TYPE (ADD REMOVE)
+    public void addReviewUserGroup(UserGroup userGroup) {
+        reviewUserGroups.add(userGroup);
+        userGroup.getReviewDocumentType().add(this);
+    }
+
+    public void removeReviewUserGroup(UserGroup userGroup) {
+        reviewUserGroups.remove(userGroup);
+        userGroup.getReviewDocumentType().remove(this);
+    }
+
+    //GETTERS SETTERS
     public String getId() {
         return id;
     }

@@ -36,7 +36,7 @@ public class DocumentService {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
-    //get
+    //GET
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getSubmittedDocuments() {
         return documentRepository.findAll()
@@ -60,14 +60,14 @@ public class DocumentService {
         return mapEntityToGetCommand(this.getDocumentFromDB(id));
     }
 
-    //create
+    //CREATE
     @Transactional
     public void createDocument(DocumentCreateCommand documentCreateCommand) {
         User author = this.getUserFromDB(documentCreateCommand.getUsername());
         DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
-        //TODO find author's groups
+        //find authors groups
         Set<UserGroup> userGroups = author.getUserGroups();
-        //TODO check if the found group can create this type of document
+        //check if the found group can create this type of document
         boolean isAllowed = false;
         for (UserGroup userGroup : userGroups) {
             for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
@@ -79,8 +79,8 @@ public class DocumentService {
         }
         if (isAllowed) {
             Document document = mapCreateCommandToEntity(documentCreateCommand);
+            author.addDocument(document);
             documentRepository.save(document);
-            addToUserList(document);
         } else {
             //TODO UserCannotCreateDocumentException
             throw new IllegalArgumentException("User doesn't have permission to create this type of document");
@@ -88,7 +88,7 @@ public class DocumentService {
 
     }
 
-    //submit
+    //SUBMIT
     @Transactional
     public void submitDocument(String id) {
         Document document = this.getDocumentFromDB(id);
@@ -96,14 +96,14 @@ public class DocumentService {
         document.setDocumentState(DocumentState.SUBMITTED);
     }
 
-    //review
+    //REVIEW
     @Transactional
     public void reviewDocument(String id, DocumentReviewCommand documentReviewCommand) {
         User reviewer = this.getUserFromDB(documentReviewCommand.getReviewerUsername());
         Document document = this.getDocumentFromDB(id);
-        //TODO check reviewer's groups
+        //find reviewer's groups
         Set<UserGroup> userGroups = reviewer.getUserGroups();
-        //TODO check if the found group can review this type of document
+        //check if the found group can review this type of document
         boolean isAllowed = false;
         for (UserGroup userGroup : userGroups) {
             for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
@@ -126,7 +126,7 @@ public class DocumentService {
     }
 
 
-    //update
+    //UPDATE
     @Transactional
     public void updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand) {
         Document document = this.getDocumentFromDB(id);
@@ -138,14 +138,16 @@ public class DocumentService {
         }
     }
 
-    //delete
+    //DELETE
     @Transactional
     public void deleteDocumentById(String id) {
-        documentRepository.deleteById(id);
+        Document document = getDocumentFromDB(id);
+        User author = document.getAuthor();
+        author.removeDocument(document);
+        documentRepository.delete(document);
     }
 
-    //package methods
-
+    //PACKAGE METHODS (MAPPING)
     DocumentGetCommand mapEntityToGetCommand(Document document) {
         DocumentGetCommand documentGetCommand = new DocumentGetCommand();
         BeanUtils.copyProperties(document, documentGetCommand);
@@ -177,13 +179,7 @@ public class DocumentService {
             return document;
     }
 
-    @Transactional
-    void addToUserList(Document document) {
-        User author = this.getUserFromDB(document.getAuthor().getUsername());
-        author.getDocuments().add(document);
-    }
-
-    //private methods
+    //PRIVATE METHODS (GETTING ENTITIES FROM DB)
     @Transactional
     private User getUserFromDB(String username) throws ResourceNotFoundException {
         User user = userRepository.findByUsername(username);

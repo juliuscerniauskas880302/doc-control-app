@@ -26,7 +26,7 @@ public class DocumentTypeService {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
-    //get
+    //GET
     @Transactional(readOnly = true)
     public List<DocumentTypeGetCommand> getDocumentTypes() {
         return documentTypeRepository.findAll().stream().map(docType -> {
@@ -43,7 +43,7 @@ public class DocumentTypeService {
         return documentTypeGetCommand;
     }
 
-    //create
+    //CREATE
     @Transactional
     public void createDocumentType(DocumentTypeCreateCommand documentTypeCreateCommand) {
         DocumentType documentType = new DocumentType();
@@ -51,7 +51,7 @@ public class DocumentTypeService {
         documentTypeRepository.save(documentType);
     }
 
-    //update
+    //UPDATE
     @Transactional
     public void updateDocumentType(String id, DocumentTypeCreateCommand documentTypeCreateCommand) {
         DocumentType documentType = this.getDocTypeFromDB(id);
@@ -59,13 +59,18 @@ public class DocumentTypeService {
         documentTypeRepository.save(documentType);
     }
 
-    //delete
+    //DELETE
     @Transactional
     public void deleteDocumentType(String id) {
-        documentTypeRepository.deleteById(id);
+        DocumentType documentType = this.getDocTypeFromDB(id);
+        for (UserGroup userGroup: userGroupRepository.findAll()) {
+            documentType.removeSubmissionUserGroup(userGroup);
+            documentType.removeReviewUserGroup(userGroup);
+        }
+        documentTypeRepository.delete(documentType);
     }
 
-    //get groups
+    //GET GROUPS
     @Transactional
     public List<UserGroupGetCommand> getDocTypeGroups(String id, String groupType) {
         DocumentType documentType = this.getDocTypeFromDB(id);
@@ -89,32 +94,32 @@ public class DocumentTypeService {
         } return null;
     }
 
-    //add groups
+    //ADD GROUPS
     @Transactional
     public void addGroupsToDocType(String id, String groupType, UserAddGroupsCommand userAddGroupsCommand) {
         DocumentType documentType = this.getDocTypeFromDB(id);
         List<UserGroup> userGroups = userGroupRepository.findAllById(userAddGroupsCommand.getId());
         for (UserGroup userGroup : userGroups) {
-            if(groupType.equals("submission")) documentType.getSubmissionUserGroups().add(userGroup);
-            else if (groupType.equals("review")) documentType.getReviewUserGroups().add(userGroup);
+            if(groupType.equals("submission")) documentType.addSubmissionUserGroup(userGroup);
+            else if (groupType.equals("review")) documentType.addReviewUserGroup(userGroup);
         }
         documentTypeRepository.save(documentType);
     }
 
-    //remove groups
+    //REMOVE GROUPS
     @Transactional
     public void removeGroupsFromDocType(String id, String groupType, UserRemoveGroupsCommand userRemoveGroupsCommand) {
         DocumentType documentType = this.getDocTypeFromDB(id);
         List<UserGroup> userGroups = userGroupRepository.findAllById(userRemoveGroupsCommand.getId());
         for (UserGroup userGroup : userGroups) {
-            if(groupType.equals("submission")) documentType.getSubmissionUserGroups().remove(userGroup);
-            else if (groupType.equals("review")) documentType.getReviewUserGroups().remove(userGroup);
+            if(groupType.equals("submission")) documentType.removeSubmissionUserGroup(userGroup);
+            else if (groupType.equals("review")) documentType.removeReviewUserGroup(userGroup);
         }
         documentTypeRepository.save(documentType);
     }
 
 
-    //private methods
+    //PRIVATE METHODS (GETTING ENTITIES FROM DB)
     @Transactional
     private DocumentType getDocTypeFromDB(String id) {
         return documentTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Document type not found"));
