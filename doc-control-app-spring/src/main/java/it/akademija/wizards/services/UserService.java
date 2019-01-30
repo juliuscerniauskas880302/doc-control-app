@@ -14,11 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,11 +22,13 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserGroupRepository userGroupRepository;
+    private DocumentService documentService;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository) {
+    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, DocumentService documentService) {
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
+        this.documentService = documentService;
     }
 
     public UserRepository getUserRepository() {
@@ -136,9 +134,9 @@ public class UserService {
             return user.getDocuments().stream().map(document -> {
                 //TODO pastebejimas nuo migles. nesumapina normaliai username ir document type title, as documentService turiu privatu metoda mapEntitytoGetCommand kur viska padaro,
                 // bet galvoju gal sitas visas reikalas isvis turetu but document servise
-                DocumentGetCommand documentGetCommand = new DocumentGetCommand();
-                BeanUtils.copyProperties(document, documentGetCommand);
-                return documentGetCommand;
+//                DocumentGetCommand documentGetCommand = new DocumentGetCommand();
+//                BeanUtils.copyProperties(document, documentGetCommand);
+                return documentService.mapEntityToGetCommand(document);
             }).collect(Collectors.toList());
         } else {
             throw new NullPointerException("User does not exist");
