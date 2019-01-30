@@ -9,8 +9,9 @@ export default class NewDocumentForm extends Component {
       title: "",
       description: "",
       documentType: "",
+      username: "migle",
       selectedFiles: null,
-      selectedDocumentType: "",
+      documentTypeTitle: "",
       documentTypes: []
     };
   }
@@ -36,17 +37,23 @@ export default class NewDocumentForm extends Component {
   };
 
   onSubmitDocumentHandler = e => {
-    console.log();
     e.preventDefault();
+    let model = {
+      description: this.state.description,
+      documentTypeTitle: this.state.documentTypeTitle,
+      title: this.state.title,
+      username: "migle"
+    };
+    console.log(model);
     let file = new FormData();
-    console.log(this.state.selectedFiles.length);
     if (this.state.selectedFiles.length === 1) {
       file.append(
         "file",
         this.state.selectedFiles[0],
         this.state.selectedFiles[0].name
       );
-      Axios.post("http://localhost:8081/api/files/upload", file, {
+      file.append("model", JSON.stringify(model));
+      Axios.post("http://localhost:8081/api/docs", file, {
         onUploadProgress: progressEvent => {
           console.log(
             "Upload progress: " +
@@ -58,26 +65,26 @@ export default class NewDocumentForm extends Component {
         .then(res => console.log(res))
         .catch(err => console.log(err));
     } else {
-      for (let i = 0; i < this.state.selectedFiles.length; i++) {
-        file.append(
-          "file",
-          this.state.selectedFiles[i],
-          this.state.selectedFiles[i].name
-        );
-        console.log(this.state.selectedFiles[i]);
-        console.log(this.state.selectedFiles[i].name);
-      }
-      Axios.post("http://localhost:8081/api/files/upload", file, {
-        onUploadProgress: progressEvent => {
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
-        }
-      })
-        .then(res => console.log(res))
-        .catch(err => console.log(err));
+      //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
+      //     file.append(
+      //       "file",
+      //       this.state.selectedFiles[i],
+      //       this.state.selectedFiles[i].name
+      //     );
+      //     console.log(this.state.selectedFiles[i]);
+      //     console.log(this.state.selectedFiles[i].name);
+      //   }
+      //   Axios.post("http://localhost:8081/api/files/upload", file, {
+      //     onUploadProgress: progressEvent => {
+      //       console.log(
+      //         "Upload progress: " +
+      //           (progressEvent.loaded / progressEvent.total) * 100 +
+      //           "%"
+      //       );
+      //     }
+      //   })
+      //     .then(res => console.log(res))
+      //     .catch(err => console.log(err));
     }
     console.log(file);
   };
@@ -129,7 +136,7 @@ export default class NewDocumentForm extends Component {
                       placeholder="Title (Document title)"
                       className="form-control input-md"
                       pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                      // required
+                      required
                     />
                   </div>
                 </div>
@@ -144,9 +151,9 @@ export default class NewDocumentForm extends Component {
                     size="5"
                     onChange={this.onValueChangeHandler}
                     id="select type"
-                    name="selectedDocumentType"
+                    name="documentTypeTitle"
                     type="text"
-                    // required
+                    required
                   >
                     {this.showAvailableDocumentTypes()}
                   </select>
@@ -183,8 +190,8 @@ export default class NewDocumentForm extends Component {
                     className="form-control"
                     rows="10"
                     id="Description (max 200 words)"
-                    name="description (max 200 words)"
-                    // required
+                    name="description"
+                    required
                   />
                 </div>
               </div>
