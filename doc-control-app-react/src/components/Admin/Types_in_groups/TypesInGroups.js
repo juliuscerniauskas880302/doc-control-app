@@ -8,7 +8,7 @@ export default class TypesInGroups extends Component {
     this.state = {
       groups: [],
       doctypes: [],
-      selectedGroup: null,
+      selectedType: null,
       selectedCanSend: "",
       selectedRemoveCanSend: "",
       selectedCanReview: "",
@@ -44,28 +44,27 @@ export default class TypesInGroups extends Component {
     this.props.history.goBack();
   };
 
-  showAllGroups = () => {
-    console.log(this.state.groups);
-    if (this.state.groups.length === 0) {
+  showAllDocTypes = () => {
+    if (this.state.doctypes.length === 0) {
       return (
         <option value="" disabled>
-          No available groups...
+          No available doc types...
         </option>
       );
     } else {
-      let groupList = this.state.groups.map(g => {
+      let docTypeList = this.state.doctypes.map(dt => {
         return (
-          <option key={g.title} value={g.userGroupId}>
-            {g.title}
+          <option key={dt.title} value={dt.id}>
+            {dt.title}
           </option>
         );
       });
-      return groupList;
+      return docTypeList;
     }
   };
 
-  loadSelectedGroup = e => {
-    Axios.get("http://localhost:8081/api/groups/" + e.target.value)
+  loadSelectedDocType = e => {
+    Axios.get("http://localhost:8081/api/doctypes/" + e.target.value)
       .then(res => {
         this.setState({ selectedGroup: res.data });
         console.log(res.data);
@@ -121,22 +120,23 @@ export default class TypesInGroups extends Component {
           <div className="panel panel-primary">
             <div className="panel-body">
               <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase">Group Types</strong>
+                <strong className="text-uppercase">Doc Types</strong>
               </h3>
               <div className="mx-1">
                 <span className="input-group-text group">
-                  All available groups
+                  Available doc types
                 </span>
                 <div className="input-group mb-1">
                   <select
                     className="form-control"
                     size="5"
-                    onChange={this.loadSelectedGroup}
-                    name="selectedGroup"
+                    onChange={this.loadSelectedDocType}
+                    name="selectedType"
                   >
-                    {this.showAllGroups()}
+                    {this.showAllDocTypes()}
                   </select>
                 </div>
+                {/* //////////////////////////////////////////////////////////////////// */}
                 <br />
                 <div className="row justify-content-center text-center">
                   <div className="col">
