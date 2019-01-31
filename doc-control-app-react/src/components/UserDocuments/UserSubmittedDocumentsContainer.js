@@ -42,7 +42,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
   componentDidMount() {
     //TODO
     let currentUser = "migle";
-    let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs';
+    let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs/submitted';
     axios.get(resourcePath)
       .then((response) => {
         this.setState({ documents: response.data });

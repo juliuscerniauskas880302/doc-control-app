@@ -10,32 +10,36 @@ class OneSubmittedDocumentContainer extends React.Component {
                     id: "kodas1",
                     title: "Title1",
                     description: "Description1",
-                    type: "Type1",
-                    state: "State1",
-                    creationDate: "2019.01.26"   
+                    documentTypeTitle: "Type1",
+                    documentState: "State1",
+                    submissionDate: "2019.01.26"   
         };      
     }
     
     componentDidMount() {
         
         //TODO
-        //Padaryti normaliai su duomenų nuskaitymu
-        // const position = this.props.match.params.id;
-        // axios.get('http://localhost:8080/api/docs/' + (position))
-        //     .then((response) => {
-        //         //this.setState(response.data);
-        //         console.log("-----------------Response data id yra: " + response.data.id);
-        //         console.log("-----------------Response data title yra: " + response.data.title);
-        //         this.setState({ title: response.data.title,
-        //                         description: response.data.description,
-        //                         type: response.data.type,
-        //                         flag: response.data.flag
-        //         })
+        
+        const position = this.props.match.params.documentId;
+        //let currentUser = "migle";
+        let resourcePath = 'http://localhost:8080/api/docs/' + position;
+        axios.get(resourcePath)
+            .then((response) => {
+                //this.setState(response.data);
+                console.log("-----------------Response data id yra: " + response.data.id);
+                console.log("-----------------Response data title yra: " + response.data.title);
+                this.setState({ id: response.data.id,
+                                title: response.data.title,
+                                description: response.data.description,
+                                documentTypeTitle: response.data.documentTypeTitle,
+                                documentState: response.data.documentState,
+                                submissionDate: response.data.submissionDate
+                })
                 
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     render() {
@@ -45,9 +49,9 @@ class OneSubmittedDocumentContainer extends React.Component {
                                     id={this.state.id}
                                     title={this.state.title}
                                     description={this.state.description}
-                                    type={this.state.type}
-                                    state={this.state.state}
-                                    creationDate={this.state.creationDate}
+                                    type={this.state.documentTypeTitle}
+                                    state={this.state.documentState.toLowerCase().charAt(0).toUpperCase() + this.state.documentState.toLowerCase().slice(1)}
+                                    submissionDate={this.state.submissionDate ? this.state.submissionDate.substring(0, 10): ""}
                   />
             </div>
         );

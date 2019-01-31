@@ -73,6 +73,7 @@ export default class NewDocumentForm extends Component {
         );
       }
       file.append("model", JSON.stringify(model));
+
       Axios.post("http://localhost:8081/api/docs/files", file, {
         onUploadProgress: progressEvent => {
           console.log(
@@ -84,7 +85,6 @@ export default class NewDocumentForm extends Component {
       })
         .then(res => console.log(res))
         .catch(err => console.log(err));
-
     }
     console.log(file);
   };
