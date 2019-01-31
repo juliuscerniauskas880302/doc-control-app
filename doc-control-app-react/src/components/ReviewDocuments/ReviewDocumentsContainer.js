@@ -12,28 +12,28 @@ class ReviewDocumentsContainer extends React.Component {
             documents: [
                 {
                     id: "Kodas1r",
-                    authorUsername: "Autorius1r",
+                    author: {},
                     title: "Title1r",
                     description: "Description1r",
                     documentTypeTitle: "Type1r",
                     submissionDate: "2019.01.26"
                 },
-                {
-                    id: "Kodas2r",
-                    authorUsername: "Autorius2r",
-                    title: "Title2r",
-                    description: "Description2r",
-                    documentTypeTitle: "Type2r",
-                    submissionDate: "2019.01.27"
-                },
-                {
-                    id: "Kodas3r",
-                    authorUsername: "Autorius3r",
-                    title: "Title3r",
-                    description: "Description3r",
-                    documentTypeTitle: "Type3r",
-                    submissionDate: "2019.01.28"
-                }
+                // {
+                //     id: "Kodas2r",
+                //     author: {},
+                //     title: "Title2r",
+                //     description: "Description2r",
+                //     documentTypeTitle: "Type2r",
+                //     submissionDate: "2019.01.27"
+                // },
+                // {
+                //     id: "Kodas3r",
+                //     author: {},
+                //     title: "Title3r",
+                //     description: "Description3r",
+                //     documentTypeTitle: "Type3r",
+                //     submissionDate: "2019.01.28"
+                // }
             ],
             loading: 'Kraunami dokumentai. Prašome palaukti...'
         };
@@ -61,11 +61,11 @@ class ReviewDocumentsContainer extends React.Component {
                     <ReviewDocumentsComponent
                         key={index}
                         id={document.id}
-                        author={document.authorUsername}
+                        author={document.author.firstname + " " + document.author.lastname}
                         title={document.title}
                         description={document.description}
                         type={document.documentTypeTitle}
-                        submissionDate={document.submissionDate.substring(0, 10)}
+                        submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10): ""}
                     />
                 );
             });

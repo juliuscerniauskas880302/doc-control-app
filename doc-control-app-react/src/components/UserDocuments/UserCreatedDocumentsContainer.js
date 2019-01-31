@@ -15,7 +15,6 @@ class UserCreatedDocumentsContainer extends React.Component {
                     title: "Title1s",
                     description: "Description1s",
                     documentTypeTitle: "Type1s",
-                    state: "State1s",
                     creationDate: "2019.01.26"
                 },
                 {
@@ -23,7 +22,6 @@ class UserCreatedDocumentsContainer extends React.Component {
                     title: "Title2s",
                     description: "Description2s",
                     documentTypeTitle: "Type2s",
-                    state: "State2s",
                     creationDate: "2019.01.27"
                 },
                 {
@@ -31,7 +29,6 @@ class UserCreatedDocumentsContainer extends React.Component {
                     title: "Title3s",
                     description: "Description3s",
                     documentTypeTitle: "Type3s",
-                    state: "State3s",
                     creationDate: "2019.01.28"
                 }
             ],
@@ -42,7 +39,7 @@ class UserCreatedDocumentsContainer extends React.Component {
     componentDidMount() {
         //TODO
         let currentUser = "migle";
-        let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs';
+        let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs/created';
         axios.get(resourcePath)
             .then((response) => {
                 this.setState({ documents: response.data });
@@ -69,7 +66,6 @@ class UserCreatedDocumentsContainer extends React.Component {
                         title={document.title}
                         description={document.description}
                         type={document.documentTypeTitle}
-                        state={document.state}
                         creationDate={document.creationDate.substring(0, 10)}
                     />
                 );

@@ -37,14 +37,6 @@ const OneCreatedDocumentComponent = (props) => {
             </div>
             <div className="row">
                 <div className="col-1">   
-                    <p>Būsena:</p>
-                </div>
-                <div className="col-2">
-                    <p>{props.state}</p>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-1">   
                     <p>Sukūrimo data:</p>
                 </div>
                 <div className="col-2">
@@ -56,7 +48,7 @@ const OneCreatedDocumentComponent = (props) => {
                     <button className="btn btn-primary" type="submit" onClick={props.handleEdit}>Redaguoti</button> &nbsp;       
                     <button className="btn btn-danger" type="submit" onClick={props.handleDelete}>Trinti</button> &nbsp;
                     <button className="btn btn-success" type="submit" onClick={props.handleSubmit}>Pateikti</button> &nbsp;
-                    <a href="/createdDocuments" class="btn btn-dark" role="button" aria-pressed="true">Atgal</a>
+                    <a href="/createdDocuments" className="btn btn-dark" role="button" aria-pressed="true">Atgal</a>
                 </div>
             </div>
         </div>
