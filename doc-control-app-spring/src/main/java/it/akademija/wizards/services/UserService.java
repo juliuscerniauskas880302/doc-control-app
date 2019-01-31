@@ -1,5 +1,6 @@
 package it.akademija.wizards.services;
 
+import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.enums.DocumentState;
@@ -95,6 +96,9 @@ public class UserService {
         if (user != null) {
             for (UserGroup userGroup: user.getUserGroups()) {
                 userGroup.removeUser(user);
+            }
+            for (Document document: user.getDocuments()) {
+                document.setAuthor(null);
             }
             userRepository.delete(user);
         } else {

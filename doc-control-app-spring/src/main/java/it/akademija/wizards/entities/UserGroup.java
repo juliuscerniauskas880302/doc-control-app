@@ -1,10 +1,8 @@
 package it.akademija.wizards.entities;
 
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,9 +59,6 @@ public class UserGroup {
         return submissionDocumentType;
     }
 
-    public void addSubmissionType (DocumentType documentType){
-        this.submissionDocumentType.add(documentType);
-    }
     public void setSubmissionDocumentType(List<DocumentType> submissionDocumentType) {
         this.submissionDocumentType = submissionDocumentType;
     }
@@ -72,9 +67,6 @@ public class UserGroup {
         return reviewDocumentType;
     }
 
-    public void addReviewType (DocumentType documentType){
-        this.submissionDocumentType.add(documentType);
-    }
 
     public void setReviewDocumentType(List<DocumentType> reviewDocumentType) {
         this.reviewDocumentType = reviewDocumentType;
@@ -94,5 +86,25 @@ public class UserGroup {
 
     public void removeUser(User user) {
         this.users.remove(user);
+    }
+
+    public void addSubmissionType (DocumentType documentType){
+        this.submissionDocumentType.add(documentType);
+        documentType.addSubmissionUserGroup(this);
+    }
+
+    public void removeSubmissionType(DocumentType documentType) {
+        this.submissionDocumentType.remove(documentType);
+        documentType.removeSubmissionUserGroup(this);
+    }
+
+    public void addReviewType (DocumentType documentType){
+        this.submissionDocumentType.add(documentType);
+        documentType.addReviewUserGroup(this);
+    }
+
+    public void removeReviewType(DocumentType documentType) {
+        this.reviewDocumentType.remove(documentType);
+        documentType.removeReviewUserGroup(this);
     }
 }
