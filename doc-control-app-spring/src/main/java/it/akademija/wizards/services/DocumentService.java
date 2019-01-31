@@ -300,7 +300,7 @@ public class DocumentService {
 
     @Transactional
     private void uploadFile(Document document, MultipartFile multipartFile) throws IOException {
-        File path = new File("documents/" + document.getAuthor().getUsername());
+        File path = new File("documents" + File.separator + document.getAuthor().getUsername());
         path.mkdirs();
         String originalFileName = multipartFile.getOriginalFilename();
         String updatedFileName = originalFileName + document.getPrefix();
@@ -327,7 +327,7 @@ public class DocumentService {
 
     @Transactional
     private void uploadFiles(Document document, MultipartFile []  multipartFile) throws IOException {
-        File path = new File("documents/" + document.getAuthor().getUsername());
+        File path = new File("documents" + "/" + document.getAuthor().getUsername());
         path.mkdirs();
         for(int i = 0; i < multipartFile.length; i++){
             String originalFileName = multipartFile[i].getOriginalFilename();
@@ -360,11 +360,12 @@ public class DocumentService {
 
     @Transactional
     private void deleteFiles(String username, String path, List<String> additionalFilePaths){
-        File file = new File("documents/" + username + "/" + path);
+        File file = new File("documents" + "/" + username + "/" + path);
         file.delete();
+
         for (String p :
                 additionalFilePaths) {
-            File files = new File("documents/" + username + "/" + p);
+            File files = new File("documents" + "/" + username + "/" + p);
             files.delete();
         }
     }
