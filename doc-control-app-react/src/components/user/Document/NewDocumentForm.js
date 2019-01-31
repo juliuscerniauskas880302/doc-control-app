@@ -65,26 +65,25 @@ export default class NewDocumentForm extends Component {
         .then(res => console.log(res))
         .catch(err => console.log(err));
     } else {
-      //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
-      //     file.append(
-      //       "file",
-      //       this.state.selectedFiles[i],
-      //       this.state.selectedFiles[i].name
-      //     );
-      //     console.log(this.state.selectedFiles[i]);
-      //     console.log(this.state.selectedFiles[i].name);
-      //   }
-      //   Axios.post("http://localhost:8081/api/files/upload", file, {
-      //     onUploadProgress: progressEvent => {
-      //       console.log(
-      //         "Upload progress: " +
-      //           (progressEvent.loaded / progressEvent.total) * 100 +
-      //           "%"
-      //       );
-      //     }
-      //   })
-      //     .then(res => console.log(res))
-      //     .catch(err => console.log(err));
+      for (let i = 0; i < this.state.selectedFiles.length; i++) {
+        file.append(
+          "file",
+          this.state.selectedFiles[i],
+          this.state.selectedFiles[i].name
+        );
+      }
+      file.append("model", JSON.stringify(model));
+      Axios.post("http://localhost:8081/api/files/upload", file, {
+        onUploadProgress: progressEvent => {
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
     }
     console.log(file);
   };
