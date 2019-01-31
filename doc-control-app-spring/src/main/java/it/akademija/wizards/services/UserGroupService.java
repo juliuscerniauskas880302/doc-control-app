@@ -1,5 +1,6 @@
 package it.akademija.wizards.services;
 
+import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.models.user.UserGetCommand;
@@ -13,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +70,16 @@ public class UserGroupService {
 
     @Transactional
     public void deleteUserGroup(String id) {
-        userGroupRepository.deleteById(id);
+        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        if (userGroup != null) {
+            for (DocumentType submissionDocumentType: userGroup.getSubmissionDocumentType()) {
+                submissionDocumentType.removeSubmissionUserGroup(userGroup);
+            }
+            for (DocumentType reviewDocumentType: userGroup.getReviewDocumentType()) {
+                reviewDocumentType.removeReviewUserGroup(userGroup);
+            }
+            userGroupRepository.deleteById(id);
+        }
     }
 
     @Transactional

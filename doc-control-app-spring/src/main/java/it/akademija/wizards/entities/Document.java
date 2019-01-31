@@ -28,11 +28,13 @@ public class Document {
     private List<String> additionalFilePrefixes = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "author_id")
     private User author;
 
     private DocumentState documentState;
 
     @ManyToOne
+    @JoinColumn(name = "doctype_id")
     private DocumentType documentType;
 
     @NotNull

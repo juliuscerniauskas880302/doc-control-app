@@ -1,8 +1,5 @@
 package it.akademija.wizards.models.document;
 
-import it.akademija.wizards.entities.DocumentType;
-;
-
 public class DocumentCreateCommand {
 
     private String username;
