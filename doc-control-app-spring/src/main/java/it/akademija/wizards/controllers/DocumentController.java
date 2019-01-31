@@ -63,34 +63,63 @@ public class DocumentController {
         return documentService.getDocumentsById(id);
     }
 
+
     @ApiOperation(value = "create a document",
             produces = "application/json", consumes = "multipart/form-data")
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> createDocument(
             @RequestParam("model") String model,
-            @RequestParam("file") MultipartFile multipartFile) {
-            /*   String model:
-    {
-      "description": "string",
-      "documentTypeTitle": "atostogu prasymas",
-      "title": "string",
-      "username": "migle"
-    }
-    */
+            @RequestParam("file") MultipartFile [] multipartFile) {
+        /*   String model:
+            {
+              "description": "string",
+              "documentTypeTitle": "atostogu prasymas",
+              "title": "string",
+              "username": "migle"
+            }
+        */
         ObjectMapper mapper = new ObjectMapper();
         try {
             DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
             documentService.createDocument(documentCreateCommand, multipartFile);
 
         } catch (IOException ex) {
-            System.out.println(ex);
             return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
 
         }
         return new ResponseEntity<String>("Document created", HttpStatus.OK);
     }
+    //OLD CREATE
+    //    @ApiOperation(value = "create a document",
+//            produces = "application/json", consumes = "multipart/form-data")
+//    @RequestMapping(method = RequestMethod.POST)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity<String> createDocument(
+//            @RequestParam("model") String model,
+//            @RequestParam("file") MultipartFile multipartFile) {
+//        /*   String model:
+//            {
+//              "description": "string",
+//              "documentTypeTitle": "atostogu prasymas",
+//              "title": "string",
+//              "username": "migle"
+//            }
+//        */
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
+//            documentService.createDocument(documentCreateCommand, multipartFile);
+//
+//        } catch (IOException ex) {
+//            System.out.println(ex);
+//            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
+//
+//        }
+//        return new ResponseEntity<String>("Document created", HttpStatus.OK);
+//    }
 
+//TODO: download main file + additional file
     @ApiOperation(value = "download a file")
     @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -111,7 +140,7 @@ public class DocumentController {
     }
 
     @ApiOperation(value = "submit document by document Id")
-    @RequestMapping(value = "/{id}/submit", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/submit", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
     public void submitDocument(@PathVariable String id) {
         documentService.submitDocument(id);
@@ -126,6 +155,7 @@ public class DocumentController {
         documentService.reviewDocument(id, documentReviewCommand);
     }
 
+
     @ApiOperation(value = "update document by document Id",
             produces = "application/json", consumes = "multipart/form-data")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -133,7 +163,7 @@ public class DocumentController {
     public ResponseEntity<String> updateDocumentById(
             @PathVariable String id,
             @RequestPart String model,
-            @RequestPart MultipartFile multipartFile) {
+            @RequestPart MultipartFile [] multipartFile) {
         /*   String model:
     {
       "documentTypeTitle": "atostogu prasymas",
@@ -153,6 +183,34 @@ public class DocumentController {
         }
         return new ResponseEntity<String>("Document updated", HttpStatus.OK);
     }
+    //OLD UPDATE
+    //    @ApiOperation(value = "update document by document Id",
+    //            produces = "application/json", consumes = "multipart/form-data")
+    //    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    //    @ResponseStatus(HttpStatus.ACCEPTED)
+    //    public ResponseEntity<String> updateDocumentById(
+    //            @PathVariable String id,
+    //            @RequestPart String model,
+    //            @RequestPart MultipartFile multipartFile) {
+    //        /*   String model:
+    //    {
+    //      "documentTypeTitle": "atostogu prasymas",
+    //      "title": "string",
+    //      "description": "string"
+    //    }
+    //    */
+    //        ObjectMapper mapper = new ObjectMapper();
+    //        try {
+    //            DocumentUpdateCommand documentUpdateCommand = mapper.readValue(model, DocumentUpdateCommand.class);
+    //            documentService.updateDocumentById(id, documentUpdateCommand, multipartFile);
+    //
+    //        } catch (IOException ex) {
+    //            System.out.println(ex);
+    //            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
+    //
+    //        }
+    //        return new ResponseEntity<String>("Document updated", HttpStatus.OK);
+    //    }
 
     @ApiOperation(value = "delete document by document Id")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
