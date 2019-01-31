@@ -5,7 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Document {
@@ -18,6 +20,12 @@ public class Document {
     @NotNull
     @Column(unique = true)
     private String prefix;
+
+//    Other files prefixes
+    @ElementCollection
+    @CollectionTable
+    @Column
+    private List<String> additionalFilePrefixes = new ArrayList<>();
 
     @ManyToOne
     private User author;
@@ -76,6 +84,7 @@ public class Document {
         this.reviewer = reviewer;
         this.rejectionReason = rejectionReason;
         this.path = path;
+
     }
 
     //GETTERS SETTERS
@@ -198,5 +207,15 @@ public class Document {
         }
     }
 
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
+    public List<String> getAdditionalFilePrefixes() {
+        return additionalFilePrefixes;
+    }
+
+    public void setAdditionalFilePrefixes(List<String> additionalFilePrefixes) {
+        this.additionalFilePrefixes = additionalFilePrefixes;
+    }
 }

@@ -53,12 +53,12 @@ export default class NewDocumentForm extends Component {
         this.state.selectedFiles[0].name
       );
       file.append("model", JSON.stringify(model));
-      Axios.post("http://localhost:8081/api/docs", file, {
+      Axios.post("http://localhost:8081/api/docs/files", file, {
         onUploadProgress: progressEvent => {
           console.log(
             "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
+            (progressEvent.loaded / progressEvent.total) * 100 +
+            "%"
           );
         }
       })
@@ -73,12 +73,13 @@ export default class NewDocumentForm extends Component {
         );
       }
       file.append("model", JSON.stringify(model));
-      Axios.post("http://localhost:8081/api/files/upload", file, {
+
+      Axios.post("http://localhost:8081/api/docs/files", file, {
         onUploadProgress: progressEvent => {
           console.log(
             "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
+            (progressEvent.loaded / progressEvent.total) * 100 +
+            "%"
           );
         }
       })

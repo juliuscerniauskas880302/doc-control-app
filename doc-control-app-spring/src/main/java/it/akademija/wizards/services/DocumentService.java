@@ -30,10 +30,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,9 +69,12 @@ public class DocumentService {
         return mapEntityToGetCommand(this.getDocumentFromDB(id));
     }
 
+
+
     //CREATE
     @Transactional
-    public ResponseEntity<String> createDocument (DocumentCreateCommand documentCreateCommand, MultipartFile multipartFile) {
+    public ResponseEntity<String> createDocument(DocumentCreateCommand documentCreateCommand,
+                                                                    MultipartFile [] multipartFile) {
         User author = this.getUserFromDB(documentCreateCommand.getUsername());
         DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
         //find authors groups
@@ -93,7 +93,7 @@ public class DocumentService {
             Document document = mapCreateCommandToEntity(documentCreateCommand);
             author.addDocument(document);
             try {
-                this.uploadFile(document, multipartFile);
+                this.uploadFiles(document, multipartFile);
             } catch (IOException e) {
                 return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
             }
@@ -104,6 +104,40 @@ public class DocumentService {
         }
         return new ResponseEntity<>("Document was created", HttpStatus.CREATED);
     }
+
+    //OLD CREATE
+    //  //Create
+    //    @Transactional
+    //    public ResponseEntity<String> createDocument (DocumentCreateCommand documentCreateCommand, MultipartFile multipartFile) {
+    //        User author = this.getUserFromDB(documentCreateCommand.getUsername());
+    //        DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
+    //        //find authors groups
+    //        Set<UserGroup> userGroups = author.getUserGroups();
+    //        //check if the found group can create this type of document
+    //        boolean isAllowed = false;
+    //        for (UserGroup userGroup : userGroups) {
+    //            for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
+    //                if (createdDocumentType.equals(allowedDocumentType)) {
+    //                    isAllowed = true;
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //        if (isAllowed) {
+    //            Document document = mapCreateCommandToEntity(documentCreateCommand);
+    //            author.addDocument(document);
+    //            try {
+    //                this.uploadFile(document, multipartFile);
+    //            } catch (IOException e) {
+    //                return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+    //            }
+    //            documentRepository.save(document);
+    //        } else {
+    //            //TODO UserCannotCreateDocumentException
+    //            throw new IllegalArgumentException("User doesn't have permission to create this type of document");
+    //        }
+    //        return new ResponseEntity<>("Document was created", HttpStatus.CREATED);
+    //    }
 
     //SUBMIT
     @Transactional
@@ -145,12 +179,15 @@ public class DocumentService {
 
     //UPDATE
     @Transactional
-    public ResponseEntity<String> updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand, MultipartFile multipartFile)  {
+    public ResponseEntity<String> updateDocumentById(
+            String id,
+            DocumentUpdateCommand documentUpdateCommand,
+            MultipartFile [] multipartFile)  {
         Document document = this.getDocumentFromDB(id);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
             if (multipartFile != null) {
                 try {
-                    uploadFile(document, multipartFile);
+                    uploadFiles(document, multipartFile);
                 } catch (IOException e) {
                     return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
                 }
@@ -162,6 +199,29 @@ public class DocumentService {
         }
         return new ResponseEntity<>("Document updated", HttpStatus.OK);
     }
+
+    //OLD UPDATE
+    //    //UPDATE
+//    @Transactional
+//    public ResponseEntity<String> updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand, MultipartFile multipartFile)  {
+//        Document document = this.getDocumentFromDB(id);
+//        if (document.getDocumentState().equals(DocumentState.CREATED)) {
+//            if (multipartFile != null) {
+//                try {
+//                    uploadFile(document, multipartFile);
+//                } catch (IOException e) {
+//                    return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+//                }
+//            }
+//            documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
+//        } else {
+//            //TODO SubmittedDocumentUpdateNotAllowedException
+//            throw new IllegalArgumentException("submitted documents cannot be updated");
+//        }
+//        return new ResponseEntity<>("Document updated", HttpStatus.OK);
+//    }
+//
+
 
     //DELETE
     @Transactional
@@ -261,6 +321,37 @@ public class DocumentService {
         Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
     }
 
-
-
+    @Transactional
+    private void uploadFiles(Document document, MultipartFile []  multipartFile) throws IOException {
+        File path = new File("documents/" + document.getAuthor().getUsername());
+        path.mkdirs();
+        for(int i = 0; i < multipartFile.length; i++){
+            String originalFileName = multipartFile[i].getOriginalFilename();
+            String updatedFileName = originalFileName + document.getPrefix();
+            if (i == 0) {
+                document.setPath(updatedFileName);
+            } else {
+                document.getAdditionalFilePrefixes().add(updatedFileName);
+            }
+            byte[] buf = new byte[1024];
+            File file = new File(path.getPath(), updatedFileName);
+            try (InputStream inputStream = multipartFile[i].getInputStream();
+                 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                int numRead = 0;
+                while ((numRead = inputStream.read(buf)) >= 0) {
+                    fileOutputStream.write(buf, 0, numRead);
+                }
+            }
+            Set<PosixFilePermission> perms = new HashSet<>();
+            // add owners permission
+            perms.add(PosixFilePermission.OWNER_READ);
+            perms.add(PosixFilePermission.OWNER_WRITE);
+            perms.add(PosixFilePermission.GROUP_READ);
+            perms.add(PosixFilePermission.GROUP_WRITE);
+            // add others permissions
+            perms.add(PosixFilePermission.OTHERS_READ);
+            Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
+        }
+    }
 }
+
