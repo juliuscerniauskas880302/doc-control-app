@@ -1,0 +1,7 @@
+Schema uploadFile:
+   {
+     "description": "string",
+     "documentTypeTitle": "string",
+     "title": "string",
+     "username": "string"
+   }
