@@ -127,7 +127,9 @@ public class DocumentController {
         DocumentGetCommand document = documentService.getDocumentsById(id);
         String originalFileName = document.getPath().replace(document.getPrefix(), "");
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
-        File file = new File("documents" + "/" + document.getAuthor().getUsername() + "/" + document.getPath());
+        File file = new File("documents" + "/" +
+                document.getAuthor().getUsername() + "/" +
+                document.getPath());
         if (file.exists()) {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             HttpHeaders headers = new HttpHeaders();
