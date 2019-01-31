@@ -224,12 +224,16 @@ public class DocumentService {
 
 
     //DELETE
+    //TODO: Can user DELETE only created documents?
     @Transactional
     public void deleteDocumentById(String id) {
         Document document = getDocumentFromDB(id);
-        User author = document.getAuthor();
-        author.removeDocument(document);
-        documentRepository.delete(document);
+//        if(document.getDocumentState().equals(DocumentState.CREATED)) {
+            User author = document.getAuthor();
+            deleteFiles(author.getUsername(), document.getPath(), document.getAdditionalFilePaths());
+            author.removeDocument(document);
+            documentRepository.delete(document);
+//        }
     }
 
     //PACKAGE METHODS (MAPPING)
@@ -331,7 +335,7 @@ public class DocumentService {
             if (i == 0) {
                 document.setPath(updatedFileName);
             } else {
-                document.getAdditionalFilePrefixes().add(updatedFileName);
+                document.getAdditionalFilePaths().add(updatedFileName);
             }
             byte[] buf = new byte[1024];
             File file = new File(path.getPath(), updatedFileName);
@@ -351,6 +355,17 @@ public class DocumentService {
             // add others permissions
             perms.add(PosixFilePermission.OTHERS_READ);
             Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
+        }
+    }
+
+    @Transactional
+    private void deleteFiles(String username, String path, List<String> additionalFilePaths){
+        File file = new File("documents/" + username + "/" + path);
+        file.delete();
+        for (String p :
+                additionalFilePaths) {
+            File files = new File("documents/" + username + "/" + p);
+            files.delete();
         }
     }
 }

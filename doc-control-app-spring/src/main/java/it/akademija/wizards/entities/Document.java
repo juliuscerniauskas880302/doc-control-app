@@ -25,7 +25,7 @@ public class Document {
     @ElementCollection
     @CollectionTable
     @Column
-    private List<String> additionalFilePrefixes = new ArrayList<>();
+    private List<String> additionalFilePaths = new ArrayList<>();
 
     @ManyToOne
     private User author;
@@ -211,11 +211,11 @@ public class Document {
         this.prefix = prefix;
     }
 
-    public List<String> getAdditionalFilePrefixes() {
-        return additionalFilePrefixes;
+    public List<String> getAdditionalFilePaths() {
+        return additionalFilePaths;
     }
 
-    public void setAdditionalFilePrefixes(List<String> additionalFilePrefixes) {
-        this.additionalFilePrefixes = additionalFilePrefixes;
+    public void setAdditionalFilePaths(List<String> additionalFilePaths) {
+        this.additionalFilePaths = additionalFilePaths;
     }
 }
