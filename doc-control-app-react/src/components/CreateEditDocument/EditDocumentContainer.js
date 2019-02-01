@@ -10,47 +10,17 @@ class EditDocumentContainer extends React.Component {
       id: "default kodas",
       title: "default title",
       description: "default description",
-      type:"Antras tipas",
-      typeList: ["Pirmas tipas", "Antras tipas", "Trečias tipas", "Ketvirtas tipas"],
-      state: "default state",
-      creationDate: "2019.01.28"
+      username: "migle",
+      documentTypeTitle: "Antras tipas",
+      typeList: [],
+      selectedFiles: null
+      //state: "default state",
+      //creationDate: "2019.01.28"
     };
-  }
-
-  componentDidMount() {
-    const position = this.props.match.params.title;
-
-    //TODO
-    //Padaryti normalią GET operaciją
-    /* axios.get('http://localhost:8080/holidays/' + (position))
-      .then((response) => {
-        //this.setState(response.data);
-        console.log("Gavau tokį produktą į redagavimą");
-        console.log(this.state);
-       // console.log(response.data.id);
-        //console.log(response.data.title);
-        this.setState({oldTitle: response.data.title});
-        this.setState({title: response.data.title});
-        this.setState({image: response.data.image});
-        this.setState({description: response.data.description});
-        this.setState({type: response.data.type});
-        this.setState({flag: response.data.flag});
-      
-      console.log("Pagaminau tokį State ->" + this.state);
-      //console.log("Toks description iš state'o -> " + this.state.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      }); */
   }
 
   handleChangeOfTitle = (event) => {
     this.setState({ title: event.target.value });
-    console.log(this.state.title);
-  }
-
-  handleChangeOfImage = (event) => {
-    this.setState({ image: event.target.value });
   }
 
   handleChangeOfDescription = (event) => {
@@ -58,34 +28,132 @@ class EditDocumentContainer extends React.Component {
   }
 
   handleChangeOfType = (event) => {
-    this.setState({ type: event.target.value });
+    this.setState({ documentTypeTitle: event.target.value });
   }
 
-  handleChangeOfFlag = (event) => {
-    this.setState({ flag: event.target.value });
-  }
+  onFileSelectHandler = event => {
+    console.log(event.target.files);
+    this.setState({ [event.target.name]: event.target.files });
+  };
 
+  downloadHandler = (event) => {
+    // 70a73980-02d1-4e63-a577-6e59b25c976b
+    // Axios.get(
+    //   "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download"
+    // ).then(res => FileSaver.saveAs(res.data, "effectiveFileName"));
+
+    axios({
+      url:
+        "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download", //doc id
+      method: "GET",
+      responseType: "blob" // important
+    }).then(response => {
+      var filename = this.extractFileName(
+        response.headers["content-disposition"]
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
+
+  extractFileName = contentDispositionValue => {
+    var filename = "";
+    if (
+      contentDispositionValue &&
+      contentDispositionValue.indexOf("attachment") !== -1
+    ) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      var matches = filenameRegex.exec(contentDispositionValue);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
+      }
+    }
+    return filename;
+  };
+
+
+
+  //TODO
   handleSubmit = (event) => {
-    //TODO
-    //Padaryti normalia PUT operaciją
-    // event.preventDefault();
-    // //const position = this.props.match.params.id;
-    // axios.put('http://localhost:8080/holidays/' + (this.state.oldTitle), this.state)
-
-    //   .then(function (response) {
-    //     /* axios.get('http://localhost:8080/products/' + (this.state.id))
-    //                 .then((response) => {
-    //                     this.setState({ products: response.data });
-    //                 })
-    //                 .catch((error) => {
-    //                     console.log(error);
-    //                 }); */
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-
+    console.log("Atėjau į Submit handlerį");
+    event.preventDefault();
+    let model = {
+      description: this.state.description,
+      documentTypeTitle: this.state.documentTypeTitle,
+      title: this.state.title,
+      username: "migle"
+    };
+    console.log("Čia spausdina modelį");
+    console.log(model);
+    let file = new FormData();
+    if (this.state.selectedFiles.length === 1) {
+      file.append(
+        "multipartFile",
+        this.state.selectedFiles[0],
+        this.state.selectedFiles[0].name
+      );
+      file.append("model", JSON.stringify(model));
+      axios.put("http://localhost:8081/api/docs/" + this.state.id, file, {
+        onUploadProgress: progressEvent => {
+          console.log(
+            "Upload progress: " +
+            (progressEvent.loaded / progressEvent.total) * 100 +
+            "%"
+          );
+        }
+      })
+        .then(res => console.log(res))
+        .catch(err => console.log("KLAIDA SUBMITE" + err));
+    } else {
+      //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
+      //     file.append(
+      //       "file",
+      //       this.state.selectedFiles[i],
+      //       this.state.selectedFiles[i].name
+      //     );
+      //     console.log(this.state.selectedFiles[i]);
+      //     console.log(this.state.selectedFiles[i].name);
+      //   }
+      //   Axios.post("http://localhost:8081/api/files/upload", file, {
+      //     onUploadProgress: progressEvent => {
+      //       console.log(
+      //         "Upload progress: " +
+      //           (progressEvent.loaded / progressEvent.total) * 100 +
+      //           "%"
+      //       );
+      //     }
+      //   })
+      //     .then(res => console.log(res))
+      //     .catch(err => console.log(err));
+    }
+    console.log("Spausinu FILE" + file);
   }
+
+  // handleSubmit = (event) => {
+  //   //TODO
+  //   //Padaryti normalia PUT operaciją
+  //   event.preventDefault();
+  //   //const position = this.props.match.params.id;
+  //   axios.put('http://localhost:8081/holidays/' + (this.state.oldTitle), this.state)
+
+  //     .then(function (response) {
+  //       /* axios.get('http://localhost:8080/products/' + (this.state.id))
+  //                   .then((response) => {
+  //                       this.setState({ products: response.data });
+  //                   })
+  //                   .catch((error) => {
+  //                       console.log(error);
+  //                   }); */
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }
 
   //TODO
   //Padaryti normalų ištrynimo metodą
@@ -93,27 +161,68 @@ class EditDocumentContainer extends React.Component {
     event.preventDefault();
     console.log("Noriu ištrinti " + this.state.oldTitle);
     axios.delete('http://localhost:8080/holidays/' + (this.state.oldTitle))
-    .then((response) => {
+      .then((response) => {
         console.log("Ištrinta");
-    })
-    .catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
-    });
+      });
   }
+
+  componentDidMount() {
+    //nusiskaitau dokumentų tipus
+    axios.get('http://localhost:8081/api/doctypes')
+      .then((response) => {
+        this.setState({ typeList: response.data.map(item => item.title) });
+        console.log("Koks atiduodamas dokumentų tipų sąrašas?");
+        console.log(this.state.typeList);
+      })
+      .catch((error) => {
+        console.log("KLAIDA!!!!" + error);
+      });
+
+
+    //Konkretaus dokumento duomenų nuskaitymas
+    const position = this.props.match.params.documentId;
+    //let currentUser = "migle";
+    let resourcePath = 'http://localhost:8081/api/docs/' + position;
+
+    axios.get(resourcePath)
+      .then((response) => {
+        //this.setState(response.data);
+        
+        // console.log(response.data.id);
+        //console.log(response.data.title);
+        this.setState({ id: response.data.id })
+        this.setState({ title: response.data.title });
+        this.setState({ description: response.data.description });
+        this.setState({ documentTypeTitle: response.data.documentTypeTitle });
+        console.log("Gavau tokį produktą į redagavimą");
+        console.log(this.state);
+
+        //console.log("Pagaminau tokį State ->" + this.state);
+        //console.log("Toks description iš state'o -> " + this.state.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
 
   render() {
     return (
-      <EditDocumentComponent handleChangeOfTitle={this.handleChangeOfTitle}
-        handleChangeOfImage={this.handleChangeOfImage}
+      <EditDocumentComponent
+        handleChangeOfTitle={this.handleChangeOfTitle}
         handleChangeOfDescription={this.handleChangeOfDescription}
         handleChangeOfType={this.handleChangeOfType}
-        handleChangeOfFlag={this.handleChangeOfFlag}
         handleSubmit={this.handleSubmit}
         handleDelete={this.handleDelete}
+        downloadHandler={this.downloadHandler}
+        onFileSelectHandler={this.onFileSelectHandler}
         title={this.state.title}
         description={this.state.description}
         typeList={this.state.typeList}
-        type={this.state.type}
+        type={this.state.documentTypeTitle}
       />
     );
   }

@@ -2,11 +2,12 @@ import React from 'react';
 
 const EditDocumentComponet = (props) => {
     let optionList = props.typeList.map ( v => (
-        <option value = {v}>{v}</option>
+        //<option value = {v}>{v}</option>
+        <option key={v}>{v}</option>
     ))
 
     return (
-        <form >
+        <form onSubmit={props.handleSubmit}>
             <div className="form-row">
                 <div className="col-md-12 mb-12">
                     <h5>Esamo dokumento redagavimas</h5>
@@ -28,15 +29,35 @@ const EditDocumentComponet = (props) => {
             <div className="form-row">
                 <div className="col-md-4 mb-3">
                     <label htmlFor="validationDefault03">Dokumento tipas</label>
-                    <select class="form-control" value={props.type} required onChange={props.handleChangeOfType}>
+                    <select className="form-control" value={props.type} required onChange={props.handleChangeOfType}>
                         <option hidden>Pasirinkite...</option>
                         {optionList}
                     </select>
                 </div>
             </div>
-
-            <button className="btn btn-primary" type="submit" onClick={props.handleSubmit}>Išsaugoti</button> &nbsp;
-            <button className="btn btn-danger" onClick={props.handleDelete}>Ištrinti</button> &nbsp;
+            <div className="form-row">
+                <div className="col-md-4 mb-3">
+                    <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
+                    <div className="input-group mb-1">
+                        <input
+                            multiple
+                            onChange={props.onFileSelectHandler}
+                            id="Upload file"
+                            name="selectedFiles"
+                            className="input-file"
+                            type="file"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="col-md-4 mb-3">
+                <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Prisegti</button>
+                </div>
+            </div>
+            <button className="btn btn-primary" type="submit">Išsaugoti</button> &nbsp;
+            <button className="btn btn-danger" type="button" onClick={props.handleDelete}>Ištrinti</button> &nbsp;
             <a href="/createdDocuments" className="btn btn-dark" role="button" aria-pressed="true">Atmesti pakeitimus</a>
         </form>
     );

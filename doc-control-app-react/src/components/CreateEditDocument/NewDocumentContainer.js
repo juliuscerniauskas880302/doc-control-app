@@ -20,8 +20,6 @@ class NewDocumentContainer extends React.Component {
 
   }
 
-  //TODO
-  //Perdaryti HANDLE metodus
   handleChangeOfTitle = (event) => {
     this.setState({ title: event.target.value });
   }
@@ -132,11 +130,7 @@ class NewDocumentContainer extends React.Component {
       //     .then(res => console.log(res))
       //     .catch(err => console.log(err));
     }
-    console.log(file);
-
-
-
-
+    console.log("Toks yra failas" + file);
   }
 
   componentDidMount() {
