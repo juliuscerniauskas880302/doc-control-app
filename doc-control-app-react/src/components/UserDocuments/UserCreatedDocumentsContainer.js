@@ -36,6 +36,46 @@ class UserCreatedDocumentsContainer extends React.Component {
         };
     }
 
+    handleDelete = (id) => {
+        let currentUser = "migle";
+        let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        console.log("Atėjau į handleDelete metodą");
+        //const position = this.props.match.params.documentId;
+        console.log("Dokumento ID yra:");
+        console.log(id);
+        axios.delete("http://localhost:8081/api/docs/" + id)
+            .then((response) => {
+                axios.get(resourcePath)
+                    .then((response) => {
+                        this.setState({ documents: response.data });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+    }
+
+
+    handleSubmit = (id) => {
+        let currentUser = "migle";
+        let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        console.log("Atėjau į handleSubmit metodą");
+        //const position = this.props.match.params.documentId;
+        console.log("Dokumento ID yra:");
+        console.log(id);
+        axios.put("http://localhost:8081/api/docs/" + id + "/submit")
+            .then((response) => {
+                axios.get(resourcePath)
+                    .then((response) => {
+                        this.setState({ documents: response.data });
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+    }
+
     componentDidMount() {
         let currentUser = "migle";
         let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
@@ -62,6 +102,8 @@ class UserCreatedDocumentsContainer extends React.Component {
                         description={document.description}
                         type={document.documentTypeTitle}
                         creationDate={document.creationDate.substring(0, 10)}
+                        handleDelete={this.handleDelete}
+                        handleSubmit={this.handleSubmit}
                     />
                 );
             });
