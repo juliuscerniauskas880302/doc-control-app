@@ -37,18 +37,13 @@ class UserCreatedDocumentsContainer extends React.Component {
     }
 
     componentDidMount() {
-        //TODO
         let currentUser = "migle";
-        let resourcePath = 'http://localhost:8080/api/users/' + currentUser + '/docs/created';
+        let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
         axios.get(resourcePath)
             .then((response) => {
                 this.setState({ documents: response.data });
                 console.log("Koks gautas dokumentų sąrašas iš 'Sukurtų'?");
                 console.log(this.state.documents);
-                
-                /*let fff = new Date(this.state.documents[0].creationDate);
-                let ggg= fff.format("YYYY/MM/DD");
-                console.log("Data yra " + ggg);*/
             })
             .catch((error) => {
                 console.log(error);

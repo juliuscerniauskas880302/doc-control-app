@@ -2,13 +2,13 @@ import React from 'react';
 
 const NewDocumentComponet = (props) => {
 
-    let optionList = props.typeList.map(v => (
-        //<option value = {v}>{v}</option>
-        <option key={v}>{v}</option>
+    let optionList = props.typeList.map ( v => (
+       //<option value = {v}>{v}</option>
+        <option key = {v}>{v}</option>
     ))
 
     return (
-        <form onSubmit={props.handleSubmit}>
+        <form >
             <div className="form-row">
                 <div className="col-md-12 mb-12">
                     <h5>Naujo dokumento suvedimas</h5>
@@ -37,29 +37,7 @@ const NewDocumentComponet = (props) => {
                 </div>
             </div>
 
-            <div className="form-row">
-                <div className="col-md-4 mb-3">
-                    <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
-                    <div className="input-group mb-1">
-                        <input
-                            multiple
-                            onChange={props.onFileSelectHandler}
-                            id="Upload file"
-                            name="selectedFiles"
-                            className="input-file"
-                            type="file"
-                            required
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="form-row">
-                <div className="col-md-4 mb-3">
-                <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Prisegti</button>
-                </div>
-            </div>
-
-            <button className="btn btn-primary" type="submit" >Išsaugoti</button>
+            <button className="btn btn-primary" type="submit" onClick={props.handleSubmit}>Išsaugoti</button>
         </form>
     );
 }

@@ -22,7 +22,7 @@ class OneReviewDocumentContainer extends React.Component {
         
         const position = this.props.match.params.documentId;
         //let currentUser = "migle";
-        let resourcePath = 'http://localhost:8080/api/docs/' + position;
+        let resourcePath = 'http://localhost:8081/api/docs/' + position;
         axios.get(resourcePath)
             .then((response) => {
                 //this.setState(response.data);
