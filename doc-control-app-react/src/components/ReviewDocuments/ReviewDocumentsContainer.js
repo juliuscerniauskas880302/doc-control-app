@@ -39,10 +39,8 @@ class ReviewDocumentsContainer extends React.Component {
         };
     }
 
-    componentDidMount() {
-        //TODO
-        
-        axios.get('http://localhost:8080/api/docs')
+    componentDidMount() {    
+        axios.get('http://localhost:8081/api/docs')
             .then((response) => {
                 this.setState({ documents: response.data });
                 console.log("Koks atiduodamas dokumentų sąrašas?");
