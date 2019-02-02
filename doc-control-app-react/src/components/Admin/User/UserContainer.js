@@ -57,8 +57,8 @@ export class UserContainer extends Component {
 
   render() {
     return (
-      <div className="container-fluid my-5">
-        <div className="row justify-content-center border rounded py-3 mx-3">
+      <div className="container my-5">
+        <div className="row justify-content-center py-3 mx-3">
           {this.showAllUsers()}
         </div>
       </div>

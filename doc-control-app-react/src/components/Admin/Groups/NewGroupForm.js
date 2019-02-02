@@ -47,6 +47,7 @@ export default class NewGroupForm extends Component {
   };
 
   goBack = () => {
+    console.log("Baxk");
     this.props.history.goBack();
   };
 

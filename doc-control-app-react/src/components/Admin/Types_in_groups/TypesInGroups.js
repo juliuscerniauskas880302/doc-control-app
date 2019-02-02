@@ -224,106 +224,102 @@ export default class TypesInGroups extends Component {
 
   render() {
     return (
-      <div className="container-fluid">
+      <div className="container my-5">
         <div className="row justify-content-center">
-          <div className="panel panel-primary">
-            <div className="panel-body">
-              <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase">Doc Types</strong>
-              </h3>
-              <div className="mx-1">
-                <span className="input-group-text group">
-                  Available doc types
-                </span>
-                <div className="input-group mb-1">
-                  <select
-                    className="form-control"
-                    size="5"
-                    onChange={this.onSelectTypeHandler}
-                    name="selectedType"
-                  >
-                    {this.showAllDocTypes()}
-                  </select>
+          <section id="content">
+            <h1>Doc Types</h1>
+            <div className="mx-1">
+              <div className="input-group-prepend">
+                <h3>Available doc types</h3>
+              </div>
+              <div className="input-group mb-1">
+                <select
+                  className="form-control"
+                  size="5"
+                  onChange={this.onSelectTypeHandler}
+                  name="selectedType"
+                >
+                  {this.showAllDocTypes()}
+                </select>
+              </div>
+              {/* //////////////////////////////////////////////////////////////////// */}
+              <br />
+              <h1>Groups</h1>
+              <div className="row justify-content-center text-center">
+                <div className="col">
+                  <Select
+                    buttonTitle="Add |submmision|"
+                    buttonType="btn btn-success"
+                    title="For submmit"
+                    options={this.availableGroups(this.state.submission)}
+                    onChange={this.onSelectHandler}
+                    onClick={() =>
+                      this.onClickAddGroups(
+                        this.state.selectedAddSubmissionGroups,
+                        "submission"
+                      )
+                    }
+                    name="selectedAddSubmissionGroups"
+                  />
+                  <Select
+                    buttonTitle="Remove |submmision|"
+                    buttonType="btn btn-danger"
+                    title="Submission groups"
+                    options={this.inGroups(this.state.submission)}
+                    onChange={this.onSelectHandler}
+                    onClick={() =>
+                      this.onClickRemoveGroups(
+                        this.state.selectedRemoveSubmissionGroups,
+                        "submission"
+                      )
+                    }
+                    name="selectedRemoveSubmissionGroups"
+                  />
                 </div>
-                {/* //////////////////////////////////////////////////////////////////// */}
-                <br />
-                <span className="input-group-text group">Groups</span>
-                <div className="row justify-content-center text-center">
-                  <div className="col">
-                    <Select
-                      buttonTitle="Add |submmision|"
-                      buttonType="btn btn-success"
-                      title="For submmit"
-                      options={this.availableGroups(this.state.submission)}
-                      onChange={this.onSelectHandler}
-                      onClick={() =>
-                        this.onClickAddGroups(
-                          this.state.selectedAddSubmissionGroups,
-                          "submission"
-                        )
-                      }
-                      name="selectedAddSubmissionGroups"
-                    />
-                    <Select
-                      buttonTitle="Remove |submmision|"
-                      buttonType="btn btn-danger"
-                      title="Submission groups"
-                      options={this.inGroups(this.state.submission)}
-                      onChange={this.onSelectHandler}
-                      onClick={() =>
-                        this.onClickRemoveGroups(
-                          this.state.selectedRemoveSubmissionGroups,
-                          "submission"
-                        )
-                      }
-                      name="selectedRemoveSubmissionGroups"
-                    />
-                  </div>
-                  <div className="col">
-                    <Select
-                      buttonTitle="Add |review|"
-                      buttonType="btn btn-success"
-                      title="For review"
-                      options={this.availableGroups(this.state.review)}
-                      onChange={this.onSelectHandler}
-                      onClick={() =>
-                        this.onClickAddGroups(
-                          this.state.selectedAddReviewGroups,
-                          "review"
-                        )
-                      }
-                      name="selectedAddReviewGroups"
-                    />
-                    <Select
-                      buttonTitle="Remove |review|"
-                      buttonType="btn btn-danger"
-                      title="Review groups"
-                      options={this.inGroups(this.state.review)}
-                      onChange={this.onSelectHandler}
-                      onClick={() =>
-                        this.onClickRemoveGroups(
-                          this.state.selectedRemoveReviewGroups,
-                          "review"
-                        )
-                      }
-                      name="selectedRemoveReviewGroups"
-                    />
-                    <br />
-                  </div>
-                </div>
-                <br />
-                <div className="input-group mb-1">
-                  <button
-                    type="buton"
-                    className="btn btn-warning"
-                    onClick={() => this.goBack()}
-                  >
-                    Go back
-                  </button>
+                <div className="col">
+                  <Select
+                    buttonTitle="Add |review|"
+                    buttonType="btn btn-success"
+                    title="For review"
+                    options={this.availableGroups(this.state.review)}
+                    onChange={this.onSelectHandler}
+                    onClick={() =>
+                      this.onClickAddGroups(
+                        this.state.selectedAddReviewGroups,
+                        "review"
+                      )
+                    }
+                    name="selectedAddReviewGroups"
+                  />
+                  <Select
+                    buttonTitle="Remove |review|"
+                    buttonType="btn btn-danger"
+                    title="Review groups"
+                    options={this.inGroups(this.state.review)}
+                    onChange={this.onSelectHandler}
+                    onClick={() =>
+                      this.onClickRemoveGroups(
+                        this.state.selectedRemoveReviewGroups,
+                        "review"
+                      )
+                    }
+                    name="selectedRemoveReviewGroups"
+                  />
+                  <br />
                 </div>
               </div>
+              <br />
+              <div className="input-group mb-1">
+                <button
+                  type="buton"
+                  className="btn btn-warning"
+                  onClick={() => this.goBack()}
+                >
+                  Go back
+                </button>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     );

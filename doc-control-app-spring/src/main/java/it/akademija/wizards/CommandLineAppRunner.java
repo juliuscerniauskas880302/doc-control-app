@@ -38,8 +38,14 @@ public class CommandLineAppRunner implements CommandLineRunner {
         //GROUPS
         if (!groupExists("administracija")) userGroupService.createUserGroup(new UserGroupCreateCommand("administracija"));
         if (!groupExists("darbuotojai")) userGroupService.createUserGroup(new UserGroupCreateCommand("darbuotojai"));
+        if (!groupExists("statybininkai")) userGroupService.createUserGroup(new UserGroupCreateCommand("statybininkai"));
+        if (!groupExists("programisiai")) userGroupService.createUserGroup(new UserGroupCreateCommand("programisiai"));
+        if (!groupExists("programeriai")) userGroupService.createUserGroup(new UserGroupCreateCommand("programeriai"));
         //DOCTYPES
         if(!docTypeExists("atostogu prasymas")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atostogu prasymas"));
+        if(!docTypeExists("atleidimas is darbo")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atleidimas is darbo"));
+        if(!docTypeExists("paausktinimas pareigose")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("paausktinimas pareigose"));
+        if(!docTypeExists("atlyginimo padidinimas")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atlyginimo padidinimas"));
         //USERS
         if (!usernameExists("migle")) userService.createUser(new UserCreateCommand("migle", "captain", "Migle", "Babickaite", "captain@captain.lt", true));
         if (!usernameExists("julius")) userService.createUser(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", false));
