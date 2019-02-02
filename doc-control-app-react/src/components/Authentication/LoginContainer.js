@@ -6,6 +6,7 @@ export default class LoginContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      wrongUsernameOrPassword: false,
       password: "",
       username: "",
       users: [
@@ -48,10 +49,16 @@ export default class LoginContainer extends Component {
   };
 
   onUsernameChange = event => {
-    this.setState({ username: event.target.value });
+    this.setState({
+      username: event.target.value,
+      wrongUsernameOrPassword: false
+    });
   };
   onPassChange = event => {
-    this.setState({ password: event.target.value });
+    this.setState({
+      password: event.target.value,
+      wrongUsernameOrPassword: false
+    });
   };
 
   onSubmit = event => {
@@ -81,12 +88,13 @@ export default class LoginContainer extends Component {
         }
       }
     });
-    console.log("user not found");
+    this.setState({ wrongUsernameOrPassword: true });
   };
 
   render() {
     return (
       <Login
+        wrongUsernameOrPassword={this.state.wrongUsernameOrPassword}
         username={this.state.username}
         password={this.state.password}
         onUsernameChange={this.onUsernameChange}

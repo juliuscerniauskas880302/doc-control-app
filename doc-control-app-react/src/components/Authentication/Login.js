@@ -6,13 +6,22 @@ const Login = ({
   password,
   onUsernameChange,
   onPassChange,
-  onSubmit
+  onSubmit,
+  wrongUsernameOrPassword
 }) => {
+  let wrongData = () => {
+    if (wrongUsernameOrPassword)
+      return (
+        <div className="wrong-pass-or-username">Wrong username or password</div>
+      );
+  };
+
   return (
     <div className="container">
       <section id="content">
         <form onSubmit={e => onSubmit(e)}>
           <h1>Login Form</h1>
+          {wrongData()}
           <div>
             <input
               type="text"
