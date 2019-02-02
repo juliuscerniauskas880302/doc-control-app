@@ -118,7 +118,7 @@ export default class NewDocumentTypeForm extends Component {
   };
   render() {
     return (
-      <div className="container-fluid">
+      <div className="container my-5">
         <NewDocumentTypeComponent
           onCLickAddNewDocTypeHandler={this.onCLickAddNewDocTypeHandler}
           onValueChangeHandler={this.onValueChangeHandler}

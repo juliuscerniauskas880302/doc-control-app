@@ -2,20 +2,16 @@ import React from "react";
 
 export default function NewDocumentTypeComponent(props) {
   return (
-    <div>
+    <div className="container">
       <div className="row justify-content-center">
-        <div className="panel panel-primary">
+        <section id="content">
           <div className="panel-body">
-            <h3 className="text-on-pannel text-primary">
-              <strong className="text-uppercase"> New Doc Type </strong>
-            </h3>
+            <h1>New Doc Type</h1>
             <div className="mx-1">
               <form onSubmit={e => props.onCLickAddNewDocTypeHandler(e)}>
                 <div className="input-group mb-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Title</span>
-                  </div>
                   <input
+                    placeholder="Doc title"
                     onChange={event => props.onValueChangeHandler(event)}
                     value={props.state.title}
                     type="text"
@@ -27,9 +23,7 @@ export default function NewDocumentTypeComponent(props) {
                 </div>
 
                 <div className="input-group mb-1">
-                  <button type="buton" className="btn btn-success">
-                    Add
-                  </button>
+                  <input type="submit" value="add" />
                 </div>
               </form>
 
@@ -46,18 +40,16 @@ export default function NewDocumentTypeComponent(props) {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       {/*  */}
       <div className="row justify-content-center">
-        <div className="panel panel-primary">
+        <section id="content">
           <div className="panel-body">
-            <h3 className="text-on-pannel text-primary">
-              <strong className="text-uppercase"> Update Doc Type </strong>
-            </h3>
+            <h1>Update Doc Type</h1>
             <div className="mx-1">
-              <span className="input-group-text group">All document types</span>
+              <h3>All document types</h3>
               <div className="input-group mb-1">
                 <select
                   className="form-control"
@@ -73,10 +65,8 @@ export default function NewDocumentTypeComponent(props) {
             <div className="mx-1">
               <form onSubmit={e => props.onClickUpdateHandler(e)}>
                 <div className="input-group mb-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">New title</span>
-                  </div>
                   <input
+                    placeholder="New title"
                     onChange={event => props.onValueChangeHandler(event)}
                     type="text"
                     name="newTitle"
@@ -88,9 +78,7 @@ export default function NewDocumentTypeComponent(props) {
                 </div>
 
                 <div className="input-group mb-1">
-                  <button type="buton" className="btn btn-info">
-                    Update
-                  </button>
+                  <input type="submit" value="Update" />
                 </div>
               </form>
               <br />
@@ -105,7 +93,7 @@ export default function NewDocumentTypeComponent(props) {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export default class LoginContainer extends Component {
         {
           username: "migle",
           password: "captain",
-          isAdmin: false
+          isAdmin: true
         },
         {
           username: "vytautas",

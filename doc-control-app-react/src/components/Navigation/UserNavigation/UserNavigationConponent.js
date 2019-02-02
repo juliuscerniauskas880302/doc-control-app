@@ -4,19 +4,19 @@ import "../Navigation.css";
 
 const UserNavigationComponent = props => {
   return (
-    <div className="navigation">
-      <ul className="navigation_ul">
-        <li className="nav-item active">
-          <Link to="/">Pateikti</Link> |&nbsp;
-        </li>
-        <li className="nav-item active">
-          <Link to="/createdDocuments">Sukurti</Link> |&nbsp;
-        </li>
-        <li className="nav-item active">
-          <Link to="/reviewDocuments">Peržiūrėti</Link> |&nbsp;
-        </li>
-        {props.logout()}
-      </ul>
+    <div className="container">
+      <section id="content-navigation">
+        <p className="nav-item active">
+          <Link to="/">Pateikti</Link>
+        </p>
+        <p className="nav-item active">
+          <Link to="/createdDocuments">Sukurti</Link>
+        </p>
+        <p className="nav-item active">
+          <Link to="/reviewDocuments">Peržiūrėti</Link>
+        </p>
+        <p className="nav-item active">{props.logout()}</p>
+      </section>
     </div>
   );
 };

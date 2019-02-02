@@ -47,7 +47,7 @@ export default class NewUserForm2 extends Component {
 
   render() {
     return (
-      <div className="container-fluid">
+      <div className="container my-5">
         <NewUserComponent
           onSubmit={this.onSubmitHandler}
           onChange={this.onValueChangeHandler}

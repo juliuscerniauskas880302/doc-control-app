@@ -19,11 +19,7 @@ export default class Authentication extends Component {
     this.setState({ isLogged: false });
   };
   logout = () => {
-    return (
-      <li>
-        <div onClick={this.onClickLogoutHandler}>Log out</div>|&nbsp;
-      </li>
-    );
+    return <p onClick={this.onClickLogoutHandler}>Log out</p>;
   };
 
   render() {

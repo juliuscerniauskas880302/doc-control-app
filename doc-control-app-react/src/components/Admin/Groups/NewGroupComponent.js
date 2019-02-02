@@ -2,20 +2,16 @@ import React from "react";
 
 export default function NewGroupComponent(props) {
   return (
-    <div className="container-fluid">
+    <div className="container my-5">
       <div className="row justify-content-center">
-        <div className="panel panel-primary">
+        <section id="content">
           <div className="panel-body">
-            <h3 className="text-on-pannel text-primary">
-              <strong className="text-uppercase"> New Group </strong>
-            </h3>
+            <h1>New Group</h1>
             <div className="mx-1">
               <form onSubmit={props.onSubmitAdd}>
                 <div className="input-group mb-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Title</span>
-                  </div>
                   <input
+                    placeholder="Title"
                     onChange={props.onChange}
                     type="text"
                     name={props.newTitle}
@@ -25,11 +21,8 @@ export default function NewGroupComponent(props) {
                     required
                   />
                 </div>
-
                 <div className="input-group mb-1">
-                  <button type="buton" className="btn btn-success">
-                    Add
-                  </button>
+                  <input type="submit" value="add" />
                 </div>
               </form>
               <br />
@@ -44,17 +37,16 @@ export default function NewGroupComponent(props) {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       <div className="row justify-content-center">
-        <div className="panel panel-primary">
+        <section id="content">
           <div className="panel-body">
-            <h3 className="text-on-pannel text-primary">
-              <strong className="text-uppercase"> Update Group </strong>
-            </h3>
+            <h1>Update group</h1>
             <div className="mx-1">
-              <span className="input-group-text group">All groups</span>
+              <h3>All groups</h3>
+
               <div className="input-group mb-1">
                 <select
                   className="form-control"
@@ -70,10 +62,8 @@ export default function NewGroupComponent(props) {
             <div className="mx-1">
               <form onSubmit={props.onSubmitUpdate}>
                 <div className="input-group mb-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">New title</span>
-                  </div>
                   <input
+                    placeholder="New title"
                     onChange={props.onChange}
                     type="text"
                     name={props.nameForUpdate}
@@ -85,9 +75,7 @@ export default function NewGroupComponent(props) {
                 </div>
 
                 <div className="input-group mb-1">
-                  <button type="buton" className="btn btn-info">
-                    Update
-                  </button>
+                  <input type="submit" value="update" />
                 </div>
               </form>
               <br />
@@ -102,7 +90,7 @@ export default function NewGroupComponent(props) {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

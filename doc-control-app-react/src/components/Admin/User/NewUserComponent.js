@@ -74,16 +74,16 @@ export default function NewUserComponent(props) {
               className="form-control"
               required
             >
-              <option selected disabled>
+              <option defaultValue="Is Admin" disabled>
                 Is Admin
               </option>
-              <option defaultValue={false}>False</option>
+              <option value={false}>False</option>
               <option value={true}>True</option>
             </select>
           </div>
           <br />
           <div className="input-group mb-1">
-            <input type="submit" value="Add" />
+            <input type="submit" value="add" />
           </div>
         </form>
       </section>
