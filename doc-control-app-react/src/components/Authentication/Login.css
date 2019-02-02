@@ -164,3 +164,11 @@ input[type="submit"] {
 input[type="submit"]:hover {
 /* TODO: */
 }
+
+
+
+/* ////////////////////////////// */
+
+.wrong-pass-or-username{
+	color:red;
+}
