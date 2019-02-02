@@ -6,18 +6,27 @@ const UserNavigationComponent = props => {
   return (
     <div className="container">
       <section id="content-navigation">
-        <p className="nav-item active">
-          <Link to="/">Pateikti</Link>
-        </p>
-        <p className="nav-item active">
-          <Link to="/createdDocuments">Sukurti</Link>
-        </p>
-        <p className="nav-item active">
-          <Link to="/reviewDocuments">Peržiūrėti</Link>
-        </p>
-        <div className="nav-item active">{props.logout()}</div>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <span className="navigation-bar">Pateikti</span>
+        </Link>
+
+        <Link to="/createdDocuments" style={{ textDecoration: "none" }}>
+          <span className="navigation-bar">Sukurti</span>
+        </Link>
+
+        <Link to="/reviewDocuments" style={{ textDecoration: "none" }}>
+          <span className="navigation-bar">Peržiūrėti</span>
+        </Link>
+
+        <div className="logout">{props.logout()}</div>
       </section>
     </div>
   );
 };
 export default UserNavigationComponent;
+
+{
+  /* <Link to="/" style={{ textDecoration: "none" }}>
+<span className="navigation-bar">User</span>
+</Link> */
+}
