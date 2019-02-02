@@ -42,6 +42,11 @@ export default class LoginContainer extends Component {
       ]
     };
   }
+
+  componentDidMount = () => {
+    this.props.history.push("/");
+  };
+
   onUsernameChange = event => {
     this.setState({ username: event.target.value });
   };

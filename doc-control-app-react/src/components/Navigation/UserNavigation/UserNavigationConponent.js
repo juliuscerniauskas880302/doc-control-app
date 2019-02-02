@@ -15,7 +15,7 @@ const UserNavigationComponent = props => {
         <p className="nav-item active">
           <Link to="/reviewDocuments">Peržiūrėti</Link>
         </p>
-        <p className="nav-item active">{props.logout()}</p>
+        <div className="nav-item active">{props.logout()}</div>
       </section>
     </div>
   );
