@@ -28,30 +28,30 @@ const User = props => {
   };
 
   return (
-    <div className="col-sm-4">
-      <div className="card card-flip h-100">
-        <div className="card-front text-white bg-primary">
-          <div className="card-body">
-            <i className="fas fa-user fa-5x float-right" />
-            <h4 className="card-title">{props.firstname}</h4>
-            <h4 className="card-title">{props.lastname}</h4>
-            <p className="card-text">
+    <div className="col-sm-4 my-3">
+      <div className="user user-flip h-100">
+        <div className="user-front text-white">
+          <div id="content">
+            <i className="fas fa-user fa-5x" />
+            <h4>{props.firstname}</h4>
+            <h4>{props.lastname}</h4>
+            <h5>
               <i className="fas fa-at mx-1" />
               {props.email}
-            </p>
-            <i className="fas fa-unlock-alt mx-1" />
-            {props.isAdmin}
+            </h5>
+            <h5>
+              <i className="fas fa-unlock-alt mx-1" />
+              {props.isAdmin}
+            </h5>
           </div>
         </div>
-        <div className="card-back">
-          <div className="card-body text-primary ">
-            <div className="d-flex justify-content-around">
-              <i
-                className="fas fa-trash-alt fa-2x"
-                onClick={() => confirmDeltetion()}
-              />
-              <i className="fas fa-user-edit fa-2x" onClick={props.update} />
-            </div>
+        <div className="user-back">
+          <div id="content">
+            <i
+              className="fas fa-trash-alt fa-2x mx-2"
+              onClick={() => confirmDeltetion()}
+            />
+            <i className="fas fa-user-edit fa-2x mx-2" onClick={props.update} />
           </div>
         </div>
       </div>
