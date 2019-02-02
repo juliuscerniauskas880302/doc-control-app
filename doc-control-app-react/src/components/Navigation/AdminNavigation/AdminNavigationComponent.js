@@ -24,7 +24,7 @@ export default function AdminNavigationComponent(props) {
         <p>
           <Link to="/document_types/groups">Types in Groups</Link>
         </p>
-        <p> {props.logout()}</p>
+        <div> {props.logout()}</div>
       </section>
     </div>
   );
