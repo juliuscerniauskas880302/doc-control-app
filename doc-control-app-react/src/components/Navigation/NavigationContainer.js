@@ -3,14 +3,12 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 ////////////////Julius components///////////////////////////////////
 import NavigationComponent from "./NavigationComponent";
 import UserContainer from "../Admin/User/UserContainer";
-import Login from "../Admin/Login";
 import NewUserContainer from "../Admin/User/NewUserContainer";
 import UpdateUserContainer from "../Admin/User/UpdateUserContainer";
 import NewGroupForm from "../Admin/Groups/NewGroupForm";
 import NewDocumentTypeContainer from "../Admin/DocumentType/NewDocumentTypeContainer";
 import TypesInGroups from "../Admin/Types_in_groups/TypesInGroups";
 import EditUserGroups from "../Admin/Groups/EditUserGroups";
-import LoginContainer from "../Admin/LoginContainer";
 import ResourceNotFoundComponent from "../Errors/ResourceNotFoundComponent";
 import NewDocumentForm from "../user/Document/NewDocumentForm";
 /////////////////////////////////////////////////////////////////
@@ -33,7 +31,6 @@ export default class NavigationContainer extends Component {
           <div>
             <NavigationComponent />
             <Switch>
-              <Route path="/login" component={Login} exact />
               <Route path="/users" component={UserContainer} exact />
               <Route path="/users2/add" component={NewUserContainer} exact />
               <Route path="/groups/add" component={NewGroupForm} exact />
@@ -42,7 +39,6 @@ export default class NavigationContainer extends Component {
                 component={NewDocumentForm}
                 exact
               />
-              <Route path="/login" component={LoginContainer} exact />
               <Route
                 path="/document_types/groups"
                 component={TypesInGroups}

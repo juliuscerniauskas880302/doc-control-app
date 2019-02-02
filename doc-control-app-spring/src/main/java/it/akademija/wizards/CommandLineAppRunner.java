@@ -42,7 +42,11 @@ public class CommandLineAppRunner implements CommandLineRunner {
         if(!docTypeExists("atostogu prasymas")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atostogu prasymas"));
         //USERS
         if (!usernameExists("migle")) userService.createUser(new UserCreateCommand("migle", "captain", "Migle", "Babickaite", "captain@captain.lt", true));
-        if (!usernameExists("julius")) userService.createUser(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", true));
+        if (!usernameExists("julius")) userService.createUser(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", false));
+        if (!usernameExists("root")) userService.createUser(new UserCreateCommand("root", "root", "Rootas", "Rootauskas", "root@captain.lt", true));
+        if (!usernameExists("jonas")) userService.createUser(new UserCreateCommand("jonas", "jonas", "Jonas", "Gaidukevicius", "jonas@captain.lt", false));
+        if (!usernameExists("andrius")) userService.createUser(new UserCreateCommand("andrius", "andrius", "Andrius", "", "andrius@captain.lt", false));
+        if (!usernameExists("vytautas")) userService.createUser(new UserCreateCommand("vytautas", "vytautas", "Vytautas", "", "vytautas@captain.lt", false));
 
 
         //create lists of groups' ids
