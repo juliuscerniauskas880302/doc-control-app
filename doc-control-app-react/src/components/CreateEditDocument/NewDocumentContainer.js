@@ -85,7 +85,7 @@ class NewDocumentContainer extends React.Component {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
       title: this.state.title,
-      username: "migle"
+      username: this.state.username
     };
     console.log("Čia spausdina modelį");
     console.log(model);
@@ -145,6 +145,12 @@ class NewDocumentContainer extends React.Component {
       .catch((error) => {
         console.log("KLAIDA!!!!" + error);
       });
+
+      //pasitestuoju, kas yra sessionStore išsaugota
+      let currentUser = JSON.parse(sessionStorage.getItem('user'));
+      console.log("Spausdinu userį gautą iš sessionStorage");
+      console.log(currentUser);
+      this.setState({username: currentUser.username});
   }
 
   render() {
