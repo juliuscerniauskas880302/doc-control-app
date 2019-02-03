@@ -37,7 +37,7 @@ class UserCreatedDocumentsContainer extends React.Component {
     }
 
     handleDelete = (id) => {
-        let currentUser = "migle";
+        let currentUser = JSON.parse(sessionStorage.getItem('user')).username;
         let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
         console.log("Atėjau į handleDelete metodą");
         //const position = this.props.match.params.documentId;
@@ -57,7 +57,7 @@ class UserCreatedDocumentsContainer extends React.Component {
 
 
     handleSubmit = (id) => {
-        let currentUser = "migle";
+        let currentUser = JSON.parse(sessionStorage.getItem('user')).username;
         let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
         console.log("Atėjau į handleSubmit metodą");
         //const position = this.props.match.params.documentId;
@@ -77,7 +77,7 @@ class UserCreatedDocumentsContainer extends React.Component {
     }
 
     componentDidMount() {
-        let currentUser = "migle";
+        let currentUser = JSON.parse(sessionStorage.getItem('user')).username;
         let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
         axios.get(resourcePath)
             .then((response) => {
