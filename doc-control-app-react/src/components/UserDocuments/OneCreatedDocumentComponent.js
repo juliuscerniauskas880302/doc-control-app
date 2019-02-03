@@ -44,6 +44,14 @@ const OneCreatedDocumentComponent = (props) => {
                 </div>
             </div>
             <div className="row">
+                <div className="col-1">   
+                    <p>Pridėtas failas:</p>
+                </div>
+                <div className="col-2">
+                    <p>{props.filename}</p>
+                </div>
+            </div>
+            <div className="row">
                 <div className="col-3">   
                     <button className="btn btn-primary" type="submit" onClick={props.handleEdit}>Redaguoti</button> &nbsp;       
                     <button className="btn btn-danger" type="submit" onClick={props.handleDelete}>Trinti</button> &nbsp;

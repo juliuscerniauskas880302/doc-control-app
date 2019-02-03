@@ -93,20 +93,12 @@ class EditDocumentContainer extends React.Component {
     let file = new FormData();
     if (this.state.selectedFiles.length === 1) {
       file.append(
-        "multipartFile",
+        "file",
         this.state.selectedFiles[0],
         this.state.selectedFiles[0].name
       );
       file.append("model", JSON.stringify(model));
-      axios.put("http://localhost:8081/api/docs/" + this.state.id, file, {
-        onUploadProgress: progressEvent => {
-          console.log(
-            "Upload progress: " +
-            (progressEvent.loaded / progressEvent.total) * 100 +
-            "%"
-          );
-        }
-      })
+      axios.put("http://localhost:8081/api/docs/" + this.state.id, file)
         .then(res => console.log(res))
         .catch(err => console.log("KLAIDA SUBMITE" + err));
     } else {
