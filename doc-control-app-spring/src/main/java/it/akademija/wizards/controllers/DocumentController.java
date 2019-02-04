@@ -112,8 +112,7 @@ public class DocumentController {
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             headers.setContentType(mediaType);
-            return ResponseEntity.ok().headers(headers).header(HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=a").
+            return ResponseEntity.ok().headers(headers).
                     body(resource);
         }
         return ResponseEntity.notFound().build();
