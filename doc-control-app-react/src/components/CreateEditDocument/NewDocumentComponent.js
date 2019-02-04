@@ -52,11 +52,11 @@ const NewDocumentComponet = (props) => {
                     </div>
                 </div>
             </div>
-            <div className="form-row">
+            {/* <div className="form-row">
                 <div className="col-md-4 mb-3">
                 <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Prisegti</button>
                 </div>
-            </div>
+            </div> */}
 
             <button className="btn btn-primary" type="submit" >Išsaugoti</button>
         </form>
