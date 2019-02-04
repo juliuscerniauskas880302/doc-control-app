@@ -18,10 +18,45 @@ class OneCreatedDocumentContainer extends React.Component {
         };
     }
 
+    downloadHandler = (event) => {
+        axios({
+          url:
+            "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+          method: "GET",
+          responseType: "blob" // important
+        }).then(response => {
+          var filename = this.extractFileName(
+            response.headers["content-disposition"]
+          );
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", filename); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      };
+    
+      extractFileName = contentDispositionValue => {
+        var filename = "";
+        if (
+          contentDispositionValue &&
+          contentDispositionValue.indexOf("attachment") !== -1
+        ) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(contentDispositionValue);
+          if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, "");
+          }
+        }
+        return filename;
+      };
+
     handleDelete = (event) => {
-        let currentUser = "migle";
-        let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
-        console.log("Atėjau į handleDelete metodą");
+        //let currentUser = "migle";
+        //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        console.log("Atėjau į handleDelete metodą OneCreatedDocumentContainer faile");
         //const position = this.props.match.params.documentId;
         console.log("Dokumento ID yra:");
         console.log(this.state.id);
@@ -106,17 +141,14 @@ class OneCreatedDocumentContainer extends React.Component {
                     console.log("SetState nebuvo padarytas");
                 }
             })
-            .then(() => {
-                console.log("Ar čia atėjooooooooo?");
-                console.log(this.state.path.lastIndexOf(this.state.prefix));
-                if(this.state.path.lastIndexOf(this.state.prefix) !== -1){
-                    this.filename = this.state.path.substring(0, this.state.path.lastIndexOf(this.state.prefix));
-                }
-                console.log("Failo pavadinimas gaunasi" + this.filename);
-            }
-               
-                
-            )
+            // .then(() => {
+            //     console.log("Ar čia atėjooooooooo?");
+            //     console.log(this.state.path.lastIndexOf(this.state.prefix));
+            //     if(this.state.path.lastIndexOf(this.state.prefix) !== -1){
+            //         this.filename = this.state.path.substring(0, this.state.path.lastIndexOf(this.state.prefix));
+            //     }
+            //     console.log("Failo pavadinimas gaunasi" + this.filename);
+            // })
             .catch((error) => {
                 console.log(error);
             });
@@ -138,6 +170,7 @@ class OneCreatedDocumentContainer extends React.Component {
                     path={this.state.path}
                     prefix={this.state.prefix}
                     filename={this.state.filename}
+                    downloadHandler={this.downloadHandler}
                     handleDelete={this.handleDelete}
                     handleSubmit={this.handleSubmit}
                 />

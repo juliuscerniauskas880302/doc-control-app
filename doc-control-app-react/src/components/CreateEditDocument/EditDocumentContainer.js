@@ -13,9 +13,12 @@ class EditDocumentContainer extends React.Component {
       username: "migle",
       documentTypeTitle: "Antras tipas",
       typeList: [],
-      selectedFiles: null
+      selectedFiles: null,
       //state: "default state",
       //creationDate: "2019.01.28"
+      path: "",
+      prefix: "",
+      filename: "Nėra pridėto failo"
     };
   }
 
@@ -37,14 +40,9 @@ class EditDocumentContainer extends React.Component {
   };
 
   downloadHandler = (event) => {
-    // 70a73980-02d1-4e63-a577-6e59b25c976b
-    // Axios.get(
-    //   "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download"
-    // ).then(res => FileSaver.saveAs(res.data, "effectiveFileName"));
-
     axios({
       url:
-        "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download", //doc id
+        "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -76,8 +74,6 @@ class EditDocumentContainer extends React.Component {
     return filename;
   };
 
-
-
   //TODO
   handleSubmit = (event) => {
     console.log("Atėjau į Submit handlerį");
@@ -86,43 +82,53 @@ class EditDocumentContainer extends React.Component {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
       title: this.state.title,
-      username: "migle"
+      username: this.state.username
     };
     console.log("Čia spausdina modelį");
     console.log(model);
     let file = new FormData();
-    if (this.state.selectedFiles.length === 1) {
-      file.append(
-        "file",
-        this.state.selectedFiles[0],
-        this.state.selectedFiles[0].name
-      );
-      file.append("model", JSON.stringify(model));
-      axios.put("http://localhost:8081/api/docs/" + this.state.id, file)
-        .then(res => console.log(res))
-        .catch(err => console.log("KLAIDA SUBMITE" + err));
+
+    if (this.state.selectedFiles === null) {
+      console.log("Pažymėti failai yra null");
+      file.append("file", "jo", this.state.filename); //nėra 3 parametro, kuris turėtų būti failo pavadinimas 
     } else {
-      //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
-      //     file.append(
-      //       "file",
-      //       this.state.selectedFiles[i],
-      //       this.state.selectedFiles[i].name
-      //     );
-      //     console.log(this.state.selectedFiles[i]);
-      //     console.log(this.state.selectedFiles[i].name);
-      //   }
-      //   Axios.post("http://localhost:8081/api/files/upload", file, {
-      //     onUploadProgress: progressEvent => {
-      //       console.log(
-      //         "Upload progress: " +
-      //           (progressEvent.loaded / progressEvent.total) * 100 +
-      //           "%"
-      //       );
-      //     }
-      //   })
-      //     .then(res => console.log(res))
-      //     .catch(err => console.log(err));
+      if (this.state.selectedFiles.length === 1) {
+        file.append(
+          "file",
+          this.state.selectedFiles[0],
+          this.state.selectedFiles[0].name
+        );
+      }
     }
+    file.append("model", JSON.stringify(model));
+    axios.put("http://localhost:8081/api/docs/" + this.state.id, file)
+      .then(res => console.log(res))
+      .catch(err => console.log("KLAIDA SUBMITE" + err));
+
+
+
+    //} else {
+    //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
+    //     file.append(
+    //       "file",
+    //       this.state.selectedFiles[i],
+    //       this.state.selectedFiles[i].name
+    //     );
+    //     console.log(this.state.selectedFiles[i]);
+    //     console.log(this.state.selectedFiles[i].name);
+    //   }
+    //   Axios.post("http://localhost:8081/api/files/upload", file, {
+    //     onUploadProgress: progressEvent => {
+    //       console.log(
+    //         "Upload progress: " +
+    //           (progressEvent.loaded / progressEvent.total) * 100 +
+    //           "%"
+    //       );
+    //     }
+    //   })
+    //     .then(res => console.log(res))
+    //     .catch(err => console.log(err));
+    //}
     console.log("Spausinu FILE" + file);
   }
 
@@ -151,13 +157,9 @@ class EditDocumentContainer extends React.Component {
   //Padaryti normalų ištrynimo metodą
   handleDelete = (event) => {
     event.preventDefault();
-    console.log("Noriu ištrinti " + this.state.oldTitle);
-    axios.delete('http://localhost:8080/holidays/' + (this.state.oldTitle))
+    axios.delete("http://localhost:8081/api/docs/" + this.state.id)
       .then((response) => {
-        console.log("Ištrinta");
-      })
-      .catch(function (error) {
-        console.log(error);
+        this.props.history.push(`/createdDocuments`);
       });
   }
 
@@ -182,15 +184,25 @@ class EditDocumentContainer extends React.Component {
     axios.get(resourcePath)
       .then((response) => {
         //this.setState(response.data);
-        
         // console.log(response.data.id);
         //console.log(response.data.title);
+        var realFileName = "";
+        if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
+          realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+        }
         this.setState({ id: response.data.id })
         this.setState({ title: response.data.title });
         this.setState({ description: response.data.description });
         this.setState({ documentTypeTitle: response.data.documentTypeTitle });
+        this.setState({ path: response.data.path });
+        this.setState({ prefix: response.data.prefix });
+        this.setState({ filename: realFileName });
         console.log("Gavau tokį produktą į redagavimą");
         console.log(this.state);
+        let currentUser = JSON.parse(localStorage.getItem('user'));
+        console.log("Spausdinu userį gautą iš localStorage");
+        console.log(currentUser);
+        this.setState({ username: currentUser.username });
 
         //console.log("Pagaminau tokį State ->" + this.state);
         //console.log("Toks description iš state'o -> " + this.state.id);
@@ -204,6 +216,13 @@ class EditDocumentContainer extends React.Component {
   render() {
     return (
       <EditDocumentComponent
+        title={this.state.title}
+        description={this.state.description}
+        typeList={this.state.typeList}
+        type={this.state.documentTypeTitle}
+        path={this.state.path}
+        prefix={this.state.prefix}
+        filename={this.state.filename}
         handleChangeOfTitle={this.handleChangeOfTitle}
         handleChangeOfDescription={this.handleChangeOfDescription}
         handleChangeOfType={this.handleChangeOfType}
@@ -211,10 +230,7 @@ class EditDocumentContainer extends React.Component {
         handleDelete={this.handleDelete}
         downloadHandler={this.downloadHandler}
         onFileSelectHandler={this.onFileSelectHandler}
-        title={this.state.title}
-        description={this.state.description}
-        typeList={this.state.typeList}
-        type={this.state.documentTypeTitle}
+
       />
     );
   }

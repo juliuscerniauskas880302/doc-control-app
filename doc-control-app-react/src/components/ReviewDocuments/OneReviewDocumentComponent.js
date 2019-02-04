@@ -60,6 +60,14 @@ const OneReviewDocumentComponent = (props) => {
                 </div>
             </div>
             <div className="row">
+                <div className="col-1">   
+                    <p>Pridėtas failas:</p>
+                </div>
+                <div className="col-2">
+                    <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
+                </div>
+            </div>
+            <div className="row">
                 <div className="col-3">   
                     <button className="btn btn-success" type="submit" onClick={props.handleSubmit}>Patvirtinti</button> &nbsp;
                     <button className="btn btn-danger" type="submit" onClick={props.handleDelete}>Atmesti</button> &nbsp;
