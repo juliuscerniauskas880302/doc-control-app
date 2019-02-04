@@ -51,7 +51,7 @@ export default class TypesInGroups extends Component {
     if (this.state.doctypes.length === 0) {
       return (
         <option value="" disabled>
-          No available doc types...
+          No available document types...
         </option>
       );
     } else {
@@ -227,10 +227,10 @@ export default class TypesInGroups extends Component {
       <div className="container my-5">
         <div className="row justify-content-center">
           <section id="content">
-            <h1>Doc Types</h1>
+            <h1>Document Types</h1>
             <div className="mx-1">
               <div className="input-group-prepend">
-                <h3>Available doc types</h3>
+                <h3>Available document types</h3>
               </div>
               <div className="input-group mb-1">
                 <select

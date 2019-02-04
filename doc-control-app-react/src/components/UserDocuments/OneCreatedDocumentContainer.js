@@ -11,7 +11,10 @@ class OneCreatedDocumentContainer extends React.Component {
             title: "Title1s",
             description: "Description1s",
             documentTypeTitle: "Type1s",
-            creationDate: "2019.01.26"
+            creationDate: "2019.01.26",
+            path: "",
+            prefix: "",
+            filename: "Nėra pridėto failo"
         };
     }
 
@@ -61,7 +64,9 @@ class OneCreatedDocumentContainer extends React.Component {
                                 title: response.data.title,
                                 description: response.data.description,
                                 documentTypeTitle: response.data.documentTypeTitle,
-                                creationDate: response.data.creationDate
+                                creationDate: response.data.creationDate,
+                                path: response.data.path,
+                                prefix: response.data.prefix
                             });
                         //}
                     })
@@ -73,7 +78,6 @@ class OneCreatedDocumentContainer extends React.Component {
             .catch((error) => {
                 console.log("Klaida keičiant dokumento statusą - " + error);
             });
-        //this.props.history.push(`/`);
     }
 
     componentDidMount() {
@@ -83,22 +87,36 @@ class OneCreatedDocumentContainer extends React.Component {
         let resourcePath = 'http://localhost:8081/api/docs/' + position;
         axios.get(resourcePath)
             .then((response) => {
-                //this.setState(response.data);
-                console.log("-----------------Response data id yra: " + response.data.id);
-                console.log("-----------------Response data title yra: " + response.data.title);
-
                 if (this.mounted) {
+                    var realFileName = "";
+                    if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
+                        realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+                    }
                     this.setState({
                         id: response.data.id,
                         title: response.data.title,
                         description: response.data.description,
                         documentTypeTitle: response.data.documentTypeTitle,
-                        creationDate: response.data.creationDate
+                        creationDate: response.data.creationDate,
+                        path: response.data.path,
+                        prefix: response.data.prefix,
+                        filename: realFileName
                     })
                 } else {
                     console.log("SetState nebuvo padarytas");
                 }
             })
+            .then(() => {
+                console.log("Ar čia atėjooooooooo?");
+                console.log(this.state.path.lastIndexOf(this.state.prefix));
+                if(this.state.path.lastIndexOf(this.state.prefix) !== -1){
+                    this.filename = this.state.path.substring(0, this.state.path.lastIndexOf(this.state.prefix));
+                }
+                console.log("Failo pavadinimas gaunasi" + this.filename);
+            }
+               
+                
+            )
             .catch((error) => {
                 console.log(error);
             });
@@ -117,6 +135,9 @@ class OneCreatedDocumentContainer extends React.Component {
                     description={this.state.description}
                     type={this.state.documentTypeTitle}
                     creationDate={this.state.creationDate.substring(0, 10)}
+                    path={this.state.path}
+                    prefix={this.state.prefix}
+                    filename={this.state.filename}
                     handleDelete={this.handleDelete}
                     handleSubmit={this.handleSubmit}
                 />

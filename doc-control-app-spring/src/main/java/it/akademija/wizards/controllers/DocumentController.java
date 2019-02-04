@@ -194,8 +194,9 @@ public class DocumentController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<String> updateDocumentById(
             @PathVariable String id,
-            @RequestPart String model,
-            @RequestPart MultipartFile[] multipartFile) {
+            @RequestPart("model") String model,
+            @RequestPart("file") MultipartFile [] multipartFile) {
+
         /*   String model:
     {
       "documentTypeTitle": "atostogu prasymas",

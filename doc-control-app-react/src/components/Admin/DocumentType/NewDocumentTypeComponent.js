@@ -6,12 +6,12 @@ export default function NewDocumentTypeComponent(props) {
       <div className="row justify-content-center">
         <section id="content">
           <div className="panel-body">
-            <h1>New Doc Type</h1>
+            <h1>New Document Type</h1>
             <div className="mx-1">
               <form onSubmit={e => props.onCLickAddNewDocTypeHandler(e)}>
                 <div className="input-group mb-1">
                   <input
-                    placeholder="Doc title"
+                    placeholder="Document title"
                     onChange={event => props.onValueChangeHandler(event)}
                     value={props.state.title}
                     type="text"
@@ -21,13 +21,10 @@ export default function NewDocumentTypeComponent(props) {
                     required
                   />
                 </div>
-
                 <div className="input-group mb-1">
                   <input type="submit" value="add" />
                 </div>
               </form>
-
-              {/*  */}
               <br />
               <div className="input-group mb-1">
                 <button
@@ -47,7 +44,7 @@ export default function NewDocumentTypeComponent(props) {
       <div className="row justify-content-center">
         <section id="content">
           <div className="panel-body">
-            <h1>Update Doc Type</h1>
+            <h1>Update Document Type</h1>
             <div className="mx-1">
               <h3>All document types</h3>
               <div className="input-group mb-1">
