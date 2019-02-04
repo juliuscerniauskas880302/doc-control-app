@@ -44,6 +44,9 @@ export default function AdminNavigationComponent(props) {
           <Link to="/document_types/groups" style={{ textDecoration: "none" }}>
             <span className="navigation-bar">Types in Groups</span>
           </Link>
+          <Link to="/testing" style={{ textDecoration: "none" }}>
+            <span className="navigation-bar">Place for testing...</span>
+          </Link>
 
           <div className="logout"> {props.logout()}</div>
         </nav>

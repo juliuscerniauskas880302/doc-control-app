@@ -16,22 +16,23 @@ import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class DocumentService {
@@ -70,11 +71,10 @@ public class DocumentService {
     }
 
 
-
     //CREATE
     @Transactional
     public ResponseEntity<String> createDocument(DocumentCreateCommand documentCreateCommand,
-                                                                    MultipartFile [] multipartFile) {
+                                                 MultipartFile[] multipartFile) {
         User author = this.getUserFromDB(documentCreateCommand.getUsername());
         DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
         //find authors groups
@@ -182,7 +182,7 @@ public class DocumentService {
     public ResponseEntity<String> updateDocumentById(
             String id,
             DocumentUpdateCommand documentUpdateCommand,
-            MultipartFile [] multipartFile)  {
+            MultipartFile[] multipartFile) {
         Document document = this.getDocumentFromDB(id);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
             if (multipartFile != null) {
@@ -229,10 +229,10 @@ public class DocumentService {
     public void deleteDocumentById(String id) {
         Document document = getDocumentFromDB(id);
 //        if(document.getDocumentState().equals(DocumentState.CREATED)) {
-            User author = document.getAuthor();
-            deleteFiles(author.getUsername(), document.getPath(), document.getAdditionalFilePaths());
-            author.removeDocument(document);
-            documentRepository.delete(document);
+        User author = document.getAuthor();
+        deleteFiles(author.getUsername(), document.getPath(), document.getAdditionalFilePaths());
+        author.removeDocument(document);
+        documentRepository.delete(document);
 //        }
     }
 
@@ -252,24 +252,24 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     Document mapCreateCommandToEntity(DocumentCreateCommand documentCreateCommand) {
-            Document document = new Document();
-            DocumentType documentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
-            User author = this.getUserFromDB(documentCreateCommand.getUsername());
-            BeanUtils.copyProperties(documentCreateCommand, document);
-            document.setDocumentState(DocumentState.CREATED);
-            document.setCreationDate(new Date());
-            document.setDocumentType(documentType);
-            document.setAuthor(author);
-            document.setPrefix();
-            return document;
+        Document document = new Document();
+        DocumentType documentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
+        User author = this.getUserFromDB(documentCreateCommand.getUsername());
+        BeanUtils.copyProperties(documentCreateCommand, document);
+        document.setDocumentState(DocumentState.CREATED);
+        document.setCreationDate(new Date());
+        document.setDocumentType(documentType);
+        document.setAuthor(author);
+        document.setPrefix();
+        return document;
     }
 
     @Transactional(readOnly = true)
     Document mapUpdateCommandToEntity(DocumentUpdateCommand documentUpdateCommand, Document document) {
-            DocumentType documentType = this.getDocTypeFromDB(documentUpdateCommand.getDocumentTypeTitle());
-            BeanUtils.copyProperties(documentUpdateCommand, document);
-            document.setDocumentType(documentType);
-            return document;
+        DocumentType documentType = this.getDocTypeFromDB(documentUpdateCommand.getDocumentTypeTitle());
+        BeanUtils.copyProperties(documentUpdateCommand, document);
+        document.setDocumentType(documentType);
+        return document;
     }
 
     UserGetCommand mapUserEntityToGetCommand(User user) {
@@ -326,10 +326,10 @@ public class DocumentService {
     }
 
     @Transactional
-    private void uploadFiles(Document document, MultipartFile []  multipartFile) throws IOException {
+    private void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
         File path = new File("documents" + "/" + document.getAuthor().getUsername());
         path.mkdirs();
-        for(int i = 0; i < multipartFile.length; i++){
+        for (int i = 0; i < multipartFile.length; i++) {
             String originalFileName = multipartFile[i].getOriginalFilename();
             String updatedFileName = originalFileName + document.getPrefix();
             if (i == 0) {
@@ -359,7 +359,7 @@ public class DocumentService {
     }
 
     @Transactional
-    private void deleteFiles(String username, String path, List<String> additionalFilePaths){
+    private void deleteFiles(String username, String path, List<String> additionalFilePaths) {
         File file = new File("documents" + "/" + username + "/" + path);
         file.delete();
 
@@ -368,6 +368,77 @@ public class DocumentService {
             File files = new File("documents" + "/" + username + "/" + p);
             files.delete();
         }
+    }
+
+    @Transactional
+    public ResponseEntity downloadAllDocuments(String username) throws IOException {
+        User user = this.getUserFromDB(username);
+        List<String> addedFiles = new ArrayList<>();
+        for(Document doc: user.getDocuments()){
+            System.out.println(doc.getPath());
+        }
+        if (user != null) {
+            List<Document> documents = user.getDocuments();
+            if (documents != null) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                FileOutputStream fos = new FileOutputStream(
+                        "documents" +
+                                File.separator +
+                                username +
+                                File.separator +
+                                "compressed.zip");
+                ZipOutputStream zos = new ZipOutputStream(fos);
+                byte bytes[] = new byte[2048];
+
+                for (Document document : documents) {
+                    String originalFileName = document.getPath().replace(document.getPrefix(), "");
+                    String filePath =
+                            "documents"+
+                            File.separator +
+                            username +
+                            File.separator +
+                            document.getPath();
+                    if(addedFiles.contains(originalFileName)){
+                        addedFiles.add(document.getPath());
+                        originalFileName = document.getPath();
+                    }else {
+                        addedFiles.add(originalFileName);
+                    }
+                    FileInputStream fis = new FileInputStream(filePath);
+                    BufferedInputStream bis = new BufferedInputStream(fis);
+                    zos.putNextEntry(new ZipEntry(originalFileName));
+                    int bytesRead;
+                    while ((bytesRead = bis.read(bytes)) != -1) {
+                        zos.write(bytes, 0, bytesRead);
+                    }
+                    zos.closeEntry();
+                    bis.close();
+                    fis.close();
+                }
+                zos.flush();
+                baos.flush();
+                fos.flush();
+                zos.close();
+                baos.close();
+                fos.close();
+                File file = new File(
+                        "documents" +
+                        "/" +
+                        user.getUsername() +
+                        "/" +
+                        "compressed.zip");
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "compressed.zip" + "\"");
+                headers.add("Access-Control-Expose-Headers",
+                        HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+                return ResponseEntity.ok().headers(headers).body(resource);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+
+        }
+        return ResponseEntity.notFound().build();
     }
 }
 
