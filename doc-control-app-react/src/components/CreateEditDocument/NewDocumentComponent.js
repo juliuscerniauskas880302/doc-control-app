@@ -42,7 +42,6 @@ const NewDocumentComponet = (props) => {
                     <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
                     <div className="input-group mb-1">
                         <input
-                            multiple
                             onChange={props.onFileSelectHandler}
                             id="Upload file"
                             name="selectedFiles"
