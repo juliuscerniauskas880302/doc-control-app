@@ -40,13 +40,11 @@ const EditDocumentComponet = (props) => {
                     <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
                     <div className="input-group mb-1">
                         <input
-                            multiple
                             onChange={props.onFileSelectHandler}
                             id="Upload file"
                             name="selectedFiles"
                             className="input-file"
                             type="file"
-                            required
                         />
                     </div>
                 </div>
