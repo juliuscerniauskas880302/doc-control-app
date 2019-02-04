@@ -80,7 +80,7 @@ export default class LoginContainer extends Component {
     this.state.users.forEach(user => {
       if (this.state.username === user.username) {
         if (this.state.password === user.password) {
-          sessionStorage.setItem("user", JSON.stringify(user));
+          //sessionStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("user", JSON.stringify(user));
           //console.log("Found user:", user);
           //let data = JSON.parse(sessionStorage.getItem("lastname"));

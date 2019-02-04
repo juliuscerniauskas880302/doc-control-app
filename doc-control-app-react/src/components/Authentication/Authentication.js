@@ -15,7 +15,7 @@ export default class Authentication extends Component {
   };
 
   onClickLogoutHandler = () => {
-    sessionStorage.clear("user");
+    //sessionStorage.clear("user");
     localStorage.clear("user");
     this.setState({ isLogged: false });
   };
@@ -24,9 +24,9 @@ export default class Authentication extends Component {
   };
 
   render() {
-    let data = JSON.parse(sessionStorage.getItem("user"));
+    //let data = JSON.parse(//.getItem("user"));
     let localData = JSON.parse(localStorage.getItem("user"));
-    console.log("SessionStorage", data);
+    //console.log("//", data);
     console.log("LocalStorage", localData);
     if (localData === null) {
       return (
