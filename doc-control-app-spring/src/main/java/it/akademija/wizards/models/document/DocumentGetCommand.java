@@ -3,7 +3,9 @@ package it.akademija.wizards.models.document;
 import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.models.user.UserGetCommand;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DocumentGetCommand {
 
@@ -21,7 +23,7 @@ public class DocumentGetCommand {
     private UserGetCommand reviewer;
     private String rejectionReason;
     private String path;
-
+    private List<String> additionalFilePaths = new ArrayList<>();
     public DocumentGetCommand() {
 
     }
@@ -154,5 +156,13 @@ public class DocumentGetCommand {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public List<String> getAdditionalFilePaths() {
+        return additionalFilePaths;
+    }
+
+    public void setAdditionalFilePaths(List<String> additionalFilePaths) {
+        this.additionalFilePaths = additionalFilePaths;
     }
 }

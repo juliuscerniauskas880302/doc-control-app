@@ -11,11 +11,13 @@ import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.document.DocumentReviewCommand;
 import it.akademija.wizards.models.document.DocumentUpdateCommand;
 import it.akademija.wizards.services.DocumentService;
+
+import org.hibernate.engine.jdbc.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,10 +26,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+
+
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @Api(value = "documents")
@@ -70,7 +74,7 @@ public class DocumentController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> createDocument(
             @RequestParam("model") String model,
-            @RequestParam("file") MultipartFile [] multipartFile) {
+            @RequestParam("file") MultipartFile[] multipartFile) {
         /*   String model:
             {
               "description": "string",
@@ -90,36 +94,7 @@ public class DocumentController {
         }
         return new ResponseEntity<String>("Document created", HttpStatus.OK);
     }
-    //OLD CREATE
-    //    @ApiOperation(value = "create a document",
-//            produces = "application/json", consumes = "multipart/form-data")
-//    @RequestMapping(method = RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public ResponseEntity<String> createDocument(
-//            @RequestParam("model") String model,
-//            @RequestParam("file") MultipartFile multipartFile) {
-//        /*   String model:
-//            {
-//              "description": "string",
-//              "documentTypeTitle": "atostogu prasymas",
-//              "title": "string",
-//              "username": "migle"
-//            }
-//        */
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
-//            documentService.createDocument(documentCreateCommand, multipartFile);
-//
-//        } catch (IOException ex) {
-//            System.out.println(ex);
-//            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
-//
-//        }
-//        return new ResponseEntity<String>("Document created", HttpStatus.OK);
-//    }
 
-//TODO: download main file + additional file
     @ApiOperation(value = "download a file")
     @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -133,13 +108,68 @@ public class DocumentController {
         if (file.exists()) {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"");
-            headers.add("Access-Control-Expose-Headers", HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName +"\"");
+            headers.add("Access-Control-Expose-Headers",
+                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             headers.setContentType(mediaType);
-            return ResponseEntity.ok().headers(headers).body(resource);
+            return ResponseEntity.ok().headers(headers).header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=a").
+                    body(resource);
         }
         return ResponseEntity.notFound().build();
     }
+
+
+    @ApiOperation(value = "download additionalFiles")
+    @RequestMapping(value = "/{id}/download/attachments", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<byte[]> downloadAttachments(@PathVariable final String id) throws IOException {
+
+        DocumentGetCommand document = documentService.getDocumentsById(id);
+        List<String> fileNames = document.getAdditionalFilePaths();
+        if (fileNames != null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ZipOutputStream zos = new ZipOutputStream(baos);
+            byte bytes[] = new byte[2048];
+
+            for (String fileName : fileNames) {
+                FileInputStream fis = new FileInputStream(
+                        "documents"
+                                + File.separator
+                                + document.getAuthor().getUsername()
+                                + File.separator
+                                + fileName);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                zos.putNextEntry(new ZipEntry(fileName));
+                int bytesRead;
+                while ((bytesRead = bis.read(bytes)) != -1) {
+                    zos.write(bytes, 0, bytesRead);
+                }
+                zos.closeEntry();
+                bis.close();
+                fis.close();
+            }
+            zos.flush();
+            baos.flush();
+            zos.close();
+            baos.close();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"zipFile.zip\"");
+            headers.add("Access-Control-Expose-Headers",
+                    HttpHeaders.CONTENT_DISPOSITION);
+//            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentType(MediaType.parseMediaType("application/zip"));
+
+            return ResponseEntity.ok().headers(headers).body(baos.toByteArray());
+
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 
     @ApiOperation(value = "submit document by document Id")
     @RequestMapping(value = "/{id}/submit", method = RequestMethod.PUT)
@@ -165,7 +195,7 @@ public class DocumentController {
     public ResponseEntity<String> updateDocumentById(
             @PathVariable String id,
             @RequestPart String model,
-            @RequestPart MultipartFile [] multipartFile) {
+            @RequestPart MultipartFile[] multipartFile) {
         /*   String model:
     {
       "documentTypeTitle": "atostogu prasymas",
