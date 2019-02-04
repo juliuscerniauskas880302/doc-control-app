@@ -40,7 +40,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
   }
 
   componentDidMount() {
-    let currentUser = JSON.parse(sessionStorage.getItem('user')).username;
+    let currentUser = JSON.parse(localStorage.getItem('user')).username;
     let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/submitted';
     axios.get(resourcePath)
       .then((response) => {
@@ -65,7 +65,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
             type={document.documentTypeTitle}
             //state={document.documentState}
             state={document.documentState.toLowerCase().charAt(0).toUpperCase() + document.documentState.toLowerCase().slice(1)}
-            submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10): ""}
+            submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10) : ""}
           />
         );
       });
