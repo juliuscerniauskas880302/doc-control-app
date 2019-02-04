@@ -10,6 +10,7 @@ import NewDocumentTypeContainer from "../../Admin/DocumentType/NewDocumentTypeCo
 import TypesInGroups from "../../Admin/Types_in_groups/TypesInGroups";
 import EditUserGroups from "../../Admin/Groups/EditUserGroups";
 import ResourceNotFoundComponent from "../../Errors/ResourceNotFoundComponent";
+import Testing from "../../Testing/Testing";
 //import NewDocumentForm from "../user/Document/NewDocumentForm";
 /////////////////////////////////////////////////////////////////
 export default class AdminNavigationContainer extends Component {
@@ -20,6 +21,7 @@ export default class AdminNavigationContainer extends Component {
           <div>
             <AdminNavigationComponent logout={this.props.logout} />
             <Switch>
+              <Route path="/testing" component={Testing} exact />
               <Route path="/" component={UserContainer} exact />
               <Route path="/users2/add" component={NewUserContainer} exact />
               <Route path="/groups/add" component={NewGroupForm} exact />

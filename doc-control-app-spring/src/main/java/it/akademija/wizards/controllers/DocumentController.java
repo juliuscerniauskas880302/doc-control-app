@@ -174,6 +174,13 @@ public class DocumentController {
 
     }
 
+    @ApiOperation(value = "download all user's documents in zip")
+    @RequestMapping(value = "/{username}/download/all", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity dowloadAllUserDocuments(@PathVariable final String username) throws IOException {
+        return documentService.downloadAllDocuments(username);
+    }
+
 
 //      DOWNLOAD WITH HTTPSERVLETRESPONSE
 //    @ApiOperation(value = "download additionalFiles")
