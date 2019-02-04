@@ -37,45 +37,45 @@ class NewDocumentContainer extends React.Component {
     this.setState({ [event.target.name]: event.target.files });
   };
 
-  downloadHandler = (event) => {
-    // 70a73980-02d1-4e63-a577-6e59b25c976b
-    // Axios.get(
-    //   "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download"
-    // ).then(res => FileSaver.saveAs(res.data, "effectiveFileName"));
+  // downloadHandler = (event) => {
+  //   // 70a73980-02d1-4e63-a577-6e59b25c976b
+  //   // Axios.get(
+  //   //   "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download"
+  //   // ).then(res => FileSaver.saveAs(res.data, "effectiveFileName"));
 
-    axios({
-      url:
-        "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download", //doc id
-      method: "GET",
-      responseType: "blob" // important
-    }).then(response => {
-      var filename = this.extractFileName(
-        response.headers["content-disposition"]
-      );
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", filename); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  };
+  //   axios({
+  //     url:
+  //       "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download", //doc id
+  //     method: "GET",
+  //     responseType: "blob" // important
+  //   }).then(response => {
+  //     var filename = this.extractFileName(
+  //       response.headers["content-disposition"]
+  //     );
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", filename); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   });
+  // };
 
-  extractFileName = contentDispositionValue => {
-    var filename = "";
-    if (
-      contentDispositionValue &&
-      contentDispositionValue.indexOf("attachment") !== -1
-    ) {
-      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      var matches = filenameRegex.exec(contentDispositionValue);
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, "");
-      }
-    }
-    return filename;
-  };
+  // extractFileName = contentDispositionValue => {
+  //   var filename = "";
+  //   if (
+  //     contentDispositionValue &&
+  //     contentDispositionValue.indexOf("attachment") !== -1
+  //   ) {
+  //     var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+  //     var matches = filenameRegex.exec(contentDispositionValue);
+  //     if (matches != null && matches[1]) {
+  //       filename = matches[1].replace(/['"]/g, "");
+  //     }
+  //   }
+  //   return filename;
+  // };
 
   //TODO
   handleSubmit = (event) => {
@@ -147,8 +147,8 @@ class NewDocumentContainer extends React.Component {
       });
 
       //pasitestuoju, kas yra sessionStore išsaugota
-      let currentUser = JSON.parse(sessionStorage.getItem('user'));
-      console.log("Spausdinu userį gautą iš sessionStorage");
+      let currentUser = JSON.parse(localStorage.getItem('user'));
+      console.log("Spausdinu userį gautą iš localStorage");
       console.log(currentUser);
       this.setState({username: currentUser.username});
   }
@@ -163,7 +163,7 @@ class NewDocumentContainer extends React.Component {
         handleChangeOfDescription={this.handleChangeOfDescription}
         handleChangeOfType={this.handleChangeOfType}
         onFileSelectHandler={this.onFileSelectHandler}
-        downloadHandler={this.downloadHandler}
+        //downloadHandler={this.downloadHandler}
         handleSubmit={this.handleSubmit}
       />
     );

@@ -36,8 +36,14 @@ const EditDocumentComponet = (props) => {
                 </div>
             </div>
             <div className="form-row">
+                <div className="col-md-4 mb-3">   
+                    <p>Pridėtas failas:</p>
+                    <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
+                </div>
+            </div>
+            <div className="form-row">
                 <div className="col-md-4 mb-3">
-                    <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
+                    <label htmlFor="Upload file">Pasirinkite naują pridedamą failą</label>
                     <div className="input-group mb-1">
                         <input
                             onChange={props.onFileSelectHandler}
@@ -47,11 +53,6 @@ const EditDocumentComponet = (props) => {
                             type="file"
                         />
                     </div>
-                </div>
-            </div>
-            <div className="form-row">
-                <div className="col-md-4 mb-3">
-                <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Prisegti</button>
                 </div>
             </div>
             <button className="btn btn-primary" type="submit">Išsaugoti</button> &nbsp;
