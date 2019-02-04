@@ -30,7 +30,7 @@ export default function NewGroupComponent(props) {
                 <button
                   type="buton"
                   className="btn btn-warning"
-                  onClick={props.OnClickGoBack}
+                  onClick={props.onClickGoBack}
                 >
                   Go back
                 </button>

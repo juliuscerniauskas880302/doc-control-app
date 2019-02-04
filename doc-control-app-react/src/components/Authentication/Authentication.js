@@ -10,16 +10,13 @@ export default class Authentication extends Component {
       isLogged: false
     };
   }
-  componentDidMount = () => {
-    console.log("Authentication");
-    console.log(this.props);
-  };
   setLoggedState = () => {
     this.setState({ isLogged: true });
   };
 
   onClickLogoutHandler = () => {
     sessionStorage.clear("user");
+    localStorage.clear("user");
     this.setState({ isLogged: false });
   };
   logout = () => {
@@ -28,11 +25,14 @@ export default class Authentication extends Component {
 
   render() {
     let data = JSON.parse(sessionStorage.getItem("user"));
-    if (data === null) {
+    let localData = JSON.parse(localStorage.getItem("user"));
+    console.log("SessionStorage", data);
+    console.log("LocalStorage", localData);
+    if (localData === null) {
       return (
         <LoginContainer {...this.props} setLoggedState={this.setLoggedState} />
       );
-    } else if (data.isAdmin) {
+    } else if (localData.isAdmin) {
       return <AdminNavigationContainer {...this.props} logout={this.logout} />;
     } else
       return <UserNavigationContainer {...this.props} logout={this.logout} />;
