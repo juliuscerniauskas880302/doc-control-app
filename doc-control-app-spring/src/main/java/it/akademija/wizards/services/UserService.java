@@ -1,23 +1,31 @@
 package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.Document;
+import it.akademija.wizards.entities.Role;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.enums.DocumentState;
+import it.akademija.wizards.enums.RoleName;
+import it.akademija.wizards.exception.AppException;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
+import it.akademija.wizards.payload.ApiResponse;
+import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
-import it.akademija.wizards.security.PBKDF2Hash;
-import it.akademija.wizards.security.PassAndSalt;
-import it.akademija.wizards.security.PasswordChecker;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +35,11 @@ public class UserService {
     private UserRepository userRepository;
     private UserGroupRepository userGroupRepository;
     private DocumentService documentService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, DocumentService documentService) {
@@ -66,27 +79,97 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser(UserCreateCommand userCreateCommand) {
+    public ResponseEntity<?> createUser(UserCreateCommand userCreateCommand) {
+        if (userRepository.existsByUsername(userCreateCommand.getUsername())) {
+            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (userRepository.existsByEmail(userCreateCommand.getEmail())) {
+            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         User user = new User();
         BeanUtils.copyProperties(userCreateCommand, user);
-        PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
-        byte[] encodedPass = null;
-        byte[] passwordSalt = null;
-        PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userCreateCommand.getPassword());
-        if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
-                && (passwordSalt = passAndSalt.getSalt()) != null) {
-            user.setPassword(encodedPass);
-            user.setPassWordSalt(passwordSalt);
-            userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(userCreateCommand.getPassword()));
+        Role userRole = null;
+        if (userCreateCommand.isAdmin()) {
+            userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
+                    () -> new AppException("Admin Role not set")
+            );
+            user.setRoles(Collections.singleton(userRole));
         } else {
-            throw new NullPointerException("Error encoding password");
+            userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                    () -> new AppException("User Role not set")
+            );
+            user.setRoles(Collections.singleton(userRole));
         }
+        User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/api/users/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+
+//        PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
+//        byte[] encodedPass = null;
+//        byte[] passwordSalt = null;
+//        PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userCreateCommand.getPassword());
+//        if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
+//                && (passwordSalt = passAndSalt.getSalt()) != null) {
+//            user.setPassword(encodedPass);
+//            user.setPassWordSalt(passwordSalt);
+//            userRepository.save(user);
+//        } else {
+//            throw new NullPointerException("Error encoding password");
+//        }
+    }
+
+    @Transactional
+    public void createUserForStartUp(UserCreateCommand userCreateCommand) {
+        if (userRepository.existsByUsername(userCreateCommand.getUsername())) {
+            throw new IllegalArgumentException("User already exists");
+        }
+
+        if (userRepository.existsByEmail(userCreateCommand.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userCreateCommand, user);
+        user.setPassword(passwordEncoder.encode(userCreateCommand.getPassword()));
+        Role userRole = null;
+        if (userCreateCommand.isAdmin()) {
+            userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
+                    () -> new AppException("Admin Role not set")
+            );
+            user.setRoles(Collections.singleton(userRole));
+        } else {
+            userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                    () -> new AppException("User Role not set")
+            );
+            user.setRoles(Collections.singleton(userRole));
+        }
+        userRepository.save(user);
     }
 
     @Transactional
     public void updateUser(String username, UserUpdateCommand userUpdateCommand) {
         User user = userRepository.findByUsername(username);
         BeanUtils.copyProperties(userUpdateCommand, user);
+        Role userRole = null;
+        if (userUpdateCommand.isAdmin()) {
+            userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
+                    () -> new AppException("Admin Role not set")
+            );
+            user.setRoles(Collections.singleton(userRole));
+        } else {
+            userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                    () -> new AppException("User Role not set")
+            );
+            user.setRoles(Collections.singleton(userRole));
+        }
         userRepository.save(user);
     }
 
@@ -94,10 +177,10 @@ public class UserService {
     public void deleteUser(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            for (UserGroup userGroup: user.getUserGroups()) {
+            for (UserGroup userGroup : user.getUserGroups()) {
                 userGroup.removeUser(user);
             }
-            for (Document document: user.getDocuments()) {
+            for (Document document : user.getDocuments()) {
                 document.setAuthor(null);
             }
             userRepository.delete(user);
@@ -106,30 +189,33 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public boolean authUser(String username, UserPassCommand userPassCommand) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            PasswordChecker passwordChecker = new PasswordChecker();
-            return passwordChecker.checkPasswordMatching(userPassCommand.getPassword(), user.getPassword(), user.getPasswordSalt());
-        }
-        return false;
-    }
+//    @Transactional
+//    public boolean authUser(String username, UserPassCommand userPassCommand) {
+//        User user = userRepository.findByUsername(username);
+//        if (user != null) {
+//            PasswordChecker passwordChecker = new PasswordChecker();
+//            return passwordChecker.checkPasswordMatching(userPassCommand.getPassword(), user.getPassword(), user.getPasswordSalt());
+//        }
+//        return false;
+//    }
 
     @Transactional
     public boolean updateUserPassword(String username, UserPassCommand userPassCommand) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
-            byte[] encodedPass = null;
-            byte[] passwordSalt = null;
-            PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userPassCommand.getPassword());
-            if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
-                    && (passwordSalt = passAndSalt.getSalt()) != null) {
-                user.setPassword(encodedPass);
-                user.setPassWordSalt(passwordSalt);
-                return true;
-            }
+            user.setPassword(passwordEncoder.encode(userPassCommand.getPassword()));
+            userRepository.save(user);
+            return true;
+//            PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
+//            byte[] encodedPass = null;
+//            byte[] passwordSalt = null;
+//            PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userPassCommand.getPassword());
+//            if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
+//                    && (passwordSalt = passAndSalt.getSalt()) != null) {
+//                user.setPassword(encodedPass);
+//                user.setPassWordSalt(passwordSalt);
+//                return true;
+//            }
         }
         return false;
     }
@@ -165,8 +251,9 @@ public class UserService {
             userRepository.save(user);
         }
     }
+
     @Transactional
-    public void removeGroupsFromUser(UserRemoveGroupsCommand userRemoveGroupsCommand, String username){
+    public void removeGroupsFromUser(UserRemoveGroupsCommand userRemoveGroupsCommand, String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             List<UserGroup> userGroupList = userGroupRepository.findAllById(userRemoveGroupsCommand.getId());

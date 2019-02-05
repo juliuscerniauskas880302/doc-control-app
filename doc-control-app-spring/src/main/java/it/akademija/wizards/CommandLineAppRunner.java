@@ -1,5 +1,7 @@
 package it.akademija.wizards;
 
+import it.akademija.wizards.entities.Role;
+import it.akademija.wizards.enums.RoleName;
 import it.akademija.wizards.models.documenttype.DocumentTypeCreateCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.UserAddGroupsCommand;
@@ -7,6 +9,7 @@ import it.akademija.wizards.models.user.UserCreateCommand;
 import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
+import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.services.DocumentTypeService;
 import it.akademija.wizards.services.UserGroupService;
 import it.akademija.wizards.services.UserService;
@@ -32,9 +35,15 @@ public class CommandLineAppRunner implements CommandLineRunner {
     @Autowired
     private UserGroupService userGroupService;
 
+    @Autowired
+    RoleRepository roleRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
+        //ROLES
+        if (!roleExists("ROLE_USER")) roleRepository.save(new Role(RoleName.ROLE_USER));
+        if (!roleExists("ROLE_ADMIN")) roleRepository.save(new Role(RoleName.ROLE_ADMIN));
         //GROUPS
         if (!groupExists("administracija")) userGroupService.createUserGroup(new UserGroupCreateCommand("administracija"));
         if (!groupExists("darbuotojai")) userGroupService.createUserGroup(new UserGroupCreateCommand("darbuotojai"));
@@ -47,12 +56,12 @@ public class CommandLineAppRunner implements CommandLineRunner {
         if(!docTypeExists("paausktinimas pareigose")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("paausktinimas pareigose"));
         if(!docTypeExists("atlyginimo padidinimas")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atlyginimo padidinimas"));
         //USERS
-        if (!usernameExists("migle")) userService.createUser(new UserCreateCommand("migle", "captain", "Migle", "Babickaite", "captain@captain.lt", true));
-        if (!usernameExists("julius")) userService.createUser(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", false));
-        if (!usernameExists("root")) userService.createUser(new UserCreateCommand("root", "root", "Rootas", "Rootauskas", "root@captain.lt", true));
-        if (!usernameExists("jonas")) userService.createUser(new UserCreateCommand("jonas", "jonas", "Jonas", "Gaidukevicius", "jonas@captain.lt", false));
-        if (!usernameExists("andrius")) userService.createUser(new UserCreateCommand("andrius", "andrius", "Andrius", "", "andrius@captain.lt", false));
-        if (!usernameExists("vytautas")) userService.createUser(new UserCreateCommand("vytautas", "vytautas", "Vytautas", "", "vytautas@captain.lt", false));
+        if (!usernameExists("migle")) userService.createUserForStartUp(new UserCreateCommand("migle", "captain", "Migle", "Babickaite", "captain@captain.lt", true));
+        if (!usernameExists("julius")) userService.createUserForStartUp(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", false));
+        if (!usernameExists("root")) userService.createUserForStartUp(new UserCreateCommand("root", "root", "Rootas", "Rootauskas", "root@captain.lt", true));
+        if (!usernameExists("jonas")) userService.createUserForStartUp(new UserCreateCommand("jonas", "jonas", "Jonas", "Gaidukevicius", "jonas@captain.lt", false));
+        if (!usernameExists("andrius")) userService.createUserForStartUp(new UserCreateCommand("andrius", "andrius", "Andrius", "", "andrius@captain.lt", false));
+        if (!usernameExists("vytautas")) userService.createUserForStartUp(new UserCreateCommand("vytautas", "vytautas", "Vytautas", "", "vytautas@captain.lt", false));
 
 
         //create lists of groups' ids
@@ -86,6 +95,10 @@ public class CommandLineAppRunner implements CommandLineRunner {
         documentTypeService.addGroupsToDocType(docTypeId, "submission", new UserAddGroupsCommand(allGroups));
         //add administracija to doctype review
         documentTypeService.addGroupsToDocType(docTypeId, "review", new UserAddGroupsCommand(administration));
+    }
+
+    private boolean roleExists(String roleName) {
+        return roleRepository.existsByName(RoleName.valueOf(roleName));
     }
 
     private boolean docTypeExists(String title) {

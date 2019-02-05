@@ -1,5 +1,6 @@
 package it.akademija.wizards.entities;
 
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class User {
     private String username;
 
     @NotNull
-    private byte[] password;
+    private String password;
 
     @NotNull
     private String firstname;
@@ -30,12 +31,17 @@ public class User {
     @NotNull
     private String email;
 
+    @ManyToMany
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
     @ManyToMany(mappedBy = "users")
     private Set<UserGroup> userGroups;
 
     private boolean isAdmin;
 
-    private byte[] passwordSalt;
+//    private byte[] passwordSalt;
 
     @OneToMany(mappedBy = "author")
     private List<Document> documents;
@@ -44,12 +50,12 @@ public class User {
     }
 
     public User(String username,
-                @NotNull byte[] password,
+                @NotNull String password,
                 @NotNull String firstname,
                 @NotNull String lastname,
                 @NotNull String email,
                 boolean isAdmin,
-                byte[] passwordSalt,
+//                byte[] passwordSalt,
                 List<Document> documents) {
         this.username = username;
         this.password = password;
@@ -58,7 +64,7 @@ public class User {
         this.email = email;
         this.userGroups = new HashSet<>();
         this.isAdmin = isAdmin;
-        this.passwordSalt = passwordSalt;
+//        this.passwordSalt = passwordSalt;
         this.documents = documents;
     }
 
@@ -88,11 +94,11 @@ public class User {
         this.username = username;
     }
 
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(byte[] password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -154,7 +160,15 @@ public class User {
         this.documents = documents;
     }
 
-    public byte[] getPasswordSalt() { return passwordSalt; }
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-    public void setPassWordSalt(byte[] passwordSalt) { this.passwordSalt = passwordSalt; }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    //    public byte[] getPasswordSalt() { return passwordSalt; }
+//
+//    public void setPassWordSalt(byte[] passwordSalt) { this.passwordSalt = passwordSalt; }
 }

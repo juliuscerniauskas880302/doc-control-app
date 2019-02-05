@@ -58,12 +58,12 @@ public class UserController {
 
     }
 
-    @ApiOperation(value = "check if user exists by username")
-    @RequestMapping(value = "/auth/{username}", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public boolean userExists(@RequestBody UserPassCommand userPassCommand, @PathVariable(value = "username") String username){
-        return userService.authUser(username, userPassCommand);
-    }
+//    @ApiOperation(value = "check if user exists by username")
+//    @RequestMapping(value = "/auth/{username}", method = RequestMethod.POST)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public boolean userExists(@RequestBody UserPassCommand userPassCommand, @PathVariable(value = "username") String username){
+//        return userService.authUser(username, userPassCommand);
+//    }
 
     @ApiOperation(value = "update user by username")
     @RequestMapping(value = "/{username}", method = RequestMethod.PUT)
