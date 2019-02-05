@@ -82,7 +82,7 @@ class EditDocumentContainer extends React.Component {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
       title: this.state.title,
-      username: this.state.username
+      //username: this.state.username
     };
     console.log("Čia spausdina modelį");
     console.log(model);
@@ -90,7 +90,7 @@ class EditDocumentContainer extends React.Component {
 
     if (this.state.selectedFiles === null) {
       console.log("Pažymėti failai yra null");
-      file.append("file", "jo", this.state.filename); //nėra 3 parametro, kuris turėtų būti failo pavadinimas 
+      file.append("file", null); //nėra 3 parametro, kuris turėtų būti failo pavadinimas 
     } else {
       if (this.state.selectedFiles.length === 1) {
         file.append(
@@ -101,6 +101,7 @@ class EditDocumentContainer extends React.Component {
       }
     }
     file.append("model", JSON.stringify(model));
+    console.log("Dokuemnto id yra - " + this.state.id);
     axios.put("http://localhost:8081/api/docs/" + this.state.id, file)
       .then(res => console.log(res))
       .catch(err => console.log("KLAIDA SUBMITE" + err));

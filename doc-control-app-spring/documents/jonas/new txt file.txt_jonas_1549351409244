@@ -1,0 +1,16 @@
+let model = {
+     description: this.state.description,
+     documentTypeTitle: this.state.documentTypeTitle,
+     title: this.state.title,
+     username: "migle"
+   };
+   console.log(model);
+   let file = new FormData();
+   if (this.state.selectedFiles.length === 1) {
+     file.append(
+       "file",
+       this.state.selectedFiles[0],
+       this.state.selectedFiles[0].name
+     );
+     file.append("model", JSON.stringify(model));
+     Axios.post("http://localhost:8081/api/docs", file)
