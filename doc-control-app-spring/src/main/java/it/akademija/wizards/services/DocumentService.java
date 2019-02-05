@@ -27,8 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -46,6 +51,7 @@ public class DocumentService {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
+    private static final String pathName = "documents";
     //GET
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getSubmittedDocuments() {
@@ -175,8 +181,130 @@ public class DocumentService {
             throw new IllegalArgumentException("User doesn't have permission to review this type of document");
         }
     }
+// DELETES ONE FILE IN DOCUMENT
+    @Transactional
+    public ResponseEntity<String> deleteFileByFileName (
+            String documentId,
+            String fileName){
+        Document document = this.getDocumentFromDB(documentId);
+        if(document.getPath().equals(fileName)){
+            deleteMainFile(document);
+        } else {
+            deleteAdditionalFiles(document, fileName);
+        }
 
+        return new ResponseEntity<>("File " + fileName + " was deleted.", HttpStatus.CREATED);
+    }
 
+    // GET ALL DOCUMENTS WITH FOLDERS
+    @Transactional
+    public ResponseEntity downloadAllDocuments(String username) throws IOException {
+        long time1 = System.currentTimeMillis();
+        User user = this.getUserFromDB(username);
+        List<Document> documents = user.getDocuments();
+        if (documents != null) {
+
+            File file = new File(pathName +
+                    File.separator +
+                    username +
+                    File.separator +
+                    "dokumentai.zip");
+            FileOutputStream fos = new FileOutputStream(file);
+            ZipOutputStream zs = new ZipOutputStream(fos);
+
+            for (Document d :
+                    documents) {
+                File documentFile = getDocumentFolder(d);
+                try {
+                    addDirToZipArchive(zs, documentFile, "");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            zs.flush();;
+            fos.flush();
+            zs.close();
+            fos.close();
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "compressed.zip" + "\"");
+            headers.add("Access-Control-Expose-Headers",
+                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+            long time2 = System.currentTimeMillis();
+            System.out.println(time2 - time1);
+            return ResponseEntity.ok().headers(headers).body(resource);
+        }
+        return ResponseEntity.notFound().build();
+    }
+//
+//    // GET ALL DOCUMENTS
+//    @Transactional
+//    public ResponseEntity downloadAllDocuments(String username) throws IOException {
+//        User user = this.getUserFromDB(username);
+//        List<String> addedFiles = new ArrayList<>();
+//        for(Document doc: user.getDocuments()){
+//            System.out.println(doc.getPath());
+//        }
+//        if (user != null) {
+//            List<Document> documents = user.getDocuments();
+//            if (documents != null) {
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                FileOutputStream fos = new FileOutputStream(
+//                        pathName +
+//                                File.separator +
+//                                username +
+//                                File.separator +
+//                                "compressed.zip");
+//                ZipOutputStream zos = new ZipOutputStream(fos);
+//                byte bytes[] = new byte[2048];
+//
+//                for (Document document : documents) {
+//                    String originalFileName = document.getPath();
+//                    String filePath =(getDocumentFolder(document).getPath()
+//                            + File.separator
+//                            + document.getPath());
+//                    if(addedFiles.contains(originalFileName)){
+//                        addedFiles.add(document.getPath());
+//                        originalFileName = document.getPath();
+//                    }else {
+//                        addedFiles.add(originalFileName);
+//                    }
+//                    FileInputStream fis = new FileInputStream(filePath);
+//                    BufferedInputStream bis = new BufferedInputStream(fis);
+//                    zos.putNextEntry(new ZipEntry(originalFileName));
+//                    int bytesRead;
+//                    while ((bytesRead = bis.read(bytes)) != -1) {
+//                        zos.write(bytes, 0, bytesRead);
+//                    }
+//                    zos.closeEntry();
+//                    bis.close();
+//                    fis.close();
+//                }
+//                zos.flush();
+//                baos.flush();
+//                fos.flush();
+//                zos.close();
+//                baos.close();
+//                fos.close();
+//                File file = new File(
+//                        pathName +
+//                                "/" +
+//                                user.getUsername() +
+//                                "/" +
+//                                "compressed.zip");
+//                InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+//                HttpHeaders headers = new HttpHeaders();
+//                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "compressed.zip" + "\"");
+//                headers.add("Access-Control-Expose-Headers",
+//                        HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+//                return ResponseEntity.ok().headers(headers).body(resource);
+//            }
+//        } else {
+//            return ResponseEntity.notFound().build();
+//
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
     //UPDATE
     @Transactional
     public ResponseEntity<String> updateDocumentById(
@@ -224,16 +352,13 @@ public class DocumentService {
 
 
     //DELETE
-    //TODO: Can user DELETE only created documents?
     @Transactional
     public void deleteDocumentById(String id) {
         Document document = getDocumentFromDB(id);
-//        if(document.getDocumentState().equals(DocumentState.CREATED)) {
         User author = document.getAuthor();
-        deleteFiles(author.getUsername(), document.getPath(), document.getAdditionalFilePaths());
+        deleteAllFiles(document);
         author.removeDocument(document);
         documentRepository.delete(document);
-//        }
     }
 
     //PACKAGE METHODS (MAPPING)
@@ -300,13 +425,18 @@ public class DocumentService {
 
     @Transactional
     private void uploadFile(Document document, MultipartFile multipartFile) throws IOException {
-        File path = new File("documents" + File.separator + document.getAuthor().getUsername());
-        path.mkdirs();
+        File folder = getDocumentFolder(document);
+//        File path = new File(pathName
+//                + File.separator
+//                + document.getAuthor().getUsername()
+//                +   File.separator
+//                + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(document.getCreationDate())));
+        boolean mkdirs = folder.mkdirs();
         String originalFileName = multipartFile.getOriginalFilename();
-        String updatedFileName = originalFileName + document.getPrefix();
-        document.setPath(updatedFileName);
+//        String updatedFileName = originalFileName + document.getPrefix();
+        document.setPath(originalFileName);
         byte[] buf = new byte[1024];
-        File file = new File(path.getPath(), updatedFileName);
+        File file = new File(folder.getPath(), originalFileName);
         try (InputStream inputStream = multipartFile.getInputStream();
              FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             int numRead = 0;
@@ -325,20 +455,25 @@ public class DocumentService {
         Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
     }
 
+
     @Transactional
     private void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
-        File path = new File("documents" + "/" + document.getAuthor().getUsername());
+        File path = new File(pathName
+                + File.separator
+                + document.getAuthor().getUsername()
+                +   File.separator
+                + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(document.getCreationDate())));
         path.mkdirs();
         for (int i = 0; i < multipartFile.length; i++) {
             String originalFileName = multipartFile[i].getOriginalFilename();
-            String updatedFileName = originalFileName + document.getPrefix();
+//            String updatedFileName = originalFileName + document.getPrefix();
             if (i == 0) {
-                document.setPath(updatedFileName);
+                document.setPath(originalFileName);
             } else {
-                document.getAdditionalFilePaths().add(updatedFileName);
+                document.getAdditionalFilePaths().add(originalFileName);
             }
             byte[] buf = new byte[1024];
-            File file = new File(path.getPath(), updatedFileName);
+            File file = new File(path.getPath(), originalFileName);
             try (InputStream inputStream = multipartFile[i].getInputStream();
                  FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                 int numRead = 0;
@@ -358,87 +493,119 @@ public class DocumentService {
         }
     }
 
+    //    DELETES ONLY CREATED FILES
     @Transactional
-    private void deleteFiles(String username, String path, List<String> additionalFilePaths) {
-        File file = new File("documents" + "/" + username + "/" + path);
-        file.delete();
-
-        for (String p :
-                additionalFilePaths) {
-            File files = new File("documents" + "/" + username + "/" + p);
-            files.delete();
+    private void deleteAllFiles(Document document) {
+        if (document.getDocumentState().equals(DocumentState.CREATED)) {
+            File folder = getDocumentFolder(document);
+            deleteFolder(folder);
+        } else {
+            throw new IllegalArgumentException("Cannot delete file that is already submitted.");
         }
     }
 
     @Transactional
-    public ResponseEntity downloadAllDocuments(String username) throws IOException {
-        User user = this.getUserFromDB(username);
-        List<String> addedFiles = new ArrayList<>();
-        for(Document doc: user.getDocuments()){
-            System.out.println(doc.getPath());
-        }
-        if (user != null) {
-            List<Document> documents = user.getDocuments();
-            if (documents != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                FileOutputStream fos = new FileOutputStream(
-                        "documents" +
-                                File.separator +
-                                username +
-                                File.separator +
-                                "compressed.zip");
-                ZipOutputStream zos = new ZipOutputStream(fos);
-                byte bytes[] = new byte[2048];
-
-                for (Document document : documents) {
-                    String originalFileName = document.getPath().replace(document.getPrefix(), "");
-                    String filePath =
-                            "documents"+
-                            File.separator +
-                            username +
-                            File.separator +
-                            document.getPath();
-                    if(addedFiles.contains(originalFileName)){
-                        addedFiles.add(document.getPath());
-                        originalFileName = document.getPath();
-                    }else {
-                        addedFiles.add(originalFileName);
-                    }
-                    FileInputStream fis = new FileInputStream(filePath);
-                    BufferedInputStream bis = new BufferedInputStream(fis);
-                    zos.putNextEntry(new ZipEntry(originalFileName));
-                    int bytesRead;
-                    while ((bytesRead = bis.read(bytes)) != -1) {
-                        zos.write(bytes, 0, bytesRead);
-                    }
-                    zos.closeEntry();
-                    bis.close();
-                    fis.close();
-                }
-                zos.flush();
-                baos.flush();
-                fos.flush();
-                zos.close();
-                baos.close();
-                fos.close();
-                File file = new File(
-                        "documents" +
-                        "/" +
-                        user.getUsername() +
-                        "/" +
-                        "compressed.zip");
-                InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-                HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "compressed.zip" + "\"");
-                headers.add("Access-Control-Expose-Headers",
-                        HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
-                return ResponseEntity.ok().headers(headers).body(resource);
+    private void deleteMainFile(Document document) {
+        if (document.getDocumentState().equals(DocumentState.CREATED)) {
+            File folder = getDocumentFolder(document);
+            File file = new File(folder.getPath()
+                    + File.separator
+                    + document.getPath());
+            file.delete();
+            if (Objects.requireNonNull(folder.list()).length == 0) {
+                deleteFolder(folder);
             }
         } else {
-            return ResponseEntity.notFound().build();
-
+            throw new IllegalArgumentException("Cannot delete file that is already submitted.");
         }
-        return ResponseEntity.notFound().build();
+    }
+
+    @Transactional
+    private void deleteAdditionalFiles(Document document, String fileName) {
+        if (document.getDocumentState().equals(DocumentState.CREATED)) {
+            if (document.getAdditionalFilePaths() != null) {
+                File folder = getDocumentFolder(document);
+                for (String p :
+                        document.getAdditionalFilePaths()) {
+                    File files = new File(folder.getPath()
+                            + File.separator
+                            + p);
+                    boolean delete = files.delete();
+                }
+                if (Objects.requireNonNull(folder.list()).length == 0) {
+                    deleteFolder(folder);
+                    }
+
+            } else {
+                throw new IllegalArgumentException("There is no attachment named \"" + fileName + "\".");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot delete file that is already submitted.");
+        }
+    }
+    //    TODO: WHEN TO USE @TRANSACTIONAL?
+    @Transactional
+    private File getDocumentFolder(Document document) {
+        return new File(pathName
+                + File.separator
+                + document.getAuthor().getUsername()
+                + File.separator
+                + formatLocalDateTime(
+                convertToLocalDateTimeViaMilisecond(document.getCreationDate()
+                )
+        ));
+    }
+//    Date TO LocalDateTime CONVERTER
+    @Transactional
+    private LocalDateTime convertToLocalDateTimeViaMilisecond(Date dateToConvert) {
+        return Instant.ofEpochMilli(dateToConvert.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+//    Date format
+    @Transactional
+    private String formatLocalDateTime(LocalDateTime localDateTime){
+        DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss", Locale.US);
+        return localDateTime.format(dataTimeFormatter);
+    }
+
+    void deleteFolder(File folder){
+
+        for(String s: folder.list()){
+            File currentFile = new File(folder.getPath(),s);
+            currentFile.delete();
+        }
+        folder.delete();
+    }
+
+    //    Zip folders
+    public  void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+        if (fileToZip == null || !fileToZip.exists()) {
+            return;
+        }
+
+        String zipEntryName = fileToZip.getName();
+        if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
+            zipEntryName = parrentDirectoryName + File.separator + fileToZip.getName();
+        }
+
+        if (fileToZip.isDirectory()) {
+            System.out.println("+" + zipEntryName);
+            for (File file : fileToZip.listFiles()) {
+                addDirToZipArchive(zos, file, zipEntryName);
+            }
+        } else {
+            System.out.println("   " + zipEntryName);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = new FileInputStream(fileToZip);
+            zos.putNextEntry(new ZipEntry(zipEntryName));
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        }
     }
 }
 

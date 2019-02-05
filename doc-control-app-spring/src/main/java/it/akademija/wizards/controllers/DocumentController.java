@@ -274,39 +274,19 @@ public class DocumentController {
         }
         return new ResponseEntity<String>("Document updated", HttpStatus.OK);
     }
-    //OLD UPDATE
-    //    @ApiOperation(value = "update document by document Id",
-    //            produces = "application/json", consumes = "multipart/form-data")
-    //    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    //    @ResponseStatus(HttpStatus.ACCEPTED)
-    //    public ResponseEntity<String> updateDocumentById(
-    //            @PathVariable String id,
-    //            @RequestPart String model,
-    //            @RequestPart MultipartFile multipartFile) {
-    //        /*   String model:
-    //    {
-    //      "documentTypeTitle": "atostogu prasymas",
-    //      "title": "string",
-    //      "description": "string"
-    //    }
-    //    */
-    //        ObjectMapper mapper = new ObjectMapper();
-    //        try {
-    //            DocumentUpdateCommand documentUpdateCommand = mapper.readValue(model, DocumentUpdateCommand.class);
-    //            documentService.updateDocumentById(id, documentUpdateCommand, multipartFile);
-    //
-    //        } catch (IOException ex) {
-    //            System.out.println(ex);
-    //            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
-    //
-    //        }
-    //        return new ResponseEntity<String>("Document updated", HttpStatus.OK);
-    //    }
+
 
     @ApiOperation(value = "delete document by document Id")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteDocumentById(@PathVariable String id) {
         documentService.deleteDocumentById(id);
+    }
+
+    @ApiOperation(value = "delete file by document Id and file name")
+    @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteFile(@PathVariable String id, @PathVariable String filename){
+        documentService.deleteFileByFileName(id, filename);
     }
 }
