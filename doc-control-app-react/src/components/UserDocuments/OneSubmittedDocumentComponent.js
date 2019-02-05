@@ -39,14 +39,6 @@ const OneSubmittedDocumentComponent = (props) => {
             </div>
             <div className="row">
                 <div className="col-1">
-                    <p>Būsena:</p>
-                </div>
-                <div className="col-3">
-                    <p>{props.state}</p>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-1">
                     <p>Pateikimo data:</p>
                 </div>
                 <div className="col-3">
@@ -55,11 +47,39 @@ const OneSubmittedDocumentComponent = (props) => {
             </div>
             <div className="row">
                 <div className="col-1">
+                    <p>Būsena:</p>
+                </div>
+                <div className="col-3">
+                    <p>{props.state}</p>
+                </div>
+            </div>
+            {props.reviewer.length > 0 &&
+                <div className="row">
+                    <div className="col-1">
+                        <p>Priėmė:</p>
+                    </div>
+                    <div className="col-3">
+                        <p>{props.reviewer}</p>
+                    </div>
+                </div>
+            }
+            {props.approvalDate !== "" &&
+            <div className="row">
+                <div className="col-1">
+                    <p>Priėmimo data:</p>
+                </div>
+                <div className="col-3">
+                    <p>{props.approvalDate}</p>
+                </div>
+            </div>
+            }
+            <div className="row">
+                <div className="col-1">
                     <p>Pridėtas failas:</p>
                 </div>
                 <div className="col-2">
                     <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
-                     
+
                 </div>
             </div>
             <div className="row">

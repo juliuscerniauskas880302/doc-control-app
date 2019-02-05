@@ -39,8 +39,30 @@ class ReviewDocumentsContainer extends React.Component {
         };
     }
 
+    handleAccept = (id) =>  {
+        console.log("Atėjau į Accept");
+        //let currentUser = JSON.parse(localStorage.getItem('user')).username;
+        let docInfo = {
+            documentState: "ACCEPTED",
+            rejectionReason: "",
+            reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+        }
+        console.log("docInfo yra " + docInfo.documentState);
+        axios.post("http://localhost:8081/api/docs/review/" + id, docInfo)
+            .then((response) => {
+                axios.get('http://localhost:8081/api/docs/review')
+                    .then((response) => {
+                        this.setState({ documents: response.data });
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+    }
+
     componentDidMount() {    
-        axios.get('http://localhost:8081/api/docs')
+        axios.get('http://localhost:8081/api/docs/review')
             .then((response) => {
                 this.setState({ documents: response.data });
                 console.log("Koks atiduodamas dokumentų sąrašas?");
@@ -64,6 +86,7 @@ class ReviewDocumentsContainer extends React.Component {
                         description={document.description}
                         type={document.documentTypeTitle}
                         submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10): ""}
+                        handleAccept={this.handleAccept}
                     />
                 );
             });
