@@ -53,7 +53,17 @@ const OneSubmittedDocumentComponent = (props) => {
                     <p>{props.state}</p>
                 </div>
             </div>
-            {props.reviewer.length > 0 &&
+            {props.state === "Rejected" &&
+                <div className="row">
+                    <div className="col-1">
+                        <p>Atmetimo priežastis:</p>
+                    </div>
+                    <div className="col-3">
+                        <p>{props.rejectionReason}</p>
+                    </div>
+                </div>
+            }
+            {props.state === "Accepted" &&
                 <div className="row">
                     <div className="col-1">
                         <p>Priėmė:</p>
@@ -70,6 +80,26 @@ const OneSubmittedDocumentComponent = (props) => {
                 </div>
                 <div className="col-3">
                     <p>{props.approvalDate}</p>
+                </div>
+            </div>
+            }
+            {props.state === "Rejected" &&
+                <div className="row">
+                    <div className="col-1">
+                        <p>Atmetė:</p>
+                    </div>
+                    <div className="col-3">
+                        <p>{props.reviewer}</p>
+                    </div>
+                </div>
+            }
+            {props.rejectionDate !== "" &&
+            <div className="row">
+                <div className="col-1">
+                    <p>Atmetimo data:</p>
+                </div>
+                <div className="col-3">
+                    <p>{props.rejectionDate}</p>
                 </div>
             </div>
             }
