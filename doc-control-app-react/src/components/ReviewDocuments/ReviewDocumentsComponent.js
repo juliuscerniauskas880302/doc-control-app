@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
 const ReviewDocumentsComponent = (props) => {
     var linkas = "/reviewDocuments/" + props.id;
     return (
@@ -25,10 +26,11 @@ const ReviewDocumentsComponent = (props) => {
                     <p>{props.submissionDate}</p>
                 </div>
                 <div className="col-1">
-                    <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link>
+                    <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link> &nbsp;
                     {/* <Link to={linkas}> <i className="fas fa-check-circle"></i> </Link> */}
-                    <i className="fas fa-check-circle" onClick={() => {props.handleAccept(props.id)}}></i>
-                    <Link to={linkas}> <i className="fas fa-times-circle"></i> </Link>
+                    <i className="fas fa-check-circle" onClick={() => { props.handleAccept(props.id) }}></i> &nbsp;
+                    <i className="fas fa-times-circle" onClick={() => props.openPopup(props.id)}></i>  
+                    {/* <Link to={linkas}> <i className="fas fa-times-circle"></i> </Link> */}
                 </div>
             </div>
         </div>

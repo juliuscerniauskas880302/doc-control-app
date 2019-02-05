@@ -14,7 +14,9 @@ class OneSubmittedDocumentContainer extends React.Component {
                     documentState: "State1",
                     submissionDate: "2019.01.26",
                     approvalDate: "2019.02.05",
+                    rejectionDate: "2019.02.05",
                     reviewer: {},
+                    rejectionReason: "",
                     path: "",
                     prefix: "",
                     filename: "Nėra pridėto failo"
@@ -77,7 +79,9 @@ class OneSubmittedDocumentContainer extends React.Component {
                                 documentState: response.data.documentState,
                                 submissionDate: response.data.submissionDate,
                                 approvalDate: response.data.approvalDate,
+                                rejectionDate: response.data.rejectionDate,
                                 reviewer: response.data.reviewer,
+                                rejectionReason: response.data.rejectionReason,
                                 path: response.data.path,
                                 prefix: response.data.prefix,
                                 filename: realFileName
@@ -100,7 +104,9 @@ class OneSubmittedDocumentContainer extends React.Component {
                                     state={this.state.documentState.toLowerCase().charAt(0).toUpperCase() + this.state.documentState.toLowerCase().slice(1)}
                                     submissionDate={this.state.submissionDate ? this.state.submissionDate.substring(0, 10): ""}
                                     approvalDate={this.state.approvalDate ? this.state.approvalDate.substring(0, 10): ""}
+                                    rejectionDate={this.state.rejectionDate ? this.state.rejectionDate.substring(0, 10): ""}
                                     reviewer={this.state.reviewer ? this.state.reviewer.firstname + " " + this.state.reviewer.lastname : ""}
+                                    rejectionReason={this.state.rejectionReason}
                                     path={this.state.path}
                                     prefix={this.state.prefix}
                                     filename={this.state.filename}

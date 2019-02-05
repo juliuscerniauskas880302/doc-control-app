@@ -62,25 +62,7 @@ class OneCreatedDocumentContainer extends React.Component {
         console.log(this.state.id);
         axios.delete("http://localhost:8081/api/docs/" + this.state.id)
             .then((response) => {
-
                 this.props.history.push(`/createdDocuments`);
-                // console.log("Ištryniau dokumentą");
-                // axios.get('http://localhost:8081/api/docs/' + this.state.id)
-                //     .then((response) => {
-                //         //if (this.mounted) {
-                //             this.setState({
-                //                 id: response.data.id,
-                //                 title: response.data.title,
-                //                 description: response.data.description,
-                //                 documentTypeTitle: response.data.documentTypeTitle,
-                //                 creationDate: response.data.creationDate
-                //             });
-                //         //}
-                //     })
-                //     .then((response) => this.props.history.push(`/`))
-                //     .catch((error) => {
-                //         console.log(error);
-                //     });
             });
     }
 
