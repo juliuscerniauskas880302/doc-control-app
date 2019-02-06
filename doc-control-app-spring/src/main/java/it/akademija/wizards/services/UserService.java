@@ -112,19 +112,6 @@ public class UserService {
                 .buildAndExpand(result.getUsername()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
-
-//        PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
-//        byte[] encodedPass = null;
-//        byte[] passwordSalt = null;
-//        PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userCreateCommand.getPassword());
-//        if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
-//                && (passwordSalt = passAndSalt.getSalt()) != null) {
-//            user.setPassword(encodedPass);
-//            user.setPassWordSalt(passwordSalt);
-//            userRepository.save(user);
-//        } else {
-//            throw new NullPointerException("Error encoding password");
-//        }
     }
 
     @Transactional
@@ -189,16 +176,6 @@ public class UserService {
         }
     }
 
-//    @Transactional
-//    public boolean authUser(String username, UserPassCommand userPassCommand) {
-//        User user = userRepository.findByUsername(username);
-//        if (user != null) {
-//            PasswordChecker passwordChecker = new PasswordChecker();
-//            return passwordChecker.checkPasswordMatching(userPassCommand.getPassword(), user.getPassword(), user.getPasswordSalt());
-//        }
-//        return false;
-//    }
-
     @Transactional
     public boolean updateUserPassword(String username, UserPassCommand userPassCommand) {
         User user = userRepository.findByUsername(username);
@@ -206,16 +183,6 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(userPassCommand.getPassword()));
             userRepository.save(user);
             return true;
-//            PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
-//            byte[] encodedPass = null;
-//            byte[] passwordSalt = null;
-//            PassAndSalt passAndSalt = pbkdf2Hash.hashPassword(userPassCommand.getPassword());
-//            if (passAndSalt != null && (encodedPass = passAndSalt.getPassword()) != null
-//                    && (passwordSalt = passAndSalt.getSalt()) != null) {
-//                user.setPassword(encodedPass);
-//                user.setPassWordSalt(passwordSalt);
-//                return true;
-//            }
         }
         return false;
     }

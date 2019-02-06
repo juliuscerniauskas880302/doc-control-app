@@ -1,8 +1,6 @@
 package it.akademija.wizards.entities;
 
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -41,8 +39,6 @@ public class User {
 
     private boolean isAdmin;
 
-//    private byte[] passwordSalt;
-
     @OneToMany(mappedBy = "author")
     private List<Document> documents;
 
@@ -55,7 +51,6 @@ public class User {
                 @NotNull String lastname,
                 @NotNull String email,
                 boolean isAdmin,
-//                byte[] passwordSalt,
                 List<Document> documents) {
         this.username = username;
         this.password = password;
@@ -64,7 +59,6 @@ public class User {
         this.email = email;
         this.userGroups = new HashSet<>();
         this.isAdmin = isAdmin;
-//        this.passwordSalt = passwordSalt;
         this.documents = documents;
     }
 
@@ -167,8 +161,4 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-    //    public byte[] getPasswordSalt() { return passwordSalt; }
-//
-//    public void setPassWordSalt(byte[] passwordSalt) { this.passwordSalt = passwordSalt; }
 }

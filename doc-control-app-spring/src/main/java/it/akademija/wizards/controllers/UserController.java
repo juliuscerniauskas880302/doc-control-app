@@ -5,10 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
+import it.akademija.wizards.security.CurrentUser;
+import it.akademija.wizards.security.UserPrincipal;
 import it.akademija.wizards.services.DocumentService;
 import it.akademija.wizards.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +29,12 @@ public class UserController {
     public UserController(UserService userService, DocumentService documentService){
         this.userService = userService;
         this.documentService = documentService;
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public String getCurrentUserUsername(@CurrentUser UserPrincipal userPrincipal) {
+        return userPrincipal.getUsername();
     }
 
     @ApiOperation(value = "get users")
@@ -57,13 +66,6 @@ public class UserController {
         userService.createUser(userCreateCommand);
 
     }
-
-//    @ApiOperation(value = "check if user exists by username")
-//    @RequestMapping(value = "/auth/{username}", method = RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public boolean userExists(@RequestBody UserPassCommand userPassCommand, @PathVariable(value = "username") String username){
-//        return userService.authUser(username, userPassCommand);
-//    }
 
     @ApiOperation(value = "update user by username")
     @RequestMapping(value = "/{username}", method = RequestMethod.PUT)
