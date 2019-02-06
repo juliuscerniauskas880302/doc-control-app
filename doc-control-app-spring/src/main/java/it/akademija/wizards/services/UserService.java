@@ -26,11 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,13 +131,12 @@ public class UserService {
             userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
                     () -> new AppException("Admin Role not set")
             );
-            user.setRoles(Collections.singleton(userRole));
         } else {
             userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
                     () -> new AppException("User Role not set")
             );
-            user.setRoles(Collections.singleton(userRole));
         }
+        user.getRoles().add(userRole);
         userRepository.save(user);
     }
 
@@ -154,13 +149,14 @@ public class UserService {
             userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
                     () -> new AppException("Admin Role not set")
             );
-            user.setRoles(Collections.singleton(userRole));
+//            user.setRoles(Collections.singleton(userRole));
         } else {
             userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
                     () -> new AppException("User Role not set")
             );
-            user.setRoles(Collections.singleton(userRole));
+//            user.setRoles(Collections.singleton(userRole));
         }
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userRepository.save(user);
     }
 
