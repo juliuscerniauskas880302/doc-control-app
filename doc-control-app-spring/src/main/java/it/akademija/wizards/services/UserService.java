@@ -1,10 +1,12 @@
 package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.Document;
+import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.models.document.DocumentGetCommand;
+import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.UserGroupRepository;
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -190,4 +194,22 @@ public class UserService {
             throw new NullPointerException("User does not exist");
         }
     }
+
+    @Transactional
+    public Set<DocumentTypeGetCommand> getUserSubmissionDocTypes(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            Set<UserGroup> userGroups = user.getUserGroups();
+            Set<DocumentType> submissionDocTypes = new HashSet<>();
+            userGroups.stream().forEach(userGroup -> {
+                submissionDocTypes.addAll(userGroup.getSubmissionDocumentType());
+            });
+            return submissionDocTypes.stream().map(documentType -> {
+                DocumentTypeGetCommand documentTypeGetCommand = new DocumentTypeGetCommand();
+                BeanUtils.copyProperties(documentType, documentTypeGetCommand);
+                return documentTypeGetCommand;
+            }).collect(Collectors.toSet());
+         }
+        throw new NullPointerException("User does not exist");
+     }
 }
