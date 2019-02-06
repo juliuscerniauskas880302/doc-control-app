@@ -152,14 +152,14 @@ class NewDocumentContainer extends React.Component {
   };
 
   componentDidMount() {
-    //nusiskaitau dokumentų tipus
+    
     let currentUser = JSON.parse(localStorage.getItem("user"));
     console.log("Spausdinu userį gautą iš localStorage");
     console.log(currentUser);
     this.setState({ username: currentUser.username });
+    //nusiskaitau dokumentų tipus
     axios
-    //Čia reikia pakeisti kelią  
-    .get("http://localhost:8081/api/doctypes")
+    .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
       .then(response => {
         this.setState({ typeList: response.data.map(item => item.title) });
         console.log("Koks atiduodamas dokumentų tipų sąrašas?");
@@ -168,9 +168,6 @@ class NewDocumentContainer extends React.Component {
       .catch(error => {
         console.log("KLAIDA!!!!" + error);
       });
-
-    //pasitestuoju, kas yra sessionStore išsaugota
-    
   }
 
   render() {
