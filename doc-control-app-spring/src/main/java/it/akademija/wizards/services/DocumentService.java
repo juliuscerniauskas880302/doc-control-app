@@ -1,5 +1,6 @@
 package it.akademija.wizards.services;
 
+import it.akademija.wizards.configs.MediaTypeUtils;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.User;
@@ -20,11 +21,13 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,6 +53,9 @@ public class DocumentService {
     private UserRepository userRepository;
     @Autowired
     private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private ServletContext servletContext;
 
     private static final String pathName = "documents";
     //GET
@@ -196,6 +202,28 @@ public class DocumentService {
         return new ResponseEntity<>("File " + fileName + " was deleted.", HttpStatus.CREATED);
     }
 
+//    DOWNLOAD DOCUMENT MAIN FILE
+    @Transactional
+    public ResponseEntity downloadFile(String documentId) throws FileNotFoundException {
+        Document document = documentRepository.getOne(documentId);
+        String originalFileName = document.getPath().replace(document.getPrefix(), "");
+        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
+        File file = new File(getDocumentFolder(document).getPath()
+                + File.separator
+                + document.getPath());
+        if (file.exists()) {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName +"\"");
+            headers.add("Access-Control-Expose-Headers",
+                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+            headers.setContentType(mediaType);
+            return ResponseEntity.ok().headers(headers).
+                    body(resource);
+        }
+        return ResponseEntity.notFound().build();
+
+    }
     // GET ALL DOCUMENTS WITH FOLDERS
     @Transactional
     public ResponseEntity downloadAllDocuments(String username) throws IOException {
