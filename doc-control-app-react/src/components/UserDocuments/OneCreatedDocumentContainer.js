@@ -105,10 +105,13 @@ class OneCreatedDocumentContainer extends React.Component {
         axios.get(resourcePath)
             .then((response) => {
                 if (this.mounted) {
-                    var realFileName = "";
-                    if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
-                        realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
-                    }
+                    
+                    //buvo naudota, kai PATH buvo ne vien tik failo pavadinimas, bet dar ir PREFIX katu
+                    //var realFileName = "";
+                    //if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
+                    //    realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+                    //    console.log("Tikras failo pavadinimas yra " + realFileName);
+                    //}
                     this.setState({
                         id: response.data.id,
                         title: response.data.title,
@@ -117,7 +120,7 @@ class OneCreatedDocumentContainer extends React.Component {
                         creationDate: response.data.creationDate,
                         path: response.data.path,
                         prefix: response.data.prefix,
-                        filename: realFileName
+                        //filename: realFileName
                     })
                 } else {
                     console.log("SetState nebuvo padarytas");
@@ -151,7 +154,7 @@ class OneCreatedDocumentContainer extends React.Component {
                     creationDate={this.state.creationDate.substring(0, 10)}
                     path={this.state.path}
                     prefix={this.state.prefix}
-                    filename={this.state.filename}
+                    //filename={this.state.filename}
                     downloadHandler={this.downloadHandler}
                     handleDelete={this.handleDelete}
                     handleSubmit={this.handleSubmit}

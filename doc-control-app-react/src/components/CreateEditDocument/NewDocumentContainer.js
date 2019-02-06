@@ -12,10 +12,24 @@ class NewDocumentContainer extends React.Component {
       username: "migle",
       documentTypeTitle: "",
       typeList: [],
-      selectedFiles: null
+      selectedFiles: null,
+      isOpen: false,
+      percentage: 0
       //documentState: "default state",
       //creationDate: "2019.01.28"
     };
+  }
+
+  openFileTransferPopup = () => {
+    this.setState({
+      isOpen: true,
+    });
+  }
+
+  closeFileTransferPopup = () => {
+    this.setState({
+      isOpen: false
+    });
   }
 
   handleChangeOfTitle = event => {
@@ -79,6 +93,9 @@ class NewDocumentContainer extends React.Component {
   handleSubmit = event => {
     console.log("Atėjau į Submit handlerį");
     event.preventDefault();
+    //Turiu padaryti failo progreso barą matomą
+    this.openFileTransferPopup();
+
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
@@ -98,13 +115,15 @@ class NewDocumentContainer extends React.Component {
       axios
         .post("http://localhost:8081/api/docs", file, {
           onUploadProgress: progressEvent => {
+            this.setState({ percentage: Math.round((progressEvent.loaded / progressEvent.total) * 100) });
             console.log(
               "Upload progress: " +
-                (progressEvent.loaded / progressEvent.total) * 100 +
-                "%"
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
             );
           }
         })
+        .then((response) => this.props.history.push(`/createdDocuments`))
         .then(res => console.log(res))
         .catch(err => console.log("KLAIDA SUBMITE" + err));
     } else {
@@ -134,8 +153,13 @@ class NewDocumentContainer extends React.Component {
 
   componentDidMount() {
     //nusiskaitau dokumentų tipus
+    let currentUser = JSON.parse(localStorage.getItem("user"));
+    console.log("Spausdinu userį gautą iš localStorage");
+    console.log(currentUser);
+    this.setState({ username: currentUser.username });
     axios
-      .get("http://localhost:8081/api/doctypes")
+    //Čia reikia pakeisti kelią  
+    .get("http://localhost:8081/api/doctypes")
       .then(response => {
         this.setState({ typeList: response.data.map(item => item.title) });
         console.log("Koks atiduodamas dokumentų tipų sąrašas?");
@@ -146,10 +170,7 @@ class NewDocumentContainer extends React.Component {
       });
 
     //pasitestuoju, kas yra sessionStore išsaugota
-    let currentUser = JSON.parse(localStorage.getItem("user"));
-    console.log("Spausdinu userį gautą iš localStorage");
-    console.log(currentUser);
-    this.setState({ username: currentUser.username });
+    
   }
 
   render() {
@@ -157,12 +178,16 @@ class NewDocumentContainer extends React.Component {
       <NewDocumentComponent
         type={this.state.type}
         typeList={this.state.typeList}
+        percentage={this.state.percentage}
+        isOpen={this.state.isOpen}
         handleChangeOfTitle={this.handleChangeOfTitle}
         handleChangeOfDescription={this.handleChangeOfDescription}
         handleChangeOfType={this.handleChangeOfType}
         onFileSelectHandler={this.onFileSelectHandler}
         //downloadHandler={this.downloadHandler}
         handleSubmit={this.handleSubmit}
+        openFileTransferPopup={this.openFileTransferPopup}
+        closeFileTransferPopup={this.closeFileTransferPopup}
       />
     );
   }
