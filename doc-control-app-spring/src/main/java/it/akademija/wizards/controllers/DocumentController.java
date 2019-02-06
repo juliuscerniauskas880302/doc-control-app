@@ -94,29 +94,13 @@ public class DocumentController {
         return new ResponseEntity<String>("Document created", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "download a file")
+    @ApiOperation(value = "download document main file")
     @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity downloadAFile(@PathVariable final String id) throws IOException {
-        DocumentGetCommand document = documentService.getDocumentsById(id);
-        String originalFileName = document.getPath().replace(document.getPrefix(), "");
-        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
-        File file = new File("documents" + "/" +
-                document.getAuthor().getUsername() + "/" +
-                document.getPath());
-        if (file.exists()) {
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName +"\"");
-            headers.add("Access-Control-Expose-Headers",
-                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
-            headers.setContentType(mediaType);
-            return ResponseEntity.ok().headers(headers).
-                    body(resource);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity downloadAFile(@PathVariable final String id) throws FileNotFoundException {
+        return documentService.downloadFile(id);
     }
-    //TODO: solve ZIP corruption problem in swagger-UI
+
     @ApiOperation(value = "download additionalFiles")
     @RequestMapping(value = "/{id}/download/attachments", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -151,12 +135,9 @@ public class DocumentController {
                 fis.close();
             }
             zos.flush();
-            //            baos.flush();
             fos.flush();
             zos.close();
-            //            baos.close();
             fos.close();
-            //            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(baos.toByteArray()));
             InputStreamResource resource = new InputStreamResource(
                     new FileInputStream(
                             new File("documents" + File.separator
@@ -274,39 +255,19 @@ public class DocumentController {
         }
         return new ResponseEntity<String>("Document updated", HttpStatus.OK);
     }
-    //OLD UPDATE
-    //    @ApiOperation(value = "update document by document Id",
-    //            produces = "application/json", consumes = "multipart/form-data")
-    //    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    //    @ResponseStatus(HttpStatus.ACCEPTED)
-    //    public ResponseEntity<String> updateDocumentById(
-    //            @PathVariable String id,
-    //            @RequestPart String model,
-    //            @RequestPart MultipartFile multipartFile) {
-    //        /*   String model:
-    //    {
-    //      "documentTypeTitle": "atostogu prasymas",
-    //      "title": "string",
-    //      "description": "string"
-    //    }
-    //    */
-    //        ObjectMapper mapper = new ObjectMapper();
-    //        try {
-    //            DocumentUpdateCommand documentUpdateCommand = mapper.readValue(model, DocumentUpdateCommand.class);
-    //            documentService.updateDocumentById(id, documentUpdateCommand, multipartFile);
-    //
-    //        } catch (IOException ex) {
-    //            System.out.println(ex);
-    //            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
-    //
-    //        }
-    //        return new ResponseEntity<String>("Document updated", HttpStatus.OK);
-    //    }
+
 
     @ApiOperation(value = "delete document by document Id")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteDocumentById(@PathVariable String id) {
         documentService.deleteDocumentById(id);
+    }
+
+    @ApiOperation(value = "delete file by document Id and file name")
+    @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteFile(@PathVariable String id, @PathVariable String filename){
+        documentService.deleteFileByFileName(id, filename);
     }
 }

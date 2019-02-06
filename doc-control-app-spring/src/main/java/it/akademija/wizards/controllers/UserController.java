@@ -3,6 +3,7 @@ package it.akademija.wizards.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import it.akademija.wizards.models.document.DocumentGetCommand;
+import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.security.CurrentUser;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Api(value = "users")
 @RestController
@@ -107,5 +109,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<UserGroupGetCommand> getUsersGroups(@PathVariable(value = "username") String username) {
         return userService.getUsersGroups(username);
+    }
+
+    @ApiOperation(value = "get users submission doc types")
+    @RequestMapping(value = "{username}/submissionDocTypes", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Set<DocumentTypeGetCommand> getUserSubmissionDocTypes(@PathVariable String username) {
+        return userService.getUserSubmissionDocTypes(username);
     }
 }

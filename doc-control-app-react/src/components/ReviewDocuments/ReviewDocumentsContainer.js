@@ -1,6 +1,7 @@
 import React from 'react';
 import ReviewDocumentsComponent from './ReviewDocumentsComponent';
 import axios from 'axios';
+import RejectReasonPopUp from './RejectReasonPopUp';
 
 class ReviewDocumentsContainer extends React.Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class ReviewDocumentsContainer extends React.Component {
             //tikram kode turės būti tuščias masyvas
             //documents: '',
             //laikina bazikė
+            documentId: "", //naudojamas tik vienu atveju, kai daromas REJECT
             documents: [
                 {
                     id: "Kodas1r",
@@ -16,7 +18,9 @@ class ReviewDocumentsContainer extends React.Component {
                     title: "Title1r",
                     description: "Description1r",
                     documentTypeTitle: "Type1r",
-                    submissionDate: "2019.01.26"
+                    submissionDate: "2019.01.26",
+                    rejectionReason: "",
+                    isOpen: false
                 },
                 // {
                 //     id: "Kodas2r",
@@ -39,8 +43,79 @@ class ReviewDocumentsContainer extends React.Component {
         };
     }
 
-    componentDidMount() {    
-        axios.get('http://localhost:8081/api/docs')
+    openPopup = (id) => {
+        this.setState({
+            isOpen: true,
+            documentId: id
+        });
+    }
+
+    closePopupCancelReject = () => {
+        this.setState({
+            isOpen: false,
+            rejectionReason: ""
+        });
+    }
+
+    closePopupAcceptReject = () => {
+        this.setState({
+            isOpen: false,
+        });
+        this.handleReject();
+    }
+
+    handleChangeOfRejectionReason = event => {
+        this.setState({ rejectionReason: event.target.value });
+        //console.log("Atmetimo priežastis yra " + this.state.rejectionReason);
+    };
+
+    handleReject = () => {
+        console.log("Atėjau į handleReject");
+        console.log("RejectionReason yra " + this.state.rejectionReason);
+        let docInfo = {
+            documentState: "REJECTED",
+            rejectionReason: this.state.rejectionReason,
+            reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+        }
+        console.log("docInfo yra " + docInfo.documentState);
+        axios.post("http://localhost:8081/api/docs/review/" + this.state.documentId, docInfo)
+            .then((response) => {
+                axios.get('http://localhost:8081/api/docs/review')
+                    .then((response) => {
+                        this.setState({ documents: response.data });
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+    }
+
+
+    handleAccept = (id) => {
+        console.log("Atėjau į Accept");
+        //let currentUser = JSON.parse(localStorage.getItem('user')).username;
+        let docInfo = {
+            documentState: "ACCEPTED",
+            rejectionReason: "",
+            reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+        }
+        console.log("docInfo yra " + docInfo.documentState);
+        axios.post("http://localhost:8081/api/docs/review/" + id, docInfo)
+            .then((response) => {
+                axios.get('http://localhost:8081/api/docs/review')
+                    .then((response) => {
+                        this.setState({ documents: response.data });
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:8081/api/docs/review')
             .then((response) => {
                 this.setState({ documents: response.data });
                 console.log("Koks atiduodamas dokumentų sąrašas?");
@@ -63,7 +138,11 @@ class ReviewDocumentsContainer extends React.Component {
                         title={document.title}
                         description={document.description}
                         type={document.documentTypeTitle}
-                        submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10): ""}
+                        submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10) : ""}
+                        handleAccept={this.handleAccept}
+                        openPopup={this.openPopup}
+                        closePopupCancelReject={this.closePopupCancelReject}
+                        closePopupAcceptReject={this.closePopupAcceptReject}
                     />
                 );
             });
@@ -93,6 +172,13 @@ class ReviewDocumentsContainer extends React.Component {
                 </div>
                 <div className="row">{documentCard}
                 </div>
+                <RejectReasonPopUp show={this.state.isOpen}
+                    onClose={this.closePopup}
+                    handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
+                    closePopupAcceptReject={this.closePopupAcceptReject}
+                    closePopupCancelReject={this.closePopupCancelReject}
+                    >
+                </RejectReasonPopUp>
             </div>);
         }
         return this.state.loading;
