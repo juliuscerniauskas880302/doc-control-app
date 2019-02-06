@@ -206,7 +206,7 @@ public class DocumentService {
     @Transactional
     public ResponseEntity downloadFile(String documentId) throws FileNotFoundException {
         Document document = documentRepository.getOne(documentId);
-        String originalFileName = document.getPath().replace(document.getPrefix(), "");
+        String originalFileName = document.getPath();
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
         File file = new File(getDocumentFolder(document).getPath()
                 + File.separator
@@ -246,7 +246,7 @@ public class DocumentService {
                 try {
                     addDirToZipArchive(zs, documentFile, "");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    return new ResponseEntity<>("Archiving failed", HttpStatus.BAD_REQUEST);
                 }
             }
             zs.flush();;
@@ -494,7 +494,6 @@ public class DocumentService {
         path.mkdirs();
         for (int i = 0; i < multipartFile.length; i++) {
             String originalFileName = multipartFile[i].getOriginalFilename();
-//            String updatedFileName = originalFileName + document.getPrefix();
             if (i == 0) {
                 document.setPath(originalFileName);
             } else {
@@ -521,7 +520,7 @@ public class DocumentService {
         }
     }
 
-    //    DELETES ONLY CREATED FILES
+    //    DELETES ONLY CREATED DOCUMENT FILES
     @Transactional
     private void deleteAllFiles(Document document) {
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
@@ -598,12 +597,15 @@ public class DocumentService {
     }
 
     void deleteFolder(File folder){
-
-        for(String s: folder.list()){
-            File currentFile = new File(folder.getPath(),s);
-            currentFile.delete();
+        if(folder.exists()) {
+            for (String s : folder.list()) {
+                File currentFile = new File(folder.getPath(), s);
+                currentFile.delete();
+            }
+            folder.delete();
+        } else {
+            throw new IllegalArgumentException("Folder by this name does not exist");
         }
-        folder.delete();
     }
 
     //    Zip folders
