@@ -1,4 +1,5 @@
 import React from 'react';
+import FileTransferPopup from './FileTransferPopup';
 
 const NewDocumentComponet = (props) => {
 
@@ -38,7 +39,7 @@ const NewDocumentComponet = (props) => {
             </div>
 
             <div className="form-row">
-                <div className="col-md-4 mb-3">
+                <div className="col-md-2 mb-2">
                     <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
                     <div className="input-group mb-1">
                         <input
@@ -50,6 +51,12 @@ const NewDocumentComponet = (props) => {
                             required
                         />
                     </div>
+                </div>
+                <div className="col-md-1 mb-1">
+                   <FileTransferPopup show={props.isOpen}
+                                        onClose={props.closeFileTransferPopup}
+                                        percentage={props.percentage}
+                   />
                 </div>
             </div>
             {/* <div className="form-row">

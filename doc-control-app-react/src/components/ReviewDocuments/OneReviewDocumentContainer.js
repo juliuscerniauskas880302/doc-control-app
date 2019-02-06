@@ -18,7 +18,7 @@ class OneReviewDocumentContainer extends React.Component {
             rejectionReason: "",
             path: "",
             prefix: "",
-            filename: "Nėra pridėto failo",
+            //filename: "Nėra pridėto failo",
             isOpen: false
         };
     }
@@ -137,10 +137,11 @@ class OneReviewDocumentContainer extends React.Component {
                 //this.setState(response.data);
                 console.log("-----------------Response data id yra: " + response.data.id);
                 console.log("-----------------Response data title yra: " + response.data.title);
-                var realFileName = "";
-                if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
-                    realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
-                }
+                //buvo naudota, kai PATH buvo ne vien tik failo pavadinimas, bet dar ir PREFIX katu
+                //var realFileName = "";
+                //if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
+                //    realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+                //}
                 this.setState({
                     id: response.data.id,
                     author: response.data.author.firstname + " " + response.data.author.lastname,
@@ -152,7 +153,7 @@ class OneReviewDocumentContainer extends React.Component {
                     rejectionReason: response.data.rejectionReason,
                     path: response.data.path,
                     prefix: response.data.prefix,
-                    filename: realFileName
+                    //filename: realFileName
                 })
             })
             .catch((error) => {
@@ -173,7 +174,7 @@ class OneReviewDocumentContainer extends React.Component {
                     submissionDate={this.state.submissionDate ? this.state.submissionDate.substring(0, 10) : ""}
                     path={this.state.path}
                     prefix={this.state.prefix}
-                    filename={this.state.filename}
+                    //filename={this.state.filename}
                     downloadHandler={this.downloadHandler}
                     handleAccept={this.handleAccept}
                     openPopup={this.openPopup}

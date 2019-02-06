@@ -18,8 +18,8 @@ class OneSubmittedDocumentContainer extends React.Component {
                     reviewer: {},
                     rejectionReason: "",
                     path: "",
-                    prefix: "",
-                    filename: "Nėra pridėto failo"
+                    prefix: ""
+                    //filename: "Nėra pridėto failo"
         };      
     }
     
@@ -68,10 +68,11 @@ class OneSubmittedDocumentContainer extends React.Component {
                 //this.setState(response.data);
                 console.log("-----------------Response data id yra: " + response.data.id);
                 console.log("-----------------Response data title yra: " + response.data.title);
-                var realFileName = "";
-                    if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
-                        realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
-                    }
+                //buvo naudota, kai PATH buvo ne vien tik failo pavadinimas, bet dar ir PREFIX katu
+                //var realFileName = "";
+                //    if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
+                //        realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+                //    }
                 this.setState({ id: response.data.id,
                                 title: response.data.title,
                                 description: response.data.description,
@@ -84,7 +85,7 @@ class OneSubmittedDocumentContainer extends React.Component {
                                 rejectionReason: response.data.rejectionReason,
                                 path: response.data.path,
                                 prefix: response.data.prefix,
-                                filename: realFileName
+                                //filename: realFileName
                 })
                 
             })
@@ -109,7 +110,7 @@ class OneSubmittedDocumentContainer extends React.Component {
                                     rejectionReason={this.state.rejectionReason}
                                     path={this.state.path}
                                     prefix={this.state.prefix}
-                                    filename={this.state.filename}
+                                    //filename={this.state.filename}
                                     downloadHandler={this.downloadHandler}
                   />
             </div>

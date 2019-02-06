@@ -48,7 +48,8 @@ const OneCreatedDocumentComponent = (props) => {
                     <p>Pridėtas failas:</p>
                 </div>
                 <div className="col-2">
-                    <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
+                    <p>{props.path} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
+                    {/* <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p> */}
                 </div>
             </div>
             <div className="row">
