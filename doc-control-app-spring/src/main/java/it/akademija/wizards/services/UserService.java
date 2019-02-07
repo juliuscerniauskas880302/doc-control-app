@@ -98,13 +98,12 @@ public class UserService {
             userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
                     () -> new AppException("Admin Role not set")
             );
-            user.setRoles(Collections.singleton(userRole));
         } else {
             userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
                     () -> new AppException("User Role not set")
             );
-            user.setRoles(Collections.singleton(userRole));
         }
+        user.getRoles().add(userRole);
         User result = userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder
@@ -149,12 +148,10 @@ public class UserService {
             userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
                     () -> new AppException("Admin Role not set")
             );
-//            user.setRoles(Collections.singleton(userRole));
         } else {
             userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
                     () -> new AppException("User Role not set")
             );
-//            user.setRoles(Collections.singleton(userRole));
         }
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userRepository.save(user);
