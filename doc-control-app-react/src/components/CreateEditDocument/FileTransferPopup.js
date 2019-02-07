@@ -1,9 +1,8 @@
-import React from 'react';
-import Filler from './Filler';
+import React from "react";
+import Filler from "./Filler";
 import "./FileTransferStyles.css";
 
 class FileTransferPopup extends React.Component {
-
   render() {
     if (!this.props.show) {
       return null;

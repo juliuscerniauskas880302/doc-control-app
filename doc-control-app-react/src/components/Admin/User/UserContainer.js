@@ -60,23 +60,19 @@ export class UserContainer extends Component {
 
   render() {
     return (
-      <div className="col-lg-12 col-md-12">
-        <div className="table-responsive">
-          <table className="table table-striped">
-            <thead className="thead-inverse">
-              <tr>
-                <th>#</th>
-                <th>Vardas</th>
-                <th>Pavardė</th>
-                <th>El. paštas</th>
-                <th>Teisės</th>
-                <th>Veiksmai</th>
-              </tr>
-            </thead>
-            <tbody>{this.showAllUsers()}</tbody>
-          </table>
-        </div>
-      </div>
+      <table className="table table-striped">
+        <thead className="thead-inverse">
+          <tr>
+            <th>#</th>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>El. paštas</th>
+            <th>Teisės</th>
+            <th>Veiksmai</th>
+          </tr>
+        </thead>
+        <tbody>{this.showAllUsers()}</tbody>
+      </table>
     );
   }
 }
