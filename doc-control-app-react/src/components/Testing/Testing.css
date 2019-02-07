@@ -1,0 +1,102 @@
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+
+
+.navbar {
+    padding: 15px 10px;
+    background: #f0eeed;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    box-shadow: 10px 8px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+    border-radius:10px;
+}
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar {
+    margin: 20px;
+    padding: 20px;
+    min-width: 250px;
+    max-width: 250px;
+    background: #f0eeed;
+    border-radius: 20px;
+    box-shadow: 10px 8px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+
+#sidebar ul p {
+    color: rgb(169, 113, 177);
+    padding: 20px;
+}
+
+hr{
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul li div {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+    height: 40px;
+    width: 100%;
+}
+#sidebar ul li button:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li.active > button, button[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+#contentz {
+    padding: 20px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -260px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}

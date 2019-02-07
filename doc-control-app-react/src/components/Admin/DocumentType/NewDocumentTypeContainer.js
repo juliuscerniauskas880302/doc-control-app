@@ -118,17 +118,15 @@ export default class NewDocumentTypeForm extends Component {
   };
   render() {
     return (
-      <div className="container my-5">
-        <NewDocumentTypeComponent
-          onCLickAddNewDocTypeHandler={this.onCLickAddNewDocTypeHandler}
-          onValueChangeHandler={this.onValueChangeHandler}
-          onDeleteCLickHandler={this.onDeleteCLickHandler}
-          showAllDocumentTypes={this.showAllDocumentTypes}
-          onClickUpdateHandler={this.onClickUpdateHandler}
-          goBack={this.goBack}
-          state={this.state}
-        />
-      </div>
+      <NewDocumentTypeComponent
+        onCLickAddNewDocTypeHandler={this.onCLickAddNewDocTypeHandler}
+        onValueChangeHandler={this.onValueChangeHandler}
+        onDeleteCLickHandler={this.onDeleteCLickHandler}
+        showAllDocumentTypes={this.showAllDocumentTypes}
+        onClickUpdateHandler={this.onClickUpdateHandler}
+        goBack={this.goBack}
+        state={this.state}
+      />
     );
   }
 }

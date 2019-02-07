@@ -10,58 +10,61 @@ import NewDocumentContainer from "../../CreateEditDocument/NewDocumentContainer"
 import EditDocumentContainer from "../../CreateEditDocument/EditDocumentContainer";
 import UserNavigationComponent from "./UserNavigationConponent";
 import ResourceNotFoundCompoentn from "../../Errors/ResourceNotFoundComponent";
+import UserNav from "../../Testing/UserNav";
+
 export default class UserNavigationContainer extends Component {
   render() {
     return (
       <div>
         <BrowserRouter>
           <div>
-            <UserNavigationComponent logout={this.props.logout} />
-            <Switch>
-              {/* ///////////////////////////////////////////////////////// */}
-              <Route
-                exact
-                path="/"
-                component={UserSubmittedDocumentsContainer}
-              />
-              <Route
-                exact
-                path="/createdDocuments"
-                component={UserCreatedDocumentsContainer}
-              />
-              <Route
-                exact
-                path="/createdDocuments/:documentId"
-                component={OneCreatedDocumentsContainer}
-              />
-              <Route
-                exact
-                path="/submittedDocuments/:documentId"
-                component={OneSubmittedDocumentsContainer}
-              />
-              <Route
-                exact
-                path="/reviewDocuments"
-                component={ReviewDocumentsContainer}
-              />
-              <Route
-                exact
-                path="/reviewDocuments/:documentId"
-                component={OneReviewDocumentsContainer}
-              />
-              <Route
-                exact
-                path="/admin/newDocument"
-                component={NewDocumentContainer}
-              />
-              <Route
-                exact
-                path="/admin/Documents/:documentId"
-                component={EditDocumentContainer}
-              />
-              <Route path="*" component={ResourceNotFoundCompoentn} />
-              <Route component={ResourceNotFoundCompoentn} />
-            </Switch>
+            <UserNav {...this.props}>
+              <Switch>
+                {/* ///////////////////////////////////////////////////////// */}
+                <Route
+                  exact
+                  path="/"
+                  component={UserSubmittedDocumentsContainer}
+                />
+                <Route
+                  exact
+                  path="/createdDocuments"
+                  component={UserCreatedDocumentsContainer}
+                />
+                <Route
+                  exact
+                  path="/createdDocuments/:documentId"
+                  component={OneCreatedDocumentsContainer}
+                />
+                <Route
+                  exact
+                  path="/submittedDocuments/:documentId"
+                  component={OneSubmittedDocumentsContainer}
+                />
+                <Route
+                  exact
+                  path="/reviewDocuments"
+                  component={ReviewDocumentsContainer}
+                />
+                <Route
+                  exact
+                  path="/reviewDocuments/:documentId"
+                  component={OneReviewDocumentsContainer}
+                />
+                <Route
+                  exact
+                  path="/admin/newDocument"
+                  component={NewDocumentContainer}
+                />
+                <Route
+                  exact
+                  path="/admin/Documents/:documentId"
+                  component={EditDocumentContainer}
+                />
+                <Route path="*" component={ResourceNotFoundCompoentn} />
+                <Route component={ResourceNotFoundCompoentn} />
+              </Switch>
+            </UserNav>
           </div>
         </BrowserRouter>
       </div>

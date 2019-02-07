@@ -180,78 +180,67 @@ export default class EditUserGroups extends Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <div className="row justify-content-center">
-          <div className="panel panel-primary">
-            <div className="panel-body">
-              <h3 className="text-on-pannel text-primary">
-                <strong className="text-uppercase"> Add groups </strong>
-              </h3>
-              <div className="mx-1">
-                {/*  */}
-                <span className="input-group-text groups">
-                  Available groups
-                </span>
-                <div className="input-group mb-1">
-                  <select
-                    multiple
-                    className="form-control"
-                    size="5"
-                    onChange={this.onValueChangeHandler}
-                    name="selectedAddGroup"
-                  >
-                    {this.showAvailableGroups()}
-                  </select>
-                  <div className="input-group ">
-                    <button
-                      type="buton"
-                      className="btn btn-success"
-                      onClick={() => this.onClickAddGroupToUserHandler()}
-                    >
-                      Add group to user
-                    </button>
-                  </div>
-                </div>
-                <br />
-                {/*  */}
-                <span className="input-group-text groups">
-                  <h2>{this.state.user.username}</h2> &nbsp; in groups
-                </span>
-                <div className="input-group mb-1">
-                  <select
-                    multiple
-                    className="form-control"
-                    size="5"
-                    onChange={this.onValueChangeHandler}
-                    name="selectedRemoveGroup"
-                  >
-                    {this.showAllUserGroups()}
-                  </select>
-                  <div className="input-group ">
-                    <button
-                      type="buton"
-                      className="btn btn-danger"
-                      onClick={() => this.onClickRemoveGroupFromUserHandler()}
-                    >
-                      Remove group from user
-                    </button>
-                  </div>
-                </div>
-                <br />
-                {/*  */}
-                <div className="input-group mb-1">
-                  <button
-                    type="buton"
-                    className="btn btn-warning"
-                    onClick={() => this.goBack()}
-                  >
-                    Go back
-                  </button>
-                </div>
-              </div>
-            </div>
+      <div className="container">
+        <section id="content">
+          <h1>Pridėti grupes</h1>
+          <span className="groups">Galimos grupės</span>
+
+          <div className="input-group">
+            <select
+              multiple
+              className="form-control"
+              size="5"
+              onChange={this.onValueChangeHandler}
+              name="selectedAddGroup"
+            >
+              {this.showAvailableGroups()}
+            </select>
+            <br />
+            <button
+              type="buton"
+              className="btn btn-success"
+              onClick={() => this.onClickAddGroupToUserHandler()}
+            >
+              Pridėti
+            </button>
           </div>
-        </div>
+          <div className="line" />
+          <span className="groups">
+            Vartotojo "<b>{this.state.user.username}</b>" grupės
+          </span>
+
+          <div className="input-group">
+            <select
+              multiple
+              className="form-control"
+              size="5"
+              onChange={this.onValueChangeHandler}
+              name="selectedRemoveGroup"
+            >
+              {this.showAllUserGroups()}
+            </select>
+
+            <br />
+            <button
+              type="buton"
+              className="btn btn-danger"
+              onClick={() => this.onClickRemoveGroupFromUserHandler()}
+            >
+              Pašalinti
+            </button>
+          </div>
+
+          <br />
+          <div className="input-group mb-1">
+            <button
+              type="buton"
+              className="btn btn-warning"
+              onClick={() => this.goBack()}
+            >
+              Grįžti atgal
+            </button>
+          </div>
+        </section>
       </div>
     );
   }

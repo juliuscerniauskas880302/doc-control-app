@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./Testing.css";
 import { Link } from "react-router-dom";
 
-export default class Testing extends Component {
+export default class UserNav extends Component {
   constructor(props) {
     super(props);
     this.state = { showMenu: false };
@@ -21,44 +21,27 @@ export default class Testing extends Component {
           <div className="sidebar-header">
             <h1>Dokumentų tvarkymas </h1>
           </div>
-
           <ul className="list-unstyled components">
-            <p>Administratorius</p>
+            <p>Vartotojas</p>
             <hr />
             <li>
               <Link to="/">
                 <div className="btn btn-info my-1">
-                  <i className="fas fa-id-card left">Visi vartotojai</i>
+                  <i className="fas fa-id-card left">Pateikti</i>
                 </div>
               </Link>
             </li>
             <li>
-              <Link to="/users/add">
+              <Link to="/createdDocuments">
                 <div className="btn btn-info my-1">
-                  <i className="fas fa-file-signature left">
-                    Naujas Vartotojas
-                  </i>
+                  <i className="fas fa-file-signature left">Sukurti</i>
                 </div>
               </Link>
             </li>
             <li>
-              <Link to="/groups/add">
+              <Link to="/reviewDocuments">
                 <div className="btn btn-info my-1">
-                  <i className="fas fa-file-alt left">Nauja grupė</i>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="/document_types/add">
-                <div className="btn btn-info my-1">
-                  <i className="fas fa-file-alt left">Naujas dokumento tipas</i>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="document_types/groups">
-                <div className="btn btn-info my-1">
-                  <i className="fas fa-file-alt left">Dokumentų tipų grupės</i>
+                  <i className="fas fa-file-alt left">Peržiūrėti</i>
                 </div>
               </Link>
             </li>

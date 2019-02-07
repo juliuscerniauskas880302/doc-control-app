@@ -3,95 +3,79 @@ import React from "react";
 export default function NewDocumentTypeComponent(props) {
   return (
     <div className="container">
-      <div className="row justify-content-center">
-        <section id="content">
-          <div className="panel-body">
-            <h1>New Document Type</h1>
-            <div className="mx-1">
-              <form onSubmit={e => props.onCLickAddNewDocTypeHandler(e)}>
-                <div className="input-group mb-1">
-                  <input
-                    placeholder="Document title"
-                    onChange={event => props.onValueChangeHandler(event)}
-                    value={props.state.title}
-                    type="text"
-                    name="title"
-                    className="form-control"
-                    pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                    required
-                  />
-                </div>
-                <div className="input-group mb-1">
-                  <input type="submit" value="add" />
-                </div>
-              </form>
-              <br />
-              <div className="input-group mb-1">
-                <button
-                  type="buton"
-                  className="btn btn-warning"
-                  onClick={() => props.goBack()}
-                >
-                  Go back
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
+      <section id="content">
+        <h1>Naujas dokumento tipas</h1>
 
-      {/*  */}
-      <div className="row justify-content-center">
-        <section id="content">
-          <div className="panel-body">
-            <h1>Update Document Type</h1>
-            <div className="mx-1">
-              <h3>All document types</h3>
-              <div className="input-group mb-1">
-                <select
-                  className="form-control"
-                  size="5"
-                  onChange={props.onValueChangeHandler}
-                  name="selectedDocTypeTitle"
-                >
-                  {props.showAllDocumentTypes()}
-                </select>
-              </div>
-            </div>
-            <br />
-            <div className="mx-1">
-              <form onSubmit={e => props.onClickUpdateHandler(e)}>
-                <div className="input-group mb-1">
-                  <input
-                    placeholder="New title"
-                    onChange={event => props.onValueChangeHandler(event)}
-                    type="text"
-                    name="newTitle"
-                    value={props.state.newTitle}
-                    className="form-control"
-                    pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                    required
-                  />
-                </div>
-
-                <div className="input-group mb-1">
-                  <input type="submit" value="Update" />
-                </div>
-              </form>
-              <br />
-              <div className="input-group mb-1">
-                <button
-                  type="buton"
-                  className="btn btn-danger"
-                  onClick={() => props.onDeleteCLickHandler()}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+        <form onSubmit={e => props.onCLickAddNewDocTypeHandler(e)}>
+          <div className="input-group mb-1">
+            <input
+              placeholder="Dokumento tipo pavadinimas"
+              onChange={event => props.onValueChangeHandler(event)}
+              value={props.state.title}
+              type="text"
+              name="title"
+              className="form-control"
+              pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+              required
+            />
           </div>
-        </section>
-      </div>
+          <button type="submit" className="btn btn-success">
+            Pridėti
+          </button>
+        </form>
+        <br />
+        <div className="input-group mb-1">
+          <button
+            type="buton"
+            className="btn btn-warning"
+            onClick={() => props.goBack()}
+          >
+            Grįžti atgal
+          </button>
+        </div>
+      </section>
+
+      <div className="line" />
+      <section id="content">
+        <h1>Atnaujinti dokumentų tipus</h1>
+        <span className="groups">Visi dokumentų tipai</span>
+        <div className="input-group">
+          <select
+            className="form-control"
+            size="5"
+            onChange={props.onValueChangeHandler}
+            name="selectedDocTypeTitle"
+          >
+            {props.showAllDocumentTypes()}
+          </select>
+
+          <button
+            type="buton"
+            className="btn btn-danger"
+            onClick={() => props.onDeleteCLickHandler()}
+          >
+            Ištrinti
+          </button>
+        </div>
+        <br />
+        <form onSubmit={e => props.onClickUpdateHandler(e)}>
+          <div className="input-group">
+            <input
+              placeholder="Naujas pavadinimas"
+              onChange={event => props.onValueChangeHandler(event)}
+              type="text"
+              name="newTitle"
+              value={props.state.newTitle}
+              className="form-control"
+              pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-info">
+            Atnaujinti
+          </button>
+        </form>
+      </section>
     </div>
   );
 }

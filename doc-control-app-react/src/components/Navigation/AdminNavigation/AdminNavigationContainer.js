@@ -19,40 +19,35 @@ export default class AdminNavigationContainer extends Component {
       <div>
         <BrowserRouter>
           <div>
-            <AdminNavigationComponent logout={this.props.logout} />
-            <Switch>
-              <Route path="/testing" component={Testing} exact />
-              <Route path="/" component={UserContainer} exact />
-              <Route path="/users2/add" component={NewUserContainer} exact />
-              <Route path="/groups/add" component={NewGroupForm} exact />
-              {/* <Route
-                path="/userdocument/add"
-                component={NewDocumentForm}
-                exact
-              /> */}
-              <Route
-                path="/document_types/groups"
-                component={TypesInGroups}
-                exact
-              />
-              <Route
-                path="/document_types/add"
-                component={NewDocumentTypeContainer}
-                exact
-              />
-              <Route
-                path="/users/groups/:username"
-                component={EditUserGroups}
-                exact
-              />
-              <Route
-                path="/users/update/:username"
-                component={UpdateUserContainer}
-                exact
-              />
-              <Route path="*" component={ResourceNotFoundComponent} />
-              <Route component={ResourceNotFoundComponent} />
-            </Switch>
+            <Testing {...this.props}>
+              <Switch>
+                <Route path="/" component={UserContainer} exact />
+                <Route path="/users/add" component={NewUserContainer} exact />
+                <Route path="/groups/add" component={NewGroupForm} exact />
+                <Route
+                  path="/document_types/groups"
+                  component={TypesInGroups}
+                  exact
+                />
+                <Route
+                  path="/document_types/add"
+                  component={NewDocumentTypeContainer}
+                  exact
+                />
+                <Route
+                  path="/users/groups/:username"
+                  component={EditUserGroups}
+                  exact
+                />
+                <Route
+                  path="/users/update/:username"
+                  component={UpdateUserContainer}
+                  exact
+                />
+                <Route path="*" component={ResourceNotFoundComponent} />
+                <Route component={ResourceNotFoundComponent} />
+              </Switch>
+            </Testing>
           </div>
         </BrowserRouter>
       </div>
