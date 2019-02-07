@@ -17,6 +17,7 @@ public class UserPrincipal implements UserDetails {
     private String firstname;
     private String lastname;
     private String username;
+    private boolean isAdmin;
 
     @JsonIgnore
     private String email;
@@ -28,7 +29,7 @@ public class UserPrincipal implements UserDetails {
 
     public UserPrincipal(String id, String firstname, String lastname,
                          String username, String email, String password,
-                         Collection<? extends GrantedAuthority> authorities) {
+                         Collection<? extends GrantedAuthority> authorities, boolean isAdmin) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -36,6 +37,7 @@ public class UserPrincipal implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.isAdmin = isAdmin;
     }
 
     public static UserPrincipal create(User user) {
@@ -49,7 +51,8 @@ public class UserPrincipal implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
+                authorities,
+                user.isAdmin()
         );
     }
 
@@ -68,6 +71,7 @@ public class UserPrincipal implements UserDetails {
     public String getEmail() {
         return email;
     }
+    public boolean isAdmin() { return isAdmin; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
