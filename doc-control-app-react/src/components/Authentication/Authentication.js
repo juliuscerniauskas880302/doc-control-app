@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import LoginContainer from "./LoginContainer";
 import AdminNavigationContainer from "../Navigation/AdminNavigation/AdminNavigationContainer";
 import UserNavigationContainer from "../Navigation/UserNavigation/UserNavigationContainer";
+import Axios from "axios";
 
 export default class Authentication extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class Authentication extends Component {
     this.setState({ isLogged: false });
     localStorage.clear("user");
     localStorage.clear("accessToken");
+    delete Axios.defaults.headers.Authorization;
   };
   logout = () => {
     return <div onClick={this.onClickLogoutHandler}>Log out</div>;
