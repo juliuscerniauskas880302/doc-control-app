@@ -73,15 +73,14 @@ export default class LoginContainer extends Component {
     ///userData.append("password", this.state.password);
     Axios.post("http://localhost:8081/api/auth/signin", data)
       .then(res => {
-        Axios.get("http://localhost:8081/api/users/me", {
-          headers: { Authorization: `Bearer ${res.data.accessToken}` }
-        })
+        localStorage.setItem(
+          "accessToken",
+          JSON.stringify(res.data.accessToken)
+        );
+        Axios.defaults.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("accessToken"))}`;
+        Axios.get("http://localhost:8081/api/users/me")
           .then(ress => {
             localStorage.setItem("user", JSON.stringify(ress.data));
-            localStorage.setItem(
-              "accessToken",
-              JSON.stringify(res.data.accessToken)
-            );
             this.props.setLoggedState();
             console.log(ress.data);
           })

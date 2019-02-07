@@ -18,6 +18,7 @@ export default class Authentication extends Component {
     //sessionStorage.clear("user");
     this.setState({ isLogged: false });
     localStorage.clear("user");
+    localStorage.clear("accessToken");
   };
   logout = () => {
     return <div onClick={this.onClickLogoutHandler}>Log out</div>;
