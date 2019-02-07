@@ -35,8 +35,8 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public String getCurrentUserUsername(@CurrentUser UserPrincipal userPrincipal) {
-        return userPrincipal.getUsername();
+    public UserPrincipal getCurrentUserUsername(@CurrentUser UserPrincipal userPrincipal) {
+        return userPrincipal;
     }
 
     @ApiOperation(value = "get users")
