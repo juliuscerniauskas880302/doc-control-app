@@ -32,7 +32,7 @@ export default class Authentication extends Component {
       return (
         <LoginContainer {...this.props} setLoggedState={this.setLoggedState} />
       );
-    } else if (localData.isAdmin) {
+    } else if (localData.admin) {
       return (
         <AdminNavigationContainer
           {...this.props}

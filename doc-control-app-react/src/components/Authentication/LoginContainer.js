@@ -63,33 +63,48 @@ export default class LoginContainer extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    // console.log("submitt");
+    let data = {
+      username: this.state.username,
+      password: this.state.password
+    };
 
-    // let userData = new URLSearchParams();
-    // userData.append("username", this.state.username);
-    // userData.append("password", this.state.password);
-    // Axios.post("http://localhost:8081/login", userData, {
-    //   headers: { "Content-type": "application/x-www-form-urlencoded" }
-    // })
-    //   .then(resp => {
-    //     console.log("user " + resp.data.username + " logged in");
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   });
-    this.state.users.forEach(user => {
-      if (this.state.username === user.username) {
-        if (this.state.password === user.password) {
-          //sessionStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("user", JSON.stringify(user));
-          //console.log("Found user:", user);
-          //let data = JSON.parse(sessionStorage.getItem("lastname"));
-          //console.log(data);
-          this.props.setLoggedState();
-        }
-      }
-    });
-    this.setState({ wrongUsernameOrPassword: true });
+    //let userData = new URLSearchParams();
+    //userData.append("username", this.state.username);
+    ///userData.append("password", this.state.password);
+    Axios.post("http://localhost:8081/api/auth/signin", data)
+      .then(res => {
+        Axios.get("http://localhost:8081/api/users/me", {
+          headers: { Authorization: `Bearer ${res.data.accessToken}` }
+        })
+          .then(ress => {
+            localStorage.setItem("user", JSON.stringify(ress.data));
+            localStorage.setItem(
+              "accessToken",
+              JSON.stringify(res.data.accessToken)
+            );
+            this.props.setLoggedState();
+            console.log(ress.data);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    // this.state.users.forEach(user => {
+    //   if (this.state.username === user.username) {
+    //     if (this.state.password === user.password) {
+    //       //sessionStorage.setItem("user", JSON.stringify(user));
+    //       localStorage.setItem("user", JSON.stringify(user));
+    //       //console.log("Found user:", user);
+    //       //let data = JSON.parse(sessionStorage.getItem("lastname"));
+    //       //console.log(data);
+    //       this.props.setLoggedState();
+    //     }
+    //   }
+    // });
+    // this.setState({ wrongUsernameOrPassword: true });
   };
 
   render() {
