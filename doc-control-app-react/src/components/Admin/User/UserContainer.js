@@ -26,10 +26,13 @@ export class UserContainer extends Component {
     if (this.state.users.length === 0) {
       return <h2 className="">No users available at the moment</h2>;
     }
-    let users = this.state.users.map(user => {
-      let isAdmin = user.isAdmin === false ? "Simple user" : "Administrator";
+    let users = this.state.users.map((user, index) => {
+      console.log(user);
+      let isAdmin =
+        user.admin === false ? "Paprastas vartotojas" : "Administratorius";
       return (
         <UserComponent
+          number={index + 1}
           key={user.username}
           firstname={user.firstname}
           lastname={user.lastname}
@@ -57,9 +60,21 @@ export class UserContainer extends Component {
 
   render() {
     return (
-      <div className="container my-5">
-        <div className="row justify-content-center py-3 mx-3">
-          {this.showAllUsers()}
+      <div className="col-lg-12 col-md-12">
+        <div className="table-responsive">
+          <table className="table table-striped">
+            <thead className="thead-inverse">
+              <tr>
+                <th>#</th>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>El. paštas</th>
+                <th>Teisės</th>
+                <th>Veiksmai</th>
+              </tr>
+            </thead>
+            <tbody>{this.showAllUsers()}</tbody>
+          </table>
         </div>
       </div>
     );

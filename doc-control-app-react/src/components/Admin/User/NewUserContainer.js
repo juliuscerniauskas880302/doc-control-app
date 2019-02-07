@@ -3,7 +3,7 @@ import "./NewUser.css";
 import Axios from "axios";
 import NewUserComponent from "./NewUserComponent";
 
-export default class NewUserForm2 extends Component {
+export default class NewUserContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +47,7 @@ export default class NewUserForm2 extends Component {
 
   render() {
     return (
-      <div className="container my-5">
+      <div className="container">
         <NewUserComponent
           onSubmit={this.onSubmitHandler}
           onChange={this.onValueChangeHandler}

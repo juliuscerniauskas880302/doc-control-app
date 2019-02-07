@@ -16,8 +16,8 @@ export default class Authentication extends Component {
 
   onClickLogoutHandler = () => {
     //sessionStorage.clear("user");
-    localStorage.clear("user");
     this.setState({ isLogged: false });
+    localStorage.clear("user");
   };
   logout = () => {
     return <div onClick={this.onClickLogoutHandler}>Log out</div>;
@@ -33,8 +33,18 @@ export default class Authentication extends Component {
         <LoginContainer {...this.props} setLoggedState={this.setLoggedState} />
       );
     } else if (localData.isAdmin) {
-      return <AdminNavigationContainer {...this.props} logout={this.logout} />;
+      return (
+        <AdminNavigationContainer
+          {...this.props}
+          logout={this.onClickLogoutHandler}
+        />
+      );
     } else
-      return <UserNavigationContainer {...this.props} logout={this.logout} />;
+      return (
+        <UserNavigationContainer
+          {...this.props}
+          logout={this.onClickLogoutHandler}
+        />
+      );
   }
 }

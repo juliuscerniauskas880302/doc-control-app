@@ -25,6 +25,4 @@
   .user-flip:hover .user-back {
     transform: rotateY(0deg);
   }
-.fas{
-  color:red;
-}
+
