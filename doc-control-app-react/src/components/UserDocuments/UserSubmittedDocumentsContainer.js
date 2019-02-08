@@ -1,6 +1,7 @@
 import React from "react";
 import UserSubmittedDocumentsComponent from "./UserSubmittedDocumentsComponent";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 class UserSubmittedDocumentsContainer extends React.Component {
   constructor(props) {
@@ -11,33 +12,78 @@ class UserSubmittedDocumentsContainer extends React.Component {
       //laikina bazikė
       documents: [
         {
-          id: "Kodas1",
-          title: "Title1",
-          description: "Description1",
-          documentTypeTitle: "Type1",
-          documentState: "State1",
+          id: "Testas",
+          title: "Testas",
+          description: "Testas",
+          documentTypeTitle: "Testas",
+          documentState: "Testas",
           submissionDate: "2019.01.26"
         },
-        {
-          id: "Kodas2",
-          title: "Title2",
-          description: "Description2",
-          tydocumentTypeTitle: "Type2",
-          documentState: "State2",
-          submissionDate: "2019.01.27"
-        },
-        {
-          id: "Kodas3",
-          title: "Title3",
-          description: "Description3",
-          documentTypeTitle: "Type3",
-          documentState: "State3",
-          submissionDate: "2019.01.28"
-        }
+        // {
+        //   id: "Kodas1",
+        //   title: "Title1",
+        //   description: "Description1",
+        //   documentTypeTitle: "Type1",
+        //   documentState: "State1",
+        //   submissionDate: "2019.01.26"
+        // },
+        // {
+        //   id: "Kodas2",
+        //   title: "Title2",
+        //   description: "Description2",
+        //   tydocumentTypeTitle: "Type2",
+        //   documentState: "State2",
+        //   submissionDate: "2019.01.27"
+        // },
+        // {
+        //   id: "Kodas3",
+        //   title: "Title3",
+        //   description: "Description3",
+        //   documentTypeTitle: "Type3",
+        //   documentState: "State3",
+        //   submissionDate: "2019.01.28"
+        // }
       ],
       loading: "Loading documents. Please wait..."
     };
   }
+
+  handleZipDownload = (event) => {
+    let currentUser = JSON.parse(localStorage.getItem('user')).username;
+    //api/docs/{username}/download/all
+    axios({
+      url:
+        "http://localhost:8081/api/docs/" + currentUser + "/download/all",
+      method: "GET",
+      responseType: "blob" // important
+    }).then(response => {
+      var filename = this.extractFileName(
+        response.headers["content-disposition"]
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
+
+  extractFileName = contentDispositionValue => {
+    var filename = "";
+    if (
+      contentDispositionValue &&
+      contentDispositionValue.indexOf("attachment") !== -1
+    ) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      var matches = filenameRegex.exec(contentDispositionValue);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
+      }
+    }
+    return filename;
+  };
 
   componentDidMount() {
     let currentUser = JSON.parse(localStorage.getItem('user')).username;
@@ -72,8 +118,10 @@ class UserSubmittedDocumentsContainer extends React.Component {
       return (
         <div className="container-fluid">
           <div className="row">
-            <div className="col-1">
-              <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+            <div className="col-4">
+              <Link to={"/admin/newDocument"} className="btn btn-info" type="button"> Naujas dokumentas </Link> &nbsp;
+              {/* <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a> &nbsp; */}
+              <button className="btn btn-info" onClick={this.handleZipDownload}>Atsiusiųsti dokumentų ZIP'ą</button>
             </div>
           </div>
           <div className="row">

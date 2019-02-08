@@ -11,26 +11,33 @@ class UserCreatedDocumentsContainer extends React.Component {
             //laikina bazikė
             documents: [
                 {
-                    id: "kodas1s",
-                    title: "Title1s",
-                    description: "Description1s",
-                    documentTypeTitle: "Type1s",
+                    id: "Testas",
+                    title: "Testas",
+                    description: "Testas",
+                    documentTypeTitle: "Testas",
                     creationDate: "2019.01.26"
                 },
-                {
-                    id: "kodas2s",
-                    title: "Title2s",
-                    description: "Description2s",
-                    documentTypeTitle: "Type2s",
-                    creationDate: "2019.01.27"
-                },
-                {
-                    id: "kodas3s",
-                    title: "Title3s",
-                    description: "Description3s",
-                    documentTypeTitle: "Type3s",
-                    creationDate: "2019.01.28"
-                }
+                // {
+                //     id: "kodas1s",
+                //     title: "Title1s",
+                //     description: "Description1s",
+                //     documentTypeTitle: "Type1s",
+                //     creationDate: "2019.01.26"
+                // },
+                // {
+                //     id: "kodas2s",
+                //     title: "Title2s",
+                //     description: "Description2s",
+                //     documentTypeTitle: "Type2s",
+                //     creationDate: "2019.01.27"
+                // },
+                // {
+                //     id: "kodas3s",
+                //     title: "Title3s",
+                //     description: "Description3s",
+                //     documentTypeTitle: "Type3s",
+                //     creationDate: "2019.01.28"
+                // }
             ],
             loading: 'Loading documents. Please wait...'
         };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const OneCreatedDocumentComponent = (props) => {
     return (
@@ -53,8 +54,9 @@ const OneCreatedDocumentComponent = (props) => {
                 </div>
             </div>
             <div className="row">
-                <div className="col-3">   
-                    <button className="btn btn-primary" type="submit" onClick={props.handleEdit}>Redaguoti</button> &nbsp;       
+                <div className="col-3">
+                    <Link to={`/admin/Documents/${props.id}`} className="btn btn-primary" type="button"> Redaguoti </Link> &nbsp;
+                    {/* <button className="btn btn-primary" type="submit" onClick={props.handleEdit}>Redaguoti</button> &nbsp;        */}
                     <button className="btn btn-danger" type="submit" onClick={props.handleDelete}>Trinti</button> &nbsp;
                     <button className="btn btn-success" type="submit" onClick={props.handleSubmit}>Pateikti</button> &nbsp;
                     <a href="/createdDocuments" className="btn btn-dark" role="button" aria-pressed="true">Atgal</a>
