@@ -22,14 +22,9 @@ export default class Authentication extends Component {
     localStorage.clear("accessToken");
     delete Axios.defaults.headers.Authorization;
   };
-  logout = () => {
-    return <div onClick={this.onClickLogoutHandler}>Log out</div>;
-  };
 
   render() {
-    //let data = JSON.parse(//.getItem("user"));
     let localData = JSON.parse(localStorage.getItem("user"));
-    //console.log("//", data);
     console.log("LocalStorage", localData);
     if (localData === null) {
       return (
