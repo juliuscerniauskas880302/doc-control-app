@@ -48,13 +48,13 @@ const OneCreatedDocumentComponent = (props) => {
                 <div className="col-1">   
                     <p>Pridėtas failas:</p>
                 </div>
-                <div className="col-2">
+                <div className="col-3">
                     <p>{props.path} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
                     {/* <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p> */}
                 </div>
             </div>
             <div className="row">
-                <div className="col-3">
+                <div className="col-4">
                     <Link to={`/admin/Documents/${props.id}`} className="btn btn-primary" type="button"> Redaguoti </Link> &nbsp;
                     {/* <button className="btn btn-primary" type="submit" onClick={props.handleEdit}>Redaguoti</button> &nbsp;        */}
                     <button className="btn btn-danger" type="submit" onClick={props.handleDelete}>Trinti</button> &nbsp;

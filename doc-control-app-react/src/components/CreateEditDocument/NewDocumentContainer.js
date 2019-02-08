@@ -156,18 +156,22 @@ class NewDocumentContainer extends React.Component {
     let currentUser = JSON.parse(localStorage.getItem("user"));
     console.log("Spausdinu userį gautą iš localStorage");
     console.log(currentUser);
-    this.setState({ username: currentUser.username });
+    this.setState({ username: currentUser.username }, () => {
+      axios
+      .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
+        .then(response => {
+          this.setState({ typeList: response.data.map(item => item.title) });
+          console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
+          console.log(this.state.typeList);
+        })
+        .catch(error => {
+          console.log("KLAIDA!!!!" + error);
+        });
+    });
     //nusiskaitau dokumentų tipus
-    axios
-    .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
-      .then(response => {
-        this.setState({ typeList: response.data.map(item => item.title) });
-        console.log("Koks atiduodamas dokumentų tipų sąrašas?");
-        console.log(this.state.typeList);
-      })
-      .catch(error => {
-        console.log("KLAIDA!!!!" + error);
-      });
+    console.log("State user yra po visko" + this.state.username);
+    console.log("Local storage user po visko " + currentUser.username);
+   
   }
 
   render() {

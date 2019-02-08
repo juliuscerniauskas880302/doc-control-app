@@ -70,7 +70,7 @@ const OneReviewDocumentComponent = (props) => {
             <div className="row">
                 <div className="col-3">   
                     <button className="btn btn-success" type="submit" onClick={props.handleAccept}>Patvirtinti</button> &nbsp;
-                    <button className="btn btn-danger" type="submit" onClick={props.openPopup}>Atmesti</button> &nbsp;
+                    <button className="btn btn-danger" type="submit" onClick={() => props.handleReject(props.id)}>Atmesti</button> &nbsp;
                     <a href="/reviewDocuments" className="btn btn-dark" role="button" aria-pressed="true">Atgal</a>
                 </div>
             </div>
