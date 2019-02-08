@@ -10,6 +10,8 @@ import it.akademija.wizards.models.document.DocumentCreateCommand;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.document.DocumentReviewCommand;
 import it.akademija.wizards.models.document.DocumentUpdateCommand;
+import it.akademija.wizards.security.CurrentUser;
+import it.akademija.wizards.security.UserPrincipal;
 import it.akademija.wizards.services.DocumentService;
 
 import org.hibernate.engine.jdbc.StreamUtils;
@@ -19,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +38,7 @@ import java.util.zip.ZipOutputStream;
 @RestController
 @Api(value = "documents")
 @RequestMapping(value = "/api/docs")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class DocumentController {
 
     @Autowired
@@ -52,11 +56,11 @@ public class DocumentController {
         return documentService.getSubmittedDocuments();
     }
 
-    @ApiOperation(value = "get all documents to be reviewed")
+    @ApiOperation(value = "get all documents review")
     @RequestMapping(value = "/review", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<DocumentGetCommand> getDocumentsToReview() {
-        return documentService.getDocumentsToReview();
+    public List<DocumentGetCommand> getDocumentsToReview(@CurrentUser UserPrincipal userPrincipal) {
+        return documentService.getDocumentsToReview(userPrincipal.getUsername());
     }
 
     @ApiOperation(value = "get document by document Id")
@@ -156,10 +160,10 @@ public class DocumentController {
     }
 
     @ApiOperation(value = "download all user's documents in zip")
-    @RequestMapping(value = "/{username}/download/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/download/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity dowloadAllUserDocuments(@PathVariable final String username) throws IOException {
-        return documentService.downloadAllDocuments(username);
+    public ResponseEntity dowloadAllUserDocuments(@CurrentUser UserPrincipal userPrincipal) throws IOException {
+        return documentService.downloadAllDocuments(userPrincipal.getUsername());
     }
 
 

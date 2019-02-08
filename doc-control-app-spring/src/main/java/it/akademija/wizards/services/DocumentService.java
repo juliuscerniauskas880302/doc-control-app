@@ -69,10 +69,11 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public List<DocumentGetCommand> getDocumentsToReview() {
+    public List<DocumentGetCommand> getDocumentsToReview(String username) {
         return documentRepository.findAll()
                 .stream()
                 .filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED))
+                .filter(document -> !document.getAuthor().getUsername().equals(username) && this.canReviewDocument(username, document))
                 .map(document -> mapEntityToGetCommand(document))
                 .collect(Collectors.toList());
     }
@@ -88,21 +89,8 @@ public class DocumentService {
     public ResponseEntity<String> createDocument(DocumentCreateCommand documentCreateCommand,
                                                  MultipartFile[] multipartFile) {
         User author = this.getUserFromDB(documentCreateCommand.getUsername());
-        DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
-        //find authors groups
-        Set<UserGroup> userGroups = author.getUserGroups();
-        //check if the found group can create this type of document
-        boolean isAllowed = false;
-        for (UserGroup userGroup : userGroups) {
-            for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
-                if (createdDocumentType.equals(allowedDocumentType)) {
-                    isAllowed = true;
-                    break;
-                }
-            }
-        }
-        if (isAllowed) {
-            Document document = mapCreateCommandToEntity(documentCreateCommand);
+        Document document = mapCreateCommandToEntity(documentCreateCommand);
+        if (canCreateDocument(author.getUsername(), document)) {
             author.addDocument(document);
             try {
                 this.uploadFiles(document, multipartFile);
@@ -117,39 +105,40 @@ public class DocumentService {
         return new ResponseEntity<>("Document was created", HttpStatus.CREATED);
     }
 
-    //OLD CREATE
-    //  //Create
-    //    @Transactional
-    //    public ResponseEntity<String> createDocument (DocumentCreateCommand documentCreateCommand, MultipartFile multipartFile) {
-    //        User author = this.getUserFromDB(documentCreateCommand.getUsername());
-    //        DocumentType createdDocumentType = this.getDocTypeFromDB(documentCreateCommand.getDocumentTypeTitle());
-    //        //find authors groups
-    //        Set<UserGroup> userGroups = author.getUserGroups();
-    //        //check if the found group can create this type of document
-    //        boolean isAllowed = false;
-    //        for (UserGroup userGroup : userGroups) {
-    //            for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
-    //                if (createdDocumentType.equals(allowedDocumentType)) {
-    //                    isAllowed = true;
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //        if (isAllowed) {
-    //            Document document = mapCreateCommandToEntity(documentCreateCommand);
-    //            author.addDocument(document);
-    //            try {
-    //                this.uploadFile(document, multipartFile);
-    //            } catch (IOException e) {
-    //                return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
-    //            }
-    //            documentRepository.save(document);
-    //        } else {
-    //            //TODO UserCannotCreateDocumentException
-    //            throw new IllegalArgumentException("User doesn't have permission to create this type of document");
-    //        }
-    //        return new ResponseEntity<>("Document was created", HttpStatus.CREATED);
-    //    }
+    //UPDATE
+    @Transactional
+    public ResponseEntity<String> updateDocumentById(
+            String id,
+            DocumentUpdateCommand documentUpdateCommand,
+            MultipartFile[] multipartFile) {
+        Document document = this.getDocumentFromDB(id);
+        if (document.getDocumentState().equals(DocumentState.CREATED)) {
+            if (multipartFile != null) {
+                try {
+                    deleteMainFile(document);
+                    uploadFiles(document, multipartFile);
+                } catch (IOException e) {
+                    return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+                }
+            }
+            documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
+        } else {
+            //TODO SubmittedDocumentUpdateNotAllowedException
+            throw new IllegalArgumentException("Submitted documents cannot be updated");
+        }
+        return new ResponseEntity<>("Document updated", HttpStatus.OK);
+    }
+
+
+    //DELETE
+    @Transactional
+    public void deleteDocumentById(String id) {
+        Document document = getDocumentFromDB(id);
+        User author = document.getAuthor();
+        deleteAllFiles(document);
+        author.removeDocument(document);
+        documentRepository.delete(document);
+    }
 
     //SUBMIT
     @Transactional
@@ -164,19 +153,7 @@ public class DocumentService {
     public void reviewDocument(String id, DocumentReviewCommand documentReviewCommand) {
         User reviewer = this.getUserFromDB(documentReviewCommand.getReviewerUsername());
         Document document = this.getDocumentFromDB(id);
-        //find reviewer's groups
-        Set<UserGroup> userGroups = reviewer.getUserGroups();
-        //check if the found group can review this type of document
-        boolean isAllowed = false;
-        for (UserGroup userGroup : userGroups) {
-            for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
-                if (document.getDocumentType().equals(allowedDocumentType)) {
-                    isAllowed = true;
-                    break;
-                }
-            }
-        }
-        if (isAllowed) {
+        if (canReviewDocument(reviewer.getUsername(), document)) {
             document.setDocumentState(documentReviewCommand.getDocumentState());
             document.setReviewer(reviewer);
             document.setReviewDate();
@@ -333,61 +310,7 @@ public class DocumentService {
 //        }
 //        return ResponseEntity.notFound().build();
 //    }
-    //UPDATE
-    @Transactional
-    public ResponseEntity<String> updateDocumentById(
-            String id,
-            DocumentUpdateCommand documentUpdateCommand,
-            MultipartFile[] multipartFile) {
-        Document document = this.getDocumentFromDB(id);
-        if (document.getDocumentState().equals(DocumentState.CREATED)) {
-            if (multipartFile != null) {
-                try {
-                    uploadFiles(document, multipartFile);
-                } catch (IOException e) {
-                    return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
-                }
-            }
-            documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
-        } else {
-            //TODO SubmittedDocumentUpdateNotAllowedException
-            throw new IllegalArgumentException("submitted documents cannot be updated");
-        }
-        return new ResponseEntity<>("Document updated", HttpStatus.OK);
-    }
 
-    //OLD UPDATE
-    //    //UPDATE
-//    @Transactional
-//    public ResponseEntity<String> updateDocumentById(String id, DocumentUpdateCommand documentUpdateCommand, MultipartFile multipartFile)  {
-//        Document document = this.getDocumentFromDB(id);
-//        if (document.getDocumentState().equals(DocumentState.CREATED)) {
-//            if (multipartFile != null) {
-//                try {
-//                    uploadFile(document, multipartFile);
-//                } catch (IOException e) {
-//                    return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
-//                }
-//            }
-//            documentRepository.save(mapUpdateCommandToEntity(documentUpdateCommand, document));
-//        } else {
-//            //TODO SubmittedDocumentUpdateNotAllowedException
-//            throw new IllegalArgumentException("submitted documents cannot be updated");
-//        }
-//        return new ResponseEntity<>("Document updated", HttpStatus.OK);
-//    }
-//
-
-
-    //DELETE
-    @Transactional
-    public void deleteDocumentById(String id) {
-        Document document = getDocumentFromDB(id);
-        User author = document.getAuthor();
-        deleteAllFiles(document);
-        author.removeDocument(document);
-        documentRepository.delete(document);
-    }
 
     //PACKAGE METHODS (MAPPING)
     DocumentGetCommand mapEntityToGetCommand(Document document) {
@@ -449,6 +372,30 @@ public class DocumentService {
     @Transactional
     private Document getDocumentFromDB(String id) throws ResourceNotFoundException {
         return documentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("document not found"));
+    }
+
+    private boolean canReviewDocument(String username, Document document) {
+        User user = this.getUserFromDB(username);
+        for (UserGroup userGroup : user.getUserGroups()) {
+            for (DocumentType allowedDocumentType : userGroup.getReviewDocumentType()) {
+                if (document.getDocumentType().equals(allowedDocumentType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canCreateDocument(String username, Document document) {
+        User user = this.getUserFromDB(username);
+        for (UserGroup userGroup : user.getUserGroups()) {
+            for (DocumentType allowedDocumentType : userGroup.getSubmissionDocumentType()) {
+                if (document.getDocumentType().equals(allowedDocumentType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Transactional
@@ -570,7 +517,7 @@ public class DocumentService {
             throw new IllegalArgumentException("Cannot delete file that is already submitted.");
         }
     }
-    //    TODO: WHEN TO USE @TRANSACTIONAL?
+    //    TODO: WHEN TO USE @TRANSACTIONAL? kai kreipies į duombazę
     @Transactional
     private File getDocumentFolder(Document document) {
         return new File(pathName

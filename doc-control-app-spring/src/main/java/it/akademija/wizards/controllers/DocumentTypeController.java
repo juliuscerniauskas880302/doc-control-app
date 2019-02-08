@@ -12,6 +12,7 @@ import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @Api(value = "document types")
 @RequestMapping(value = "/api/doctypes")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class DocumentTypeController {
     @Autowired
     private DocumentTypeService documentTypeService;
