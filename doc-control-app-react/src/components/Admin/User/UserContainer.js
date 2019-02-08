@@ -27,7 +27,6 @@ export class UserContainer extends Component {
       return <h2 className="">No users available at the moment</h2>;
     }
     let users = this.state.users.map((user, index) => {
-      console.log(user);
       let isAdmin =
         user.admin === false ? "Paprastas vartotojas" : "Administratorius";
       return (

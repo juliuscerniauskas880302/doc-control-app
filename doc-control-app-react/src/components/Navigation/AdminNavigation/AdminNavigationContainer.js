@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
-////////////////Julius components///////////////////////////////////
-import AdminNavigationComponent from "./AdminNavigationComponent";
+
 import UserContainer from "../../Admin/User/UserContainer";
 import NewUserContainer from "../../Admin/User/NewUserContainer";
 import UpdateUserContainer from "../../Admin/User/UpdateUserContainer";
@@ -10,16 +9,14 @@ import NewDocumentTypeContainer from "../../Admin/DocumentType/NewDocumentTypeCo
 import TypesInGroups from "../../Admin/Types_in_groups/TypesInGroups";
 import EditUserGroups from "../../Admin/Groups/EditUserGroups";
 import ResourceNotFoundComponent from "../../Errors/ResourceNotFoundComponent";
-import Testing from "../../Testing/Testing";
-//import NewDocumentForm from "../user/Document/NewDocumentForm";
-/////////////////////////////////////////////////////////////////
+import AdminNav from "../../Testing/AdminNav";
 export default class AdminNavigationContainer extends Component {
   render() {
     return (
       <div>
         <BrowserRouter>
           <div>
-            <Testing {...this.props}>
+            <AdminNav {...this.props}>
               <Switch>
                 <Route path="/" component={UserContainer} exact />
                 <Route path="/users/add" component={NewUserContainer} exact />
@@ -47,7 +44,7 @@ export default class AdminNavigationContainer extends Component {
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
               </Switch>
-            </Testing>
+            </AdminNav>
           </div>
         </BrowserRouter>
       </div>
