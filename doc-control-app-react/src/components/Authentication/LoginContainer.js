@@ -8,39 +8,7 @@ export default class LoginContainer extends Component {
     this.state = {
       wrongUsernameOrPassword: false,
       password: "",
-      username: "",
-      users: [
-        {
-          username: "julius",
-          password: "julius",
-          isAdmin: false
-        },
-        {
-          username: "jonas",
-          password: "jonas",
-          isAdmin: false
-        },
-        {
-          username: "migle",
-          password: "captain",
-          isAdmin: true
-        },
-        {
-          username: "vytautas",
-          password: "vytautas",
-          isAdmin: false
-        },
-        {
-          username: "root",
-          password: "root",
-          isAdmin: true
-        },
-        {
-          username: "andrius",
-          password: "andrius",
-          isAdmin: false
-        }
-      ]
+      username: ""
     };
   }
 
@@ -68,16 +36,15 @@ export default class LoginContainer extends Component {
       password: this.state.password
     };
 
-    //let userData = new URLSearchParams();
-    //userData.append("username", this.state.username);
-    ///userData.append("password", this.state.password);
     Axios.post("http://localhost:8081/api/auth/signin", data)
       .then(res => {
         localStorage.setItem(
           "accessToken",
           JSON.stringify(res.data.accessToken)
         );
-        Axios.defaults.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("accessToken"))}`;
+        Axios.defaults.headers.Authorization = `Bearer ${JSON.parse(
+          localStorage.getItem("accessToken")
+        )}`;
         Axios.get("http://localhost:8081/api/users/me")
           .then(ress => {
             localStorage.setItem("user", JSON.stringify(ress.data));
@@ -89,21 +56,8 @@ export default class LoginContainer extends Component {
           });
       })
       .catch(e => {
-        console.log(e);
+        this.setState({ wrongUsernameOrPassword: true });
       });
-    // this.state.users.forEach(user => {
-    //   if (this.state.username === user.username) {
-    //     if (this.state.password === user.password) {
-    //       //sessionStorage.setItem("user", JSON.stringify(user));
-    //       localStorage.setItem("user", JSON.stringify(user));
-    //       //console.log("Found user:", user);
-    //       //let data = JSON.parse(sessionStorage.getItem("lastname"));
-    //       //console.log(data);
-    //       this.props.setLoggedState();
-    //     }
-    //   }
-    // });
-    // this.setState({ wrongUsernameOrPassword: true });
   };
 
   render() {

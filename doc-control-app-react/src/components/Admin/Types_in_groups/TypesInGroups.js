@@ -51,7 +51,7 @@ export default class TypesInGroups extends Component {
     if (this.state.doctypes.length === 0) {
       return (
         <option value="" disabled>
-          No available document types...
+          Nėra galimų grupių...
         </option>
       );
     } else {
@@ -94,7 +94,7 @@ export default class TypesInGroups extends Component {
     if (groups.length === 0) {
       return (
         <option value="" disabled>
-          No available groups...
+          Nėra galimų grupių...
         </option>
       );
     } else {
@@ -122,14 +122,14 @@ export default class TypesInGroups extends Component {
     if (this.state.selectedType === null) {
       return (
         <option value="" disabled>
-          No available groups...
+          Nėra galimų grupių...
         </option>
       );
     }
     if (this.state.groups.length === 0) {
       return (
         <option value="" disabled>
-          No available options...
+          Nėra pasirinkimų...
         </option>
       );
     } else {
@@ -156,7 +156,7 @@ export default class TypesInGroups extends Component {
       if (doctypeList.length === 0) {
         return (
           <option value="" disabled>
-            Already have all types...
+            Jau viskas pridėta...
           </option>
         );
       } else return doctypeList;
