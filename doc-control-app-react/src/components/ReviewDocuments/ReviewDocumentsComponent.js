@@ -29,7 +29,7 @@ const ReviewDocumentsComponent = (props) => {
                     <Link to={linkas}> <i className="fas fa-info-circle"></i> </Link> &nbsp;
                     {/* <Link to={linkas}> <i className="fas fa-check-circle"></i> </Link> */}
                     <i className="fas fa-check-circle" onClick={() => { props.handleAccept(props.id) }}></i> &nbsp;
-                    <i className="fas fa-times-circle" onClick={() => props.openPopup(props.id)}></i>  
+                    <i className="fas fa-times-circle" onClick={() => props.handleReject(props.id)}></i>  
                     {/* <Link to={linkas}> <i className="fas fa-times-circle"></i> </Link> */}
                 </div>
             </div>

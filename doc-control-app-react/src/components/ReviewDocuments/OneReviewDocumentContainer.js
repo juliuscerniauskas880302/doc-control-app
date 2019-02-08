@@ -122,6 +122,7 @@ class OneReviewDocumentContainer extends React.Component {
                     .then((response) => {
                         this.setState({ documents: response.data });
                     })
+                    .then((response) => this.props.history.push(`/reviewDocuments`))
                     .catch((error) => {
                         console.log(error);
                     });

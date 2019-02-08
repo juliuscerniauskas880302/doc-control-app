@@ -2,6 +2,7 @@ import React from 'react';
 import ReviewDocumentsComponent from './ReviewDocumentsComponent';
 import axios from 'axios';
 import RejectReasonPopUp from './RejectReasonPopUp';
+import Swal from 'sweetalert2';
 
 class ReviewDocumentsContainer extends React.Component {
     constructor(props) {
@@ -61,7 +62,7 @@ class ReviewDocumentsContainer extends React.Component {
         this.setState({
             isOpen: false,
         });
-        this.handleReject();
+        //this.handleReject();
     }
 
     handleChangeOfRejectionReason = event => {
@@ -69,26 +70,91 @@ class ReviewDocumentsContainer extends React.Component {
         //console.log("Atmetimo priežastis yra " + this.state.rejectionReason);
     };
 
-    handleReject = () => {
-        console.log("Atėjau į handleReject");
-        console.log("RejectionReason yra " + this.state.rejectionReason);
-        let docInfo = {
-            documentState: "REJECTED",
-            rejectionReason: this.state.rejectionReason,
-            reviewerUsername: JSON.parse(localStorage.getItem('user')).username
-        }
-        console.log("docInfo yra " + docInfo.documentState);
-        axios.post("http://localhost:8081/api/docs/review/" + this.state.documentId, docInfo)
-            .then((response) => {
-                axios.get('http://localhost:8081/api/docs/review')
-                    .then((response) => {
-                        this.setState({ documents: response.data });
+    handleReject = (id) => {
 
-                    })
-                    .catch((error) => {
-                        console.log(error);
+        //senas kodas
+        console.log("Atėjau į handleReject");
+        //console.log("RejectionReason yra " + this.state.rejectionReason);
+
+        //Darau sweet Alert
+        Swal.fire({
+            title: 'Įveskite atmetimo priežastį',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Patvirtinti',
+            cancelButtonText: 'Atšaukti',
+        }).then(function (result) {
+            // result.value will containt the input value
+            const swalWithBootstrapButtons = Swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+              })
+              
+            if(result.value){
+                let docInfo = {
+                    documentState: "REJECTED",
+                    rejectionReason: result.value,
+                    reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+                }
+                console.log("docInfo yra " + docInfo.rejectionReason);
+                console.log("Spausdinu id " + id);
+                this.setState({ documentId: "aaa" });
+                axios.post("http://localhost:8081/api/docs/review/" + id, docInfo)
+                    .then((response) => {
+                        axios.get('http://localhost:8081/api/docs/review')
+                            .then((response) => {
+                                this.setState({ documents: response.data });
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
+                            .catch((error) => {
+                                console.log("KLAIDA BANDANT ATMESTI" + error);
+                            });
                     });
-            });
+            } else {
+                // swalWithBootstrapButtons.fire(
+                //     'Cancelled',
+                //     'Your imaginary file is safe :)',
+                //     'error'
+                //   )
+            }
+
+
+            
+        }.bind(this))
+
+
+
+        // MyAction: function(){
+        //     this.doFetch().then(function(response){
+        //         this.setState({
+        //             the_message: response.message
+        //         });
+        //     }.bind(this))
+        // },
+
+        // let docInfo = {
+        //     documentState: "REJECTED",
+        //     rejectionReason: this.state.rejectionReason,
+        //     reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+        // }
+        // console.log("docInfo yra " + docInfo.documentState);
+        // axios.post("http://localhost:8081/api/docs/review/" + this.state.documentId, docInfo)
+        //     .then((response) => {
+        //         axios.get('http://localhost:8081/api/docs/review')
+        //             .then((response) => {
+        //                 this.setState({ documents: response.data });
+
+        //             })
+        //             .catch((error) => {
+        //                 console.log(error);
+        //             });
+        //     });
     }
 
 
@@ -140,6 +206,7 @@ class ReviewDocumentsContainer extends React.Component {
                         type={document.documentTypeTitle}
                         submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10) : ""}
                         handleAccept={this.handleAccept}
+                        handleReject={this.handleReject}
                         openPopup={this.openPopup}
                         closePopupCancelReject={this.closePopupCancelReject}
                         closePopupAcceptReject={this.closePopupAcceptReject}
@@ -177,7 +244,7 @@ class ReviewDocumentsContainer extends React.Component {
                     handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
                     closePopupAcceptReject={this.closePopupAcceptReject}
                     closePopupCancelReject={this.closePopupCancelReject}
-                    >
+                >
                 </RejectReasonPopUp>
             </div>);
         }
