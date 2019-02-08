@@ -1,8 +1,8 @@
-
 import React from 'react';
 import OneReviewDocumentComponent from './OneReviewDocumentComponent';
 import axios from 'axios';
 import RejectReasonPopUp from './RejectReasonPopUp';
+import Swal from 'sweetalert2';
 
 class OneReviewDocumentContainer extends React.Component {
     constructor(props, context) {
@@ -19,7 +19,7 @@ class OneReviewDocumentContainer extends React.Component {
             path: "",
             prefix: "",
             //filename: "Nėra pridėto failo",
-            isOpen: false
+            //isOpen: false
         };
     }
 
@@ -58,53 +58,107 @@ class OneReviewDocumentContainer extends React.Component {
         return filename;
     };
 
-    openPopup = () => {
-        this.setState({
-            isOpen: true
-        });
-    }
+    // openPopup = () => {
+    //     this.setState({
+    //         isOpen: true
+    //     });
+    // }
 
-    closePopupCancelReject = () => {
-        this.setState({
-            isOpen: false,
-            rejectionReason: ""
-        });
-    }
+    // closePopupCancelReject = () => {
+    //     this.setState({
+    //         isOpen: false,
+    //         rejectionReason: ""
+    //     });
+    // }
 
-    closePopupAcceptReject = () => {
-        this.setState({
-            isOpen: false,
-        });
-        this.handleReject();
-    }
+    // closePopupAcceptReject = () => {
+    //     this.setState({
+    //         isOpen: false,
+    //     });
+    //     this.handleReject();
+    // }
 
     handleChangeOfRejectionReason = event => {
         this.setState({ rejectionReason: event.target.value });
         //console.log("Atmetimo priežastis yra " + this.state.rejectionReason);
     };
 
-    handleReject = () => {
+    handleReject = (id) => {
         console.log("Atėjau į handleReject");
         console.log("RejectionReason yra " + this.state.rejectionReason);
-        let docInfo = {
-            documentState: "REJECTED",
-            rejectionReason: this.state.rejectionReason,
-            reviewerUsername: JSON.parse(localStorage.getItem('user')).username
-        }
-        console.log("docInfo yra " + docInfo.documentState);
-        axios.post("http://localhost:8081/api/docs/review/" + this.state.id, docInfo)
-            .then((response) => {
-                axios.get('http://localhost:8081/api/docs/review')
+        
+        //Darau sweet Alert
+        Swal.fire({
+            title: 'Įveskite atmetimo priežastį',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Patvirtinti',
+            cancelButtonText: 'Atšaukti',
+        }).then(function (result) {
+            // result.value will containt the input value
+            // const swalWithBootstrapButtons = Swal.mixin({
+            //     confirmButtonClass: 'btn btn-success',
+            //     cancelButtonClass: 'btn btn-danger',
+            //     buttonsStyling: false,
+            //   })
+              
+            if(result.value){
+                let docInfo = {
+                    documentState: "REJECTED",
+                    rejectionReason: result.value,
+                    reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+                }
+                console.log("docInfo yra " + docInfo.rejectionReason);
+                console.log("Spausdinu id " + id);
+                this.setState({ documentId: "aaa" });
+                axios.post("http://localhost:8081/api/docs/review/" + id, docInfo)
                     .then((response) => {
-                        this.setState({ documents: response.data });
-                    })
-                    .then((response) => {
-                        this.props.history.push(`/reviewDocuments`);
-                    })
-                    .catch((error) => {
-                        console.log(error);
+                        axios.get('http://localhost:8081/api/docs/review')
+                            .then((response) => {
+                                this.setState({ documents: response.data });
+                            })
+                            .then((response) => {
+                                this.props.history.push(`/reviewDocuments`);
+                            })
+                            .catch((error) => {
+                                console.log("KLAIDA BANDANT ATMESTI" + error);
+                            });
                     });
-            });
+            } else {
+                // swalWithBootstrapButtons.fire(
+                //     'Cancelled',
+                //     'Your imaginary file is safe :)',
+                //     'error'
+                //   )
+            }   
+        }.bind(this))
+
+
+        
+        
+        //SENAS KODAS
+        // let docInfo = {
+        //     documentState: "REJECTED",
+        //     rejectionReason: this.state.rejectionReason,
+        //     reviewerUsername: JSON.parse(localStorage.getItem('user')).username
+        // }
+        // console.log("docInfo yra " + docInfo.documentState);
+        // axios.post("http://localhost:8081/api/docs/review/" + this.state.id, docInfo)
+        //     .then((response) => {
+        //         axios.get('http://localhost:8081/api/docs/review')
+        //             .then((response) => {
+        //                 this.setState({ documents: response.data });
+        //             })
+        //             .then((response) => {
+        //                 this.props.history.push(`/reviewDocuments`);
+        //             })
+        //             .catch((error) => {
+        //                 console.log(error);
+        //             });
+        //     });
     }
 
     handleAccept = () => {
@@ -178,15 +232,16 @@ class OneReviewDocumentContainer extends React.Component {
                     //filename={this.state.filename}
                     downloadHandler={this.downloadHandler}
                     handleAccept={this.handleAccept}
-                    openPopup={this.openPopup}
+                    handleReject={this.handleReject}
+                    //openPopup={this.openPopup}
                 />
-                <RejectReasonPopUp show={this.state.isOpen}
+                {/* <RejectReasonPopUp show={this.state.isOpen}
                     onClose={this.closePopup}
                     handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
                     closePopupAcceptReject={this.closePopupAcceptReject}
                     closePopupCancelReject={this.closePopupCancelReject}
                     >
-                </RejectReasonPopUp>
+                </RejectReasonPopUp> */}
             </div>
         );
     }

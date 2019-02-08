@@ -18,7 +18,7 @@ class EditDocumentContainer extends React.Component {
       //creationDate: "2019.01.28"
       path: "",
       prefix: "",
-      filename: "Nėra pridėto failo"
+      //filename: "Nėra pridėto failo"
     };
   }
 
@@ -103,35 +103,30 @@ class EditDocumentContainer extends React.Component {
     file.append("model", JSON.stringify(model));
     console.log("Dokuemnto id yra - " + this.state.id);
     axios.put("http://localhost:8081/api/docs/" + this.state.id, file)
-      .then(res => console.log(res))
-      .catch(err => console.log("KLAIDA SUBMITE" + err));
-
-
-
-    //} else {
-    //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
-    //     file.append(
-    //       "file",
-    //       this.state.selectedFiles[i],
-    //       this.state.selectedFiles[i].name
-    //     );
-    //     console.log(this.state.selectedFiles[i]);
-    //     console.log(this.state.selectedFiles[i].name);
-    //   }
-    //   Axios.post("http://localhost:8081/api/files/upload", file, {
-    //     onUploadProgress: progressEvent => {
-    //       console.log(
-    //         "Upload progress: " +
-    //           (progressEvent.loaded / progressEvent.total) * 100 +
-    //           "%"
-    //       );
-    //     }
-    //   })
-    //     .then(res => console.log(res))
-    //     .catch(err => console.log(err));
-    //}
-    console.log("Spausinu FILE" + file);
-  }
+      .then((response) => {
+        axios.get("http://localhost:8081/api/docs/" + this.state.id)
+          .then((response) => {
+            this.setState({ id: response.data.id });
+            this.setState({ title: response.data.title });
+            this.setState({ description: response.data.description });
+            this.setState({ documentTypeTitle: response.data.documentTypeTitle });
+            this.setState({ path: response.data.path });
+            this.setState({ prefix: response.data.prefix });
+            //this.setState({ filename: this.state.selectedFiles[0].name });
+          })
+          .then((response) => {
+            this.props.history.push(`/createdDocuments`);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+          // .then((response) => {
+          //   this.props.history.push(`/createdDocuments`);
+          // .then (this.props.history.push(`/createdDocuments`))
+       .catch(err => console.log("KLAIDA SUBMITE" + err));
+        console.log("Spausinu FILE" + file);
+      }
 
   // handleSubmit = (event) => {
   //   //TODO
@@ -157,84 +152,109 @@ class EditDocumentContainer extends React.Component {
   //TODO
   //Padaryti normalų ištrynimo metodą
   handleDelete = (event) => {
-    event.preventDefault();
-    axios.delete("http://localhost:8081/api/docs/" + this.state.id)
-      .then((response) => {
-        this.props.history.push(`/createdDocuments`);
-      });
-  }
+          event.preventDefault();
+          axios.delete("http://localhost:8081/api/docs/" + this.state.id)
+            .then((response) => {
+              this.props.history.push(`/createdDocuments`);
+            });
+        }
 
   componentDidMount() {
-    //nusiskaitau dokumentų tipus
-    axios.get('http://localhost:8081/api/doctypes')
-      .then((response) => {
-        this.setState({ typeList: response.data.map(item => item.title) });
-        console.log("Koks atiduodamas dokumentų tipų sąrašas?");
-        console.log(this.state.typeList);
-      })
-      .catch((error) => {
-        console.log("KLAIDA!!!!" + error);
-      });
+          //nusiskaitau dokumentų tipus
+
+          let currentUser = JSON.parse(localStorage.getItem("user"));
+          console.log("Spausdinu userį gautą iš localStorage");
+          console.log(currentUser);
+          this.setState({ username: currentUser.username }, () => {
+            axios
+              .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
+              .then(response => {
+                this.setState({ typeList: response.data.map(item => item.title) });
+                console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
+                console.log(this.state.typeList);
+              })
+              .catch(error => {
+                console.log("KLAIDA!!!!" + error);
+              });
+          });
+          //nusiskaitau dokumentų tipus
+          console.log("State user yra po visko" + this.state.username);
+          console.log("Local storage user po visko " + currentUser.username)
+
+
+    //senas blogas
+    // axios.get('http://localhost:8081/api/doctypes')
+    //   .then((response) => {
+    //     this.setState({ typeList: response.data.map(item => item.title) });
+    //     console.log("Koks atiduodamas dokumentų tipų sąrašas (redagavime)?");
+    //     console.log(this.state.typeList);
+    //   })
+    //   .catch((error) => {
+    //     console.log("KLAIDA!!!!" + error);
+    //   });
 
 
     //Konkretaus dokumento duomenų nuskaitymas
     const position = this.props.match.params.documentId;
-    //let currentUser = "migle";
-    let resourcePath = 'http://localhost:8081/api/docs/' + position;
+          //let currentUser = "migle";
+          let resourcePath = 'http://localhost:8081/api/docs/' + position;
 
-    axios.get(resourcePath)
-      .then((response) => {
-        //this.setState(response.data);
-        // console.log(response.data.id);
-        //console.log(response.data.title);
-        var realFileName = "";
-        if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
-          realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+          axios.get(resourcePath)
+            .then((response) => {
+              //this.setState(response.data);
+              // console.log(response.data.id);
+              //console.log(response.data.title);
+
+              //TODO
+              //Čia to lyg ir nereikia, nes dabar PATH tik failo pavadinimą ir turi
+              // var realFileName = "";
+              // if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
+              //   realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+              // }
+              this.setState({ id: response.data.id });
+              this.setState({ title: response.data.title });
+              this.setState({ description: response.data.description });
+              this.setState({ documentTypeTitle: response.data.documentTypeTitle });
+              this.setState({ path: response.data.path });
+              this.setState({ prefix: response.data.prefix });
+              //this.setState({ filename: realFileName });
+              console.log("Gavau tokį produktą į redagavimą");
+              console.log(this.state);
+              let currentUser = JSON.parse(localStorage.getItem('user'));
+              console.log("Spausdinu userį gautą iš localStorage");
+              console.log(currentUser);
+              this.setState({ username: currentUser.username });
+
+              //console.log("Pagaminau tokį State ->" + this.state);
+              //console.log("Toks description iš state'o -> " + this.state.id);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
-        this.setState({ id: response.data.id })
-        this.setState({ title: response.data.title });
-        this.setState({ description: response.data.description });
-        this.setState({ documentTypeTitle: response.data.documentTypeTitle });
-        this.setState({ path: response.data.path });
-        this.setState({ prefix: response.data.prefix });
-        this.setState({ filename: realFileName });
-        console.log("Gavau tokį produktą į redagavimą");
-        console.log(this.state);
-        let currentUser = JSON.parse(localStorage.getItem('user'));
-        console.log("Spausdinu userį gautą iš localStorage");
-        console.log(currentUser);
-        this.setState({ username: currentUser.username });
-
-        //console.log("Pagaminau tokį State ->" + this.state);
-        //console.log("Toks description iš state'o -> " + this.state.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
 
   render() {
-    return (
+          return(
       <EditDocumentComponent
-        title={this.state.title}
-        description={this.state.description}
-        typeList={this.state.typeList}
-        type={this.state.documentTypeTitle}
-        path={this.state.path}
-        prefix={this.state.prefix}
-        filename={this.state.filename}
-        handleChangeOfTitle={this.handleChangeOfTitle}
-        handleChangeOfDescription={this.handleChangeOfDescription}
-        handleChangeOfType={this.handleChangeOfType}
-        handleSubmit={this.handleSubmit}
-        handleDelete={this.handleDelete}
-        downloadHandler={this.downloadHandler}
-        onFileSelectHandler={this.onFileSelectHandler}
+        title = { this.state.title }
+        description = { this.state.description }
+        typeList = { this.state.typeList }
+        type = { this.state.documentTypeTitle }
+        path = { this.state.path }
+        prefix = { this.state.prefix }
+        //filename = { this.state.filename }
+        handleChangeOfTitle = { this.handleChangeOfTitle }
+        handleChangeOfDescription = { this.handleChangeOfDescription }
+        handleChangeOfType = { this.handleChangeOfType }
+        handleSubmit = { this.handleSubmit }
+        handleDelete = { this.handleDelete }
+        downloadHandler = { this.downloadHandler }
+        onFileSelectHandler = { this.onFileSelectHandler }
 
-      />
+              />
     );
-  }
+        }
 }
 
-export default EditDocumentContainer;
+  export default EditDocumentContainer;

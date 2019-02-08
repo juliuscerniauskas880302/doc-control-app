@@ -1,7 +1,6 @@
 import React from 'react';
 import ReviewDocumentsComponent from './ReviewDocumentsComponent';
 import axios from 'axios';
-import RejectReasonPopUp from './RejectReasonPopUp';
 import Swal from 'sweetalert2';
 
 class ReviewDocumentsContainer extends React.Component {
@@ -21,7 +20,7 @@ class ReviewDocumentsContainer extends React.Component {
                     documentTypeTitle: "Type1r",
                     submissionDate: "2019.01.26",
                     rejectionReason: "",
-                    isOpen: false
+                    //isOpen: false
                 },
                 // {
                 //     id: "Kodas2r",
@@ -44,26 +43,26 @@ class ReviewDocumentsContainer extends React.Component {
         };
     }
 
-    openPopup = (id) => {
-        this.setState({
-            isOpen: true,
-            documentId: id
-        });
-    }
+    // openPopup = (id) => {
+    //     this.setState({
+    //         isOpen: true,
+    //         documentId: id
+    //     });
+    // }
 
-    closePopupCancelReject = () => {
-        this.setState({
-            isOpen: false,
-            rejectionReason: ""
-        });
-    }
+    // closePopupCancelReject = () => {
+    //     this.setState({
+    //         isOpen: false,
+    //         rejectionReason: ""
+    //     });
+    // }
 
-    closePopupAcceptReject = () => {
-        this.setState({
-            isOpen: false,
-        });
-        //this.handleReject();
-    }
+    // closePopupAcceptReject = () => {
+    //     this.setState({
+    //         isOpen: false,
+    //     });
+    //     //this.handleReject();
+    // }
 
     handleChangeOfRejectionReason = event => {
         this.setState({ rejectionReason: event.target.value });
@@ -71,11 +70,7 @@ class ReviewDocumentsContainer extends React.Component {
     };
 
     handleReject = (id) => {
-
-        //senas kodas
         console.log("Atėjau į handleReject");
-        //console.log("RejectionReason yra " + this.state.rejectionReason);
-
         //Darau sweet Alert
         Swal.fire({
             title: 'Įveskite atmetimo priežastį',
@@ -88,11 +83,11 @@ class ReviewDocumentsContainer extends React.Component {
             cancelButtonText: 'Atšaukti',
         }).then(function (result) {
             // result.value will containt the input value
-            const swalWithBootstrapButtons = Swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-              })
+            // const swalWithBootstrapButtons = Swal.mixin({
+            //     confirmButtonClass: 'btn btn-success',
+            //     cancelButtonClass: 'btn btn-danger',
+            //     buttonsStyling: false,
+            //   })
               
             if(result.value){
                 let docInfo = {
@@ -110,9 +105,6 @@ class ReviewDocumentsContainer extends React.Component {
                                 this.setState({ documents: response.data });
                             })
                             .catch((error) => {
-                                console.log(error);
-                            })
-                            .catch((error) => {
                                 console.log("KLAIDA BANDANT ATMESTI" + error);
                             });
                     });
@@ -123,12 +115,7 @@ class ReviewDocumentsContainer extends React.Component {
                 //     'error'
                 //   )
             }
-
-
-            
         }.bind(this))
-
-
 
         // MyAction: function(){
         //     this.doFetch().then(function(response){
@@ -207,9 +194,9 @@ class ReviewDocumentsContainer extends React.Component {
                         submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10) : ""}
                         handleAccept={this.handleAccept}
                         handleReject={this.handleReject}
-                        openPopup={this.openPopup}
-                        closePopupCancelReject={this.closePopupCancelReject}
-                        closePopupAcceptReject={this.closePopupAcceptReject}
+                        // openPopup={this.openPopup}
+                        // closePopupCancelReject={this.closePopupCancelReject}
+                        // closePopupAcceptReject={this.closePopupAcceptReject}
                     />
                 );
             });
@@ -239,13 +226,13 @@ class ReviewDocumentsContainer extends React.Component {
                 </div>
                 <div className="row">{documentCard}
                 </div>
-                <RejectReasonPopUp show={this.state.isOpen}
+                {/* <RejectReasonPopUp show={this.state.isOpen}
                     onClose={this.closePopup}
                     handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
                     closePopupAcceptReject={this.closePopupAcceptReject}
                     closePopupCancelReject={this.closePopupCancelReject}
                 >
-                </RejectReasonPopUp>
+                </RejectReasonPopUp> */}
             </div>);
         }
         return this.state.loading;
