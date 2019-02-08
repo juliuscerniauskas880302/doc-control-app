@@ -4,7 +4,7 @@ export default function Select(props) {
   return (
     <div className="py-3">
       <div className="input-group-prepend">
-        <h3>{props.title}</h3>
+        <span className="groups">{props.title}</span>
       </div>
 
       <div className="input-group mb-1">
@@ -18,11 +18,13 @@ export default function Select(props) {
           {props.options}
         </select>
         <div className="input-group ">
-          <input
+          <button
             type="submit"
+            className={props.buttonStyle}
             onClick={props.onClick}
-            value={props.buttonTitle}
-          />
+          >
+            {props.buttonTitle}
+          </button>
         </div>
       </div>
     </div>

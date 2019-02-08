@@ -244,9 +244,9 @@ export default class TypesInGroups extends Component {
           <div className="row justify-content-center text-center">
             <div className="col">
               <Select
-                buttonTitle="Add |submmision|"
-                buttonType="btn btn-success"
-                title="For submmit"
+                buttonTitle="Pridėti"
+                buttonStyle="btn btn-success"
+                title="Dokumentų siuntimui"
                 options={this.availableGroups(this.state.submission)}
                 onChange={this.onSelectHandler}
                 onClick={() =>
@@ -258,9 +258,9 @@ export default class TypesInGroups extends Component {
                 name="selectedAddSubmissionGroups"
               />
               <Select
-                buttonTitle="Remove |submmision|"
-                buttonType="btn btn-danger"
-                title="Submission groups"
+                buttonTitle="Pašalinti"
+                buttonStyle="btn btn-danger"
+                title="Pridėtos grupės"
                 options={this.inGroups(this.state.submission)}
                 onChange={this.onSelectHandler}
                 onClick={() =>
@@ -274,9 +274,9 @@ export default class TypesInGroups extends Component {
             </div>
             <div className="col">
               <Select
-                buttonTitle="Add |review|"
-                buttonType="btn btn-success"
-                title="For review"
+                buttonTitle="Pridėti"
+                buttonStyle="btn btn-success"
+                title="Dokumentų peržiurai"
                 options={this.availableGroups(this.state.review)}
                 onChange={this.onSelectHandler}
                 onClick={() =>
@@ -288,9 +288,9 @@ export default class TypesInGroups extends Component {
                 name="selectedAddReviewGroups"
               />
               <Select
-                buttonTitle="Remove |review|"
-                buttonType="btn btn-danger"
-                title="Review groups"
+                buttonTitle="Pašalinti"
+                buttonStyle="btn btn-danger"
+                title="Pridėtos grupės"
                 options={this.inGroups(this.state.review)}
                 onChange={this.onSelectHandler}
                 onClick={() =>
@@ -311,7 +311,7 @@ export default class TypesInGroups extends Component {
               className="btn btn-warning"
               onClick={() => this.goBack()}
             >
-              Go back
+              Grįžti atgal
             </button>
           </div>
         </section>

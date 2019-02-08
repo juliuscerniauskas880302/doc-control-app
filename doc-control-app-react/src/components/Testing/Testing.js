@@ -56,7 +56,7 @@ export default class Testing extends Component {
               </Link>
             </li>
             <li>
-              <Link to="document_types/groups">
+              <Link to="/document_types/groups">
                 <div className="btn btn-info my-1">
                   <i className="fas fa-file-alt left">Dokumentų tipų grupės</i>
                 </div>
