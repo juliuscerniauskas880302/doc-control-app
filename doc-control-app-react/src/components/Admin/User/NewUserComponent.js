@@ -77,8 +77,8 @@ export default function NewUserComponent(props) {
               <option defaultValue="Is Admin" disabled>
                 Ar administratorius?
               </option>
-              <option value={false}>Taip</option>
-              <option value={true}>Ne</option>
+              <option value={true}>Taip</option>
+              <option value={false}>Ne</option>
             </select>
           </div>
           <br />
