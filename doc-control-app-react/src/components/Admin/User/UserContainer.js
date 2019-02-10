@@ -24,8 +24,9 @@ export class UserContainer extends Component {
 
   showAllUsers = () => {
     if (this.state.users.length === 0) {
-      return <h2 className="">No users available at the moment</h2>;
+      return <h2 className="">Duomenys yra kraunami iš serverio....</h2>;
     }
+    console.log(this.state.users);
     let users = this.state.users.map((user, index) => {
       let isAdmin =
         user.admin === false ? "Paprastas vartotojas" : "Administratorius";
@@ -42,7 +43,21 @@ export class UserContainer extends Component {
         />
       );
     });
-    return users;
+    return (
+      <table className="table table-striped table-sm card-text">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>El. paštas</th>
+            <th>Teisės</th>
+            <th>Veiksmai</th>
+          </tr>
+        </thead>
+        <tbody>{users}</tbody>
+      </table>
+    );
   };
 
   onDeleteClickHandler = id => {
@@ -59,19 +74,20 @@ export class UserContainer extends Component {
 
   render() {
     return (
-      <table className="table table-striped">
-        <thead className="thead-inverse">
-          <tr>
-            <th>#</th>
-            <th>Vardas</th>
-            <th>Pavardė</th>
-            <th>El. paštas</th>
-            <th>Teisės</th>
-            <th>Veiksmai</th>
-          </tr>
-        </thead>
-        <tbody>{this.showAllUsers()}</tbody>
-      </table>
+      <div className="page-holder w-100 d-flex flex-wrap">
+        <div className="container-fluid px-xl-5">
+          <section className="pt-5">
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-header">
+                  <h6 className="text-uppercase mb-0">Visi vartotojai</h6>
+                </div>
+                <div className="card-body">{this.showAllUsers()}</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
     );
   }
 }

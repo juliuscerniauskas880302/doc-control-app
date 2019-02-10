@@ -7,35 +7,36 @@ export default class ResourceNotFoundCompoentn extends React.Component {
   componentDidMount = () => {};
   render() {
     return (
-      <div className="container">
-        <iframe
-          title="player"
-          src={music}
-          allow="autoplay"
-          frameBorder="0"
-          width="0"
-          height="0"
-          loop
-        />
+      <div class="page-holder w-100 d-flex flex-wrap">
+        <div class="container-fluid px-xl-5">
+          <iframe
+            title="player"
+            src={music}
+            allow="autoplay"
+            frameBorder="0"
+            width="0"
+            height="0"
+            loop
+          />
 
-        <div className="row">
-          <div className="col-md-12">
-            <div className="error-template">
-              <h1>Uoj!</h1>
-              <h2>404 Resursas nerastas</h2>
-              <div className="error-details">
-                Įvyko klaida arba puslapis, kurio ieškote, neegzistuoja.!
-              </div>
-              <div className="error-actions">
-                <Link to="/">
-                  <div className="btn btn-primary btn-lg">
-                    <span className="glyphicon glyphicon-home" />
-                    Grįžti atgal
-                  </div>
-                </Link>
+          <section class="page_404">
+            <div class="col-sm-12 ">
+              <div class="col-sm-10 col-sm-offset-1  text-center">
+                <div class="four_zero_four_bg">
+                  <h1 class="text-center ">404</h1>
+                </div>
+
+                <div class="contant_box_404">
+                  <h3 class="h2">Rodos tu pasiklydai</h3>
+
+                  <p>puslapis, kurio ieškai neegzistuoja!</p>
+                  <Link to="/">
+                    <div class="link_404">Grįžti atgal</div>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     );

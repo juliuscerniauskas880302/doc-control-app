@@ -16,7 +16,6 @@ export default class Authentication extends Component {
   };
 
   onClickLogoutHandler = () => {
-    //sessionStorage.clear("user");
     this.setState({ isLogged: false });
     localStorage.clear("user");
     localStorage.clear("accessToken");
@@ -25,7 +24,6 @@ export default class Authentication extends Component {
 
   render() {
     let localData = JSON.parse(localStorage.getItem("user"));
-    console.log("LocalStorage", localData);
     if (localData === null) {
       return (
         <LoginContainer {...this.props} setLoggedState={this.setLoggedState} />

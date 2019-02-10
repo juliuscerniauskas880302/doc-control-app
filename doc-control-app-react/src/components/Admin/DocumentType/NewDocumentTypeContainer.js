@@ -62,6 +62,7 @@ export default class NewDocumentTypeForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
+    console.log("Naujas dokumento title: ", this.state.title);
     Axios.post("http://localhost:8081/api/doctypes", title)
       .then(res => {
         this.setState({ title: "" });

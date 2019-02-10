@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter, Switch, Link } from "react-router-dom";
+import { Route, BrowserRouter, Switch } from "react-router-dom";
 import UserSubmittedDocumentsContainer from "../../UserDocuments/UserSubmittedDocumentsContainer";
 import UserCreatedDocumentsContainer from "../../UserDocuments/UserCreatedDocumentsContainer";
 import OneCreatedDocumentsContainer from "../../UserDocuments/OneCreatedDocumentContainer";
@@ -8,9 +8,8 @@ import ReviewDocumentsContainer from "../../ReviewDocuments/ReviewDocumentsConta
 import OneReviewDocumentsContainer from "../../ReviewDocuments/OneReviewDocumentContainer";
 import NewDocumentContainer from "../../CreateEditDocument/NewDocumentContainer";
 import EditDocumentContainer from "../../CreateEditDocument/EditDocumentContainer";
-import UserNavigationComponent from "./UserNavigationConponent";
 import ResourceNotFoundCompoentn from "../../Errors/ResourceNotFoundComponent";
-import UserNav from "../../Testing/UserNav";
+import UserNavigationComponent from "./UserNavigationConponent";
 
 export default class UserNavigationContainer extends Component {
   render() {
@@ -18,9 +17,8 @@ export default class UserNavigationContainer extends Component {
       <div>
         <BrowserRouter>
           <div>
-            <UserNav {...this.props}>
+            <UserNavigationComponent {...this.props}>
               <Switch>
-                {/* ///////////////////////////////////////////////////////// */}
                 <Route
                   exact
                   path="/"
@@ -64,7 +62,7 @@ export default class UserNavigationContainer extends Component {
                 <Route path="*" component={ResourceNotFoundCompoentn} />
                 <Route component={ResourceNotFoundCompoentn} />
               </Switch>
-            </UserNav>
+            </UserNavigationComponent>
           </div>
         </BrowserRouter>
       </div>

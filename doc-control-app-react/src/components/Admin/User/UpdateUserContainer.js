@@ -36,7 +36,7 @@ export default class UpdateUser extends Component {
       this.state
     )
       .then(res => {
-        this.props.history.push("/users");
+        this.props.history.push("/");
       })
       .catch(err => {});
   };
@@ -72,91 +72,133 @@ export default class UpdateUser extends Component {
 
   render() {
     return (
-      <div className="container">
-        {/* //////////////////////User Info Update table///////////////////////////////////// */}
-        <section id="content">
-          <h1>Vartotojo atnaujinimas</h1>
-          <form onSubmit={event => this.onUpdateClickHandler(event)}>
-            <h3>Vardas</h3>
-            <div>
-              <input
-                onChange={event => this.onValueChangeHandler(event)}
-                type="text"
-                name="firstname"
-                value={this.state.firstname}
-                className="form-control"
-                pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                required
+      <div className="page-holder w-100 d-flex flex-wrap">
+        <div className="container-fluid px-xl-5">
+          <section className="py-5">
+            <div className="col-lg-12 mb-5">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="h6 text-uppercase mb-0">
+                    Vartotojo atnaujinimas
+                  </h3>
+                </div>
+                <div className="card-body">
+                  <p>Pakeiskite norimus laukus.</p>
+                  <form
+                    className="form-horizontal"
+                    onSubmit={event => this.onUpdateClickHandler(event)}
+                  >
+                    <div className="form-group row">
+                      <label className="col-md-3 form-control-label">
+                        Vardas
+                      </label>
+                      <div className="col-md-9">
+                        <input
+                          onChange={event => this.onValueChangeHandler(event)}
+                          type="text"
+                          name="firstname"
+                          value={this.state.firstname}
+                          pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                          required
+                          className="form-control form-control-success"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label className="col-sm-3 form-control-label">
+                        Pavardė
+                      </label>
+                      <div className="col-md-9">
+                        <input
+                          onChange={event => this.onValueChangeHandler(event)}
+                          type="text"
+                          name="lastname"
+                          value={this.state.lastname}
+                          pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                          required
+                          className="form-control form-control-warning"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label className="col-sm-3 form-control-label">
+                        Vartotojo vardas
+                      </label>
+                      <div className="col-md-9">
+                        <input
+                          disabled
+                          onChange={event => this.onValueChangeHandler(event)}
+                          type="text"
+                          name="username"
+                          value={this.state.username}
+                          className="disabled form-control form-control-warning"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label className="col-sm-3 form-control-label">
+                        El. paštas
+                      </label>
+                      <div className="col-md-9">
+                        <input
+                          onChange={event => this.onValueChangeHandler(event)}
+                          type="email"
+                          name="email"
+                          value={this.state.email}
+                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                          required
+                          className="form-control form-control-warning"
+                        />
+                        <small className="form-text text-muted ml-3">
+                          pvz@pvz.lt
+                        </small>
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <div className="col-md-9 ml-auto">
+                        <input
+                          type="submit"
+                          value="Pakeisti"
+                          className="btn btn-primary"
+                        />
+                      </div>
+                    </div>
+                  </form>
+                  <div className="form-group row">
+                    <div className="col-md-9 ml-auto">
+                      <input
+                        onClick={() => this.goEditGroups()}
+                        type="submit"
+                        value="Pridėti grupes"
+                        className="btn btn-success"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-md-9 ml-auto">
+                      <input
+                        onClick={() => this.goBack()}
+                        type="submit"
+                        value="Grįžti atgal"
+                        className="btn btn-warning"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-12 mb-5">
+              <NewPasswordComponent
+                onSubmit={this.onUpdatePasswordHandler}
+                onChange={this.onValueChangeHandler}
+                goBack={this.goBack}
+                name="pasword"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               />
             </div>
-            <h3>Pavardė</h3>
-            <div>
-              <input
-                onChange={event => this.onValueChangeHandler(event)}
-                type="text"
-                name="lastname"
-                value={this.state.lastname}
-                className="form-control"
-                pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-                required
-              />
-            </div>
-            <h3>Vartotojo vardas</h3>
-            <div>
-              <input
-                disabled
-                onChange={event => this.onValueChangeHandler(event)}
-                type="text"
-                name="username"
-                value={this.state.username}
-                className="disabled form-control"
-              />
-            </div>
-
-            <h3>El. paštas</h3>
-            <div>
-              <input
-                onChange={event => this.onValueChangeHandler(event)}
-                type="email"
-                name="email"
-                value={this.state.email}
-                className="form-control"
-                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                required
-              />
-            </div>
-            <br />
-            <button type="submit" className="btn btn-success">
-              Išsaugoti
-            </button>
-          </form>
-
-          <button
-            type="buton"
-            className="btn btn-info my-2"
-            onClick={() => this.goEditGroups()}
-          >
-            Redaguoti grupes
-          </button>
-
-          <br />
-
-          <button
-            type="buton"
-            className="btn btn-warning"
-            onClick={() => this.goBack()}
-          >
-            Grįžti atgal
-          </button>
-        </section>
-        <div className="line" />
-        <NewPasswordComponent
-          onSubmit={this.onUpdatePasswordHandler}
-          onChange={this.onValueChangeHandler}
-          onClick={this.goBack}
-          name="pasword"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-        />
+          </section>
+        </div>
       </div>
     );
   }

@@ -79,7 +79,7 @@ export default class EditUserGroups extends Component {
     if (this.state.allGroups.length === 0) {
       return (
         <option value="" disabled>
-          No available groups...
+          Nėra grupių pasirinkimo...
         </option>
       );
     } else {
@@ -110,7 +110,7 @@ export default class EditUserGroups extends Component {
       if (groups.length === 0) {
         return (
           <option value="" disabled>
-            Already in all groups...
+            Vartotojas priklauso visoms grupėms...
           </option>
         );
       } else return groups;
@@ -180,13 +180,86 @@ export default class EditUserGroups extends Component {
 
   render() {
     return (
-      <div className="container">
-        <section id="content">
-          <h1>Pridėti grupes</h1>
-          <span className="groups">Galimos grupės</span>
+      <div className="page-holder w-100 d-flex flex-wrap">
+        <div className="container-fluid px-xl-5">
+          <section className="pt-5">
+            <div className="col-lg-12 mb-5">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="h6 text-uppercase mb-0">Grupių priskyrimas</h3>
+                </div>
+                <div className="card-body">
+                  <div className="form-group row">
+                    <label className="col-md-3 form-control-label">
+                      Visos esamos grupės
+                    </label>
+                    <div className="col-md-9 ml-auto select">
+                      <select
+                        className="form-control rounded"
+                        multiple
+                        size="5"
+                        onChange={this.onValueChangeHandler}
+                        name="selectedAddGroup"
+                      >
+                        {this.showAvailableGroups()}
+                      </select>
+                    </div>
+                    <div className="form-group row">
+                      <div className="col-md-9 ml-auto">
+                        <input
+                          onClick={() => this.onClickAddGroupToUserHandler()}
+                          type="submit"
+                          value="Pridėti"
+                          className="btn btn-primary"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-          <div className="input-group">
-            <select
+                <div className="card-body">
+                  <div className="form-group row">
+                    <label className="col-md-3 form-control-label">
+                      Vartotojo grupės
+                    </label>
+                    <div className="col-md-9 ml-auto select">
+                      <select
+                        className="form-control rounded"
+                        multiple
+                        size="5"
+                        onChange={this.onValueChangeHandler}
+                        name="selectedRemoveGroup"
+                      >
+                        {this.showAllUserGroups()}
+                      </select>
+                    </div>
+                    <div className="form-group row">
+                      <div className="col-md-9 ml-auto">
+                        <input
+                          onClick={() =>
+                            this.onClickRemoveGroupFromUserHandler()
+                          }
+                          type="submit"
+                          value="Ištrinti"
+                          className="btn btn-danger"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+}
+
+{
+  /* 
+
+<select
               multiple
               className="form-control"
               size="5"
@@ -241,7 +314,5 @@ export default class EditUserGroups extends Component {
             </button>
           </div>
         </section>
-      </div>
-    );
-  }
+      </div> */
 }

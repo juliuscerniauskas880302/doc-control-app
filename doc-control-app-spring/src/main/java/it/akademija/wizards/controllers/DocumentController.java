@@ -38,7 +38,6 @@ import java.util.zip.ZipOutputStream;
 @RestController
 @Api(value = "documents")
 @RequestMapping(value = "/api/docs")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class DocumentController {
 
     @Autowired

@@ -39,7 +39,6 @@ export default class NewGroupForm extends Component {
   };
 
   onValueChangeHandler = event => {
-    console.log(event.target.value);
     if (event.target.name === "selectedGroupTitle") {
       this.setState({ newTitle: event.target.value });
     }
@@ -55,7 +54,7 @@ export default class NewGroupForm extends Component {
     if (this.state.allGroups.length === 0) {
       return (
         <option value="" disabled>
-          No available groups...
+          Nėra jokių grupių...
         </option>
       );
     }

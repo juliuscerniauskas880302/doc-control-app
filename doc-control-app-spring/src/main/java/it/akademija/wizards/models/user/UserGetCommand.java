@@ -6,16 +6,18 @@ public class UserGetCommand {
     private String firstname;
     private String lastname;
     private String email;
+    private boolean isAdmin;
 
     public UserGetCommand() {
 
     }
 
-    public UserGetCommand(String username, String firstname, String lastname, String email) {
+    public UserGetCommand(String username, String firstname, String lastname, String email, boolean isAdmin) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.isAdmin = isAdmin;
     }
 
     public String getUsername() {
@@ -48,5 +50,13 @@ public class UserGetCommand {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }
