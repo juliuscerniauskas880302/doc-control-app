@@ -10,7 +10,8 @@ export default class TypesInGroups extends Component {
       submission: [],
       review: [],
       isChecked: false,
-      selectedType: null
+      selectedType: null,
+      showMessage: { message: "", messageType: "", show: false }
     };
   }
 
@@ -211,21 +212,22 @@ export default class TypesInGroups extends Component {
     }
     Axios.delete(
       "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
+      this.state.selectedType +
+      "/groups/" +
+      groupType,
       { data: groupIdListToRemove }
     )
       .then()
       .catch();
     Axios.post(
       "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
+      this.state.selectedType +
+      "/groups/" +
+      groupType,
       groupIdListToAdd
     )
       .then(res => {
+        this.handleMessageInput("Duomenys atnaujinti", "alert alert-info fixed-top text-center", 2500);
         if (groupType === "review") {
           this.loadReviewGroups(this.state.selectedType);
         } else {
@@ -235,57 +237,126 @@ export default class TypesInGroups extends Component {
       .catch(err => console.log(err));
   };
 
+  handleMessageInput = (message, messageType, timeout) => {
+    let data = {
+      message: message,
+      messageType: messageType,
+      show: true
+    }
+    this.setState({ showMessage: data }, () => {
+      let data = {
+        message: "",
+        messageType: "",
+        show: false
+      }
+      setTimeout(() => { this.setState({ showMessage: data }) }, timeout);
+    });
+  }
+
+  showMessage = () => {
+    if (this.state.showMessage.show) {
+      return (<div className={this.state.showMessage.messageType}>
+        {this.state.showMessage.message}
+      </div>);
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
-      <div className="page-holder w-100 d-flex flex-wrap">
-        <div className="container-fluid px-xl-5">
-          <section className="pt-5">
-            <div className="col-lg-12 mb-5">
-              <div className="card">
-                <div className="card-header">
-                  <h3 className="h6 text-uppercase mb-0">Dokumentų tipai</h3>
-                </div>
-                <div className="card-body">
-                  <div className="form-group row">
-                    <label className="col-md-3 form-control-label">
-                      Visi dokumentų tipai
+      <React.Fragment>
+        {this.showMessage()}
+        <div className="page-holder w-100 d-flex flex-wrap">
+          <div className="container-fluid px-xl-5">
+            <section className="pt-5">
+              <div className="col-lg-12 mb-5">
+                <div className="card">
+                  <div className="card-header">
+                    <h3 className="h6 text-uppercase mb-0">Dokumentų tipai</h3>
+                  </div>
+                  <div className="card-body">
+                    <div className="form-group row">
+                      <label className="col-md-3 form-control-label">
+                        Visi dokumentų tipai
                     </label>
-                    <div className="col-md-9 ml-auto select">
-                      <select
-                        className="form-control rounded"
-                        size="5"
-                        onChange={this.onSelectTypeHandler}
-                        name="selectedType"
-                      >
-                        {this.showAllDocTypes()}
-                      </select>
+                      <div className="col-md-9 ml-auto select">
+                        <select
+                          className="form-control rounded"
+                          size="5"
+                          onChange={this.onSelectTypeHandler}
+                          name="selectedType"
+                        >
+                          {this.showAllDocTypes()}
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-          <div className="row">
-            <div className="col-lg-6 mb-5">
-              <div className="card">
-                <div className="card-header">
-                  <h3 className="h6 text-uppercase mb-0">
-                    Dokumentų siuntimui
+            </section>
+            <div className="row">
+              <div className="col-lg-6 mb-5">
+                <div className="card">
+                  <div className="card-header">
+                    <h3 className="h6 text-uppercase mb-0">
+                      Dokumentų siuntimui
                   </h3>
-                </div>
-                <div className="card-body">
-                  <p>
-                    Pasirinkite grupę, kuri galės siųsti dokumentus peržiūrai.
+                  </div>
+                  <div className="card-body">
+                    <p>
+                      Pasirinkite grupę, kuri galės siųsti dokumentus peržiūrai.
                   </p>
-                  <div className="col-md-9">
-                    <div>
+                    <div className="col-md-9">
+                      <div>
+                        <div className="line" />
+                        {this.showSubmissionCheckBoxes()}
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-md-12 ml-auto">
+                          <input
+                            onClick={() => this.onClickAddGroups("submission")}
+                            type="submit"
+                            value="Atnaujinti"
+                            className="btn btn-primary"
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-md-12 ml-auto">
+                          <input
+                            onClick={() => this.goBack()}
+                            type="submit"
+                            value="Grįžti atgal"
+                            className="btn btn-warning"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-lg-6 mb-5">
+                <div className="card">
+                  <div className="card-header">
+                    <h3 className="h6 text-uppercase mb-0">
+                      Dokumentų peržiūrai
+                  </h3>
+                  </div>
+                  <div className="card-body">
+                    <p>
+                      Pasirinkite grupę, kuri galės peržiūrėti pateiktus
+                      dokumentus.
+                  </p>
+                    <div className="col-md-9">
                       <div className="line" />
-                      {this.showSubmissionCheckBoxes()}
+                      {this.showReviewCheckBoxes()}
                     </div>
                     <div className="form-group row">
                       <div className="col-md-12 ml-auto">
                         <input
-                          onClick={() => this.onClickAddGroups("submission")}
+                          onClick={() => this.onClickAddGroups("review")}
                           type="submit"
                           value="Atnaujinti"
                           className="btn btn-primary"
@@ -306,49 +377,9 @@ export default class TypesInGroups extends Component {
                 </div>
               </div>
             </div>
-
-            <div className="col-lg-6 mb-5">
-              <div className="card">
-                <div className="card-header">
-                  <h3 className="h6 text-uppercase mb-0">
-                    Dokumentų peržiūrai
-                  </h3>
-                </div>
-                <div className="card-body">
-                  <p>
-                    Pasirinkite grupę, kuri galės peržiūrėti pateiktus
-                    dokumentus.
-                  </p>
-                  <div className="col-md-9">
-                    <div className="line" />
-                    {this.showReviewCheckBoxes()}
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-md-12 ml-auto">
-                      <input
-                        onClick={() => this.onClickAddGroups("review")}
-                        type="submit"
-                        value="Atnaujinti"
-                        className="btn btn-primary"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-md-12 ml-auto">
-                      <input
-                        onClick={() => this.goBack()}
-                        type="submit"
-                        value="Grįžti atgal"
-                        className="btn btn-warning"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

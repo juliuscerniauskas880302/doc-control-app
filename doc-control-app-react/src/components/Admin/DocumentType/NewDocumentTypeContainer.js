@@ -9,7 +9,8 @@ export default class NewDocumentTypeForm extends Component {
       title: "",
       selectedDocTypeTitle: "",
       newTitle: "",
-      allDocumentTypes: []
+      allDocumentTypes: [],
+      showMessage: { message: "", messageType: "", show: false }
     };
   }
 
@@ -62,9 +63,9 @@ export default class NewDocumentTypeForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
-    console.log("Naujas dokumento title: ", this.state.title);
     Axios.post("http://localhost:8081/api/doctypes", title)
       .then(res => {
+        this.handleMessageInput("Naujas dokumento tipas buvo pridėtas", "alert alert-info fixed-top text-center", 2500);
         this.setState({ title: "" });
         this.getAllDocumentTypes();
       })
@@ -93,6 +94,7 @@ export default class NewDocumentTypeForm extends Component {
       "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID()
     )
       .then(res => {
+        this.handleMessageInput("Dokumento tipas buvo sėkmingai ištrintas", "alert alert-info fixed-top text-center", 2500);
         this.setState({ newTitle: "" });
         this.getAllDocumentTypes();
       })
@@ -110,6 +112,7 @@ export default class NewDocumentTypeForm extends Component {
       title
     )
       .then(res => {
+        this.handleMessageInput("Dokumento tipas buvo sėkmingai atnaujintas", "alert alert-info fixed-top text-center", 2500);
         this.setState({ newTitle: "" });
         this.getAllDocumentTypes();
       })
@@ -117,17 +120,47 @@ export default class NewDocumentTypeForm extends Component {
         console.log(err);
       });
   };
+
+  handleMessageInput = (message, messageType, timeout) => {
+    let data = {
+      message: message,
+      messageType: messageType,
+      show: true
+    }
+    this.setState({ showMessage: data }, () => {
+      let data = {
+        message: "",
+        messageType: "",
+        show: false
+      }
+      setTimeout(() => { this.setState({ showMessage: data }) }, timeout);
+    });
+  }
+
+  showMessage = () => {
+    if (this.state.showMessage.show) {
+      return (<div className={this.state.showMessage.messageType}>
+        {this.state.showMessage.message}
+      </div>);
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
-      <NewDocumentTypeComponent
-        onCLickAddNewDocTypeHandler={this.onCLickAddNewDocTypeHandler}
-        onValueChangeHandler={this.onValueChangeHandler}
-        onDeleteCLickHandler={this.onDeleteCLickHandler}
-        showAllDocumentTypes={this.showAllDocumentTypes}
-        onClickUpdateHandler={this.onClickUpdateHandler}
-        goBack={this.goBack}
-        state={this.state}
-      />
+      <React.Fragment>
+        {this.showMessage()}
+        <NewDocumentTypeComponent
+          onCLickAddNewDocTypeHandler={this.onCLickAddNewDocTypeHandler}
+          onValueChangeHandler={this.onValueChangeHandler}
+          onDeleteCLickHandler={this.onDeleteCLickHandler}
+          showAllDocumentTypes={this.showAllDocumentTypes}
+          onClickUpdateHandler={this.onClickUpdateHandler}
+          goBack={this.goBack}
+          state={this.state}
+        />
+      </React.Fragment>
     );
   }
 }
