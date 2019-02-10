@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Testing.css";
+//import "./Testing.css";
 import { Link } from "react-router-dom";
 
 export default class UserNav extends Component {

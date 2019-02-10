@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import Select from "./Select";
 
 export default class TypesInGroups extends Component {
   constructor(props) {
@@ -10,13 +9,37 @@ export default class TypesInGroups extends Component {
       doctypes: [],
       submission: [],
       review: [],
-      selectedType: null,
-      selectedAddReviewGroups: [],
-      selectedRemoveReviewGroups: [],
-      selectedAddSubmissionGroups: [],
-      selectedRemoveSubmissionGroups: []
+      isChecked: false,
+      selectedType: null
     };
   }
+
+  //Load data on component mount
+  componentDidMount = () => {
+    this.getAllDocTypes();
+    this.getAllGroups();
+  };
+
+  handleReviewCheckBoxClick = e => {
+    const options = this.state.review;
+    options.forEach(option => {
+      if (option.id === e.target.value) {
+        option.isChecked = !option.isChecked;
+      }
+      this.setState({ review: options });
+    });
+  };
+
+  handleSubmissionCheckBoxClick = e => {
+    const options = this.state.submission;
+    options.forEach(option => {
+      if (option.id === e.target.value) {
+        option.isChecked = !option.isChecked;
+      }
+      this.setState({ submission: options });
+    });
+  };
+
   //Get all document types from server
   getAllDocTypes = () => {
     Axios.get("http://localhost:8081/api/doctypes")
@@ -37,11 +60,7 @@ export default class TypesInGroups extends Component {
         console.log(err);
       });
   };
-  //Load data on component mount
-  componentDidMount = () => {
-    this.getAllDocTypes();
-    this.getAllGroups();
-  };
+
   //Method to go back in history
   goBack = () => {
     this.props.history.goBack();
@@ -69,7 +88,18 @@ export default class TypesInGroups extends Component {
   loadReviewGroups(type) {
     Axios.get("http://localhost:8081/api/doctypes/" + type + "/groups/review")
       .then(res => {
-        this.setState({ review: res.data });
+        let allList = [];
+        this.state.groups.forEach(type => {
+          allList.push({ id: type.id, title: type.title, isChecked: false });
+        });
+        allList.forEach(listEl => {
+          res.data.forEach(resEl => {
+            if (listEl.id === resEl.id) {
+              listEl.isChecked = true;
+            }
+          });
+        });
+        this.setState({ review: allList });
       })
       .catch(err => console.log(err));
   }
@@ -79,143 +109,126 @@ export default class TypesInGroups extends Component {
       "http://localhost:8081/api/doctypes/" + type + "/groups/submission"
     )
       .then(res => {
-        this.setState({ submission: res.data });
+        let allList = [];
+        this.state.groups.forEach(type => {
+          allList.push({ id: type.id, title: type.title, isChecked: false });
+        });
+        allList.forEach(listEl => {
+          res.data.forEach(resEl => {
+            if (listEl.id === resEl.id) {
+              listEl.isChecked = true;
+            }
+          });
+        });
+        this.setState({ submission: allList });
       })
       .catch(err => console.log(err));
   }
 
   onSelectTypeHandler = e => {
-    this.setState({ selectedType: e.target.value });
-    this.loadReviewGroups(e.target.value);
-    this.loadSubmmisionGroups(e.target.value);
-  };
-  //Show asinged groups to document type
-  inGroups = groups => {
-    if (groups.length === 0) {
-      return (
-        <option value="" disabled>
-          Nėra galimų grupių...
-        </option>
-      );
-    } else {
-      let groupList = groups.map(g => {
-        return (
-          <option key={g.title} value={g.id}>
-            {g.title}
-          </option>
-        );
-      });
-      return groupList;
-    }
-  };
-
-  onSelectHandler = e => {
-    this.setState({
-      [e.target.name]: [].slice.call(e.target.selectedOptions).map(option => {
-        return option.value;
-      })
+    this.setState({ selectedType: e.target.value }, () => {
+      this.loadReviewGroups(this.state.selectedType);
+      this.loadSubmmisionGroups(this.state.selectedType);
     });
   };
 
-  //Show not asinged and available groups to document type
-  availableGroups = groupType => {
-    if (this.state.selectedType === null) {
-      return (
-        <option value="" disabled>
-          Nėra galimų grupių...
-        </option>
-      );
-    }
+  showReviewCheckBoxes = () => {
     if (this.state.groups.length === 0) {
+      return <div>Nėra grupių</div>;
+    }
+    if (this.state.selectedType === null) {
+      return <div>Pasirinkite dokumento tipą</div>;
+    }
+    let data = this.state.review.map(t => {
       return (
-        <option value="" disabled>
-          Nėra pasirinkimų...
-        </option>
+        <div className="form-group row" key={t.id}>
+          <label className="form-control-label">{t.title}</label>
+          <div className="ml-auto">
+            <input
+              onChange={event => this.handleReviewCheckBoxClick(event)}
+              id={t.id}
+              type="checkbox"
+              value={t.id}
+              checked={t.isChecked}
+            />
+          </div>
+        </div>
       );
-    } else {
-      let doctypeList = this.state.groups
-        .map(type => {
-          let shouldShow = true;
-          groupType.forEach(t => {
-            if (t.title === type.title) {
-              shouldShow = false;
-            }
-          });
-
-          if (shouldShow)
-            return (
-              <option key={type.title} value={type.id}>
-                {type.title}
-              </option>
-            );
-          else {
-            return null;
-          }
-        })
-        .filter(t => t !== null);
-      if (doctypeList.length === 0) {
-        return (
-          <option value="" disabled>
-            Jau viskas pridėta...
-          </option>
-        );
-      } else return doctypeList;
-    }
+    });
+    return data;
   };
 
-  onClickAddGroups = (selectedGroups, groupType) => {
-    if (selectedGroups.length === 0) {
-      return;
+  showSubmissionCheckBoxes = () => {
+    if (this.state.groups.length === 0) {
+      return <div>Nėra grupių</div>;
     }
-    let groupIdList = {
+    if (this.state.selectedType === null) {
+      return <div>Pasirinkite dokumento tipą</div>;
+    }
+    let data = this.state.submission.map(t => {
+      return (
+        <div className="form-group row" key={t.id}>
+          <label className="form-control-label">{t.title}</label>
+          <div className="ml-auto">
+            <input
+              onChange={event => this.handleSubmissionCheckBoxClick(event)}
+              id={t.id}
+              type="checkbox"
+              value={t.id}
+              checked={t.isChecked}
+            />
+          </div>
+        </div>
+      );
+    });
+    return data;
+  };
+
+  onClickAddGroups = groupType => {
+    console.log("Selected type: ", this.state.selectedType);
+    let groupIdListToAdd = {
       id: []
     };
-    selectedGroups.forEach(el => {
-      groupIdList.id.push(el);
-    });
-
-    Axios.post(
-      "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
-      groupIdList
-    )
-      .then(res => {
-        if (groupType === "review") {
-          this.setState({ selectedAddReviewGroups: "" });
-          this.loadReviewGroups(this.state.selectedType);
+    let groupIdListToRemove = {
+      id: []
+    };
+    if (groupType === "review") {
+      this.state.review.forEach(el => {
+        if (el.isChecked) {
+          groupIdListToAdd.id.push(el.id);
         } else {
-          this.setState({ selectedAddSubmissionGroups: "" });
-          this.loadSubmmisionGroups(this.state.selectedType);
+          groupIdListToRemove.id.push(el.id);
         }
-      })
-      .catch(err => console.log(err));
-  };
-
-  onClickRemoveGroups = (selectedGroups, groupType) => {
-    if (selectedGroups.length === 0) {
-      return;
+      });
+    } else {
+      this.state.submission.forEach(el => {
+        if (el.isChecked) {
+          groupIdListToAdd.id.push(el.id);
+        } else {
+          groupIdListToRemove.id.push(el.id);
+        }
+      });
     }
-    let groupIdList = {
-      id: []
-    };
-    selectedGroups.forEach(el => {
-      groupIdList.id.push(el);
-    });
     Axios.delete(
       "http://localhost:8081/api/doctypes/" +
         this.state.selectedType +
         "/groups/" +
         groupType,
-      { data: groupIdList }
+      { data: groupIdListToRemove }
+    )
+      .then()
+      .catch();
+    Axios.post(
+      "http://localhost:8081/api/doctypes/" +
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
+      groupIdListToAdd
     )
       .then(res => {
         if (groupType === "review") {
-          this.setState({ selectedRemoveReviewGroups: "" });
           this.loadReviewGroups(this.state.selectedType);
         } else {
-          this.setState({ selectedRemoveSubmissionGroups: "" });
           this.loadSubmmisionGroups(this.state.selectedType);
         }
       })
@@ -224,97 +237,117 @@ export default class TypesInGroups extends Component {
 
   render() {
     return (
-      <div className="container">
-        <section id="content">
-          <h1>Dokumento tipas</h1>
-          <span className="groups">Visi dokumentų tipai</span>
-          <div className="input-group mb-1">
-            <select
-              className="form-control"
-              size="5"
-              onChange={this.onSelectTypeHandler}
-              name="selectedType"
-            >
-              {this.showAllDocTypes()}
-            </select>
-          </div>
-          {/* //////////////////////////////////////////////////////////////////// */}
-          <br />
-          <h1>Grupės</h1>
-          <div className="row justify-content-center text-center">
-            <div className="col">
-              <Select
-                buttonTitle="Pridėti"
-                buttonStyle="btn btn-success"
-                title="Dokumentų siuntimui"
-                options={this.availableGroups(this.state.submission)}
-                onChange={this.onSelectHandler}
-                onClick={() =>
-                  this.onClickAddGroups(
-                    this.state.selectedAddSubmissionGroups,
-                    "submission"
-                  )
-                }
-                name="selectedAddSubmissionGroups"
-              />
-              <Select
-                buttonTitle="Pašalinti"
-                buttonStyle="btn btn-danger"
-                title="Pridėtos grupės"
-                options={this.inGroups(this.state.submission)}
-                onChange={this.onSelectHandler}
-                onClick={() =>
-                  this.onClickRemoveGroups(
-                    this.state.selectedRemoveSubmissionGroups,
-                    "submission"
-                  )
-                }
-                name="selectedRemoveSubmissionGroups"
-              />
+      <div className="page-holder w-100 d-flex flex-wrap">
+        <div className="container-fluid px-xl-5">
+          <section className="pt-5">
+            <div className="col-lg-12 mb-5">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="h6 text-uppercase mb-0">Dokumentų tipai</h3>
+                </div>
+                <div className="card-body">
+                  <div className="form-group row">
+                    <label className="col-md-3 form-control-label">
+                      Visi dokumentų tipai
+                    </label>
+                    <div className="col-md-9 ml-auto select">
+                      <select
+                        className="form-control rounded"
+                        size="5"
+                        onChange={this.onSelectTypeHandler}
+                        name="selectedType"
+                      >
+                        {this.showAllDocTypes()}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="col">
-              <Select
-                buttonTitle="Pridėti"
-                buttonStyle="btn btn-success"
-                title="Dokumentų peržiurai"
-                options={this.availableGroups(this.state.review)}
-                onChange={this.onSelectHandler}
-                onClick={() =>
-                  this.onClickAddGroups(
-                    this.state.selectedAddReviewGroups,
-                    "review"
-                  )
-                }
-                name="selectedAddReviewGroups"
-              />
-              <Select
-                buttonTitle="Pašalinti"
-                buttonStyle="btn btn-danger"
-                title="Pridėtos grupės"
-                options={this.inGroups(this.state.review)}
-                onChange={this.onSelectHandler}
-                onClick={() =>
-                  this.onClickRemoveGroups(
-                    this.state.selectedRemoveReviewGroups,
-                    "review"
-                  )
-                }
-                name="selectedRemoveReviewGroups"
-              />
-              <br />
+          </section>
+          <div className="row">
+            <div className="col-lg-6 mb-5">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="h6 text-uppercase mb-0">
+                    Dokumentų siuntimui
+                  </h3>
+                </div>
+                <div className="card-body">
+                  <p>
+                    Pasirinkite grupę, kuri galės siųsti dokumentus peržiūrai.
+                  </p>
+                  <div className="col-md-9">
+                    <div>
+                      <div className="line" />
+                      {this.showSubmissionCheckBoxes()}
+                    </div>
+                    <div className="form-group row">
+                      <div className="col-md-12 ml-auto">
+                        <input
+                          onClick={() => this.onClickAddGroups("submission")}
+                          type="submit"
+                          value="Atnaujinti"
+                          className="btn btn-primary"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <div className="col-md-12 ml-auto">
+                        <input
+                          onClick={() => this.goBack()}
+                          type="submit"
+                          value="Grįžti atgal"
+                          className="btn btn-warning"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-lg-6 mb-5">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="h6 text-uppercase mb-0">
+                    Dokumentų peržiūrai
+                  </h3>
+                </div>
+                <div className="card-body">
+                  <p>
+                    Pasirinkite grupę, kuri galės peržiūrėti pateiktus
+                    dokumentus.
+                  </p>
+                  <div className="col-md-9">
+                    <div className="line" />
+                    {this.showReviewCheckBoxes()}
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-md-12 ml-auto">
+                      <input
+                        onClick={() => this.onClickAddGroups("review")}
+                        type="submit"
+                        value="Atnaujinti"
+                        className="btn btn-primary"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-md-12 ml-auto">
+                      <input
+                        onClick={() => this.goBack()}
+                        type="submit"
+                        value="Grįžti atgal"
+                        className="btn btn-warning"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <br />
-          <div className="input-group mb-1">
-            <button
-              type="buton"
-              className="btn btn-warning"
-              onClick={() => this.goBack()}
-            >
-              Grįžti atgal
-            </button>
-          </div>
-        </section>
+        </div>
       </div>
     );
   }

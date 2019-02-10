@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @Api(value = "document types")
 @RequestMapping(value = "/api/doctypes")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class DocumentTypeController {
     @Autowired
     private DocumentTypeService documentTypeService;

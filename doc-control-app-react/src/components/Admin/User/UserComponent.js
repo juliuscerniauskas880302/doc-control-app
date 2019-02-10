@@ -1,5 +1,4 @@
 import React from "react";
-import "./User.css";
 import Swal from "sweetalert2";
 
 const User = props => {
@@ -27,19 +26,15 @@ const User = props => {
 
   return (
     <tr>
-      <td>{props.number}</td>
+      <th scope="row">{props.number}</th>
       <td>{props.firstname}</td>
       <td>{props.lastname}</td>
       <td>{props.email}</td>
+      <td>{props.isAdmin}</td>
       <td>
-        <i className="fas fa-unlock-alt mx-1 fa-2x" />
-        {props.isAdmin}
-      </td>
-      <td>
-        <i className="fas fa-info mx-1 fa-2x" onClick={props.update} />
-
+        <i className="fas fa-info mx-1 fa-1x" onClick={props.update} />
         <i
-          className="fas fa-user-times mx-1 fa-2x "
+          className="fas fa-user-times mx-1 fa-1x "
           onClick={() => confirmDeltetion()}
         />
       </td>
