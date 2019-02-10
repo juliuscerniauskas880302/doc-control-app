@@ -9,13 +9,19 @@ export default class NewGroupForm extends Component {
       title: "",
       selectedGroupTitle: "",
       newTitle: "",
-      allGroups: []
+      allGroups: [],
+      showMessage: { message: "", messageType: "", show: false }
     };
   }
 
   componentDidMount = () => {
     this.getAllGroups();
   };
+
+
+  rerenderComponent = () => {
+    this.setState({ rerender: !this.state.rerender });
+  }
 
   getAllGroups = () => {
     Axios.get("http://localhost:8081/api/groups")
@@ -46,7 +52,6 @@ export default class NewGroupForm extends Component {
   };
 
   goBack = () => {
-    console.log("Baxk");
     this.props.history.goBack();
   };
 
@@ -74,6 +79,7 @@ export default class NewGroupForm extends Component {
     title.title = this.state.title;
     Axios.post("http://localhost:8081/api/groups", title)
       .then(res => {
+        this.handleMessageInput("Nauja gruė buvo sėkmingai pridėta", "alert alert-info fixed-top text-center", 2500);
         this.setState({ title: "" });
         this.getAllGroups();
       })
@@ -88,6 +94,7 @@ export default class NewGroupForm extends Component {
       "http://localhost:8081/api/groups/" + this.getSelectedGroupID()
     )
       .then(res => {
+        this.handleMessageInput("Grupė buvo sėkmingai ištrinta", "alert alert-info fixed-top text-center", 2500);
         this.setState({ newTitle: "" });
         this.getAllGroups();
       })
@@ -105,6 +112,7 @@ export default class NewGroupForm extends Component {
       title
     )
       .then(res => {
+        this.handleMessageInput("Grupė buvo sėkmingai atnaujinta", "alert alert-info fixed-top text-center", 2500);
         this.setState({ newTitle: "" });
         this.getAllGroups();
       })
@@ -113,21 +121,51 @@ export default class NewGroupForm extends Component {
       });
   };
 
+
+  handleMessageInput = (message, messageType, timeout) => {
+    let data = {
+      message: message,
+      messageType: messageType,
+      show: true
+    }
+    this.setState({ showMessage: data }, () => {
+      let data = {
+        message: "",
+        messageType: "",
+        show: false
+      }
+      setTimeout(() => { this.setState({ showMessage: data }) }, timeout);
+    });
+  }
+
+  showMessage = () => {
+    if (this.state.showMessage.show) {
+      return (<div className={this.state.showMessage.messageType}>
+        {this.state.showMessage.message}
+      </div>);
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
-      <NewGroupComponent
-        showGroups={this.showAllGroups()}
-        onSubmitAdd={e => this.onClickAddNewGroupHandler(e)}
-        onChange={e => this.onValueChangeHandler(e)}
-        newTitle="title"
-        newTitleValue={this.state.title}
-        pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-        onClickGoBack={() => this.goBack()}
-        onDeleteClick={() => this.onDeleteCLickHandler()}
-        onSubmitUpdate={e => this.onClickUpdateHandler(e)}
-        nameForUpdate="newTitle"
-        valueForUpdate={this.state.newTitle}
-      />
+      <React.Fragment>
+        {this.showMessage()}
+        <NewGroupComponent
+          showGroups={this.showAllGroups()}
+          onSubmitAdd={e => this.onClickAddNewGroupHandler(e)}
+          onChange={e => this.onValueChangeHandler(e)}
+          newTitle="title"
+          newTitleValue={this.state.title}
+          pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+          onClickGoBack={() => this.goBack()}
+          onDeleteClick={() => this.onDeleteCLickHandler()}
+          onSubmitUpdate={e => this.onClickUpdateHandler(e)}
+          nameForUpdate="newTitle"
+          valueForUpdate={this.state.newTitle}
+        />
+      </React.Fragment>
     );
   }
 }

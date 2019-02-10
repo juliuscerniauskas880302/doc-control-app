@@ -216,7 +216,7 @@ export default class EditUserGroups extends Component {
                     </div>
                   </div>
                 </div>
-
+                <div className="line" />
                 <div className="card-body">
                   <div className="form-group row">
                     <label className="col-md-3 form-control-label">
