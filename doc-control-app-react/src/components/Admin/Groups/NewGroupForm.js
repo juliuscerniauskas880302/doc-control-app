@@ -30,7 +30,12 @@ export default class NewGroupForm extends Component {
         console.log(err);
       });
   };
-  getAllUsers;
+  getAllUsers = () => {
+    Axios.get("http://localhost:8081/api/users").then(res => {
+      console.log(res.data);
+      this.setState({ allUsers: res.data });
+    });
+  };
 
   getSelectedGroupID = () => {
     let id = "";
