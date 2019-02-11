@@ -44,3 +44,8 @@
 .goBackButton:active {
     background-color: #bb8c00;
 }
+
+/* NavLink selection */
+.selected {
+    filter: brightness(50%);
+}
