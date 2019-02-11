@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Axios from "axios";
 // import "./NewUser.css";
 import NewPasswordComponent from "./NewPasswordComponent";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default class UpdateUser extends Component {
   constructor(props) {
@@ -155,36 +156,25 @@ export default class UpdateUser extends Component {
                       </div>
                     </div>
 
-                    <div className="form-group row">
-                      <div className="col-md-9 ml-auto">
-                        <input
-                          type="submit"
-                          value="Pakeisti"
-                          className="btn btn-primary"
-                        />
-                      </div>
-                    </div>
+                    <ButtonComponent
+                      type="submit"
+                      value="Pakeisti"
+                      className="btn submitButton"
+                    />
                   </form>
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        onClick={() => this.goEditGroups()}
-                        type="submit"
-                        value="Pridėti grupes"
-                        className="btn btn-success"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        onClick={() => this.goBack()}
-                        type="submit"
-                        value="Grįžti atgal"
-                        className="btn btn-warning"
-                      />
-                    </div>
-                  </div>
+                  <ButtonComponent
+                    onClick={() => this.goEditGroups()}
+                    type="submit"
+                    value="Pridėti grupes"
+                    className="btn submitButtonAlt"
+                  />
+
+                  <ButtonComponent
+                    onClick={() => this.goBack()}
+                    type="submit"
+                    value="Grįžti atgal"
+                    className="btn goBackButton"
+                  />
                 </div>
               </div>
             </div>

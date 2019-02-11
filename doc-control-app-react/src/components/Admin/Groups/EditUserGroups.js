@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import "./EditGroups.css";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default class EditUserGroups extends Component {
   constructor(props) {
@@ -204,16 +205,13 @@ export default class EditUserGroups extends Component {
                         {this.showAvailableGroups()}
                       </select>
                     </div>
-                    <div className="form-group row">
-                      <div className="col-md-9 ml-auto">
-                        <input
-                          onClick={() => this.onClickAddGroupToUserHandler()}
-                          type="submit"
-                          value="Pridėti"
-                          className="btn btn-primary"
-                        />
-                      </div>
-                    </div>
+
+                    <ButtonComponent
+                      onClick={() => this.onClickAddGroupToUserHandler()}
+                      type="submit"
+                      value="Pridėti"
+                      className="btn submitButton"
+                    />
                   </div>
                 </div>
                 <div className="line" />
@@ -233,18 +231,13 @@ export default class EditUserGroups extends Component {
                         {this.showAllUserGroups()}
                       </select>
                     </div>
-                    <div className="form-group row">
-                      <div className="col-md-9 ml-auto">
-                        <input
-                          onClick={() =>
-                            this.onClickRemoveGroupFromUserHandler()
-                          }
-                          type="submit"
-                          value="Ištrinti"
-                          className="btn btn-danger"
-                        />
-                      </div>
-                    </div>
+
+                    <ButtonComponent
+                      onClick={() => this.onClickRemoveGroupFromUserHandler()}
+                      type="submit"
+                      value="Ištrinti"
+                      className="btn deleteButton"
+                    />
                   </div>
                 </div>
               </div>
@@ -254,65 +247,4 @@ export default class EditUserGroups extends Component {
       </div>
     );
   }
-}
-
-{
-  /* 
-
-<select
-              multiple
-              className="form-control"
-              size="5"
-              onChange={this.onValueChangeHandler}
-              name="selectedAddGroup"
-            >
-              {this.showAvailableGroups()}
-            </select>
-            <br />
-            <button
-              type="buton"
-              className="btn btn-success"
-              onClick={() => this.onClickAddGroupToUserHandler()}
-            >
-              Pridėti
-            </button>
-          </div>
-          <div className="line" />
-          <span className="groups">
-            Vartotojo "<b>{this.state.user.username}</b>" grupės
-          </span>
-
-          <div className="input-group">
-            <select
-              multiple
-              className="form-control"
-              size="5"
-              onChange={this.onValueChangeHandler}
-              name="selectedRemoveGroup"
-            >
-              {this.showAllUserGroups()}
-            </select>
-
-            <br />
-            <button
-              type="buton"
-              className="btn btn-danger"
-              onClick={() => this.onClickRemoveGroupFromUserHandler()}
-            >
-              Pašalinti
-            </button>
-          </div>
-
-          <br />
-          <div className="input-group mb-1">
-            <button
-              type="buton"
-              className="btn btn-warning"
-              onClick={() => this.goBack()}
-            >
-              Grįžti atgal
-            </button>
-          </div>
-        </section>
-      </div> */
 }

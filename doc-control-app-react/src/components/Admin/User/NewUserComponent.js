@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default function NewUserComponent(props) {
   return (
@@ -94,6 +95,7 @@ export default function NewUserComponent(props) {
                     <div className="col-md-9">
                       <input
                         onChange={event => props.onChange(event)}
+                        autoComplete="new-password"
                         type="password"
                         name="password"
                         placeholder="Slaptažodis"
@@ -125,15 +127,11 @@ export default function NewUserComponent(props) {
                     </div>
                   </div>
 
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        type="submit"
-                        value="Pridėti"
-                        className="btn btn-primary"
-                      />
-                    </div>
-                  </div>
+                  <ButtonComponent
+                    type="submit"
+                    value="Pridėti"
+                    className="btn submitButton"
+                  />
                 </form>
               </div>
             </div>
