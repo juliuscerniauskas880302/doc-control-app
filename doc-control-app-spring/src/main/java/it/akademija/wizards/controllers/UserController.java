@@ -6,37 +6,40 @@ import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
-import it.akademija.wizards.security.CurrentUser;
-import it.akademija.wizards.security.UserPrincipal;
-import it.akademija.wizards.services.DocumentService;
+import it.akademija.wizards.security.models.CurrentUser;
+import it.akademija.wizards.security.models.UserPrincipal;
 import it.akademija.wizards.services.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
 @Api(value = "users")
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping (value = "/api/users")
 public class UserController {
 
-    @Autowired
+
     private final UserService userService;
 
     @Autowired
-    private final DocumentService documentService;
-    public UserController(UserService userService, DocumentService documentService){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.documentService = documentService;
     }
 
-    @GetMapping("/me")
+    @RequestMapping(value = "/me", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public UserPrincipal getCurrentUserUsername(@CurrentUser UserPrincipal userPrincipal) {
-        return userPrincipal;
+    public UserGetCommand getCurrentUserUsername(@CurrentUser UserPrincipal userPrincipal) {
+        UserGetCommand userGetCommand = new UserGetCommand();
+        BeanUtils.copyProperties(userPrincipal, userGetCommand);
+        return userGetCommand;
     }
 
     @ApiOperation(value = "get users")
@@ -53,20 +56,19 @@ public class UserController {
         return userService.getUser(username);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "get user's documents")
-    @RequestMapping(value = "/{username}/docs/{state}", method = RequestMethod.GET)
+    @RequestMapping(value = "/docs/{state}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List <DocumentGetCommand> getDocumentsByUsername(@PathVariable String username,
+    public List <DocumentGetCommand> getDocumentsByUsername(@CurrentUser UserPrincipal userPrincipal,
                                                             @PathVariable(value = "state") String state){
-        return userService.getUserDocuments(username, state);
+        return userService.getUserDocuments(userPrincipal.getUsername(), state);
     }
 
-    @ApiOperation(value = "create user")
+    @ApiOperation(value = "create new user")
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody UserCreateCommand userCreateCommand){
-        userService.createUser(userCreateCommand);
-
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserCreateCommand userCreateCommand) {
+        return userService.createUser(userCreateCommand);
     }
 
     @ApiOperation(value = "update user by username")
@@ -111,10 +113,11 @@ public class UserController {
         return userService.getUsersGroups(username);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "get users submission doc types")
-    @RequestMapping(value = "{username}/submissionDocTypes", method = RequestMethod.GET)
+    @RequestMapping(value = "/submissionDocTypes", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Set<DocumentTypeGetCommand> getUserSubmissionDocTypes(@PathVariable String username) {
-        return userService.getUserSubmissionDocTypes(username);
+    public Set<DocumentTypeGetCommand> getUserSubmissionDocTypes(@CurrentUser UserPrincipal userPrincipal) {
+        return userService.getUserSubmissionDocTypes(userPrincipal.getUsername());
     }
 }

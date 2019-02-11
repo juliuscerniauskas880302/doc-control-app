@@ -84,8 +84,9 @@ class UserCreatedDocumentsContainer extends React.Component {
     }
 
     componentDidMount() {
-        let currentUser = JSON.parse(localStorage.getItem('user')).username;
-        let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        //let currentUser = JSON.parse(localStorage.getItem('user')).username;
+        //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        let resourcePath = 'http://localhost:8081/api/users/docs/created';
         axios.get(resourcePath)
             .then((response) => {
                 this.setState({ documents: response.data });
@@ -114,35 +115,101 @@ class UserCreatedDocumentsContainer extends React.Component {
                     />
                 );
             });
-            return (<div className="container-fluid">
-                <div className="row">
-                    <div className="col-1">
-                        <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+            return (
+                <div className="page-holder w-100 d-flex flex-wrap">
+                    <div className="container-fluid px-xl-5">
+                        <section className="pt-5">
+                            <div className="col-lg-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h6 className="text-uppercase mb-0">Sukurti dokumentai</h6>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-1">
+                                                <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <table className="table table-striped">
+                                                    <thead className="thead-inverse">
+                                                        <tr>
+                                                            <th>Numeris</th>
+                                                            <th>Pavadinimas</th>
+                                                            <th>Aprašymas</th>
+                                                            <th>Tipas</th>
+                                                            <th>Sukūrimo data</th>
+                                                            <th>Operacijos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>{documentCard}</tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-2">
-                        <h5>Numeris</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Pavadinimas</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Aprašymas</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Tipas</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Sukūrimo data</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Operacijos</h5>
-                    </div>
-                </div>
-                <div className="row">{documentCard}
-                </div>
-            </div>);
+
+
+                // <div className="container-fluid">
+                //     <div className="row">
+                //         <div className="col-1">
+                //             <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                //         </div>
+                //     </div>
+                //     <div className="row">
+                //         <div className="col-12">
+                //             <table className="table table-striped">
+                //                 <thead className="thead-inverse">
+                //                     <tr>
+                //                         <th>Numeris</th>
+                //                         <th>Pavadinimas</th>
+                //                         <th>Aprašymas</th>
+                //                         <th>Tipas</th>
+                //                         <th>Sukūrimo data</th>
+                //                         <th>Operacijos</th>
+                //                     </tr>
+                //                 </thead>
+                //                 <tbody>{documentCard}</tbody>
+                //             </table>
+                //         </div>
+                //     </div>
+                // </div>
+            );
+
+            // <div className="container-fluid">
+            //     <div className="row">
+            //         <div className="col-1">
+            //             <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+            //         </div>
+            //     </div>
+            //     <div className="row">
+            //         <div className="col-2">
+            //             <h5>Numeris</h5>
+            //         </div>
+            //         <div className="col-2">
+            //             <h5>Pavadinimas</h5>
+            //         </div>
+            //         <div className="col-2">
+            //             <h5>Aprašymas</h5>
+            //         </div>
+            //         <div className="col-1">
+            //             <h5>Tipas</h5>
+            //         </div>
+            //         <div className="col-1">
+            //             <h5>Sukūrimo data</h5>
+            //         </div>
+            //         <div className="col-2">
+            //             <h5>Operacijos</h5>
+            //         </div>
+            //     </div>
+            //     <div className="row">{documentCard}
+            //     </div>
+            // </div>);
         }
         return this.state.loading;
     }

@@ -1,4 +1,4 @@
-package it.akademija.wizards.security;
+package it.akademija.wizards.security.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.akademija.wizards.entities.User;

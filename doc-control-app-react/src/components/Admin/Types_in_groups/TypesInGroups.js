@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default class TypesInGroups extends Component {
   constructor(props) {
@@ -212,22 +213,26 @@ export default class TypesInGroups extends Component {
     }
     Axios.delete(
       "http://localhost:8081/api/doctypes/" +
-      this.state.selectedType +
-      "/groups/" +
-      groupType,
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
       { data: groupIdListToRemove }
     )
       .then()
       .catch();
     Axios.post(
       "http://localhost:8081/api/doctypes/" +
-      this.state.selectedType +
-      "/groups/" +
-      groupType,
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
       groupIdListToAdd
     )
       .then(res => {
-        this.handleMessageInput("Duomenys atnaujinti", "alert alert-info fixed-top text-center", 2500);
+        this.handleMessageInput(
+          "Duomenys atnaujinti",
+          "alert alert-info fixed-top text-center",
+          2500
+        );
         if (groupType === "review") {
           this.loadReviewGroups(this.state.selectedType);
         } else {
@@ -242,26 +247,30 @@ export default class TypesInGroups extends Component {
       message: message,
       messageType: messageType,
       show: true
-    }
+    };
     this.setState({ showMessage: data }, () => {
       let data = {
         message: "",
         messageType: "",
         show: false
-      }
-      setTimeout(() => { this.setState({ showMessage: data }) }, timeout);
+      };
+      setTimeout(() => {
+        this.setState({ showMessage: data });
+      }, timeout);
     });
-  }
+  };
 
   showMessage = () => {
     if (this.state.showMessage.show) {
-      return (<div className={this.state.showMessage.messageType}>
-        {this.state.showMessage.message}
-      </div>);
+      return (
+        <div className={this.state.showMessage.messageType}>
+          {this.state.showMessage.message}
+        </div>
+      );
     } else {
       return null;
     }
-  }
+  };
 
   render() {
     return (
@@ -279,7 +288,7 @@ export default class TypesInGroups extends Component {
                     <div className="form-group row">
                       <label className="col-md-3 form-control-label">
                         Visi dokumentų tipai
-                    </label>
+                      </label>
                       <div className="col-md-9 ml-auto select">
                         <select
                           className="form-control rounded"
@@ -301,37 +310,29 @@ export default class TypesInGroups extends Component {
                   <div className="card-header">
                     <h3 className="h6 text-uppercase mb-0">
                       Dokumentų siuntimui
-                  </h3>
+                    </h3>
                   </div>
                   <div className="card-body">
                     <p>
                       Pasirinkite grupę, kuri galės siųsti dokumentus peržiūrai.
-                  </p>
+                    </p>
                     <div className="col-md-9">
                       <div>
                         <div className="line" />
                         {this.showSubmissionCheckBoxes()}
                       </div>
-                      <div className="form-group row">
-                        <div className="col-md-12 ml-auto">
-                          <input
-                            onClick={() => this.onClickAddGroups("submission")}
-                            type="submit"
-                            value="Atnaujinti"
-                            className="btn btn-primary"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-md-12 ml-auto">
-                          <input
-                            onClick={() => this.goBack()}
-                            type="submit"
-                            value="Grįžti atgal"
-                            className="btn btn-warning"
-                          />
-                        </div>
-                      </div>
+                      <ButtonComponent
+                        onClick={() => this.onClickAddGroups("submission")}
+                        type="submit"
+                        value="Atnaujinti"
+                        className="btn submitButton"
+                      />
+                      <ButtonComponent
+                        onClick={() => this.goBack()}
+                        type="submit"
+                        value="Grįžti atgal"
+                        className="btn goBackButton"
+                      />
                     </div>
                   </div>
                 </div>
@@ -342,37 +343,30 @@ export default class TypesInGroups extends Component {
                   <div className="card-header">
                     <h3 className="h6 text-uppercase mb-0">
                       Dokumentų peržiūrai
-                  </h3>
+                    </h3>
                   </div>
                   <div className="card-body">
                     <p>
                       Pasirinkite grupę, kuri galės peržiūrėti pateiktus
                       dokumentus.
-                  </p>
+                    </p>
                     <div className="col-md-9">
                       <div className="line" />
                       {this.showReviewCheckBoxes()}
                     </div>
-                    <div className="form-group row">
-                      <div className="col-md-12 ml-auto">
-                        <input
-                          onClick={() => this.onClickAddGroups("review")}
-                          type="submit"
-                          value="Atnaujinti"
-                          className="btn btn-primary"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group row">
-                      <div className="col-md-12 ml-auto">
-                        <input
-                          onClick={() => this.goBack()}
-                          type="submit"
-                          value="Grįžti atgal"
-                          className="btn btn-warning"
-                        />
-                      </div>
-                    </div>
+                    <ButtonComponent
+                      onClick={() => this.onClickAddGroups("review")}
+                      type="submit"
+                      value="Atnaujinti"
+                      className="btn submitButton"
+                    />
+
+                    <ButtonComponent
+                      onClick={() => this.goBack()}
+                      type="submit"
+                      value="Grįžti atgal"
+                      className="btn goBackButton"
+                    />
                   </div>
                 </div>
               </div>

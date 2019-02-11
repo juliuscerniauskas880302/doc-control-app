@@ -152,46 +152,46 @@ class NewDocumentContainer extends React.Component {
   };
 
   componentDidMount() {
-    
+
     let currentUser = JSON.parse(localStorage.getItem("user"));
     console.log("Spausdinu userį gautą iš localStorage");
     console.log(currentUser);
-    this.setState({ username: currentUser.username }, () => {
-      axios
-      .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
-        .then(response => {
-          this.setState({ typeList: response.data.map(item => item.title) });
-          console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
-          console.log(this.state.typeList);
-        })
-        .catch(error => {
-          console.log("KLAIDA!!!!" + error);
-        });
-    });
+    //ankčiau po setState, kaip papildoma funkcija buvo iškart vykdoma axios komanda
+    //this.setState({ username: currentUser.username }, () => {
     //nusiskaitau dokumentų tipus
-    console.log("State user yra po visko" + this.state.username);
-    console.log("Local storage user po visko " + currentUser.username);
+    axios.get("http://localhost:8081/api/users/submissionDocTypes")
+      .then(response => {
+        this.setState({ typeList: response.data.map(item => item.title) });
+        console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
+        console.log(this.state.typeList);
+      })
+      .catch(error => {
+        console.log("KLAIDA!!!!" + error);
+      });
+  
+  console.log("State user yra po visko" + this.state.username);
+console.log("Local storage user po visko " + currentUser.username);
    
   }
 
-  render() {
-    return (
-      <NewDocumentComponent
-        type={this.state.type}
-        typeList={this.state.typeList}
-        percentage={this.state.percentage}
-        isOpen={this.state.isOpen}
-        handleChangeOfTitle={this.handleChangeOfTitle}
-        handleChangeOfDescription={this.handleChangeOfDescription}
-        handleChangeOfType={this.handleChangeOfType}
-        onFileSelectHandler={this.onFileSelectHandler}
-        //downloadHandler={this.downloadHandler}
-        handleSubmit={this.handleSubmit}
-        openFileTransferPopup={this.openFileTransferPopup}
-        closeFileTransferPopup={this.closeFileTransferPopup}
-      />
-    );
-  }
+render() {
+  return (
+    <NewDocumentComponent
+      type={this.state.type}
+      typeList={this.state.typeList}
+      percentage={this.state.percentage}
+      isOpen={this.state.isOpen}
+      handleChangeOfTitle={this.handleChangeOfTitle}
+      handleChangeOfDescription={this.handleChangeOfDescription}
+      handleChangeOfType={this.handleChangeOfType}
+      onFileSelectHandler={this.onFileSelectHandler}
+      //downloadHandler={this.downloadHandler}
+      handleSubmit={this.handleSubmit}
+      openFileTransferPopup={this.openFileTransferPopup}
+      closeFileTransferPopup={this.closeFileTransferPopup}
+    />
+  );
+}
 }
 
 export default NewDocumentContainer;
