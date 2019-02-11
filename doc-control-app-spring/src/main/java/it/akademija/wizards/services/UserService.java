@@ -12,7 +12,7 @@ import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
-import it.akademija.wizards.payload.ApiResponse;
+import it.akademija.wizards.security.payload.ApiResponse;
 import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;

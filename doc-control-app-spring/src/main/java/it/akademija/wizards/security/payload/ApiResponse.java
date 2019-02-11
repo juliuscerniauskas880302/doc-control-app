@@ -1,4 +1,4 @@
-package it.akademija.wizards.payload;
+package it.akademija.wizards.security.payload;
 
 public class ApiResponse {
     private Boolean success;

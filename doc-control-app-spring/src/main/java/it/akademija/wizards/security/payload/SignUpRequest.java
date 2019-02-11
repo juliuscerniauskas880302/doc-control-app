@@ -1,6 +1,4 @@
-package it.akademija.wizards.payload;
-
-import javax.validation.constraints.NotBlank;
+package it.akademija.wizards.security.payload;
 
 public class SignUpRequest {
 
