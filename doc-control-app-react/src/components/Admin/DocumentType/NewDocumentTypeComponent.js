@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default function NewDocumentTypeComponent(props) {
   return (
@@ -31,26 +32,18 @@ export default function NewDocumentTypeComponent(props) {
                       />
                     </div>
                   </div>
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        type="submit"
-                        value="Pridėti"
-                        className="btn btn-primary"
-                      />
-                    </div>
-                  </div>
+                  <ButtonComponent
+                    type="submit"
+                    value="Pridėti"
+                    className="btn submitButton"
+                  />
                 </form>
-                <div className="form-group row">
-                  <div className="col-md-9 ml-auto">
-                    <input
-                      onClick={() => props.goBack()}
-                      type="submit"
-                      value="Grįžti atgal"
-                      className="btn btn-warning"
-                    />
-                  </div>
-                </div>
+                <ButtonComponent
+                  onClick={() => props.goBack()}
+                  type="submit"
+                  value="Grįžti atgal"
+                  className="btn goBackButton"
+                />
               </div>
             </div>
           </div>
@@ -103,36 +96,25 @@ export default function NewDocumentTypeComponent(props) {
                       />
                     </div>
                   </div>
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        type="submit"
-                        value="Atnaujinti"
-                        className="btn btn-primary"
-                      />
-                    </div>
-                  </div>
+                  <ButtonComponent
+                    type="submit"
+                    value="Atnaujinti"
+                    className="btn submitButton"
+                  />
                 </form>
-                <div className="form-group row">
-                  <div className="col-md-9 ml-auto">
-                    <input
-                      onClick={() => props.onDeleteCLickHandler()}
-                      type="submit"
-                      value="Ištrinti"
-                      className="btn btn-danger"
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <div className="col-md-9 ml-auto">
-                    <input
-                      onClick={props.onClickGoBack}
-                      type="submit"
-                      value="Grįžti atgal"
-                      className="btn btn-warning"
-                    />
-                  </div>
-                </div>
+                <ButtonComponent
+                  onClick={() => props.onDeleteCLickHandler()}
+                  type="submit"
+                  value="Ištrinti"
+                  className="btn deleteButton"
+                />
+
+                <ButtonComponent
+                  onClick={() => props.goBack()}
+                  type="submit"
+                  value="Grįžti atgal"
+                  className="btn goBackButton"
+                />
               </div>
             </div>
           </div>

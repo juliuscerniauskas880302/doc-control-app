@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default function NewGroupComponent(props) {
   return (
@@ -23,34 +24,26 @@ export default function NewGroupComponent(props) {
                         type="text"
                         name={props.newTitle}
                         value={props.newTitleValue}
-                        className="form-control form-control-success"
+                        className="form-control form-control-success rounded"
                         pattern={props.pattern}
                         required
                       />
                     </div>
                   </div>
 
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        type="submit"
-                        value="Pridėti"
-                        className="btn btn-primary"
-                      />
-                    </div>
-                  </div>
+                  <ButtonComponent
+                    type="submit"
+                    value="Pridėti"
+                    className="btn submitButton"
+                  />
                 </form>
 
-                <div className="form-group row">
-                  <div className="col-md-9 ml-auto">
-                    <input
-                      onClick={props.onClickGoBack}
-                      type="submit"
-                      value="Grįžti atgal"
-                      className="btn btn-warning"
-                    />
-                  </div>
-                </div>
+                <ButtonComponent
+                  type="submit"
+                  value="Grįžti atgal"
+                  className="btn goBackButton"
+                  onClick={props.onClickGoBack}
+                />
               </div>
             </div>
           </div>
@@ -101,38 +94,26 @@ export default function NewGroupComponent(props) {
                     </div>
                   </div>
 
-                  <div className="form-group row">
-                    <div className="col-md-9 ml-auto">
-                      <input
-                        type="submit"
-                        value="Atnaujinti"
-                        className="btn btn-primary"
-                      />
-                    </div>
-                  </div>
+                  <ButtonComponent
+                    type="submit"
+                    value="Atnaujinti"
+                    className="btn submitButton"
+                  />
                 </form>
 
-                <div className="form-group row">
-                  <div className="col-md-9 ml-auto">
-                    <input
-                      onClick={props.onDeleteClick}
-                      type="submit"
-                      value="Ištrinti"
-                      className="btn btn-danger"
-                    />
-                  </div>
-                </div>
+                <ButtonComponent
+                  onClick={props.onDeleteClick}
+                  type="submit"
+                  value="Ištrinti"
+                  className="btn deleteButton"
+                />
 
-                <div className="form-group row">
-                  <div className="col-md-9 ml-auto">
-                    <input
-                      onClick={props.onClickGoBack}
-                      type="submit"
-                      value="Grįžti atgal"
-                      className="btn btn-warning"
-                    />
-                  </div>
-                </div>
+                <ButtonComponent
+                  onClick={props.onClickGoBack}
+                  type="submit"
+                  value="Grįžti atgal"
+                  className="btn goBackButton"
+                />
               </div>
             </div>
           </div>
