@@ -84,8 +84,9 @@ class UserCreatedDocumentsContainer extends React.Component {
     }
 
     componentDidMount() {
-        let currentUser = JSON.parse(localStorage.getItem('user')).username;
-        let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        //let currentUser = JSON.parse(localStorage.getItem('user')).username;
+        //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+        let resourcePath = 'http://localhost:8081/api/users/docs/created';
         axios.get(resourcePath)
             .then((response) => {
                 this.setState({ documents: response.data });
