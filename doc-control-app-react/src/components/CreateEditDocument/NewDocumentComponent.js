@@ -1,5 +1,6 @@
 import React from 'react';
 import FileTransferPopup from './FileTransferPopup';
+import "./FileTransferStyles.css";
 
 const NewDocumentComponet = (props) => {
 
@@ -49,6 +50,7 @@ const NewDocumentComponet = (props) => {
                             className="input-file"
                             type="file"
                             required
+                            accept=".pdf, .jpg, .png"
                         />
                     </div>
                 </div>
