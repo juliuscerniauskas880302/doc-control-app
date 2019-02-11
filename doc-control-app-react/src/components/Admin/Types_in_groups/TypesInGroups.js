@@ -383,3 +383,5 @@ export default class TypesInGroups extends Component {
     );
   }
 }
+
+

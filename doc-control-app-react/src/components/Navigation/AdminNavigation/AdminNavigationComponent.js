@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../../css/images/avatar.png";
+import $ from "jquery";
+
+$('.sidebar-toggler').on('click', function () {
+  $('.sidebar').toggleClass('shrink show');
+});
 export default class AdminNavigationComponent extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +21,9 @@ export default class AdminNavigationComponent extends Component {
       this.setState({ showMenu: "sidebar py-3 shrink" });
     }
   };
+
+
+
 
   render() {
     let data = JSON.parse(localStorage.getItem("user"));
