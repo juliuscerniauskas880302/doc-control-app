@@ -115,30 +115,69 @@ class UserCreatedDocumentsContainer extends React.Component {
                 );
             });
             return (
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-1">
-                            <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table table-striped">
-                                <thead className="thead-inverse">
-                                    <tr>
-                                        <th>Numeris</th>
-                                        <th>Pavadinimas</th>
-                                        <th>Aprašymas</th>
-                                        <th>Tipas</th>
-                                        <th>Sukūrimo data</th>
-                                        <th>Operacijos</th>
-                                    </tr>
-                                </thead>
-                                <tbody>{documentCard}</tbody>
-                            </table>
-                        </div>
+                <div className="page-holder w-100 d-flex flex-wrap">
+                    <div className="container-fluid px-xl-5">
+                        <section className="pt-5">
+                            <div className="col-lg-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h6 className="text-uppercase mb-0">Sukurti dokumentai</h6>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-1">
+                                                <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <table className="table table-striped">
+                                                    <thead className="thead-inverse">
+                                                        <tr>
+                                                            <th>Numeris</th>
+                                                            <th>Pavadinimas</th>
+                                                            <th>Aprašymas</th>
+                                                            <th>Tipas</th>
+                                                            <th>Sukūrimo data</th>
+                                                            <th>Operacijos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>{documentCard}</tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
+
+
+                // <div className="container-fluid">
+                //     <div className="row">
+                //         <div className="col-1">
+                //             <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                //         </div>
+                //     </div>
+                //     <div className="row">
+                //         <div className="col-12">
+                //             <table className="table table-striped">
+                //                 <thead className="thead-inverse">
+                //                     <tr>
+                //                         <th>Numeris</th>
+                //                         <th>Pavadinimas</th>
+                //                         <th>Aprašymas</th>
+                //                         <th>Tipas</th>
+                //                         <th>Sukūrimo data</th>
+                //                         <th>Operacijos</th>
+                //                     </tr>
+                //                 </thead>
+                //                 <tbody>{documentCard}</tbody>
+                //             </table>
+                //         </div>
+                //     </div>
+                // </div>
             );
 
             // <div className="container-fluid">

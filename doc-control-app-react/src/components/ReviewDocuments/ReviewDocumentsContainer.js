@@ -88,8 +88,8 @@ class ReviewDocumentsContainer extends React.Component {
             //     cancelButtonClass: 'btn btn-danger',
             //     buttonsStyling: false,
             //   })
-              
-            if(result.value){
+
+            if (result.value) {
                 let docInfo = {
                     documentState: "REJECTED",
                     rejectionReason: result.value,
@@ -194,46 +194,86 @@ class ReviewDocumentsContainer extends React.Component {
                         submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10) : ""}
                         handleAccept={this.handleAccept}
                         handleReject={this.handleReject}
-                        // openPopup={this.openPopup}
-                        // closePopupCancelReject={this.closePopupCancelReject}
-                        // closePopupAcceptReject={this.closePopupAcceptReject}
+                    // openPopup={this.openPopup}
+                    // closePopupCancelReject={this.closePopupCancelReject}
+                    // closePopupAcceptReject={this.closePopupAcceptReject}
                     />
                 );
             });
-            return (<div className="container-fluid">
-                <div className="row">
-                    <div className="col-2">
-                        <h5>Autorius</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Numeris</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Pavadinimas</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Aprašymas</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Tipas</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Pateikimo data</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Operacijos</h5>
+            return (
+                <div className="page-holder w-100 d-flex flex-wrap">
+                    <div className="container-fluid px-xl-5">
+                        <section className="pt-5">
+                            <div className="col-lg-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h6 className="text-uppercase mb-0">Peržiūrimi dokumentai</h6>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <table className="table table-striped">
+                                                    <thead className="thead-inverse">
+                                                        <tr>
+                                                            <th>Autorius</th>
+                                                            <th>Numeris</th>
+                                                            <th>Pavadinimas</th>
+                                                            <th>Aprašymas</th>
+                                                            <th>Tipas</th>
+                                                            <th>Pateikimo data</th>
+                                                            <th>Operacijos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>{documentCard}</tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
-                <div className="row">{documentCard}
-                </div>
-                {/* <RejectReasonPopUp show={this.state.isOpen}
-                    onClose={this.closePopup}
-                    handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
-                    closePopupAcceptReject={this.closePopupAcceptReject}
-                    closePopupCancelReject={this.closePopupCancelReject}
-                >
-                </RejectReasonPopUp> */}
-            </div>);
+                
+                
+        
+                
+                
+                // <div className="container-fluid">
+                //     <div className="row">
+                //         <div className="col-2">
+                //             <h5>Autorius</h5>
+                //         </div>
+                //         <div className="col-2">
+                //             <h5>Numeris</h5>
+                //         </div>
+                //         <div className="col-2">
+                //             <h5>Pavadinimas</h5>
+                //         </div>
+                //         <div className="col-2">
+                //             <h5>Aprašymas</h5>
+                //         </div>
+                //         <div className="col-1">
+                //             <h5>Tipas</h5>
+                //         </div>
+                //         <div className="col-1">
+                //             <h5>Pateikimo data</h5>
+                //         </div>
+                //         <div className="col-1">
+                //             <h5>Operacijos</h5>
+                //         </div>
+                //     </div>
+                //     <div className="row">{documentCard}
+                //     </div>
+                //     {/* <RejectReasonPopUp show={this.state.isOpen}
+                //     onClose={this.closePopup}
+                //     handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
+                //     closePopupAcceptReject={this.closePopupAcceptReject}
+                //     closePopupCancelReject={this.closePopupCancelReject}
+                // >
+                // </RejectReasonPopUp> */}
+                // </div>
+            );
         }
         return this.state.loading;
     }
