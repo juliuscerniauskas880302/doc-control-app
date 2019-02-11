@@ -75,10 +75,10 @@ export class UserContainer extends Component {
   render() {
     return (
       <div className="page-holder w-100 d-flex flex-wrap">
-        <div className="container-fluid px-xl-5">
-          <section className="pt-5">
+        <div className="container-fluid px-xl-5" >
+          <section className="pt-5" >
             <div className="col-lg-12">
-              <div className="card">
+              <div className="card" >
                 <div className="card-header">
                   <h6 className="text-uppercase mb-0">Visi vartotojai</h6>
                 </div>

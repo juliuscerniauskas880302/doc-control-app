@@ -81,7 +81,7 @@ export default class UserNavigationComponent extends Component {
               <Link to="/" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
-                    <i className="fas fa-users mr-3 text-gray" />
+                    <i className="fas fa-file-alt mr-3 text-gray" />
                     <span>Pateikti</span>
                   </div>
                 </li>
@@ -89,7 +89,7 @@ export default class UserNavigationComponent extends Component {
               <Link to="/createdDocuments" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
-                    <i className="fas fa-user mr-3 text-gray" />
+                    <i className="fas fa-file mr-3 text-gray" />
                     <span>Sukurti</span>
                   </div>
                 </li>
@@ -98,8 +98,16 @@ export default class UserNavigationComponent extends Component {
               <Link to="/reviewDocuments" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
-                    <i className="fas fa-clipboard-list  mr-3 text-gray" />
+                    <i className="fas fa-file-contract  mr-3 text-gray" />
                     <span>Peržiūrėti</span>
+                  </div>
+                </li>
+              </Link>
+              <Link to="/newDocument" style={{ textDecoration: "none" }}>
+                <li className="sidebar-list-item">
+                  <div className="sidebar-link text-muted">
+                    <i className="fas fa-file-signature  mr-3 text-gray" />
+                    <span>Naujas dokumentas</span>
                   </div>
                 </li>
               </Link>

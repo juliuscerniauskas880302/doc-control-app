@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import NewGroupComponent from "./NewGroupComponent";
+import EditGroupUsers from "./EditGroupUsers";
 
 export default class NewGroupForm extends Component {
   constructor(props) {
@@ -10,16 +11,14 @@ export default class NewGroupForm extends Component {
       selectedGroupTitle: "",
       newTitle: "",
       allGroups: [],
+      allUsers: [],
+      selectedGroupForAddUsers: "",
       showMessage: { message: "", messageType: "", show: false }
     };
   }
 
   componentDidMount = () => {
     this.getAllGroups();
-  };
-
-  rerenderComponent = () => {
-    this.setState({ rerender: !this.state.rerender });
   };
 
   getAllGroups = () => {
@@ -31,6 +30,7 @@ export default class NewGroupForm extends Component {
         console.log(err);
       });
   };
+  getAllUsers;
 
   getSelectedGroupID = () => {
     let id = "";
@@ -166,19 +166,31 @@ export default class NewGroupForm extends Component {
     return (
       <React.Fragment>
         {this.showMessage()}
-        <NewGroupComponent
-          showGroups={this.showAllGroups()}
-          onSubmitAdd={e => this.onClickAddNewGroupHandler(e)}
-          onChange={e => this.onValueChangeHandler(e)}
-          newTitle="title"
-          newTitleValue={this.state.title}
-          pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-          onClickGoBack={() => this.goBack()}
-          onDeleteClick={() => this.onDeleteCLickHandler()}
-          onSubmitUpdate={e => this.onClickUpdateHandler(e)}
-          nameForUpdate="newTitle"
-          valueForUpdate={this.state.newTitle}
-        />
+        <div className="page-holder w-100 d-flex flex-wrap">
+          <div className="container-fluid px-xl-5">
+            <section className="pt-5">
+              <NewGroupComponent
+                showGroups={this.showAllGroups()}
+                onSubmitAdd={e => this.onClickAddNewGroupHandler(e)}
+                onChange={e => this.onValueChangeHandler(e)}
+                newTitle="title"
+                newTitleValue={this.state.title}
+                pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                onClickGoBack={() => this.goBack()}
+                onDeleteClick={() => this.onDeleteCLickHandler()}
+                onSubmitUpdate={e => this.onClickUpdateHandler(e)}
+                nameForUpdate="newTitle"
+                valueForUpdate={this.state.newTitle}
+              />
+            </section>
+            <section>
+              <EditGroupUsers
+                showGroups={this.showAllGroups()}
+                onClickGoBack={() => this.goBack()}
+              />
+            </section>
+          </div>
+        </div>
       </React.Fragment>
     );
   }

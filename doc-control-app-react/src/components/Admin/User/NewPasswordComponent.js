@@ -57,3 +57,5 @@ export default function NewPasswordComponent(props) {
     </div>
   );
 }
+
+
