@@ -19,6 +19,8 @@ class EditDocumentContainer extends React.Component {
       path: "",
       prefix: "",
       //filename: "Nėra pridėto failo"
+      isOpen: false,
+      percentage: 0
     };
   }
 
@@ -38,6 +40,18 @@ class EditDocumentContainer extends React.Component {
     console.log(event.target.files);
     this.setState({ [event.target.name]: event.target.files });
   };
+
+  openFileTransferPopup = () => {
+    this.setState({
+      isOpen: true,
+    });
+  }
+
+  closeFileTransferPopup = () => {
+    this.setState({
+      isOpen: false
+    });
+  }
 
   downloadHandler = (event) => {
     axios({
@@ -78,6 +92,8 @@ class EditDocumentContainer extends React.Component {
   handleSubmit = (event) => {
     console.log("Atėjau į Submit handlerį");
     event.preventDefault();
+    this.openFileTransferPopup();
+
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
@@ -101,8 +117,17 @@ class EditDocumentContainer extends React.Component {
       }
     }
     file.append("model", JSON.stringify(model));
-    console.log("Dokuemnto id yra - " + this.state.id);
-    axios.put("http://localhost:8081/api/docs/" + this.state.id, file)
+    console.log("Dokumento id yra - " + this.state.id);
+    axios.put("http://localhost:8081/api/docs/" + this.state.id, file, {
+      onUploadProgress: progressEvent => {
+        this.setState({ percentage: Math.round((progressEvent.loaded / progressEvent.total) * 100) });
+        console.log(
+          "Upload progress: " +
+          (progressEvent.loaded / progressEvent.total) * 100 +
+          "%"
+        );
+      }
+    })
       .then((response) => {
         axios.get("http://localhost:8081/api/docs/" + this.state.id)
           .then((response) => {
@@ -121,12 +146,12 @@ class EditDocumentContainer extends React.Component {
             console.log(error);
           });
       })
-          // .then((response) => {
-          //   this.props.history.push(`/createdDocuments`);
-          // .then (this.props.history.push(`/createdDocuments`))
-       .catch(err => console.log("KLAIDA SUBMITE" + err));
-        console.log("Spausinu FILE" + file);
-      }
+      // .then((response) => {
+      //   this.props.history.push(`/createdDocuments`);
+      // .then (this.props.history.push(`/createdDocuments`))
+      .catch(err => console.log("KLAIDA SUBMITE" + err));
+    console.log("Spausinu FILE" + file);
+  }
 
   // handleSubmit = (event) => {
   //   //TODO
@@ -152,34 +177,34 @@ class EditDocumentContainer extends React.Component {
   //TODO
   //Padaryti normalų ištrynimo metodą
   handleDelete = (event) => {
-          event.preventDefault();
-          axios.delete("http://localhost:8081/api/docs/" + this.state.id)
-            .then((response) => {
-              this.props.history.push(`/createdDocuments`);
-            });
-        }
+    event.preventDefault();
+    axios.delete("http://localhost:8081/api/docs/" + this.state.id)
+      .then((response) => {
+        this.props.history.push(`/createdDocuments`);
+      });
+  }
 
   componentDidMount() {
-          //nusiskaitau dokumentų tipus
+    //nusiskaitau dokumentų tipus
 
-          let currentUser = JSON.parse(localStorage.getItem("user"));
-          console.log("Spausdinu userį gautą iš localStorage");
-          console.log(currentUser);
-          this.setState({ username: currentUser.username }, () => {
-            axios
-              .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
-              .then(response => {
-                this.setState({ typeList: response.data.map(item => item.title) });
-                console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
-                console.log(this.state.typeList);
-              })
-              .catch(error => {
-                console.log("KLAIDA!!!!" + error);
-              });
-          });
-          //nusiskaitau dokumentų tipus
-          console.log("State user yra po visko" + this.state.username);
-          console.log("Local storage user po visko " + currentUser.username)
+    let currentUser = JSON.parse(localStorage.getItem("user"));
+    console.log("Spausdinu userį gautą iš localStorage");
+    console.log(currentUser);
+    this.setState({ username: currentUser.username }, () => {
+      axios
+        .get("http://localhost:8081/api/users/" + this.state.username + "/submissionDocTypes")
+        .then(response => {
+          this.setState({ typeList: response.data.map(item => item.title) });
+          console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
+          console.log(this.state.typeList);
+        })
+        .catch(error => {
+          console.log("KLAIDA!!!!" + error);
+        });
+    });
+    //nusiskaitau dokumentų tipus
+    console.log("State user yra po visko" + this.state.username);
+    console.log("Local storage user po visko " + currentUser.username)
 
 
     //senas blogas
@@ -196,65 +221,68 @@ class EditDocumentContainer extends React.Component {
 
     //Konkretaus dokumento duomenų nuskaitymas
     const position = this.props.match.params.documentId;
-          //let currentUser = "migle";
-          let resourcePath = 'http://localhost:8081/api/docs/' + position;
+    //let currentUser = "migle";
+    let resourcePath = 'http://localhost:8081/api/docs/' + position;
 
-          axios.get(resourcePath)
-            .then((response) => {
-              //this.setState(response.data);
-              // console.log(response.data.id);
-              //console.log(response.data.title);
+    axios.get(resourcePath)
+      .then((response) => {
+        //this.setState(response.data);
+        // console.log(response.data.id);
+        //console.log(response.data.title);
 
-              //TODO
-              //Čia to lyg ir nereikia, nes dabar PATH tik failo pavadinimą ir turi
-              // var realFileName = "";
-              // if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
-              //   realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
-              // }
-              this.setState({ id: response.data.id });
-              this.setState({ title: response.data.title });
-              this.setState({ description: response.data.description });
-              this.setState({ documentTypeTitle: response.data.documentTypeTitle });
-              this.setState({ path: response.data.path });
-              this.setState({ prefix: response.data.prefix });
-              //this.setState({ filename: realFileName });
-              console.log("Gavau tokį produktą į redagavimą");
-              console.log(this.state);
-              let currentUser = JSON.parse(localStorage.getItem('user'));
-              console.log("Spausdinu userį gautą iš localStorage");
-              console.log(currentUser);
-              this.setState({ username: currentUser.username });
+        //TODO
+        //Čia to lyg ir nereikia, nes dabar PATH tik failo pavadinimą ir turi
+        // var realFileName = "";
+        // if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
+        //   realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+        // }
+        this.setState({ id: response.data.id });
+        this.setState({ title: response.data.title });
+        this.setState({ description: response.data.description });
+        this.setState({ documentTypeTitle: response.data.documentTypeTitle });
+        this.setState({ path: response.data.path });
+        this.setState({ prefix: response.data.prefix });
+        //this.setState({ filename: realFileName });
+        console.log("Gavau tokį produktą į redagavimą");
+        console.log(this.state);
+        let currentUser = JSON.parse(localStorage.getItem('user'));
+        console.log("Spausdinu userį gautą iš localStorage");
+        console.log(currentUser);
+        this.setState({ username: currentUser.username });
 
-              //console.log("Pagaminau tokį State ->" + this.state);
-              //console.log("Toks description iš state'o -> " + this.state.id);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
+        //console.log("Pagaminau tokį State ->" + this.state);
+        //console.log("Toks description iš state'o -> " + this.state.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
 
   render() {
-          return(
+    return (
       <EditDocumentComponent
-        title = { this.state.title }
-        description = { this.state.description }
-        typeList = { this.state.typeList }
-        type = { this.state.documentTypeTitle }
-        path = { this.state.path }
-        prefix = { this.state.prefix }
+        title={this.state.title}
+        description={this.state.description}
+        typeList={this.state.typeList}
+        type={this.state.documentTypeTitle}
+        path={this.state.path}
+        prefix={this.state.prefix}
         //filename = { this.state.filename }
-        handleChangeOfTitle = { this.handleChangeOfTitle }
-        handleChangeOfDescription = { this.handleChangeOfDescription }
-        handleChangeOfType = { this.handleChangeOfType }
-        handleSubmit = { this.handleSubmit }
-        handleDelete = { this.handleDelete }
-        downloadHandler = { this.downloadHandler }
-        onFileSelectHandler = { this.onFileSelectHandler }
-
-              />
+        handleChangeOfTitle={this.handleChangeOfTitle}
+        handleChangeOfDescription={this.handleChangeOfDescription}
+        handleChangeOfType={this.handleChangeOfType}
+        handleSubmit={this.handleSubmit}
+        handleDelete={this.handleDelete}
+        downloadHandler={this.downloadHandler}
+        onFileSelectHandler={this.onFileSelectHandler}
+        isOpen={this.state.isOpen}
+        percentage={this.state.percentage}
+        openFileTransferPopup={this.openFileTransferPopup}
+        closeFileTransferPopup={this.closeFileTransferPopup}
+      />
     );
-        }
+  }
 }
 
-  export default EditDocumentContainer;
+export default EditDocumentContainer;
