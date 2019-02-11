@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../../css/images/avatar.png";
+import PropTypes from "prop-types";
+import NavLink from "../../Utilities/Navigation/NavLink";
+
 export default class AdminNavigationComponent extends Component {
   constructor(props) {
     super(props);
@@ -69,7 +72,7 @@ export default class AdminNavigationComponent extends Component {
           </nav>
         </header>
 
-        <div className="d-flex align-items-stretch">
+        <div className="d-flex align-items-stretch ">
           <div id="sidebar" className={this.state.showMenu}>
             <div className="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">
               <i className="fas fa-tools fa-3x" />
@@ -77,40 +80,41 @@ export default class AdminNavigationComponent extends Component {
               <div className="line" />
             </div>
             <ul className="sidebar-menu list-unstyled">
-              <Link to="/" style={{ textDecoration: "none" }}>
-                <li className="sidebar-list-item">
-                  <div className="sidebar-link text-muted">
-                    <i className="fas fa-users mr-3 text-gray" />
+              <NavLink to="/" style={{ textDecoration: "none" }}>
+                <li className="sidebar-list-item ">
+                  <div className="sidebar-link text-muted ">
+                    <i className="fas fa-users mr-3 text-gray " />
                     <span>Pagrindinis</span>
                   </div>
                 </li>
-              </Link>
-              <Link to="/users/add" style={{ textDecoration: "none" }}>
+              </NavLink>
+
+              <NavLink to="/users/add" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
-                  <div className="sidebar-link text-muted">
+                  <div className="sidebar-link text-muted ">
                     <i className="fas fa-user mr-3 text-gray" />
                     <span>Naujas vartotojas</span>
                   </div>
                 </li>
-              </Link>
+              </NavLink>
 
-              <Link to="/groups/add" style={{ textDecoration: "none" }}>
+              <NavLink to="/groups/add" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-clipboard-list  mr-3 text-gray" />
                     <span>Grupės</span>
                   </div>
                 </li>
-              </Link>
-              <Link to="/types/add" style={{ textDecoration: "none" }}>
+              </NavLink>
+              <NavLink to="/types/add" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-file-signature mr-3 text-gray" />
                     <span>Dokumentų tipai</span>
                   </div>
                 </li>
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/document_types/groups"
                 style={{ textDecoration: "none" }}
               >
@@ -120,7 +124,7 @@ export default class AdminNavigationComponent extends Component {
                     <span>Siųsti / Peržiūrėti</span>
                   </div>
                 </li>
-              </Link>
+              </NavLink>
             </ul>
           </div>
           {this.props.children}
