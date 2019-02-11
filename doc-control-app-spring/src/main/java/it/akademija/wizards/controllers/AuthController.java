@@ -1,9 +1,8 @@
 package it.akademija.wizards.controllers;
 
-import it.akademija.wizards.models.user.UserCreateCommand;
-import it.akademija.wizards.payload.JwtAuthenticationResponse;
-import it.akademija.wizards.payload.LoginRequest;
-import it.akademija.wizards.security.JwtTokenProvider;
+import it.akademija.wizards.security.payload.JwtAuthenticationResponse;
+import it.akademija.wizards.security.payload.LoginRequest;
+import it.akademija.wizards.security.jwt.JwtTokenProvider;
 import it.akademija.wizards.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,11 +43,6 @@ public class AuthController {
 
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserCreateCommand userCreateCommand) {
-        return userService.createUser(userCreateCommand);
     }
 
 }

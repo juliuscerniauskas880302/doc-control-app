@@ -1,8 +1,8 @@
 package it.akademija.wizards.configs;
 
-import it.akademija.wizards.security.CustomUserDetailsService;
-import it.akademija.wizards.security.JwtAuthenticationEntryPoint;
-import it.akademija.wizards.security.JwtAuthenticationFilter;
+import it.akademija.wizards.security.services.CustomUserDetailsService;
+import it.akademija.wizards.security.jwt.JwtAuthenticationEntryPoint;
+import it.akademija.wizards.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,10 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                 .authorizeRequests()
-//                    .antMatchers("/", "/swagger-ui.html").permitAll()
-//                    .antMatchers("/api/auth/signup").hasRole("ADMIN")
-//                    .antMatchers("/api/auth/signin").permitAll()
-//                    .antMatchers("/api/**").authenticated()
+                    .antMatchers("/", "/swagger-ui.html").permitAll()
+                    .antMatchers("/api/auth/signup").hasRole("ADMIN")
+                    .antMatchers("/api/auth/signin").permitAll()
+                    .antMatchers("/api/**").authenticated()
                 .anyRequest()
                     .permitAll()
                     .and()

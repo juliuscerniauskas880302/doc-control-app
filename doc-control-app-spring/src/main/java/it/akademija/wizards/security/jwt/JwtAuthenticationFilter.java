@@ -1,5 +1,6 @@
-package it.akademija.wizards.security;
+package it.akademija.wizards.security.jwt;
 
+import it.akademija.wizards.security.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

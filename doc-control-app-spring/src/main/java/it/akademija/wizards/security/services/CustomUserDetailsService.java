@@ -1,7 +1,8 @@
-package it.akademija.wizards.security;
+package it.akademija.wizards.security.services;
 
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.repositories.UserRepository;
+import it.akademija.wizards.security.models.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

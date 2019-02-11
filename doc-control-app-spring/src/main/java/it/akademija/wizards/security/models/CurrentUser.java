@@ -1,4 +1,4 @@
-package it.akademija.wizards.security;
+package it.akademija.wizards.security.models;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

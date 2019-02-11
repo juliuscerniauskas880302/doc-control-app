@@ -1,4 +1,4 @@
-package it.akademija.wizards.payload;
+package it.akademija.wizards.security.payload;
 
 import javax.validation.constraints.NotBlank;
 
