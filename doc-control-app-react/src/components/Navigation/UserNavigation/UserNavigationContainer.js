@@ -12,11 +12,8 @@ import ResourceNotFoundCompoentn from "../../Errors/ResourceNotFoundComponent";
 import UserNavigationComponent from "./UserNavigationConponent";
 import Axios from "axios";
 
-Axios.defaults.headers.Authorization = `Bearer ${JSON.parse(
-  localStorage.getItem("accessToken")
-)}`;
 export default class UserNavigationContainer extends Component {
-  componentDidMount = () => {
+  checkToken = () => {
     let token = JSON.parse(localStorage.getItem("accessToken"));
     if (token) {
       Axios.defaults.headers.Authorization = `Bearer ${token}`;
@@ -28,6 +25,7 @@ export default class UserNavigationContainer extends Component {
     }
   };
   render() {
+    this.checkToken();
     return (
       <div>
         <BrowserRouter>

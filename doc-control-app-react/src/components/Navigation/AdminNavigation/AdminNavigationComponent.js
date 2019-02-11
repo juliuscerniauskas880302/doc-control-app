@@ -20,12 +20,10 @@ export default class AdminNavigationComponent extends Component {
     }
   };
 
-
-
-
   render() {
     let data = JSON.parse(localStorage.getItem("user"));
-    let role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+    let role;
+    if (data) role = data.admin ? "Administratorius" : "Paprastas vartotojas";
     return (
       <React.Fragment>
         <header className="header">

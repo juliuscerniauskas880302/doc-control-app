@@ -1,7 +1,7 @@
 import React from "react";
 import UserSubmittedDocumentsComponent from "./UserSubmittedDocumentsComponent";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 class UserSubmittedDocumentsContainer extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
           documentTypeTitle: "Testas",
           documentState: "Testas",
           submissionDate: "2019.01.26"
-        },
+        }
         // {
         //   id: "Kodas1",
         //   title: "Title1",
@@ -48,12 +48,11 @@ class UserSubmittedDocumentsContainer extends React.Component {
     };
   }
 
-  handleZipDownload = (event) => {
-    let currentUser = JSON.parse(localStorage.getItem('user')).username;
+  handleZipDownload = event => {
+    let currentUser = JSON.parse(localStorage.getItem("user")).username;
     //api/docs/{username}/download/all
     axios({
-      url:
-        "http://localhost:8081/api/docs/" + currentUser + "/download/all",
+      url: "http://localhost:8081/api/docs/" + currentUser + "/download/all",
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -88,14 +87,15 @@ class UserSubmittedDocumentsContainer extends React.Component {
   componentDidMount() {
     //let currentUser = JSON.parse(localStorage.getItem('user')).username;
     //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/submitted';
-    let resourcePath = 'http://localhost:8081/api/users/docs/submitted';
-    axios.get(resourcePath)
-      .then((response) => {
+    let resourcePath = "http://localhost:8081/api/users/docs/submitted";
+    axios
+      .get(resourcePath)
+      .then(response => {
         this.setState({ documents: response.data });
         console.log("Koks atiduodamas dokumentų sąrašas?");
         console.log(this.state.documents);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
@@ -111,8 +111,17 @@ class UserSubmittedDocumentsContainer extends React.Component {
             description={document.description}
             type={document.documentTypeTitle}
             //state={document.documentState}
-            state={document.documentState.toLowerCase().charAt(0).toUpperCase() + document.documentState.toLowerCase().slice(1)}
-            submissionDate={document.submissionDate ? document.submissionDate.substring(0, 10) : ""}
+            state={
+              document.documentState
+                .toLowerCase()
+                .charAt(0)
+                .toUpperCase() + document.documentState.toLowerCase().slice(1)
+            }
+            submissionDate={
+              document.submissionDate
+                ? document.submissionDate.substring(0, 10)
+                : ""
+            }
           />
         );
       });
@@ -128,7 +137,14 @@ class UserSubmittedDocumentsContainer extends React.Component {
                   <div className="card-body">
                     <div className="row">
                       <div className="col-1">
-                        <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                        <a
+                          href="/admin/newDocument"
+                          className="btn btn-info"
+                          role="button"
+                          aria-pressed="true"
+                        >
+                          Naujas dokumentas
+                        </a>
                       </div>
                     </div>
                     <div className="row">
@@ -156,16 +172,6 @@ class UserSubmittedDocumentsContainer extends React.Component {
           </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
         // <div className="container-fluid">
         //   <div className="row">
         //     <div className="col-1">
@@ -191,7 +197,6 @@ class UserSubmittedDocumentsContainer extends React.Component {
         //     </div>
         //   </div>
         // </div>
-
 
         // <div className="container-fluid">
         //   <div className="row">
