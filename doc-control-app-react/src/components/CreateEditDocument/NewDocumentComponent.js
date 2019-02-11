@@ -48,7 +48,8 @@ const NewDocumentComponet = (props) => {
                                             Dokumento aprašymas:
                                         </label>
                                         <div className="col-md-4">
-                                            <input
+                                            <textarea
+                                                rows="4" cols="50"
                                                 type="text"
                                                 className="form-control form-control-success"
                                                 //name="lastname"
@@ -99,7 +100,7 @@ const NewDocumentComponet = (props) => {
                                             />
                                         </div>
                                     </div>
-                                    
+
                                     <div className="form-group row">
                                         <div className="col-md-9">
                                             <button className="btn btn-primary" type="submit" >Išsaugoti</button>

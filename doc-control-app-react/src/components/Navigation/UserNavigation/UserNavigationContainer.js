@@ -10,8 +10,23 @@ import NewDocumentContainer from "../../CreateEditDocument/NewDocumentContainer"
 import EditDocumentContainer from "../../CreateEditDocument/EditDocumentContainer";
 import ResourceNotFoundCompoentn from "../../Errors/ResourceNotFoundComponent";
 import UserNavigationComponent from "./UserNavigationConponent";
+import Axios from "axios";
 
+Axios.defaults.headers.Authorization = `Bearer ${JSON.parse(
+  localStorage.getItem("accessToken")
+)}`;
 export default class UserNavigationContainer extends Component {
+  componentDidMount = () => {
+    let token = JSON.parse(localStorage.getItem("accessToken"));
+    if (token) {
+      Axios.defaults.headers.Authorization = `Bearer ${token}`;
+    } else {
+      localStorage.clear("user");
+      localStorage.clear("accessToken");
+      delete Axios.defaults.headers.Authorization;
+      this.props.history.push("/login");
+    }
+  };
   render() {
     return (
       <div>
@@ -52,6 +67,11 @@ export default class UserNavigationContainer extends Component {
                 <Route
                   exact
                   path="/admin/newDocument"
+                  component={NewDocumentContainer}
+                />
+                <Route
+                  exact
+                  path="/newDocument"
                   component={NewDocumentContainer}
                 />
                 <Route

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import "./EditGroups.css";
 import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default class EditUserGroups extends Component {
@@ -36,8 +35,8 @@ export default class EditUserGroups extends Component {
   getAllUserGroups = () => {
     Axios.get(
       "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/groups"
+      this.props.match.params.username +
+      "/groups"
     )
       .then(res => {
         this.setState({ userGroups: res.data });
@@ -145,8 +144,8 @@ export default class EditUserGroups extends Component {
 
     Axios.put(
       "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/groups",
+      this.props.match.params.username +
+      "/groups",
       groupIdList
     )
       .then(res => {
@@ -169,8 +168,8 @@ export default class EditUserGroups extends Component {
     });
     Axios.delete(
       "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/groups",
+      this.props.match.params.username +
+      "/groups",
       { data: groupIdList }
     )
       .then(res => {

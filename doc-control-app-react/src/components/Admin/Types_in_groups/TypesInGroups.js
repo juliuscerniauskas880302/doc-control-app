@@ -213,18 +213,18 @@ export default class TypesInGroups extends Component {
     }
     Axios.delete(
       "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
+      this.state.selectedType +
+      "/groups/" +
+      groupType,
       { data: groupIdListToRemove }
     )
       .then()
       .catch();
     Axios.post(
       "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
+      this.state.selectedType +
+      "/groups/" +
+      groupType,
       groupIdListToAdd
     )
       .then(res => {
@@ -377,5 +377,3 @@ export default class TypesInGroups extends Component {
     );
   }
 }
-
-

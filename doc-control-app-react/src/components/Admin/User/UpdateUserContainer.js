@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Axios from "axios";
-// import "./NewUser.css";
 import NewPasswordComponent from "./NewPasswordComponent";
 import ButtonComponent from "../../Utilities/ButtonComponent";
 
