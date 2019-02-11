@@ -114,35 +114,62 @@ class UserCreatedDocumentsContainer extends React.Component {
                     />
                 );
             });
-            return (<div className="container-fluid">
-                <div className="row">
-                    <div className="col-1">
-                        <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+            return (
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-1">
+                            <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table table-striped">
+                                <thead className="thead-inverse">
+                                    <tr>
+                                        <th>Numeris</th>
+                                        <th>Pavadinimas</th>
+                                        <th>Aprašymas</th>
+                                        <th>Tipas</th>
+                                        <th>Sukūrimo data</th>
+                                        <th>Operacijos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>{documentCard}</tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-2">
-                        <h5>Numeris</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Pavadinimas</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Aprašymas</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Tipas</h5>
-                    </div>
-                    <div className="col-1">
-                        <h5>Sukūrimo data</h5>
-                    </div>
-                    <div className="col-2">
-                        <h5>Operacijos</h5>
-                    </div>
-                </div>
-                <div className="row">{documentCard}
-                </div>
-            </div>);
+            );
+
+            // <div className="container-fluid">
+            //     <div className="row">
+            //         <div className="col-1">
+            //             <a href="/admin/newDocument" className="btn btn-info" role="button" aria-pressed="true">Naujas dokumentas</a>
+            //         </div>
+            //     </div>
+            //     <div className="row">
+            //         <div className="col-2">
+            //             <h5>Numeris</h5>
+            //         </div>
+            //         <div className="col-2">
+            //             <h5>Pavadinimas</h5>
+            //         </div>
+            //         <div className="col-2">
+            //             <h5>Aprašymas</h5>
+            //         </div>
+            //         <div className="col-1">
+            //             <h5>Tipas</h5>
+            //         </div>
+            //         <div className="col-1">
+            //             <h5>Sukūrimo data</h5>
+            //         </div>
+            //         <div className="col-2">
+            //             <h5>Operacijos</h5>
+            //         </div>
+            //     </div>
+            //     <div className="row">{documentCard}
+            //     </div>
+            // </div>);
         }
         return this.state.loading;
     }
