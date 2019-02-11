@@ -16,6 +16,7 @@ import it.akademija.wizards.security.payload.ApiResponse;
 import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
+import it.akademija.wizards.services.auxiliary.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserGroupRepository userGroupRepository;
-    private DocumentService documentService;
+    private Mapper mapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -42,10 +43,10 @@ public class UserService {
     RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, DocumentService documentService) {
+    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, Mapper mapper) {
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
-        this.documentService = documentService;
+        this.mapper = mapper;
     }
 
     public UserRepository getUserRepository() {
@@ -192,11 +193,11 @@ public class UserService {
             if (state.toLowerCase().equals("created")) {
                 documents = user.getDocuments().stream()
                         .filter(document -> document.getDocumentState().equals(DocumentState.CREATED))
-                        .map(documentService::mapEntityToGetCommand).collect(Collectors.toList());
+                        .map(mapper::entityToGetCommand).collect(Collectors.toList());
             } else if (state.toLowerCase().equals("submitted")) {
                 documents = user.getDocuments().stream()
                         .filter(document -> !document.getDocumentState().equals(DocumentState.CREATED))
-                        .map(documentService::mapEntityToGetCommand).collect(Collectors.toList());
+                        .map(mapper::entityToGetCommand).collect(Collectors.toList());
             }
             return documents;
         } else {

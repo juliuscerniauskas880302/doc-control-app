@@ -1,4 +1,4 @@
-package it.akademija.wizards.services;
+package it.akademija.wizards.exception;
 
 import java.io.IOException;
 
