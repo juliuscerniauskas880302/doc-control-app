@@ -20,8 +20,15 @@ export default class UserNavigationComponent extends Component {
 
   render() {
     let data = JSON.parse(localStorage.getItem("user"));
+    let user;
     let role;
-    if (data) role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+    if (data) {
+      role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+      user = data;
+    } else {
+      user = { firstname: "", lastname: "" };
+      this.props.history.push("/login");
+    }
     return (
       <React.Fragment>
         <header className="header">
@@ -54,7 +61,7 @@ export default class UserNavigationComponent extends Component {
                 <div aria-labelledby="userInfo" className="dropdown-menu">
                   <div className="dropdown-item">
                     <strong className="d-block text-uppercase headings-font-family">
-                      {data.firstname + " " + data.lastname}
+                      {user.firstname + " " + user.lastname}
                     </strong>
                     <small>{role}</small>
                   </div>
