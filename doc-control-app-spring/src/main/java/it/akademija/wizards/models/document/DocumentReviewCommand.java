@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class DocumentReviewCommand {
 
-    private String reviewerUsername;
     private String rejectionReason;
     private DocumentState documentState;
 
@@ -16,18 +15,9 @@ public class DocumentReviewCommand {
 
     }
 
-    public DocumentReviewCommand(String reviewerUsername, String rejectionReason, String documentState) {
-        this.reviewerUsername = reviewerUsername;
+    public DocumentReviewCommand(String rejectionReason, String documentState) {
         this.rejectionReason = rejectionReason;
         this.documentState = DocumentState.valueOf(documentState);
-    }
-
-    public String getReviewerUsername() {
-        return reviewerUsername;
-    }
-
-    public void setReviewerUsername(String reviewerUsername) {
-        this.reviewerUsername = reviewerUsername;
     }
 
     public String getRejectionReason() {

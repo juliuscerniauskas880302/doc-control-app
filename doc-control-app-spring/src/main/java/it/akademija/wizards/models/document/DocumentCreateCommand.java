@@ -2,7 +2,6 @@ package it.akademija.wizards.models.document;
 
 public class DocumentCreateCommand {
 
-    private String username;
     private String documentTypeTitle;
     private String title;
     private String description;
@@ -10,19 +9,10 @@ public class DocumentCreateCommand {
     public DocumentCreateCommand() {
     }
 
-    public DocumentCreateCommand(String username, String documentTypeTitle, String title, String description) {
-        this.username = username;
+    public DocumentCreateCommand(String documentTypeTitle, String title, String description) {
         this.documentTypeTitle = documentTypeTitle;
         this.title = title;
         this.description = description;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getDocumentTypeTitle() {

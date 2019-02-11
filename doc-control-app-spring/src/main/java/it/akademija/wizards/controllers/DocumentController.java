@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 
 import io.swagger.annotations.ApiOperation;
 
+import it.akademija.wizards.entities.User;
 import it.akademija.wizards.models.document.DocumentCreateCommand;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.document.DocumentReviewCommand;
@@ -13,12 +14,14 @@ import it.akademija.wizards.security.models.CurrentUser;
 import it.akademija.wizards.security.models.UserPrincipal;
 import it.akademija.wizards.services.DocumentService;
 
+import it.akademija.wizards.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,12 +36,13 @@ import java.util.zip.ZipOutputStream;
 @RestController
 @Api(value = "documents")
 @RequestMapping(value = "/api/docs")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class DocumentController {
 
     @Autowired
     private DocumentService documentService;
     @Autowired
-    private ApplicationContext applicationContext;
+    private FileService fileService;
 
     @Autowired
     private ServletContext servletContext;
@@ -70,6 +74,7 @@ public class DocumentController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> createDocument(
+            @CurrentUser UserPrincipal userPrincipal,
             @RequestParam("model") String model,
             @RequestParam("file") MultipartFile[] multipartFile) {
         /*   String model:
@@ -83,7 +88,7 @@ public class DocumentController {
         ObjectMapper mapper = new ObjectMapper();
         try {
             DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
-            documentService.createDocument(documentCreateCommand, multipartFile);
+            documentService.createDocument(userPrincipal.getUsername(), documentCreateCommand, multipartFile);
 
         } catch (IOException ex) {
             return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
@@ -92,11 +97,65 @@ public class DocumentController {
         return new ResponseEntity<String>("Document created", HttpStatus.OK);
     }
 
+    @ApiOperation(value = "submit document by document Id")
+    @RequestMapping(value = "/{id}/submit", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void submitDocument(@PathVariable String id) {
+        documentService.submitDocument(id);
+    }
+
+    @ApiOperation(value = "review document by document Id")
+    @RequestMapping(value = "/review/{id}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void reviewDocument(
+            @CurrentUser UserPrincipal userPrincipal,
+            @PathVariable String id,
+            @RequestBody DocumentReviewCommand documentReviewCommand) {
+        documentService.reviewDocument(userPrincipal.getUsername(), id, documentReviewCommand);
+    }
+
+    @ApiOperation(value = "update document by document Id",
+            produces = "application/json", consumes = "multipart/form-data")
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<String> updateDocumentById(
+            @PathVariable String id,
+            @RequestPart("model") String model,
+            @RequestPart("file") MultipartFile [] multipartFile) {
+
+        /*   String model:
+    {
+      "documentTypeTitle": "atostogu prasymas",
+      "title": "string",
+      "description": "string"
+    }
+    */
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            DocumentUpdateCommand documentUpdateCommand = mapper.readValue(model, DocumentUpdateCommand.class);
+            documentService.updateDocumentById(id, documentUpdateCommand, multipartFile);
+
+        } catch (IOException ex) {
+            System.out.println(ex);
+            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
+
+        }
+        return new ResponseEntity<String>("Document updated", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "delete document by document Id")
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteDocumentById(@PathVariable String id) {
+        documentService.deleteDocumentById(id);
+    }
+
+
     @ApiOperation(value = "download document main file")
     @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity downloadAFile(@PathVariable final String id) throws FileNotFoundException {
-        return documentService.downloadFile(id);
+        return fileService.downloadFile(id);
     }
 
     @ApiOperation(value = "download additionalFiles")
@@ -157,7 +216,7 @@ public class DocumentController {
     @RequestMapping(value = "/download/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity dowloadAllUserDocuments(@CurrentUser UserPrincipal userPrincipal) throws IOException {
-        return documentService.downloadAllDocuments(userPrincipal.getUsername());
+        return fileService.downloadAllDocuments(userPrincipal.getUsername());
     }
 
 
@@ -208,64 +267,10 @@ public class DocumentController {
 //        outStream.flush();
 //        inStream.close();
 
-    @ApiOperation(value = "submit document by document Id")
-    @RequestMapping(value = "/{id}/submit", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void submitDocument(@PathVariable String id) {
-        documentService.submitDocument(id);
-    }
-
-    @ApiOperation(value = "review document by document Id")
-    @RequestMapping(value = "/review/{id}", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void reviewDocument(
-            @PathVariable String id,
-            @RequestBody DocumentReviewCommand documentReviewCommand) {
-        documentService.reviewDocument(id, documentReviewCommand);
-    }
-
-
-    @ApiOperation(value = "update document by document Id",
-            produces = "application/json", consumes = "multipart/form-data")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<String> updateDocumentById(
-            @PathVariable String id,
-            @RequestPart("model") String model,
-            @RequestPart("file") MultipartFile [] multipartFile) {
-
-        /*   String model:
-    {
-      "documentTypeTitle": "atostogu prasymas",
-      "title": "string",
-      "description": "string"
-    }
-    */
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            DocumentUpdateCommand documentUpdateCommand = mapper.readValue(model, DocumentUpdateCommand.class);
-            documentService.updateDocumentById(id, documentUpdateCommand, multipartFile);
-
-        } catch (IOException ex) {
-            System.out.println(ex);
-            return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
-
-        }
-        return new ResponseEntity<String>("Document updated", HttpStatus.OK);
-    }
-
-
-    @ApiOperation(value = "delete document by document Id")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteDocumentById(@PathVariable String id) {
-        documentService.deleteDocumentById(id);
-    }
-
     @ApiOperation(value = "delete file by document Id and file name")
     @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteFile(@PathVariable String id, @PathVariable String filename){
-        documentService.deleteFileByFileName(id, filename);
+        fileService.deleteFileByFileName(id, filename);
     }
 }
