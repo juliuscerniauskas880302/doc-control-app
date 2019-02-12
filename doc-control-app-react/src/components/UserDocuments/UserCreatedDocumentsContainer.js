@@ -44,16 +44,16 @@ class UserCreatedDocumentsContainer extends React.Component {
   }
 
   handleDelete = id => {
-    let currentUser = JSON.parse(localStorage.getItem("user")).username;
-    let resourcePath =
-      "http://localhost:8081/api/users/" + currentUser + "/docs/created";
+    //let currentUser = JSON.parse(localStorage.getItem("user")).username;
+    //let resourcePath =
+    //  "http://localhost:8081/api/users/" + currentUser + "/docs/created";
     console.log("Atėjau į handleDelete metodą");
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(id);
     axios.delete("http://localhost:8081/api/docs/" + id).then(response => {
       axios
-        .get(resourcePath)
+        .get("http://localhost:8081/api/users/docs/created")
         .then(response => {
           this.setState({ documents: response.data });
         })
@@ -64,10 +64,10 @@ class UserCreatedDocumentsContainer extends React.Component {
   };
 
   handleSubmit = id => {
-    let currentUser = JSON.parse(localStorage.getItem("user")).username;
-    let resourcePath =
-      "http://localhost:8081/api/users/" + currentUser + "/docs/created";
-    console.log("Atėjau į handleSubmit metodą");
+    //let currentUser = JSON.parse(localStorage.getItem("user")).username;
+    //let resourcePath =
+    //  "http://localhost:8081/api/users/" + currentUser + "/docs/created";
+    //console.log("Atėjau į handleSubmit metodą");
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(id);
@@ -75,7 +75,7 @@ class UserCreatedDocumentsContainer extends React.Component {
       .put("http://localhost:8081/api/docs/" + id + "/submit")
       .then(response => {
         axios
-          .get(resourcePath)
+          .get("http://localhost:8081/api/users/docs/created")
           .then(response => {
             this.setState({ documents: response.data });
           })

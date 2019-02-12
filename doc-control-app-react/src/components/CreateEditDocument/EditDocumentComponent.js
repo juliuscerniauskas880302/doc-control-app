@@ -99,7 +99,7 @@ const EditDocumentComponet = (props) => {
                                                 name="selectedFiles"
                                                 className="input-file"
                                                 type="file"
-                                                required
+                                                //required
                                                 accept=".pdf, .jpg, .png"
                                             />
                                         </div>
