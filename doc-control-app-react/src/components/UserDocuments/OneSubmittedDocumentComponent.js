@@ -20,7 +20,6 @@ const OneSubmittedDocumentComponent = props => {
                     <p>{props.id}</p>
                   </div>
                 </div>
-
                 <div className="row">
                   <div className="col-5">
                     <p>Pavadinimas:</p>
@@ -86,7 +85,7 @@ const OneSubmittedDocumentComponent = props => {
                     <div className="col-5">
                       <p>Priėmimo data:</p>
                     </div>
-                    <div className="col-5">
+                    <div className="col-7">
                       <p>{props.approvalDate}</p>
                     </div>
                   </div>
@@ -118,13 +117,11 @@ const OneSubmittedDocumentComponent = props => {
                   <div className="col-7">
                     <p>
                       {props.path} &nbsp;{" "}
-                      <button
-                        className="btn submitButton"
-                        type="button"
+                      <i
+                        className="mygtukas fas fa-download fa-2x"
+                        title="Atsisiųsti pridėtą failą"
                         onClick={() => props.downloadHandler()}
-                      >
-                        Atsisiųsti
-                      </button>
+                      />
                     </p>
                   </div>
                 </div>

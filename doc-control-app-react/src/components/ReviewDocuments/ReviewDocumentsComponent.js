@@ -13,9 +13,9 @@ const ReviewDocumentsComponent = (props) => {
             <td>{props.type}</td>
             <td>{props.submissionDate}</td>
             <td>
-                <Link style={{ textDecoration: 'none', color: 'black', cursor: 'default' }} to={linkas}> <i className="fas fa-info-circle fa-2x"></i> </Link> &nbsp;
-                <i className="fas fa-check-circle fa-2x" onClick={() => { props.handleAccept(props.id) }}></i> &nbsp;
-                <i className="fas fa-times-circle fa-2x" onClick={() => props.handleReject(props.id)}></i>
+                <Link style={{ textDecoration: 'none', color: 'black', cursor: 'default' }} to={linkas}> <i className="fas fa-info-circle fa-2x" title="Dokumento informacija"></i> </Link> &nbsp;
+                <i className="fas fa-check-circle fa-2x" title="Priimti dokumentą" onClick={() => { props.handleAccept(props.id) }}></i> &nbsp;
+                <i className="fas fa-times-circle fa-2x" title="Atmesti dokumentą" onClick={() => props.handleReject(props.id)}></i>
             </td>
         </tr>
 

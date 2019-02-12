@@ -86,13 +86,11 @@ const EditDocumentComponet = props => {
                     <div className="col-md-3">
                       <p>
                         {props.path} &nbsp;{" "}
-                        <button
-                          className="btn submitButton"
-                          type="button"
+                        <i
+                          className="mygtukas fas fa-download fa-2x"
+                          title="Atsisiųsti pridėtą failą"
                           onClick={() => props.downloadHandler()}
-                        >
-                          Atsisiųsti
-                        </button>
+                        />
                       </p>
                     </div>
                   </div>
