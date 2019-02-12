@@ -117,9 +117,12 @@ class UserSubmittedDocumentsContainer extends React.Component {
             //     .charAt(0)
             //     .toUpperCase() + document.documentState.toLowerCase().slice(1)
             // }
-            state={document.documentState === "SUBMITTED" ? "Pateiktas"
-                  : document.documentState === "ACCEPTED" ? "Priimtas"
-                  : "Atmestas"
+            state={
+              document.documentState === "SUBMITTED"
+                ? "Pateiktas"
+                : document.documentState === "ACCEPTED"
+                ? "Priimtas"
+                : "Atmestas"
             }
             submissionDate={
               document.submissionDate

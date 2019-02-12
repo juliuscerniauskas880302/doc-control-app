@@ -142,7 +142,7 @@ public class DocumentService {
         }
     }
 
-//PRIVATE METHODS
+    //PRIVATE METHODS
     private boolean allowedToReviewDocument(String username, Document document) {
         User user = resourceFinder.getUser(username);
         for (UserGroup userGroup : user.getUserGroups()) {

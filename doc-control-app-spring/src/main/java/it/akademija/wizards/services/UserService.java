@@ -17,6 +17,7 @@ import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
+import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -260,4 +261,23 @@ public class UserService {
          }
         throw new NullPointerException("User does not exist");
      }
+
+    @Transactional
+    public boolean isActionAllowed(String username, String action) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            for (UserGroup userGroup : user.getUserGroups()) {
+                if (action.equals("submit")) {
+                    if (!userGroup.getSubmissionDocumentType().isEmpty()) return true;
+                } else if (action.equals("review")) {
+                    if (!userGroup.getReviewDocumentType().isEmpty()) return true;
+                }
+            }
+            return false;
+        } else {
+            throw new NullPointerException("User does not exist");
+        }
+    }
+
+
 }
