@@ -3,47 +3,59 @@
     width: 12em;
 
 }
+.blue {
+    color:rgb(109, 134, 184);
+}
+
+.red {
+    color:  rgb(237,123,92);
+}
+
+.green {
+    color:  rgb(127, 167, 54);
+}
+
 .submitButton {
-    background-color:blue;
+    background-color:rgb(109, 134, 184);
 }
 
 .submitButton:hover {
-    background-color:rgb(4, 4, 194);
+    background-color:rgb(73, 91, 126);
 }
 
 .submitButton:active {
-    background-color: darkblue;
+    background-color:rgb(57, 71, 99);
 }
 
 .submitButtonAlt {
-    background-color: #28a745
+    background-color: rgb(127, 167, 54)
 }
 
 .submitButtonAlt:hover {
-    background-color:#2bc44e;
+    background-color:rgb(94, 126, 34);
 }
 .submitButtonAlt:active {
-    background-color: #1c7c33;
+    background-color: rgb(90, 121, 34);
 }
 
 .deleteButton {
-    background-color: red;
+    background-color: rgb(237,123,92);
 }
 .deleteButton:hover {
-    background-color: rgb(218, 4, 4);
+    background-color: rgb(204, 94, 64);;
 }
 .deleteButton:active {
-    background-color: rgb(175, 20, 20);
+    background-color: rgb(173, 58, 27);
 }
 .goBackButton {
-    background-color: #ffc107;
+    background-color: rgb(70, 70, 70);
 }
 
 .goBackButton:hover {
-    background-color: #ffcb2d;
+    background-color: rgb(47, 47, 47);
 }
 .goBackButton:active {
-    background-color: #bb8c00;
+    background-color: rgb(22, 22, 22);
 }
 
 /* NavLink selection */

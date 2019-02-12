@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const UserCreatedDocumentsComponent = props => {
   var linkas = "/createdDocuments/" + props.id;
@@ -36,7 +35,7 @@ const UserCreatedDocumentsComponent = props => {
         />{" "}
         &nbsp;
         <i
-          className="mygtukas text-success fas fa-check-circle fa-2x"
+          className="mygtukas blue fas fa-check-circle fa-2x"
           onClick={() => {
             props.handleSubmit(props.id);
           }}

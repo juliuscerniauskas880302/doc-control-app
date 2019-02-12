@@ -74,7 +74,7 @@ const OneCreatedDocumentComponent = props => {
                   <div className="col-12">
                     <Link
                       to={`/admin/Documents/${props.id}`}
-                      className="btn submitButton"
+                      className="btn submitButtonAlt"
                       type="button"
                     >
                       Redaguoti
@@ -89,7 +89,7 @@ const OneCreatedDocumentComponent = props => {
                     </button>{" "}
                     &nbsp;
                     <button
-                      className="btn submitButtonAlt"
+                      className="btn submitButton"
                       type="submit"
                       onClick={props.handleSubmit}
                     >
