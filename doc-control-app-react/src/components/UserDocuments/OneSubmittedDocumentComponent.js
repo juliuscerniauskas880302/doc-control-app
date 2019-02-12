@@ -21,50 +21,111 @@ const OneSubmittedDocumentComponent = props => {
                   </div>
                 </div>
 
-                <div className="row">
-                  <div className="col-5">
-                    <p>Pavadinimas:</p>
-                  </div>
-                  <div className="col-7">
-                    <p>{props.title}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-5">
-                    <p>Aprašymas:</p>
-                  </div>
-                  <div className="col-7">
-                    <p>{props.description}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-5">
-                    <p>Tipas:</p>
-                  </div>
-                  <div className="col-7">
-                    <p>{props.type}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-5">
-                    <p>Pateikimo data:</p>
-                  </div>
-                  <div className="col-7">
-                    <p>{props.submissionDate}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-5">
-                    <p>Būsena:</p>
-                  </div>
-                  <div className="col-7">
-                    <p>{props.state}</p>
-                  </div>
-                </div>
-                {props.state === "Rejected" && (
-                  <div className="row">
-                    <div className="col-5">
-                      <p>Atmetimo priežastis:</p>
+                                <div className="row">
+                                    <div className="col-5">
+                                        <p>Pavadinimas:</p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>{props.title}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-5">
+                                        <p>Aprašymas:</p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>{props.description}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-5">
+                                        <p>Tipas:</p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>{props.type}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-5">
+                                        <p>Pateikimo data:</p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>{props.submissionDate}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-5">
+                                        <p>Būsena:</p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>{props.state}</p>
+                                    </div>
+                                </div>
+                                {props.state === "Atmestas" &&
+                                    <div className="row">
+                                        <div className="col-5">
+                                            <p>Atmetimo priežastis:</p>
+                                        </div>
+                                        <div className="col-7">
+                                            <p>{props.rejectionReason}</p>
+                                        </div>
+                                    </div>
+                                }
+                                {props.state === "Priimtas" &&
+                                    <div className="row">
+                                        <div className="col-5">
+                                            <p>Priėmė:</p>
+                                        </div>
+                                        <div className="col-7">
+                                            <p>{props.reviewer}</p>
+                                        </div>
+                                    </div>
+                                }
+                                {props.approvalDate !== "" &&
+                                    <div className="row">
+                                        <div className="col-5">
+                                            <p>Priėmimo data:</p>
+                                        </div>
+                                        <div className="col-5">
+                                            <p>{props.approvalDate}</p>
+                                        </div>
+                                    </div>
+                                }
+                                {props.state === "Atmestas" &&
+                                    <div className="row">
+                                        <div className="col-5">
+                                            <p>Atmetė:</p>
+                                        </div>
+                                        <div className="col-7">
+                                            <p>{props.reviewer}</p>
+                                        </div>
+                                    </div>
+                                }
+                                {props.rejectionDate !== "" &&
+                                    <div className="row">
+                                        <div className="col-5">
+                                            <p>Atmetimo data:</p>
+                                        </div>
+                                        <div className="col-7">
+                                            <p>{props.rejectionDate}</p>
+                                        </div>
+                                    </div>
+                                }
+                                <div className="row">
+                                    <div className="col-5">
+                                        <p>Pridėtas failas:</p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>{props.path} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <Link to={`/`} className="btn btn-dark" type="button">Atgal</Link> &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-7">
                       <p>{props.rejectionReason}</p>

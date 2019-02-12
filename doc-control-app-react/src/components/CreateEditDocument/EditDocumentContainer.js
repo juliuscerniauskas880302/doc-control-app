@@ -42,15 +42,11 @@ class EditDocumentContainer extends React.Component {
   };
 
   openFileTransferPopup = () => {
-    this.setState({
-      isOpen: true,
-    });
+    this.setState({isOpen: true});
   }
 
   closeFileTransferPopup = () => {
-    this.setState({
-      isOpen: false
-    });
+    this.setState({isOpen: false});
   }
 
   downloadHandler = (event) => {
@@ -92,7 +88,8 @@ class EditDocumentContainer extends React.Component {
   handleSubmit = (event) => {
     console.log("Atėjau į Submit handlerį");
     event.preventDefault();
-    this.openFileTransferPopup();
+    //perkeliu šią komandą į kitą vietą
+    //this.openFileTransferPopup();
 
     let model = {
       description: this.state.description,
@@ -109,6 +106,7 @@ class EditDocumentContainer extends React.Component {
       file.append("file", null); //nėra 3 parametro, kuris turėtų būti failo pavadinimas 
     } else {
       if (this.state.selectedFiles.length === 1) {
+        this.openFileTransferPopup();
         file.append(
           "file",
           this.state.selectedFiles[0],

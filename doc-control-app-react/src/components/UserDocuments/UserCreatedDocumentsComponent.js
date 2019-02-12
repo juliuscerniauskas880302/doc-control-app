@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./iconsStyle.css";
+
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const UserCreatedDocumentsComponent = props => {
   var linkas = "/createdDocuments/" + props.id;
