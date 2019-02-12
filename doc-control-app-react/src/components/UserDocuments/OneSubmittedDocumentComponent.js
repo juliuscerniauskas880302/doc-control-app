@@ -130,7 +130,7 @@ const OneSubmittedDocumentComponent = props => {
                     <div className="col-7">
                       <p>{props.rejectionReason}</p>
                     </div>
-                  </div>
+                 
                 )}
                 {props.state === "Accepted" && (
                   <div className="row">
