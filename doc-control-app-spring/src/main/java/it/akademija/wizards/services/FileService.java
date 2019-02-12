@@ -249,7 +249,7 @@ public class FileService {
     }
 
     //    Zip folders
-    public  void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+    private void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
         if (fileToZip == null || !fileToZip.exists()) {
             return;
         }
@@ -261,7 +261,7 @@ public class FileService {
 
         if (fileToZip.isDirectory()) {
             System.out.println("+" + zipEntryName);
-            for (File file : fileToZip.listFiles()) {
+            for (File file : Objects.requireNonNull(fileToZip.listFiles())) {
                 addDirToZipArchive(zos, file, zipEntryName);
             }
         } else {
@@ -278,13 +278,13 @@ public class FileService {
         }
     }
 
-    public void deleteFolder(File folder){
+    private void deleteFolder(File folder){
         if(folder.exists()) {
-            for (String s : folder.list()) {
+            for (String s : Objects.requireNonNull(folder.list())) {
                 File currentFile = new File(folder.getPath(), s);
-                currentFile.delete();
+                boolean delete = currentFile.delete();
             }
-            folder.delete();
+            boolean delete = folder.delete();
         } else {
             throw new IllegalArgumentException("Folder by this name does not exist");
         }

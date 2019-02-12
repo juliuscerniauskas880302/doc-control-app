@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import avatar from "../../../css/images/avatar.png";
-import PropTypes from "prop-types";
 import NavLink from "../../Utilities/Navigation/NavLink";
 
 export default class AdminNavigationComponent extends Component {
@@ -20,12 +18,17 @@ export default class AdminNavigationComponent extends Component {
     }
   };
 
-
-
-
   render() {
     let data = JSON.parse(localStorage.getItem("user"));
-    let role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+    let user;
+    let role;
+    if (data) {
+      role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+      user = data;
+    } else {
+      user = { firstname: "", lastname: "" };
+      this.props.history.push("/login");
+    }
     return (
       <React.Fragment>
         <header className="header">
@@ -58,7 +61,7 @@ export default class AdminNavigationComponent extends Component {
                 <div aria-labelledby="userInfo" className="dropdown-menu">
                   <div className="dropdown-item">
                     <strong className="d-block text-uppercase headings-font-family">
-                      {data.firstname + " " + data.lastname}
+                      {user.firstname + " " + user.lastname}
                     </strong>
                     <small>{role}</small>
                   </div>

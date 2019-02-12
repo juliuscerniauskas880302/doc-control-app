@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../../css/images/avatar.png";
+import NavLink from "../../Utilities/Navigation/NavLink";
 
 export default class UserNavigationComponent extends Component {
   constructor(props) {
@@ -20,7 +21,15 @@ export default class UserNavigationComponent extends Component {
 
   render() {
     let data = JSON.parse(localStorage.getItem("user"));
-    let role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+    let user;
+    let role;
+    if (data) {
+      role = data.admin ? "Administratorius" : "Paprastas vartotojas";
+      user = data;
+    } else {
+      user = { firstname: "", lastname: "" };
+      this.props.history.push("/login");
+    }
     return (
       <React.Fragment>
         <header className="header">
@@ -53,7 +62,7 @@ export default class UserNavigationComponent extends Component {
                 <div aria-labelledby="userInfo" className="dropdown-menu">
                   <div className="dropdown-item">
                     <strong className="d-block text-uppercase headings-font-family">
-                      {data.firstname + " " + data.lastname}
+                      {user.firstname + " " + user.lastname}
                     </strong>
                     <small>{role}</small>
                   </div>
@@ -78,39 +87,42 @@ export default class UserNavigationComponent extends Component {
               <div className="line" />
             </div>
             <ul className="sidebar-menu list-unstyled">
-              <Link to="/" style={{ textDecoration: "none" }}>
+              <NavLink to="/" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-file-alt mr-3 text-gray" />
                     <span>Pateikti</span>
                   </div>
                 </li>
-              </Link>
-              <Link to="/createdDocuments" style={{ textDecoration: "none" }}>
+              </NavLink>
+              <NavLink
+                to="/createdDocuments"
+                style={{ textDecoration: "none" }}
+              >
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-file mr-3 text-gray" />
                     <span>Sukurti</span>
                   </div>
                 </li>
-              </Link>
+              </NavLink>
 
-              <Link to="/reviewDocuments" style={{ textDecoration: "none" }}>
+              <NavLink to="/reviewDocuments" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-file-contract  mr-3 text-gray" />
                     <span>Peržiūrėti</span>
                   </div>
                 </li>
-              </Link>
-              <Link to="/newDocument" style={{ textDecoration: "none" }}>
+              </NavLink>
+              <NavLink to="/newDocument" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-file-signature  mr-3 text-gray" />
                     <span>Naujas dokumentas</span>
                   </div>
                 </li>
-              </Link>
+              </NavLink>
             </ul>
           </div>
           {this.props.children}

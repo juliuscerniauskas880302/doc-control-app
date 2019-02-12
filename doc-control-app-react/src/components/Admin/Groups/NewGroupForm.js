@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Axios from "axios";
 import NewGroupComponent from "./NewGroupComponent";
 import EditGroupUsers from "./EditGroupUsers";
+import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default class NewGroupForm extends Component {
   constructor(props) {
@@ -12,25 +13,33 @@ export default class NewGroupForm extends Component {
       newTitle: "",
       allGroups: [],
       allUsers: [],
-      selectedGroupForAddUsers: "",
+      groupUsers: [],
+      selectedGroupForAddUsers: null,
       showMessage: { message: "", messageType: "", show: false }
     };
   }
 
   componentDidMount = () => {
     this.getAllGroups();
+    this.getAllUsers();
   };
 
   getAllGroups = () => {
     Axios.get("http://localhost:8081/api/groups")
       .then(res => {
+        console.log("Visos grupes: ", res.data);
         this.setState({ allGroups: res.data });
       })
       .catch(err => {
         console.log(err);
       });
   };
-  getAllUsers;
+  getAllUsers = () => {
+    Axios.get("http://localhost:8081/api/users").then(res => {
+      console.log(res.data);
+      this.setState({ allUsers: res.data });
+    });
+  };
 
   getSelectedGroupID = () => {
     let id = "";
@@ -44,6 +53,7 @@ export default class NewGroupForm extends Component {
   };
 
   onValueChangeHandler = event => {
+    console.log(event.target.value);
     if (event.target.name === "selectedGroupTitle") {
       this.setState({ newTitle: event.target.value });
     }
@@ -64,7 +74,7 @@ export default class NewGroupForm extends Component {
     }
     let groups = this.state.allGroups.map(group => {
       return (
-        <option key={group.title} value={group.title}>
+        <option key={group.title} id={group.id} value={group.title}>
           {group.title}
         </option>
       );
@@ -162,6 +172,151 @@ export default class NewGroupForm extends Component {
     }
   };
 
+  onSelectedGroupForAddUsersHandler = e => {
+    console.log("Target value", e.target.value);
+    this.state.allGroups.forEach(element => {
+      if (element.title === e.target.value) {
+        this.setState({ selectedGroupForAddUsers: element.id }, () => {
+          this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
+        });
+      }
+    });
+  };
+
+  loadSelectedGroupUsers = selectedId => {
+    Axios.get("http://localhost:8081/api/groups/" + selectedId + "/users")
+      .then(res => {
+        let allList = [];
+        this.state.allUsers.forEach(user => {
+          allList.push({
+            username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            isChecked: false
+          });
+        });
+        allList.forEach(listEl => {
+          res.data.forEach(resEl => {
+            if (listEl.username === resEl.username) {
+              listEl.isChecked = true;
+            }
+          });
+        });
+        this.setState({ groupUsers: allList });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  showUsersCheckBox = () => {
+    console.log("nu nassd");
+    if (this.state.allUsers.length === 0) {
+      return <div>Nėra vartotojų</div>;
+    }
+    if (this.state.selectedGroupForAddUsers === null) {
+      return <div>Pasirinkite grupę</div>;
+    }
+    let data = this.state.groupUsers.map((user, index) => {
+      return (
+        <tr>
+          <th scope="row">{index + 1}</th>
+          <td>{user.username}</td>
+          <td>{user.lastname}</td>
+          <td>{user.email}</td>
+          <td>
+            <input
+              onChange={event => this.handleUserCheckBoxClick(event)}
+              id={user.username}
+              type="checkbox"
+              value={user.username}
+              checked={user.isChecked}
+            />
+          </td>
+        </tr>
+      );
+    });
+    return (
+      <div className="col-md-12">
+        <p>
+          Pažymėkite vartotojus, kuriuos noriti pridėti ir spauskite mygtuką
+          "Atnaujinti".
+        </p>
+        <div className="line" />
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Vardas</th>
+              <th scope="col">Pavardė</th>
+              <th scope="col">Paštas</th>
+              <th scope="col">Pridėti</th>
+            </tr>
+          </thead>
+          <tbody>{data}</tbody>
+        </table>
+
+        <ButtonComponent
+          onClick={this.onClickAddUsersToGroup}
+          type="submit"
+          value="Atnaujinti"
+          className="btn submitButton"
+        />
+      </div>
+    );
+  };
+
+  handleUserCheckBoxClick = e => {
+    const options = this.state.groupUsers;
+    options.forEach(option => {
+      if (option.username === e.target.value) {
+        option.isChecked = !option.isChecked;
+      }
+      this.setState({ groupUsers: options });
+    });
+  };
+
+  onClickAddUsersToGroup = () => {
+    console.log("Selected type: ", this.state.selectedType);
+    let userIdListToAdd = [];
+    let userIdListToRemove = [];
+
+    this.state.groupUsers.forEach(el => {
+      if (el.isChecked) {
+        userIdListToAdd.push(el.username);
+      } else {
+        userIdListToRemove.push(el.username);
+      }
+    });
+    console.log("User id's to add: ", userIdListToAdd);
+    console.log("User id's to remove: ", userIdListToRemove);
+
+    Axios.delete(
+      "http://localhost:8081/api/groups/" +
+        this.state.selectedGroupForAddUsers +
+        "/users",
+      { data: { users: userIdListToRemove } }
+    )
+      .then()
+      .catch();
+    Axios.put(
+      "http://localhost:8081/api/groups/" +
+        this.state.selectedGroupForAddUsers +
+        "/users",
+      { users: userIdListToAdd }
+    )
+      .then(res => {
+        this.handleMessageInput(
+          "Vartotojų priskyrimas įvykdytas",
+          "alert alert-info fixed-top text-center",
+          2500
+        );
+        this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -187,6 +342,9 @@ export default class NewGroupForm extends Component {
               <EditGroupUsers
                 showGroups={this.showAllGroups()}
                 onClickGoBack={() => this.goBack()}
+                onChange={e => this.onSelectedGroupForAddUsersHandler(e)}
+                showUsersCheckBox={this.showUsersCheckBox}
+                onClickAddUsersToGroup={() => this.onClickAddUsersToGroup()}
               />
             </section>
           </div>

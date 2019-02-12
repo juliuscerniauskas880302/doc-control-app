@@ -13,7 +13,7 @@ import AdminNavigationComponent from "../AdminNavigation/AdminNavigationComponen
 import Axios from "axios";
 
 export default class AdminNavigationContainer extends Component {
-  componentDidMount = () => {
+  checkToken = () => {
     let token = JSON.parse(localStorage.getItem("accessToken"));
     if (token) {
       Axios.defaults.headers.Authorization = `Bearer ${token}`;
@@ -24,7 +24,9 @@ export default class AdminNavigationContainer extends Component {
       this.props.history.push("/login");
     }
   };
+
   render() {
+    this.checkToken();
     return (
       <div>
         <BrowserRouter>
