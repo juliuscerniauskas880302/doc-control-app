@@ -30,7 +30,7 @@ const Login = ({
                 <img src={svg} alt="" className="img-fluid" />
               </div>
             </div>
-            <div className="col-lg-5 px-lg-4 mt-5">
+            <div className="col-lg-5 px-lg-3 mt-5">
               <h1 className="text-base blue text-uppercase mb-4">
                 Dokumentų Valdymo Sistema v 1.0.0
               </h1>
