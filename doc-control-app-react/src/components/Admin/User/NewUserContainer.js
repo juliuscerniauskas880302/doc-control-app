@@ -9,7 +9,7 @@ export default class NewUserContainer extends Component {
       firstname: "",
       lastname: "",
       email: "",
-      passwrod: "",
+      password: "",
       username: "",
       isAdmin: false
     };
@@ -30,6 +30,7 @@ export default class NewUserContainer extends Component {
       lastname: lastname,
       username: username
     });
+    console.log("Esama busena", this.state);
     Axios.post("http://localhost:8081/api/users", this.state)
       .then(res => {
         console.log("New user added");
