@@ -64,7 +64,7 @@ const OneCreatedDocumentComponent = (props) => {
                   <div className="col-12">
                     <Link
                       to={`/admin/Documents/${props.id}`}
-                      className="btn submitButton"
+                      className="btn submitButtonAlt"
                       type="button"
                     >
                       Redaguoti

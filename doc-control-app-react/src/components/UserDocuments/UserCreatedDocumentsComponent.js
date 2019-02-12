@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const UserCreatedDocumentsComponent = props => {
   var linkas = "/createdDocuments/" + props.id;
@@ -12,14 +11,41 @@ const UserCreatedDocumentsComponent = props => {
       <td>{props.type}</td>
       <td>{props.creationDate}</td>
       <td>
-        <Link style={{ textDecoration: "none", color: "black", cursor: "default" }} to={linkas}>
-          <i className="mygtukas fas fa-info-circle fa-2x" title="Dokumento informacija"/>
-        </Link>&nbsp;
-        <Link style={{ textDecoration: "none", color: "black", cursor: "default" }} to={`/admin/Documents/${props.id}`}>
-          <i className="mygtukas far fa-edit fa-2x" title="Dokumento redagavimas"/>
-        </Link>&nbsp;
-        <i className="mygtukas fas fa-trash fa-2x" title="Dokumento trynimas" onClick={() => {props.handleDelete(props.id);}}/>&nbsp;
-        <i className="mygtukas fas fa-file-signature fa-2x" title="Dokumneto pateikimas" onClick={() => {props.handleSubmit(props.id);}}/>
+        <Link
+          style={{ textDecoration: "none", color: "black", cursor: "default" }}
+          to={linkas}
+        >
+          <i
+            className="mygtukas fas fa-info-circle fa-2x"
+            title="Dokumento informacija"
+          />
+        </Link>
+        &nbsp;
+        <Link
+          style={{ textDecoration: "none", color: "black", cursor: "default" }}
+          to={`/admin/Documents/${props.id}`}
+        >
+          <i
+            className="mygtukas far fa-edit fa-2x"
+            title="Dokumento redagavimas"
+          />
+        </Link>
+        &nbsp;
+        <i
+          className="mygtukas fas fa-trash fa-2x"
+          title="Dokumento trynimas"
+          onClick={() => {
+            props.handleDelete(props.id);
+          }}
+        />
+        &nbsp;
+        <i
+          className="mygtukas blue fas fa-check-circle fa-2x"
+          title="Dokumneto pateikimas"
+          onClick={() => {
+            props.handleSubmit(props.id);
+          }}
+        />
       </td>
     </tr>
 
