@@ -136,18 +136,6 @@ class UserSubmittedDocumentsContainer extends React.Component {
                   </div>
                   <div className="card-body">
                     <div className="row">
-                      <div className="col-1">
-                        <a
-                          href="/admin/newDocument"
-                          className="btn btn-info"
-                          role="button"
-                          aria-pressed="true"
-                        >
-                          Naujas dokumentas
-                        </a>
-                      </div>
-                    </div>
-                    <div className="row">
                       <div className="col-12">
                         <table className="table table-striped">
                           <thead className="thead-inverse">
