@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
+import javax.validation.Valid;
 import java.io.*;
 
 
@@ -81,20 +82,18 @@ public class DocumentController {
             {
               "description": "string",
               "documentTypeTitle": "atostogu prasymas",
-              "title": "string",
-              "username": "migle"
+              "title": "string"
             }
         */
         ObjectMapper mapper = new ObjectMapper();
         try {
             DocumentCreateCommand documentCreateCommand = mapper.readValue(model, DocumentCreateCommand.class);
             documentService.createDocument(userPrincipal.getUsername(), documentCreateCommand, multipartFile);
-
         } catch (IOException ex) {
             return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
 
         }
-        return new ResponseEntity<String>("Document created", HttpStatus.OK);
+        return new ResponseEntity<>("Document created", HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "submit document by document Id")
@@ -140,7 +139,7 @@ public class DocumentController {
             return new ResponseEntity<>("Failed to map to object.", HttpStatus.BAD_REQUEST);
 
         }
-        return new ResponseEntity<String>("Document updated", HttpStatus.OK);
+        return new ResponseEntity<String>("Document updated", HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "delete document by document Id")
