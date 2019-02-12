@@ -39,13 +39,13 @@
 }
 
 .deleteButton {
-    background-color: rgb(237,123,92);
+    background-color: rgb(231, 90, 80);
 }
 .deleteButton:hover {
-    background-color: rgb(204, 94, 64);;
+    background-color: rgb(197, 72, 63);
 }
 .deleteButton:active {
-    background-color: rgb(173, 58, 27);
+    background-color: rgb(156, 55, 48));
 }
 .goBackButton {
     background-color: rgb(70, 70, 70);
