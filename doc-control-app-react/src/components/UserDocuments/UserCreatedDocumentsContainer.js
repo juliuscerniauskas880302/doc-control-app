@@ -2,7 +2,14 @@ import React from "react";
 import UserCreatedDocumentsComponent from "./UserCreatedDocumentsComponent";
 import axios from "axios";
 
+//bandymas
+window.onunload = function() {
+  localStorage.clear();
+  return '';
+}
+
 class UserCreatedDocumentsContainer extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -42,6 +49,9 @@ class UserCreatedDocumentsContainer extends React.Component {
       loading: "Loading documents. Please wait..."
     };
   }
+
+  
+
 
   handleDelete = id => {
     //let currentUser = JSON.parse(localStorage.getItem("user")).username;
