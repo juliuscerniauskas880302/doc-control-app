@@ -34,9 +34,10 @@ export default class NewUserContainer extends Component {
     Axios.post("http://localhost:8081/api/users", this.state)
       .then(res => {
         console.log("New user added");
+        console.log("Grizo res:", res);
       })
       .catch(err => {
-        console.log(err);
+        console.log("Grizo err:", err.response.data);
       });
   };
 
