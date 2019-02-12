@@ -47,5 +47,5 @@
 
 /* NavLink selection */
 .selected {
-    filter: brightness(50%);
+    color: rgb(46, 46, 46);
 }

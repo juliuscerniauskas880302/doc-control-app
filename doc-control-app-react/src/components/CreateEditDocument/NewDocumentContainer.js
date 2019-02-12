@@ -100,7 +100,7 @@ class NewDocumentContainer extends React.Component {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
       title: this.state.title,
-      username: this.state.username
+      //username: this.state.username
     };
     console.log("Čia spausdina modelį");
     console.log(model);
