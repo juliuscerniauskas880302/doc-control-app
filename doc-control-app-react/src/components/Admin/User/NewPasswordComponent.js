@@ -38,7 +38,7 @@ export default function NewPasswordComponent(props) {
               <input
                 type="submit"
                 value="Pakeisti"
-                className="btn btn-primary"
+                className="btn submitButton"
               />
             </div>
           </div>
@@ -49,7 +49,7 @@ export default function NewPasswordComponent(props) {
               onClick={() => props.goBack()}
               type="submit"
               value="Grįžti atgal"
-              className="btn btn-warning"
+              className="btn goBackButton"
             />
           </div>
         </div>
@@ -57,5 +57,3 @@ export default function NewPasswordComponent(props) {
     </div>
   );
 }
-
-

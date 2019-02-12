@@ -89,8 +89,8 @@ export default class AdminNavigationComponent extends Component {
               <NavLink to="/" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item ">
                   <div className="sidebar-link text-muted ">
-                    <i className="fas fa-users mr-3 text-gray " />
-                    <span>Pagrindinis</span>
+                    <i className="fas fa-users text-gray " />
+                    <span className="mx-auto">Pagrindinis</span>
                   </div>
                 </li>
               </NavLink>
@@ -98,8 +98,8 @@ export default class AdminNavigationComponent extends Component {
               <NavLink to="/users/add" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted ">
-                    <i className="fas fa-user mr-3 text-gray" />
-                    <span>Naujas vartotojas</span>
+                    <i className="fas fa-user ml-1 text-gray" />
+                    <span className="mx-auto">Naujas vartotojas</span>
                   </div>
                 </li>
               </NavLink>
@@ -107,16 +107,16 @@ export default class AdminNavigationComponent extends Component {
               <NavLink to="/groups/add" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
-                    <i className="fas fa-clipboard-list  mr-3 text-gray" />
-                    <span>Grupės</span>
+                    <i className="fas fa-clipboard-list  ml-1 text-gray" />
+                    <span className="mx-auto">Grupės</span>
                   </div>
                 </li>
               </NavLink>
               <NavLink to="/types/add" style={{ textDecoration: "none" }}>
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
-                    <i className="fas fa-file-signature mr-3 text-gray" />
-                    <span>Dokumentų tipai</span>
+                    <i className="fas fa-file-signature ml-1 text-gray" />
+                    <span className="mx-auto">Dokumentų tipai</span>
                   </div>
                 </li>
               </NavLink>
@@ -126,8 +126,8 @@ export default class AdminNavigationComponent extends Component {
               >
                 <li className="sidebar-list-item">
                   <div className="sidebar-link text-muted">
-                    <i className="fas fa-clipboard  mr-3 text-gray" />
-                    <span>Siųsti / Peržiūrėti</span>
+                    <i className="fas fa-clipboard ml-1 text-gray" />
+                    <span className="mx-auto">Siųsti / Peržiūrėti</span>
                   </div>
                 </li>
               </NavLink>

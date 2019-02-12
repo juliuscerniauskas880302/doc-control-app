@@ -81,9 +81,13 @@ export default class UserNavigationComponent extends Component {
 
         <div className="d-flex align-items-stretch">
           <div id="sidebar" className={this.state.showMenu}>
+            <NavLink to="/newDocument" style={{ textDecoration: "none" }}>
+              <div className="sidebar-link text-muted">
+                <i className="fas fa-file-signature  mr-3 text-gray" />
+                <span>Naujas dokumentas</span>
+              </div>
+            </NavLink>
             <div className="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">
-              <i className="fas fa-tools fa-3x" />
-              <p>Meniu</p>
               <div className="line" />
             </div>
             <ul className="sidebar-menu list-unstyled">
@@ -112,14 +116,6 @@ export default class UserNavigationComponent extends Component {
                   <div className="sidebar-link text-muted">
                     <i className="fas fa-file-contract  mr-3 text-gray" />
                     <span>Peržiūrėti</span>
-                  </div>
-                </li>
-              </NavLink>
-              <NavLink to="/newDocument" style={{ textDecoration: "none" }}>
-                <li className="sidebar-list-item">
-                  <div className="sidebar-link text-muted">
-                    <i className="fas fa-file-signature  mr-3 text-gray" />
-                    <span>Naujas dokumentas</span>
                   </div>
                 </li>
               </NavLink>

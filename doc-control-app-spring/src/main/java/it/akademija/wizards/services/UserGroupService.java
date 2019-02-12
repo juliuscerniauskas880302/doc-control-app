@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,26 +84,15 @@ public class UserGroupService {
     }
 
     @Transactional
-    public void addUsersToGroup(GroupAddUsersCommand groupAddUsersCommand, String id) {
+    public List<UserGetCommand> addUsersToGroup(GroupAddUsersCommand groupAddUsersCommand, String id) {
         UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
         if (userGroup != null) {
             List<User> userList = userRepository.findAllByUsernameIn(groupAddUsersCommand.getUsers());
-            for (User user: userList) {
-                userGroup.addUser(user);
-            }
+            userGroup.setUsers(new HashSet<>(userList));
             userGroupRepository.save(userGroup);
-        }
-    }
-
-    @Transactional
-    public void removeUsersFromGroup(GroupRemoveUsersCommand groupRemoveUsersCommand, String id) {
-        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
-        if (userGroup != null) {
-            List<User> userList = userRepository.findAllByUsernameIn(groupRemoveUsersCommand.getUsers());
-            for (User user: userList) {
-                userGroup.removeUser(user);
-            }
-            userGroupRepository.save(userGroup);
+            return getGroupsUsers(id);
+        } else {
+            throw new NullPointerException("User group does not exist");
         }
     }
 

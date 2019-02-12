@@ -44,7 +44,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
         //   submissionDate: "2019.01.28"
         // }
       ],
-      loading: "Loading documents. Please wait..."
+      loading: "Kraunami duomenys. Prašome palaukti."
     };
   }
 
@@ -110,12 +110,19 @@ class UserSubmittedDocumentsContainer extends React.Component {
             title={document.title}
             description={document.description}
             type={document.documentTypeTitle}
-            //state={document.documentState}
+            //sena versija su agliškomis būsenomis
+            // state={
+            //   document.documentState
+            //     .toLowerCase()
+            //     .charAt(0)
+            //     .toUpperCase() + document.documentState.toLowerCase().slice(1)
+            // }
             state={
-              document.documentState
-                .toLowerCase()
-                .charAt(0)
-                .toUpperCase() + document.documentState.toLowerCase().slice(1)
+              document.documentState === "SUBMITTED"
+                ? "Pateiktas"
+                : document.documentState === "ACCEPTED"
+                ? "Priimtas"
+                : "Atmestas"
             }
             submissionDate={
               document.submissionDate

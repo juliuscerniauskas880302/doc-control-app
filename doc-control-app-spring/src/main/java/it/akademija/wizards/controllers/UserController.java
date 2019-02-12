@@ -2,6 +2,7 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import it.akademija.wizards.entities.User;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
@@ -120,4 +121,13 @@ public class UserController {
     public Set<DocumentTypeGetCommand> getUserSubmissionDocTypes(@CurrentUser UserPrincipal userPrincipal) {
         return userService.getUserSubmissionDocTypes(userPrincipal.getUsername());
     }
+
+    @ApiOperation(value = "checks if user is allowed to submit/review documents")
+    @RequestMapping(value = "/action/{action}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public boolean isActionAllowed (@CurrentUser UserPrincipal userPrincipal, @PathVariable String action) {
+        return userService.isActionAllowed(userPrincipal.getUsername(), action);
+    }
+
+
 }

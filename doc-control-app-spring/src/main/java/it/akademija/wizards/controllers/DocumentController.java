@@ -219,57 +219,12 @@ public class DocumentController {
     }
 
 
-//      DOWNLOAD WITH HTTPSERVLETRESPONSE
-//    @ApiOperation(value = "download additionalFiles")
-//    @RequestMapping(value = "/{id}/download/attachments", method = RequestMethod.GET,
-//    produces = "application/octet-stream")
-//    @ResponseStatus(HttpStatus.OK)
-//    public HttpEntity downloadAttachments(
-//            HttpServletResponse response, @PathVariable final String id) throws IOException {
-//
-//        File doc = new File("documents/migle" + "/" + "compressed.zip");
-//
-//        InputStream is = new FileInputStream(doc);
-//
-//        response.setHeader("Content-Disposition", "attachment;filename=\"compressed.zip\"");
-//        response.setHeader("Content-Type", "application/octet-stream;");
-//        StreamUtils.copy(is ,response.getOutputStream());
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
-//        DocumentGetCommand document = documentService.getDocumentsById(id);
-//        List<String> fileNames = document.getAdditionalFilePaths();
-//        String fileName = "compressed.zip";
-//        System.out.println("fileName: " + fileName);
-//        System.out.println("mediaType: " + mediaType);
-//
-//        File file = new File("documents/migle" + "/" + fileName);
-//
-//        // Content-Type
-//        // application/pdf
-////        response.setContentType(mediaType.getType());
-//
-//        // Content-Disposition
-//        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
-//
-//        // Content-Length
-//        response.setContentLength((int) file.length());
-//
-//        BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
-//        BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
-//
-//        byte[] buffer = new byte[1024];
-//        int bytesRead = 0;
-//        while ((bytesRead = inStream.read(buffer)) != -1) {
-//            outStream.write(buffer, 0, bytesRead);
-//        }
-//        outStream.flush();
-//        inStream.close();
-
     @ApiOperation(value = "delete file by document Id and file name")
     @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteFile(@PathVariable String id, @PathVariable String filename){
         fileService.deleteFileByFileName(id, filename);
     }
+
+
 }
