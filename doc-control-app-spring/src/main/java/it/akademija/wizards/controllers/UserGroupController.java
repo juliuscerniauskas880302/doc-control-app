@@ -74,13 +74,6 @@ public class UserGroupController {
         return userGroupService.addUsersToGroup(groupAddUsersCommand, id);
     }
 
-    @ApiOperation(value = "remove user list from group")
-    @RequestMapping(value = "/{id}/users", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void removeUsersFromGroup(@RequestBody GroupRemoveUsersCommand groupRemoveUsersCommand, @PathVariable(value = "id") String id) {
-        userGroupService.removeUsersFromGroup(groupRemoveUsersCommand, id);
-    }
-
     @ApiOperation(value = "get users in group")
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)

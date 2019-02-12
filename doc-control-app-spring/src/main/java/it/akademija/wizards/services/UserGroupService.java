@@ -96,18 +96,6 @@ public class UserGroupService {
         }
     }
 
-    @Transactional
-    public void removeUsersFromGroup(GroupRemoveUsersCommand groupRemoveUsersCommand, String id) {
-        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
-        if (userGroup != null) {
-            List<User> userList = userRepository.findAllByUsernameIn(groupRemoveUsersCommand.getUsers());
-            for (User user: userList) {
-                userGroup.removeUser(user);
-            }
-            userGroupRepository.save(userGroup);
-        }
-    }
-
     @Transactional(readOnly = true)
     public List<UserGetCommand> getGroupsUsers(String id) {
         UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
