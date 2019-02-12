@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import avatar from "../../../css/images/avatar.png";
-import PropTypes from "prop-types";
 import NavLink from "../../Utilities/Navigation/NavLink";
 
 export default class AdminNavigationComponent extends Component {
