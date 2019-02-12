@@ -61,7 +61,7 @@ const OneSubmittedDocumentComponent = (props) => {
                                         <p>{props.state}</p>
                                     </div>
                                 </div>
-                                {props.state === "Rejected" &&
+                                {props.state === "Atmestas" &&
                                     <div className="row">
                                         <div className="col-5">
                                             <p>Atmetimo priežastis:</p>
@@ -71,7 +71,7 @@ const OneSubmittedDocumentComponent = (props) => {
                                         </div>
                                     </div>
                                 }
-                                {props.state === "Accepted" &&
+                                {props.state === "Priimtas" &&
                                     <div className="row">
                                         <div className="col-5">
                                             <p>Priėmė:</p>
@@ -91,7 +91,7 @@ const OneSubmittedDocumentComponent = (props) => {
                                         </div>
                                     </div>
                                 }
-                                {props.state === "Rejected" &&
+                                {props.state === "Atmestas" &&
                                     <div className="row">
                                         <div className="col-5">
                                             <p>Atmetė:</p>
