@@ -220,7 +220,7 @@ export default class NewGroupForm extends Component {
     }
     let data = this.state.groupUsers.map((user, index) => {
       return (
-        <tr>
+        <tr key={index}>
           <th scope="row">{index + 1}</th>
           <td>{user.username}</td>
           <td>{user.lastname}</td>
@@ -292,15 +292,15 @@ export default class NewGroupForm extends Component {
     console.log("User id's to add: ", userIdListToAdd);
     console.log("User id's to remove: ", userIdListToRemove);
 
-    Axios.delete(
-      "http://localhost:8081/api/groups/" +
-        this.state.selectedGroupForAddUsers +
-        "/users",
-      { data: { users: userIdListToRemove } }
-    )
-      .then()
-      .catch();
-    Axios.put(
+    // Axios.delete(
+    //   "http://localhost:8081/api/groups/" +
+    //     this.state.selectedGroupForAddUsers +
+    //     "/users",
+    //   { data: { users: userIdListToRemove } }
+    // )
+    //   .then()
+    //   .catch();
+    Axios.post(
       "http://localhost:8081/api/groups/" +
         this.state.selectedGroupForAddUsers +
         "/users",
