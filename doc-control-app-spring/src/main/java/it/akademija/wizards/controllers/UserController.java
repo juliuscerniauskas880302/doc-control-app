@@ -123,7 +123,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "checks if user is allowed to submit/review documents")
-    @RequestMapping(value = "/{action}", method = RequestMethod.GET)
+    @RequestMapping(value = "/action/{action}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public boolean isActionAllowed (@CurrentUser UserPrincipal userPrincipal, @PathVariable String action) {
         return userService.isActionAllowed(userPrincipal.getUsername(), action);
