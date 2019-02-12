@@ -25,7 +25,6 @@ public class DocumentTypeController {
     @Autowired
     private DocumentTypeService documentTypeService;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "get all document types")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -33,7 +32,6 @@ public class DocumentTypeController {
         return documentTypeService.getDocumentTypes();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "get document type by id")
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)

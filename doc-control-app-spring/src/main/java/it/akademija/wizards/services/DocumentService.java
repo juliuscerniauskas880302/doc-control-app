@@ -14,12 +14,15 @@ import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,8 +68,7 @@ public class DocumentService {
 
     //CREATE
     @Transactional
-    public ResponseEntity<String> createDocument(String username, DocumentCreateCommand documentCreateCommand,
-                                                 MultipartFile[] multipartFile) {
+    public ResponseEntity<?> createDocument(String username, DocumentCreateCommand documentCreateCommand, MultipartFile[] multipartFile) {
         User author = resourceFinder.getUser(username);
         Document document = mapper.createCommandToEntity(username, documentCreateCommand);
         if (allowedToCreateDocument(username, document)) {
@@ -78,15 +80,14 @@ public class DocumentService {
             }
             documentRepository.save(document);
         } else {
-            //TODO UserCannotCreateDocumentException
             throw new BadRequestException("User doesn't have permission to create this type of document");
         }
-        return new ResponseEntity<>("Document was created", HttpStatus.CREATED);
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     //UPDATE
     @Transactional
-    public ResponseEntity<String> updateDocumentById(
+    public ResponseEntity<?> updateDocumentById(
             String id,
             DocumentUpdateCommand documentUpdateCommand,
             MultipartFile[] multipartFile) {
@@ -102,10 +103,9 @@ public class DocumentService {
             }
             documentRepository.save(mapper.updateCommandToEntity(documentUpdateCommand, document));
         } else {
-            //TODO SubmittedDocumentUpdateNotAllowedException
             throw new BadRequestException("Submitted documents cannot be updated");
         }
-        return new ResponseEntity<>("Document updated", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     //DELETE
@@ -138,7 +138,6 @@ public class DocumentService {
             if (document.getDocumentState().equals(DocumentState.REJECTED))
                 document.setRejectionReason(documentReviewCommand.getRejectionReason());
         } else {
-            //TODO UserCannotReviewDocumentException
             throw new BadRequestException("User doesn't have permission to review this type of document");
         }
     }

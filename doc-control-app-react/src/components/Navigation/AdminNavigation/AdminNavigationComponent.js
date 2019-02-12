@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import avatar from "../../../css/images/avatar.png";
-import PropTypes from "prop-types";
 import NavLink from "../../Utilities/Navigation/NavLink";
 
 export default class AdminNavigationComponent extends Component {
@@ -39,7 +37,7 @@ export default class AdminNavigationComponent extends Component {
               onClick={() => this.toggleMenu()}
               className="sidebar-toggler text-gray-600 mr-4 mr-lg-5 "
             >
-              <i className="fas fa-book-medical fa-4x" />
+              <i className="fas fa-file fa-4x" />
             </div>
             <div className="font-weight-bold text-uppercase ">
               Dokumentu valdymas
