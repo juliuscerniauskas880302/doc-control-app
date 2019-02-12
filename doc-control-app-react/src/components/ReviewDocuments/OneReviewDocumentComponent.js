@@ -73,16 +73,7 @@ const OneReviewDocumentComponent = props => {
                     <p>Pridėtas failas:</p>
                   </div>
                   <div className="col-7">
-                    <p>
-                      {props.path} &nbsp;{" "}
-                      <button
-                        className="btn submitButton"
-                        type="button"
-                        onClick={() => props.downloadHandler()}
-                      >
-                        Atsisiųsti
-                      </button>
-                    </p>
+                   <p>{props.path} &nbsp; <i className="mygtukas fas fa-download fa-2x" title="Atsisiųsti pridėtą failą" onClick={() => props.downloadHandler()} /></p>
                   </div>
                 </div>
                 <div className="row">

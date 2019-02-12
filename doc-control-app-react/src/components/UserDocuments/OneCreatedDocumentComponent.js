@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const OneCreatedDocumentComponent = props => {
+const OneCreatedDocumentComponent = (props) => {
   return (
     <div className="page-holder w-100 d-flex flex-wrap">
       <div className="container-fluid px-xl-5">
@@ -13,61 +13,51 @@ const OneCreatedDocumentComponent = props => {
               </div>
               <div className="card-body">
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>Numeris:</p>
                   </div>
-                  <div className="col-8">
+                  <div className="col-9">
                     <p>{props.id}</p>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>Pavadinimas:</p>
                   </div>
-                  <div className="col-8">
+                  <div className="col-9">
                     <p>{props.title}</p>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>Aprašymas:</p>
                   </div>
-                  <div className="col-8">
+                  <div className="col-9">
                     <p>{props.description}</p>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>Tipas:</p>
                   </div>
-                  <div className="col-8">
+                  <div className="col-9">
                     <p>{props.type}</p>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>Sukūrimo data:</p>
                   </div>
-                  <div className="col-8">
+                  <div className="col-9">
                     <p>{props.creationDate}</p>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>Pridėtas failas:</p>
                   </div>
-                  <div className="col-8">
-                    <p>
-                      {props.path} &nbsp;{" "}
-                      <button
-                        className="btn submitButton"
-                        type="button"
-                        onClick={() => props.downloadHandler()}
-                      >
-                        Atsisiųsti
-                      </button>
-                    </p>
-                    {/* <p>{props.filename} &nbsp; <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Atsisiųsti</button></p> */}
+                  <div className="col-9">
+                    <p>{props.path} &nbsp; <i className="mygtukas fas fa-download fa-2x" title="Atsisiųsti pridėtą failą" onClick={() => props.downloadHandler()} /></p>
                   </div>
                 </div>
                 <div className="row">
@@ -78,7 +68,7 @@ const OneCreatedDocumentComponent = props => {
                       type="button"
                     >
                       Redaguoti
-                    </Link>{" "}
+                    </Link>
                     &nbsp;
                     <button
                       className="btn deleteButton"
@@ -86,15 +76,15 @@ const OneCreatedDocumentComponent = props => {
                       onClick={props.handleDelete}
                     >
                       Trinti
-                    </button>{" "}
+                    </button>
                     &nbsp;
                     <button
-                      className="btn submitButtonAlt"
+                      className="btn submitButton"
                       type="submit"
                       onClick={props.handleSubmit}
                     >
                       Pateikti
-                    </button>{" "}
+                    </button>
                     &nbsp;
                     <Link
                       to={`/createdDocuments`}
@@ -102,7 +92,7 @@ const OneCreatedDocumentComponent = props => {
                       type="button"
                     >
                       Atgal
-                    </Link>{" "}
+                    </Link>
                     &nbsp;
                   </div>
                 </div>
@@ -110,8 +100,8 @@ const OneCreatedDocumentComponent = props => {
             </div>
           </div>
         </section>
-      </div>
-    </div>
+      </div >
+    </div >
 
     // <div className="container-fluid">
     //     <div className="row">
