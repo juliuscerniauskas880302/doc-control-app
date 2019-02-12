@@ -31,7 +31,7 @@ const Login = ({
               </div>
             </div>
             <div className="col-lg-5 px-lg-4">
-              <h1 className="text-base text-primary text-uppercase mb-4">
+              <h1 className="text-base text-secondary text-uppercase mb-4">
                 Dokumentų Valdymo Sistema v 1.0.0
               </h1>
               <h2 className="mb-4">Sveiki sugrįžę!</h2>
@@ -59,8 +59,8 @@ const Login = ({
                   />
                 </div>
                 <div className="form-group mb-4" />
-                <button type="submit" className="btn btn-primary shadow px-5">
-                  Prisijungti.
+                <button type="submit" className="btn submitButton shadow px-5">
+                  Prisijungti
                 </button>
               </form>
             </div>
