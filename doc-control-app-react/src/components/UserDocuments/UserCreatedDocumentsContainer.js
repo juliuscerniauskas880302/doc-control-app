@@ -3,10 +3,10 @@ import UserCreatedDocumentsComponent from "./UserCreatedDocumentsComponent";
 import axios from "axios";
 
 //bandymas
-window.onunload = function() {
-  localStorage.clear();
-  return '';
-}
+// window.onunload = function() {
+//   localStorage.clear();
+//   return '';
+// }
 
 class UserCreatedDocumentsContainer extends React.Component {
   
