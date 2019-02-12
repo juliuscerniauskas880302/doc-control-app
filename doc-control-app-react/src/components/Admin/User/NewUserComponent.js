@@ -47,6 +47,7 @@ export default function NewUserComponent(props) {
                         placeholder="Pavardė"
                         pattern={props.namePattern}
                         title={props.namePatternTitle}
+                        onChange={event => props.onChange(event)}
                         required
                         className="form-control form-control-warning"
                       />
@@ -61,6 +62,7 @@ export default function NewUserComponent(props) {
                         type="text"
                         name="username"
                         placeholder="Vartotojo vardas"
+                        onChange={event => props.onChange(event)}
                         // pattern={props.usernamePattern}
                         // title={props.usernamePatternTitle}
                         required
@@ -79,6 +81,7 @@ export default function NewUserComponent(props) {
                         placeholder="El. paštas"
                         pattern={props.emailPattern}
                         title={props.emailPatternTitle}
+                        onChange={event => props.onChange(event)}
                         required
                         className="form-control form-control-warning"
                       />
