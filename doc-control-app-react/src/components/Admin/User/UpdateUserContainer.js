@@ -42,12 +42,15 @@ export default class UpdateUser extends Component {
   };
 
   onUpdatePasswordHandler = event => {
+    console.log("Username to change pass:", this.props.match.params.username);
+    console.log("New password: ", this.state.password);
+    let newPassword = { password: this.state.password };
     event.preventDefault();
     Axios.put(
       "http://localhost:8081/api/users/" +
         this.props.match.params.username +
         "/changepassword",
-      this.state.password
+      newPassword
     )
       .then(res => {
         console.log("Password has been changed");
@@ -182,7 +185,7 @@ export default class UpdateUser extends Component {
                 onSubmit={this.onUpdatePasswordHandler}
                 onChange={this.onValueChangeHandler}
                 goBack={this.goBack}
-                name="pasword"
+                name="password"
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               />
             </div>

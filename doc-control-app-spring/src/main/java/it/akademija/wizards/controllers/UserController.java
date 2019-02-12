@@ -122,6 +122,7 @@ public class UserController {
         return userService.getUserSubmissionDocTypes(userPrincipal.getUsername());
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @ApiOperation(value = "checks if user is allowed to submit/review documents")
     @RequestMapping(value = "/action/{action}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)

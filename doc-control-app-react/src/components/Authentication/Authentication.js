@@ -2,17 +2,44 @@ import React, { Component } from "react";
 import LoginContainer from "./LoginContainer";
 import AdminNavigationContainer from "../Navigation/AdminNavigation/AdminNavigationContainer";
 import UserNavigationContainer from "../Navigation/UserNavigation/UserNavigationContainer";
+
 import Axios from "axios";
+import UserNavigationNoneContainer from "../Navigation/UserNavigation/None/UserNavigationNoneContainer";
+import UserNavigationReviewContainer from "../Navigation/UserNavigation/Review/UserNavigationReviewContainer";
+import UserNavigationSubmitContainer from "../Navigation/UserNavigation/Submit/UserNavigationSubmitContainer";
+import UserNavigationBothContainer from "../Navigation/UserNavigation/Both/UserNavigationBothContainer";
 
 export default class Authentication extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLogged: false
+      isLogged: false,
+      submit: false,
+      review: false
     };
   }
   setLoggedState = () => {
     this.setState({ isLogged: true });
+    this.getUserGroups();
+  };
+  componentDidMount = () => {
+    this.getUserGroups();
+  };
+
+  getUserGroups = () => {
+    Axios.get("http://localhost:8081/api/users/action/review")
+      .then(res => {
+        console.log("review grupeje? ", res.data);
+        console.log("true = true ", res.data === true);
+        this.setState({ review: res.data });
+      })
+      .catch(err => console.log(err));
+    Axios.get("http://localhost:8081/api/users/action/submit")
+      .then(res => {
+        console.log("submit grupeje? ", res.data);
+        this.setState({ submit: res.data });
+      })
+      .catch(err => console.log(err));
   };
 
   onClickLogoutHandler = () => {
@@ -24,6 +51,7 @@ export default class Authentication extends Component {
 
   render() {
     let localData = JSON.parse(localStorage.getItem("user"));
+    // this.getUserGroups();
     if (localData === null) {
       return (
         <LoginContainer {...this.props} setLoggedState={this.setLoggedState} />
@@ -35,12 +63,34 @@ export default class Authentication extends Component {
           logout={this.onClickLogoutHandler}
         />
       );
-    } else
+    } else if (this.state.submit === false && this.state.review === false) {
       return (
-        <UserNavigationContainer
+        <UserNavigationNoneContainer
           {...this.props}
           logout={this.onClickLogoutHandler}
         />
       );
+    } else if (this.state.submit === false && this.state.review === true) {
+      return (
+        <UserNavigationReviewContainer
+          {...this.props}
+          logout={this.onClickLogoutHandler}
+        />
+      );
+    } else if (this.state.submit === true && this.state.review === false) {
+      return (
+        <UserNavigationSubmitContainer
+          {...this.props}
+          logout={this.onClickLogoutHandler}
+        />
+      );
+    } else {
+      return (
+        <UserNavigationBothContainer
+          {...this.props}
+          logout={this.onClickLogoutHandler}
+        />
+      );
+    }
   }
 }

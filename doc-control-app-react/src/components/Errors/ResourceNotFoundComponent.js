@@ -7,8 +7,8 @@ export default class ResourceNotFoundCompoentn extends React.Component {
   componentDidMount = () => {};
   render() {
     return (
-      <div class="page-holder w-100 d-flex flex-wrap">
-        <div class="container-fluid px-xl-5">
+      <div className="page-holder w-100 d-flex flex-wrap">
+        <div className="container-fluid px-xl-5">
           <iframe
             title="player"
             src={music}
@@ -19,19 +19,19 @@ export default class ResourceNotFoundCompoentn extends React.Component {
             loop
           />
 
-          <section class="page_404">
-            <div class="col-sm-12 ">
-              <div class="col-sm-10 col-sm-offset-1  text-center">
-                <div class="four_zero_four_bg">
-                  <h1 class="text-center ">404</h1>
+          <section className="page_404">
+            <div className="col-sm-12 ">
+              <div className="col-sm-10 col-sm-offset-1  text-center">
+                <div className="four_zero_four_bg">
+                  <h1 className="text-center ">404</h1>
                 </div>
 
-                <div class="contant_box_404">
-                  <h3 class="h2">Rodos tu pasiklydai</h3>
+                <div className="contant_box_404">
+                  <h3 className="h2">Rodos tu pasiklydai</h3>
 
                   <p>puslapis, kurio ieškai neegzistuoja!</p>
                   <Link to="/">
-                    <div class="link_404">Grįžti atgal</div>
+                    <div className="link_404">Grįžti atgal</div>
                   </Link>
                 </div>
               </div>

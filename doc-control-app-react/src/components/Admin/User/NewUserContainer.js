@@ -11,7 +11,8 @@ export default class NewUserContainer extends Component {
       email: "",
       password: "",
       username: "",
-      isAdmin: false
+      isAdmin: true,
+      showMessage: { message: "", messageType: "", show: false }
     };
   }
 
@@ -28,15 +29,23 @@ export default class NewUserContainer extends Component {
     this.setState({
       firstname: firstname,
       lastname: lastname,
-      username: username
+      username: username,
+      isAdmin: JSON.parse(this.state.isAdmin)
     });
     console.log("Esama busena", this.state);
     Axios.post("http://localhost:8081/api/users", this.state)
       .then(res => {
         console.log("New user added");
+        console.log("Grizo res:", res);
+        this.props.history.push("/");
       })
       .catch(err => {
-        console.log(err);
+        this.handleMessageInput(
+          err.response.data.message,
+          "alert alert-danger fixed-top text-center",
+          2500
+        );
+        console.log("Grizo err:", err.response.data);
       });
   };
 
@@ -45,20 +54,53 @@ export default class NewUserContainer extends Component {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  handleMessageInput = (message, messageType, timeout) => {
+    let data = {
+      message: message,
+      messageType: messageType,
+      show: true
+    };
+    this.setState({ showMessage: data }, () => {
+      let data = {
+        message: "",
+        messageType: "",
+        show: false
+      };
+      setTimeout(() => {
+        this.setState({ showMessage: data });
+      }, timeout);
+    });
+  };
+
+  showMessage = () => {
+    if (this.state.showMessage.show) {
+      return (
+        <div className={this.state.showMessage.messageType}>
+          {this.state.showMessage.message}
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
+
   render() {
     return (
-      <NewUserComponent
-        onSubmit={this.onSubmitHandler}
-        onChange={this.onValueChangeHandler}
-        namePattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-        namePatternTitle="Please enter only letters"
-        usernamePattern=""
-        usernamePatternTitle=""
-        emailPattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-        emailPatternTitle=""
-        passwordPattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-        passwordPatternTitle="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
-      />
+      <React.Fragment>
+        {this.showMessage()}
+        <NewUserComponent
+          onSubmit={this.onSubmitHandler}
+          onChange={this.onValueChangeHandler}
+          namePattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+          namePatternTitle="Please enter only letters"
+          usernamePattern=""
+          usernamePatternTitle=""
+          emailPattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+          emailPatternTitle=""
+          passwordPattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+          passwordPatternTitle="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+        />
+      </React.Fragment>
     );
   }
 }
