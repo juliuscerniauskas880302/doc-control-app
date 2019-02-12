@@ -38,7 +38,7 @@ export default class UserNavigationComponent extends Component {
               onClick={() => this.toggleMenu()}
               className="sidebar-toggler text-gray-600 mr-4 mr-lg-5 "
             >
-              <i className="fas fa-book-medical fa-4x" />
+              <i className="fas fa-file fa-4x" />
             </div>
             <div className="font-weight-bold text-uppercase ">
               Dokumentu valdymas
