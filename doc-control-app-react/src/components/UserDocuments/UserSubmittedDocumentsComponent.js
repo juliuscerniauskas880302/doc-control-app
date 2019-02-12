@@ -13,7 +13,7 @@ const UserSubmittedDocumentsComponent = (props) => {
             <td>{props.state}</td>
             <td>{props.submissionDate}</td>
             <td>
-                <Link style={{ textDecoration: 'none', color: 'black', cursor: 'default' }} to={linkas}> <i className="fas fa-info-circle fa-2x"></i> </Link> &nbsp;
+                <Link style={{ textDecoration: 'none', color: 'black', cursor: 'default' }} to={linkas}> <i className="fas fa-info-circle fa-2x" title="Dokumento informacija"></i> </Link> &nbsp;
             </td>
         </tr>
 
