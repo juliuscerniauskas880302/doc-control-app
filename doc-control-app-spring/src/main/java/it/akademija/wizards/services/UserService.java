@@ -37,7 +37,6 @@ public class UserService {
     private UserRepository userRepository;
     private UserGroupRepository userGroupRepository;
     private Mapper mapper;
-    private ResourceFinder resourceFinder;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -265,16 +264,19 @@ public class UserService {
 
     @Transactional
     public boolean isActionAllowed(String username, String action) {
-        User user = resourceFinder.getUser(username);
-        for (UserGroup userGroup: user.getUserGroups()) {
-            if (action.equals("submit"))  {
-                if (!userGroup.getSubmissionDocumentType().isEmpty()) return true;
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            for (UserGroup userGroup : user.getUserGroups()) {
+                if (action.equals("submit")) {
+                    if (!userGroup.getSubmissionDocumentType().isEmpty()) return true;
+                } else if (action.equals("review")) {
+                    if (!userGroup.getReviewDocumentType().isEmpty()) return true;
+                }
             }
-            else if (action.equals("review")) {
-                if (!userGroup.getReviewDocumentType().isEmpty()) return true;
-            }
+            return false;
+        } else {
+            throw new NullPointerException("User does not exist");
         }
-        return false;
     }
 
 
