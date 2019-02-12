@@ -60,7 +60,7 @@ const OneCreatedDocumentComponent = props => {
                     <p>
                       {props.path} &nbsp;{" "}
                       <button
-                        className="btn btn-primary"
+                        className="btn submitButton"
                         type="button"
                         onClick={() => props.downloadHandler()}
                       >
@@ -74,14 +74,14 @@ const OneCreatedDocumentComponent = props => {
                   <div className="col-12">
                     <Link
                       to={`/admin/Documents/${props.id}`}
-                      className="btn btn-primary"
+                      className="btn submitButton"
                       type="button"
                     >
                       Redaguoti
                     </Link>{" "}
                     &nbsp;
                     <button
-                      className="btn btn-danger"
+                      className="btn deleteButton"
                       type="submit"
                       onClick={props.handleDelete}
                     >
@@ -89,7 +89,7 @@ const OneCreatedDocumentComponent = props => {
                     </button>{" "}
                     &nbsp;
                     <button
-                      className="btn btn-success"
+                      className="btn submitButtonAlt"
                       type="submit"
                       onClick={props.handleSubmit}
                     >
@@ -98,7 +98,7 @@ const OneCreatedDocumentComponent = props => {
                     &nbsp;
                     <Link
                       to={`/createdDocuments`}
-                      className="btn btn-dark"
+                      className="btn goBackButton"
                       type="button"
                     >
                       Atgal
