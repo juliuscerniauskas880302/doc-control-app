@@ -93,7 +93,7 @@ public class DocumentService {
             MultipartFile[] multipartFile) {
         Document document = resourceFinder.getDocument(id);
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
-            if (multipartFile != null) {
+            if (multipartFile.length != 0) {
                 try {
                     fileService.deleteMainFile(document);
                     fileService.uploadFiles(document, multipartFile);
