@@ -17,7 +17,6 @@ import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
-import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -28,7 +28,7 @@ public class DocApplication {
 
 	@PostConstruct
 	void init() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT+2"));
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"));
 	}
 
 	public static void main(String[] args) {
