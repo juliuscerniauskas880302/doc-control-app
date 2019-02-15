@@ -15,8 +15,7 @@ class NewDocumentContainer extends React.Component {
       mainFile: null,
       selectedAdditionalFiles: null,
       isOpen: false,
-      percentage: 0,
-      selectedFilesWithSameName: false
+      percentage: 0
       //documentState: "default state",
       //creationDate: "2019.01.28"
     };
@@ -116,6 +115,7 @@ class NewDocumentContainer extends React.Component {
     //Turiu padaryti failo progreso barą matomą
     this.openFileTransferPopup();
     let isFileNamesSame = false;
+    let correctFileExtensions = true;
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
@@ -125,6 +125,7 @@ class NewDocumentContainer extends React.Component {
     console.log("Model: " + model);
     let file = new FormData();
     // Check if attachment naming is correct #BaDdEsIgN
+
     if (
       this.state.mainFile.length === 1 &&
       (this.state.selectedAdditionalFiles === null ||
@@ -168,7 +169,14 @@ class NewDocumentContainer extends React.Component {
           }
         }
       }
-
+      let acceptedFileTypes = ["pdf", "jpeg", "png"];
+      this.state.selectedAdditionalFiles.forEach(file => {
+        if (!acceptedFileTypes.includes(file.name.split(".").pop())) {
+          correctFileExtensions = false;
+          return;
+        }
+      });
+      // Checking file extensions
       this.state.selectedAdditionalFiles.forEach(file => {
         if (file.name === this.state.mainFile[0].name) {
           isFileNamesSame = true;
@@ -176,8 +184,11 @@ class NewDocumentContainer extends React.Component {
       });
 
       if (isFileNamesSame === true) {
-        alert("Please select files with different names");
+        // alert("Please select files with different names");
         isFileNamesSame = false;
+      } else if (correctFileExtensions === false) {
+        // alert("Please select files of correct file extension.");
+        correctFileExtensions = false;
       } else {
         file.append(
           "file",
@@ -205,10 +216,10 @@ class NewDocumentContainer extends React.Component {
               );
             }
           })
+          .then(res => this.props.history.push(`/createdDocuments`))
           .then(res => console.log(res))
           .catch(err => console.log(err));
       }
-      this.props.history.push("/createdDocuments");
     }
     console.log("Toks yra failas" + file.getAll);
   };
@@ -239,22 +250,25 @@ class NewDocumentContainer extends React.Component {
 
   render() {
     return (
-      <NewDocumentComponent
-        type={this.state.type}
-        typeList={this.state.typeList}
-        percentage={this.state.percentage}
-        isOpen={this.state.isOpen}
-        handleChangeOfTitle={this.handleChangeOfTitle}
-        handleChangeOfDescription={this.handleChangeOfDescription}
-        handleChangeOfType={this.handleChangeOfType}
-        onUpdateMainFile={this.onUpdateMainFile}
-        onUpdateAdditionalFiles={this.onUpdateAdditionalFiles}
-        //downloadHandler={this.downloadHandler}
-        handleSubmit={this.handleSubmit}
-        openFileTransferPopup={this.openFileTransferPopup}
-        closeFileTransferPopup={this.closeFileTransferPopup}
-        acceptedFileTypes={acceptedFileTypes}
-      />
+      <React.Fragment>
+        <NewDocumentComponent
+          type={this.state.type}
+          typeList={this.state.typeList}
+          percentage={this.state.percentage}
+          isOpen={this.state.isOpen}
+          handleChangeOfTitle={this.handleChangeOfTitle}
+          handleChangeOfDescription={this.handleChangeOfDescription}
+          handleChangeOfType={this.handleChangeOfType}
+          onUpdateMainFile={this.onUpdateMainFile}
+          onUpdateAdditionalFiles={this.onUpdateAdditionalFiles}
+          //downloadHandler={this.downloadHandler}
+          mainFileUploaded={this.state.mainFile !== null}
+          handleSubmit={this.handleSubmit}
+          openFileTransferPopup={this.openFileTransferPopup}
+          closeFileTransferPopup={this.closeFileTransferPopup}
+          acceptedFileTypes={acceptedFileTypes}
+        />
+      </React.Fragment>
     );
   }
 }
