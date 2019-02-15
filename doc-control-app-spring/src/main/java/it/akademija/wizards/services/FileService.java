@@ -100,7 +100,7 @@ public class FileService {
                     return new ResponseEntity<>("Archiving failed", HttpStatus.BAD_REQUEST);
                 }
             }
-            zs.flush();;
+            zs.flush();
             fos.flush();
             zs.close();
             fos.close();
@@ -129,10 +129,11 @@ public class FileService {
 //        String updatedFileName = originalFileName + document.getPrefix();
         document.setPath(originalFileName);
         byte[] buf = new byte[1024];
+        assert originalFileName != null;
         File file = new File(folder.getPath(), originalFileName);
         try (InputStream inputStream = multipartFile.getInputStream();
              FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            int numRead = 0;
+            int numRead;
             while ((numRead = inputStream.read(buf)) >= 0) {
                 fileOutputStream.write(buf, 0, numRead);
             }
@@ -151,6 +152,7 @@ public class FileService {
 
     @Transactional
     public void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
+
         File path = new File(pathName
                 + File.separator
                 + document.getAuthor().getUsername()
@@ -165,6 +167,7 @@ public class FileService {
                 document.getAdditionalFilePaths().add(originalFileName);
             }
             byte[] buf = new byte[1024];
+            assert originalFileName != null;
             File file = new File(path.getPath(), originalFileName);
             try (InputStream inputStream = multipartFile[i].getInputStream();
                  FileOutputStream fileOutputStream = new FileOutputStream(file)) {
@@ -203,7 +206,7 @@ public class FileService {
             File file = new File(folder.getPath()
                     + File.separator
                     + document.getPath());
-            file.delete();
+            boolean delete = file.delete();
             if (Objects.requireNonNull(folder.list()).length == 0) {
                 deleteFolder(folder);
             }
