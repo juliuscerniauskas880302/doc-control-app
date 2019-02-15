@@ -1,6 +1,6 @@
-import React from 'react';
-import EditDocumentComponent from './EditDocumentComponent';
-import axios from 'axios';
+import React from "react";
+import EditDocumentComponent from "./EditDocumentComponent";
+import axios from "axios";
 
 class EditDocumentContainer extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class EditDocumentContainer extends React.Component {
       selectedFiles: null,
       //state: "default state",
       //creationDate: "2019.01.28"
+      paths: null,
       path: "",
       prefix: "",
       //filename: "Nėra pridėto failo"
@@ -24,17 +25,17 @@ class EditDocumentContainer extends React.Component {
     };
   }
 
-  handleChangeOfTitle = (event) => {
+  handleChangeOfTitle = event => {
     this.setState({ title: event.target.value });
-  }
+  };
 
-  handleChangeOfDescription = (event) => {
+  handleChangeOfDescription = event => {
     this.setState({ description: event.target.value });
-  }
+  };
 
-  handleChangeOfType = (event) => {
+  handleChangeOfType = event => {
     this.setState({ documentTypeTitle: event.target.value });
-  }
+  };
 
   onFileSelectHandler = event => {
     console.log(event.target.files);
@@ -42,17 +43,16 @@ class EditDocumentContainer extends React.Component {
   };
 
   openFileTransferPopup = () => {
-    this.setState({isOpen: true});
-  }
+    this.setState({ isOpen: true });
+  };
 
   closeFileTransferPopup = () => {
-    this.setState({isOpen: false});
-  }
+    this.setState({ isOpen: false });
+  };
 
-  downloadHandler = (event) => {
+  downloadHandler = event => {
     axios({
-      url:
-        "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+      url: "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -68,7 +68,30 @@ class EditDocumentContainer extends React.Component {
       document.body.removeChild(link);
     });
   };
-
+  fileDownloadHandler = event => {
+    console.log(event.target.title);
+    axios({
+      url:
+        "http://localhost:8081/api/docs/" +
+        this.state.id +
+        "/" +
+        event.target.title +
+        "/download", //doc id
+      method: "GET",
+      responseType: "blob" // important
+    }).then(response => {
+      var filename = this.extractFileName(
+        response.headers["content-disposition"]
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
   extractFileName = contentDispositionValue => {
     var filename = "";
     if (
@@ -85,7 +108,7 @@ class EditDocumentContainer extends React.Component {
   };
 
   //TODO
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     console.log("Atėjau į Submit handlerį");
     event.preventDefault();
     //perkeliu šią komandą į kitą vietą
@@ -94,7 +117,7 @@ class EditDocumentContainer extends React.Component {
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
-      title: this.state.title,
+      title: this.state.title
       //username: this.state.username
     };
     console.log("Čia spausdina modelį");
@@ -103,7 +126,7 @@ class EditDocumentContainer extends React.Component {
 
     if (this.state.selectedFiles === null) {
       console.log("Pažymėti failai yra null");
-      file.append("file", null); //nėra 3 parametro, kuris turėtų būti failo pavadinimas 
+      file.append("file", null); //nėra 3 parametro, kuris turėtų būti failo pavadinimas
     } else {
       if (this.state.selectedFiles.length === 1) {
         this.openFileTransferPopup();
@@ -116,31 +139,39 @@ class EditDocumentContainer extends React.Component {
     }
     file.append("model", JSON.stringify(model));
     console.log("Dokumento id yra - " + this.state.id);
-    axios.put("http://localhost:8081/api/docs/" + this.state.id, file, {
-      onUploadProgress: progressEvent => {
-        this.setState({ percentage: Math.round((progressEvent.loaded / progressEvent.total) * 100) });
-        console.log(
-          "Upload progress: " +
-          (progressEvent.loaded / progressEvent.total) * 100 +
-          "%"
-        );
-      }
-    })
-      .then((response) => {
-        axios.get("http://localhost:8081/api/docs/" + this.state.id)
-          .then((response) => {
+    axios
+      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+        onUploadProgress: progressEvent => {
+          this.setState({
+            percentage: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+      .then(response => {
+        axios
+          .get("http://localhost:8081/api/docs/" + this.state.id)
+          .then(response => {
             this.setState({ id: response.data.id });
             this.setState({ title: response.data.title });
             this.setState({ description: response.data.description });
-            this.setState({ documentTypeTitle: response.data.documentTypeTitle });
+            this.setState({
+              documentTypeTitle: response.data.documentTypeTitle
+            });
             this.setState({ path: response.data.path });
             this.setState({ prefix: response.data.prefix });
             //this.setState({ filename: this.state.selectedFiles[0].name });
           })
-          .then((response) => {
+          .then(response => {
             this.props.history.push(`/createdDocuments`);
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
           });
       })
@@ -149,7 +180,7 @@ class EditDocumentContainer extends React.Component {
       // .then (this.props.history.push(`/createdDocuments`))
       .catch(err => console.log("KLAIDA SUBMITE" + err));
     console.log("Spausinu FILE" + file);
-  }
+  };
 
   // handleSubmit = (event) => {
   //   //TODO
@@ -174,13 +205,14 @@ class EditDocumentContainer extends React.Component {
 
   //TODO
   //Padaryti normalų ištrynimo metodą
-  handleDelete = (event) => {
+  handleDelete = event => {
     event.preventDefault();
-    axios.delete("http://localhost:8081/api/docs/" + this.state.id)
-      .then((response) => {
+    axios
+      .delete("http://localhost:8081/api/docs/" + this.state.id)
+      .then(response => {
         this.props.history.push(`/createdDocuments`);
       });
-  }
+  };
 
   componentDidMount() {
     //nusiskaitau dokumentų tipus
@@ -190,10 +222,13 @@ class EditDocumentContainer extends React.Component {
     //console.log(currentUser);
     //this.setState({ username: currentUser.username }, () => {
     //nusiskaitau dokumentų tipus
-    axios.get("http://localhost:8081/api/users/submissionDocTypes")
+    axios
+      .get("http://localhost:8081/api/users/submissionDocTypes")
       .then(response => {
         this.setState({ typeList: response.data.map(item => item.title) });
-        console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
+        console.log(
+          "Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?"
+        );
         console.log(this.state.typeList);
       })
       .catch(error => {
@@ -203,7 +238,6 @@ class EditDocumentContainer extends React.Component {
 
     //console.log("State user yra po visko" + this.state.username);
     //console.log("Local storage user po visko " + currentUser.username)
-
 
     //senas blogas
     // axios.get('http://localhost:8081/api/doctypes')
@@ -216,14 +250,14 @@ class EditDocumentContainer extends React.Component {
     //     console.log("KLAIDA!!!!" + error);
     //   });
 
-
     //Konkretaus dokumento duomenų nuskaitymas
     const position = this.props.match.params.documentId;
     //let currentUser = "migle";
-    let resourcePath = 'http://localhost:8081/api/docs/' + position;
+    let resourcePath = "http://localhost:8081/api/docs/" + position;
 
-    axios.get(resourcePath)
-      .then((response) => {
+    axios
+      .get(resourcePath)
+      .then(response => {
         //this.setState(response.data);
         // console.log(response.data.id);
         //console.log(response.data.title);
@@ -239,11 +273,12 @@ class EditDocumentContainer extends React.Component {
         this.setState({ description: response.data.description });
         this.setState({ documentTypeTitle: response.data.documentTypeTitle });
         this.setState({ path: response.data.path });
+        this.setState({ paths: response.data.additionalFilePaths });
         this.setState({ prefix: response.data.prefix });
         //this.setState({ filename: realFileName });
         console.log("Gavau tokį produktą į redagavimą");
         console.log(this.state);
-        let currentUser = JSON.parse(localStorage.getItem('user'));
+        let currentUser = JSON.parse(localStorage.getItem("user"));
         console.log("Spausdinu userį gautą iš localStorage");
         console.log(currentUser);
         this.setState({ username: currentUser.username });
@@ -251,11 +286,10 @@ class EditDocumentContainer extends React.Component {
         //console.log("Pagaminau tokį State ->" + this.state);
         //console.log("Toks description iš state'o -> " + this.state.id);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
-
 
   render() {
     return (
@@ -265,6 +299,7 @@ class EditDocumentContainer extends React.Component {
         typeList={this.state.typeList}
         type={this.state.documentTypeTitle}
         path={this.state.path}
+        paths={this.state.paths}
         prefix={this.state.prefix}
         //filename = { this.state.filename }
         handleChangeOfTitle={this.handleChangeOfTitle}
@@ -273,6 +308,7 @@ class EditDocumentContainer extends React.Component {
         handleSubmit={this.handleSubmit}
         handleDelete={this.handleDelete}
         downloadHandler={this.downloadHandler}
+        fileDownloadHandler={this.fileDownloadHandler}
         onFileSelectHandler={this.onFileSelectHandler}
         isOpen={this.state.isOpen}
         percentage={this.state.percentage}

@@ -55,7 +55,7 @@ public class FileService {
 
     //    DOWNLOAD DOCUMENT MAIN FILE
     @Transactional
-    public ResponseEntity downloadFile(String documentId) throws FileNotFoundException {
+    public ResponseEntity downloadMainFile(String documentId) throws FileNotFoundException {
         Document document = resourceFinder.getDocument(documentId);
         String originalFileName = document.getPath();
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
@@ -75,7 +75,30 @@ public class FileService {
         return ResponseEntity.notFound().build();
 
     }
-    // GET ALL DOCUMENTS WITH FOLDERS
+
+    //    DOWNLOAD DOCUMENT FILE
+    @Transactional
+    public ResponseEntity downloadFile(String documentId, String filePath) throws FileNotFoundException {
+        Document document = resourceFinder.getDocument(documentId);
+//        String originalFileName = document.getPath();
+        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, filePath);
+        File file = new File(getDocumentFolder(document).getPath()
+                + File.separator
+                + document.getPath());
+        if (file.exists()) {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath +"\"");
+            headers.add("Access-Control-Expose-Headers",
+                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+            headers.setContentType(mediaType);
+            return ResponseEntity.ok().headers(headers).
+                    body(resource);
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+    // GET ALL ATTACHMENTS WITH FOLDERS
     @Transactional
     public ResponseEntity downloadAllDocuments(String username) throws IOException {
         long time1 = System.currentTimeMillis();
