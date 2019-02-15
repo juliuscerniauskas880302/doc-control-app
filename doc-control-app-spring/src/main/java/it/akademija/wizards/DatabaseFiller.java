@@ -5,11 +5,13 @@ import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.enums.RoleName;
 import it.akademija.wizards.exception.AppException;
 import it.akademija.wizards.repositories.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,7 +66,7 @@ public class DatabaseFiller {
         List<UserGroup> newUserGroups = new ArrayList<>();
         for (int i = 1; i <= groupsCount; i++) {
             UserGroup userGroup = new UserGroup();
-            userGroup.setTitle("Group" + i);
+            userGroup.setTitle("Group " + randomStringGenerator(5));
             newUserGroups.add(userGroup);
         }
         userGroupRepository.saveAll(newUserGroups);
@@ -78,9 +80,9 @@ public class DatabaseFiller {
             User user = new User();
             user.setUsername("user" + i);
             user.setPassword(passwordEncoder.encode("Password" + i));
-            user.setFirstname("Vartotojas" + i);
-            user.setLastname("Vartotojautojas" + i);
-            user.setEmail("user" + i + "userdvs.lt");
+            user.setFirstname(randomStringGenerator(7));
+            user.setLastname(randomStringGenerator(12));
+            user.setEmail("user" + i + "@" + randomStringGenerator(5) + ".lt");
             user.setAdmin(isAdmin);
             Role userRole = null;
             if (isAdmin) {
@@ -115,7 +117,7 @@ public class DatabaseFiller {
         List<DocumentType> documentTypes = new ArrayList<>();
         for (int i = 1; i<= docTypesCount; i++) {
             DocumentType documentType = new DocumentType();
-            documentType.setTitle("Prasymas" + i);
+            documentType.setTitle("Prasymas " + randomStringGenerator(4));
             documentTypes.add(documentType);
         }
         documentTypeRepository.saveAll(documentTypes);
@@ -191,8 +193,8 @@ public class DatabaseFiller {
                     }
                     DocumentType documentType = documentTypes.get((int) Math.floor(Math.random() * typesSize));
                     document.setDocumentType(documentType);
-                    document.setTitle(documentType.getTitle() + " " + user.getUsername() + " " + i);
-                    document.setDescription("Description");
+                    document.setTitle(documentType.getTitle() + randomStringGenerator(8));
+                    document.setDescription("Description" + randomStringGenerator(20));
                     document.setCreationDate(new Date());
                     document.setPrefix(UUID.randomUUID().toString());
 
@@ -201,5 +203,10 @@ public class DatabaseFiller {
             }
         }
         documentRepository.saveAll(documents);
+    }
+
+    public String randomStringGenerator(int length) {
+        String generatedString = RandomStringUtils.randomAlphabetic(length).toLowerCase();
+        return generatedString.substring(0, 1).toUpperCase() + generatedString.substring(1);
     }
 }
