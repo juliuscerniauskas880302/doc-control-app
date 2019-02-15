@@ -52,12 +52,18 @@ class NewDocumentContainer extends React.Component {
   // };
 
   onUpdateMainFile = fileItems => {
+    // this.setState({
+    //   mainFile: null
+    // });
     this.setState({
       mainFile: fileItems.map(fileItem => fileItem.file)
     });
     console.log(this.state.mainFile);
   };
   onUpdateAdditionalFiles = fileItems => {
+    // this.setState({
+    //   selectedAdditionalFiles: null
+    // });
     this.setState({
       selectedAdditionalFiles: fileItems.map(fileItem => fileItem.file)
     });
@@ -109,7 +115,7 @@ class NewDocumentContainer extends React.Component {
     event.preventDefault();
     //Turiu padaryti failo progreso barą matomą
     this.openFileTransferPopup();
-
+    let isFileNamesSame = false;
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
@@ -118,14 +124,11 @@ class NewDocumentContainer extends React.Component {
     };
     console.log("Model: " + model);
     let file = new FormData();
-    // Check if document is correct #BaDdEsIgN
-    if (this.state.documentTypeTitle === "") {
-      alert("Pasirinkite dokumento tipą.");
-    } else if (this.state.mainFile.length === 0) {
-      alert("Pasirinkite pagrindinę bylą.");
-    } else if (
+    // Check if attachment naming is correct #BaDdEsIgN
+    if (
       this.state.mainFile.length === 1 &&
-      this.state.selectedAdditionalFiles === null
+      (this.state.selectedAdditionalFiles === null ||
+        this.state.selectedAdditionalFiles.length === 0)
     ) {
       file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
       file.append("model", JSON.stringify(model));
@@ -151,15 +154,30 @@ class NewDocumentContainer extends React.Component {
       this.state.mainFile.length === 1 &&
       this.state.selectedAdditionalFiles.length > 0
     ) {
+      if (this.state.selectedAdditionalFiles.length > 1) {
+        for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+          for (let j = 0; j < this.state.selectedAdditionalFiles.length; j++) {
+            if (
+              this.state.selectedAdditionalFiles[i].name ===
+                this.state.selectedAdditionalFiles[j].name &&
+              i !== j
+            ) {
+              isFileNamesSame = true;
+              return;
+            }
+          }
+        }
+      }
+
       this.state.selectedAdditionalFiles.forEach(file => {
         if (file.name === this.state.mainFile[0].name) {
-          alert("Please select files with different names");
-          this.setState({
-            selectedFilesWithSameName: true
-          });
+          isFileNamesSame = true;
         }
       });
-      if (this.state.selectedFilesWithSameName) {
+
+      if (isFileNamesSame === true) {
+        alert("Please select files with different names");
+        isFileNamesSame = false;
       } else {
         file.append(
           "file",

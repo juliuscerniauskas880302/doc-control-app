@@ -156,11 +156,11 @@ const NewDocumentComponet = props => {
                       />
                     </div>
 
-                    <FileTransferPopup
+                    {/* <FileTransferPopup
                       show={props.isOpen}
                       onClose={props.closeFileTransferPopup}
                       percentage={props.percentage}
-                    />
+                    /> */}
                   </div>
 
                   <div className="form-group row">
