@@ -11,8 +11,7 @@ export default class NewUserContainer extends Component {
       email: "",
       password: "",
       username: "",
-      isAdmin: true,
-      showMessage: { message: "", messageType: "", show: false }
+      isAdmin: true
     };
   }
 
@@ -72,15 +71,26 @@ export default class NewUserContainer extends Component {
   };
 
   showMessage = () => {
-    if (this.state.showMessage.show) {
-      return (
-        <div className={this.state.showMessage.messageType}>
-          {this.state.showMessage.message}
-        </div>
+    if (this.state.showMessage === undefined) {
+      this.setState(
+        {
+          showMessage: { message: "", messageType: "", show: false }
+        },
+        () => {
+          console.log(this.state);
+          return null;
+        }
       );
-    } else {
-      return null;
     }
+    // if (this.state.showMessage.show) {
+    //   return (
+    //     <div className={this.state.showMessage.messageType}>
+    //       {this.state.showMessage.message}
+    //     </div>
+    //   );
+    // } else {
+    //   return null;
+    // }
   };
 
   render() {
