@@ -184,7 +184,7 @@ class NewDocumentContainer extends React.Component {
       });
 
       if (isFileNamesSame === true) {
-        // alert("Please select files with different names");
+        alert("Please select files with different names");
         isFileNamesSame = false;
       } else if (correctFileExtensions === false) {
         // alert("Please select files of correct file extension.");
