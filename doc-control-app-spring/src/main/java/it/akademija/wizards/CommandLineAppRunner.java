@@ -56,6 +56,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
         if(!docTypeExists("paausktinimas pareigose")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("paausktinimas pareigose"));
         if(!docTypeExists("atlyginimo padidinimas")) documentTypeService.createDocumentType(new DocumentTypeCreateCommand("atlyginimo padidinimas"));
         //USERS
+
         if (!usernameExists("migle")) userService.createUserForStartUp(new UserCreateCommand("migle", "captain", "Migle", "Babickaite", "captain@captain.lt", true));
         if (!usernameExists("julius")) userService.createUserForStartUp(new UserCreateCommand("julius", "julius", "Julius", "Cerniauskas", "julius@captain.lt", false));
         if (!usernameExists("root")) userService.createUserForStartUp(new UserCreateCommand("root", "root", "Rootas", "Rootauskas", "root@captain.lt", true));
