@@ -74,9 +74,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
 
             // ENTER groups, users, docTypes, avgDocsPerUser
             databaseFiller.fillInDatabaseWithData(groups, users, docTypes, avqDocsForUser);
-
         }
-//        else {
 
             //ROLES
             if (!roleExists("ROLE_USER")) roleRepository.save(new Role(RoleName.ROLE_USER));
@@ -132,7 +130,6 @@ public class CommandLineAppRunner implements CommandLineRunner {
             documentTypeService.addGroupsToDocType(docTypeId, "submission", new UserAddGroupsCommand(allGroups));
             //add administracija to doctype review
             documentTypeService.addGroupsToDocType(docTypeId, "review", new UserAddGroupsCommand(administration));
-//        }
     }
 
     private boolean roleExists(String roleName) {
