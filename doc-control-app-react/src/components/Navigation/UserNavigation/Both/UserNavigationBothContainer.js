@@ -8,10 +8,11 @@ import ReviewDocumentsContainer from "../../../ReviewDocuments/ReviewDocumentsCo
 import OneReviewDocumentsContainer from "../../../ReviewDocuments/OneReviewDocumentContainer";
 import NewDocumentContainer from "../../../CreateEditDocument/NewDocumentContainer";
 import EditDocumentContainer from "../../../CreateEditDocument/EditDocumentContainer";
-import ResourceNotFoundCompoentn from "../../../Errors/ResourceNotFoundComponent";
+import ResourceNotFoundComponent from "../../../Errors/ResourceNotFoundComponent";
 import UserNavigationBothComponent from "./UserNavigationBothComponent";
+import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsContainer";
+import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatisticsContainer";
 import Axios from "axios";
-
 export default class UserNavigationBothContainer extends Component {
   checkToken = () => {
     let token = JSON.parse(localStorage.getItem("accessToken"));
@@ -77,8 +78,18 @@ export default class UserNavigationBothContainer extends Component {
                   path="/admin/Documents/:documentId"
                   component={EditDocumentContainer}
                 />
-                <Route path="*" component={ResourceNotFoundCompoentn} />
-                <Route component={ResourceNotFoundCompoentn} />
+                <Route
+                  exact
+                  path="/documentStatistics"
+                  component={DocumentStatisticsContainer}
+                />
+                <Route
+                  exact
+                  path="/userStatistics"
+                  component={UserStatisticsContainer}
+                />
+                <Route path="*" component={ResourceNotFoundComponent} />
+                <Route component={ResourceNotFoundComponent} />
               </Switch>
             </UserNavigationBothComponent>
           </div>

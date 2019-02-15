@@ -128,6 +128,25 @@ export default class UserNavigationBothComponent extends Component {
                   </div>
                 </li>
               </NavLink>
+              <NavLink
+                to="/documentStatistics"
+                style={{ textDecoration: "none" }}
+              >
+                <li className="sidebar-list-item">
+                  <div className="sidebar-link text-muted">
+                    <i className="fas fa-file-alt mr-3 text-gray" />
+                    <span>Dokumentų statistika</span>
+                  </div>
+                </li>
+              </NavLink>
+              <NavLink to="/userStatistics" style={{ textDecoration: "none" }}>
+                <li className="sidebar-list-item">
+                  <div className="sidebar-link text-muted">
+                    <i className="fas fa-file-alt mr-3 text-gray" />
+                    <span>Vartotojų statistika</span>
+                  </div>
+                </li>
+              </NavLink>
             </ul>
           </div>
           {this.props.children}
