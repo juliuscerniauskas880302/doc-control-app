@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import ReviewDocumentsContainer from "../../../ReviewDocuments/ReviewDocumentsContainer";
 import OneReviewDocumentsContainer from "../../../ReviewDocuments/OneReviewDocumentContainer";
-import ResourceNotFoundCompoentn from "../../../Errors/ResourceNotFoundComponent";
+import ResourceNotFoundComponent from "../../../Errors/ResourceNotFoundComponent";
 
 import Axios from "axios";
 import UserNavigationReviewComponent from "./UserNavigationReviewComponent";
+import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatisticsContainer";
+import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsContainer";
 
 export default class UserNavigationReviewContainer extends Component {
   checkToken = () => {
@@ -38,8 +40,18 @@ export default class UserNavigationReviewContainer extends Component {
                   path="/reviewDocuments/:documentId"
                   component={OneReviewDocumentsContainer}
                 />
-                <Route path="*" component={ResourceNotFoundCompoentn} />
-                <Route component={ResourceNotFoundCompoentn} />
+                <Route
+                  exact
+                  path="/documentStatistics"
+                  component={DocumentStatisticsContainer}
+                />
+                <Route
+                  exact
+                  path="/userStatistics"
+                  component={UserStatisticsContainer}
+                />
+                <Route path="*" component={ResourceNotFoundComponent} />
+                <Route component={ResourceNotFoundComponent} />
               </Switch>
             </UserNavigationReviewComponent>
           </div>

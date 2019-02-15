@@ -1,13 +1,32 @@
 import React from "react";
 import FileTransferPopup from "./FileTransferPopup";
 import "./FileTransferStyles.css";
+// Import React FilePond
+import { FilePond, registerPlugin } from "react-filepond";
+
+// Import FilePond styles
+import "filepond/dist/filepond.min.css";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+
+// Import the Image EXIF Orientation and Image Preview plugins
+// Note: These need to be installed separately
+// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+// Register the plugins
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateType
+);
 
 const NewDocumentComponet = props => {
   let optionList = props.typeList.map(v => (
     //<option value = {v}>{v}</option>
     <option key={v}>{v}</option>
   ));
-
   return (
     <div className="page-holder w-100 d-flex flex-wrap">
       <div className="container-fluid px-xl-5">
@@ -73,18 +92,20 @@ const NewDocumentComponet = props => {
                         required
                         onChange={props.handleChangeOfType}
                       >
-                        <option hidden>Pasirinkite...</option>
+                        <option value="" hidden>
+                          Pasirinkite...
+                        </option>
                         {optionList}
                       </select>
                     </div>
                   </div>
 
                   <div className="form-group row">
-                    <label className="col-md-2 form-control-label">
-                      Pasirinkite pridedamą failą:
+                    <label className="col-md-4 col-lg-2 form-control-label">
+                      Pasirinkite pridedamus failus:
                     </label>
-                    <div className="col-md-2">
-                      <input
+                    {/* <div className="col-md-2"> */}
+                    {/* <input
                         onChange={props.onFileSelectHandler}
                         id="Upload file"
                         name="selectedFiles"
@@ -92,15 +113,62 @@ const NewDocumentComponet = props => {
                         type="file"
                         required
                         accept=".pdf, .jpg, .png"
+                      /> */}
+                    {/* </div> */}
+                    {/* <div className="col-md-2">
+                      <input
+                        onChange={props.onFileSelectHandler}
+                        id="Upload files"
+                        name="selectedAdditionalFiles"
+                        className="input-file"
+                        type="file"
+                        multiple
+                        accept=".pdf, .jpg, .png"
+                      />
+                    </div> */}
+                    <div className="col-md-12 col-lg-4">
+                      <FilePond
+                        labelIdle="Įkelkite pagrindinę bylą."
+                        labelFileTypeNotAllowed="Netinkamas bylos formatas."
+                        fileValidateTypeLabelExpectedTypes="Įkelkite pdf formato bylą."
+                        labelButtonRemoveItem="Pašalinti"
+                        name="selectedFiles"
+                        required
+                        allowMultiple={false}
+                        onupdatefiles={fileItem =>
+                          props.onUpdateMainFile(fileItem)
+                        }
+                        acceptedFileTypes={["application/pdf"]}
                       />
                     </div>
-                    <div className="col-md-3">
-                      <FileTransferPopup
-                        show={props.isOpen}
-                        onClose={props.closeFileTransferPopup}
-                        percentage={props.percentage}
-                      />
+                    <div className="col-md-12 col-lg-4">
+                      {props.mainFileUploaded ? (
+                        <FilePond
+                          labelIdle="Įkelkite papildomas bylas."
+                          labelFileTypeNotAllowed="Netinkamas bylos formatas."
+                          fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
+                          labelButtonRemoveItem="Pašalinti"
+                          name="selectedAdditionalFiles"
+                          allowMultiple={true}
+                          onupdatefiles={fileItems =>
+                            props.onUpdateAdditionalFiles(fileItems)
+                          }
+                          acceptedFileTypes={[
+                            "application/pdf",
+                            "image/png",
+                            "image/jpeg"
+                          ]}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
+
+                    {/* <FileTransferPopup
+                      show={props.isOpen}
+                      onClose={props.closeFileTransferPopup}
+                      percentage={props.percentage}
+                    /> */}
                   </div>
 
                   <div className="form-group row">

@@ -55,7 +55,7 @@ public class FileService {
 
     //    DOWNLOAD DOCUMENT MAIN FILE
     @Transactional
-    public ResponseEntity downloadFile(String documentId) throws FileNotFoundException {
+    public ResponseEntity downloadMainFile(String documentId) throws FileNotFoundException {
         Document document = resourceFinder.getDocument(documentId);
         String originalFileName = document.getPath();
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
@@ -75,7 +75,30 @@ public class FileService {
         return ResponseEntity.notFound().build();
 
     }
-    // GET ALL DOCUMENTS WITH FOLDERS
+
+    //    DOWNLOAD DOCUMENT FILE
+    @Transactional
+    public ResponseEntity downloadFile(String documentId, String filePath) throws FileNotFoundException {
+        Document document = resourceFinder.getDocument(documentId);
+//        String originalFileName = document.getPath();
+        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, filePath);
+        File file = new File(getDocumentFolder(document).getPath()
+                + File.separator
+                + document.getPath());
+        if (file.exists()) {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath +"\"");
+            headers.add("Access-Control-Expose-Headers",
+                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+            headers.setContentType(mediaType);
+            return ResponseEntity.ok().headers(headers).
+                    body(resource);
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+    // GET ALL ATTACHMENTS WITH FOLDERS
     @Transactional
     public ResponseEntity downloadAllDocuments(String username) throws IOException {
         long time1 = System.currentTimeMillis();
@@ -100,7 +123,7 @@ public class FileService {
                     return new ResponseEntity<>("Archiving failed", HttpStatus.BAD_REQUEST);
                 }
             }
-            zs.flush();;
+            zs.flush();
             fos.flush();
             zs.close();
             fos.close();
@@ -129,10 +152,11 @@ public class FileService {
 //        String updatedFileName = originalFileName + document.getPrefix();
         document.setPath(originalFileName);
         byte[] buf = new byte[1024];
+        assert originalFileName != null;
         File file = new File(folder.getPath(), originalFileName);
         try (InputStream inputStream = multipartFile.getInputStream();
              FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            int numRead = 0;
+            int numRead;
             while ((numRead = inputStream.read(buf)) >= 0) {
                 fileOutputStream.write(buf, 0, numRead);
             }
@@ -151,6 +175,7 @@ public class FileService {
 
     @Transactional
     public void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
+
         File path = new File(pathName
                 + File.separator
                 + document.getAuthor().getUsername()
@@ -165,6 +190,7 @@ public class FileService {
                 document.getAdditionalFilePaths().add(originalFileName);
             }
             byte[] buf = new byte[1024];
+            assert originalFileName != null;
             File file = new File(path.getPath(), originalFileName);
             try (InputStream inputStream = multipartFile[i].getInputStream();
                  FileOutputStream fileOutputStream = new FileOutputStream(file)) {
@@ -203,7 +229,7 @@ public class FileService {
             File file = new File(folder.getPath()
                     + File.separator
                     + document.getPath());
-            file.delete();
+            boolean delete = file.delete();
             if (Objects.requireNonNull(folder.list()).length == 0) {
                 deleteFolder(folder);
             }

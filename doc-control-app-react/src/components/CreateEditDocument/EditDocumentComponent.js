@@ -2,7 +2,7 @@ import React from "react";
 import FileTransferPopup from "./FileTransferPopup";
 import "./FileTransferStyles.css";
 
-const EditDocumentComponet = props => {
+const EditDocumentComponent = props => {
   let optionList = props.typeList.map(v => (
     //<option value = {v}>{v}</option>
     <option key={v}>{v}</option>
@@ -93,7 +93,46 @@ const EditDocumentComponet = props => {
                         />
                       </p>
                     </div>
+                    {/* {props.paths.map(path => {
+                      return (
+                        <div className="col-md-3">
+                          <p>
+                            {props.path} &nbsp;{" "}
+                            <i
+                              className="mygtukas fas fa-download fa-2x"
+                              title="Atsisiųsti pridėtą failą"
+                              onClick={() => props.downloadHandler()}
+                            />
+                          </p>
+                        </div>
+                      );
+                    })} */}
                   </div>
+                  {props.paths !== null ? (
+                    <div className="form-group row">
+                      <label className="col-md-2 form-control-label">
+                        Pridėti papildomi failai:
+                      </label>
+                      {props.paths.map((path, i) => {
+                        return (
+                          <div className="col-md-3" key={i}>
+                            <p>
+                              {path} &nbsp;{" "}
+                              <i
+                                className="mygtukas fas fa-download fa-2x"
+                                title={path}
+                                onClick={event =>
+                                  props.fileDownloadHandler(event)
+                                }
+                              />
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    ""
+                  )}
 
                   <div className="form-group row">
                     <label className="col-md-2 form-control-label">
@@ -190,4 +229,4 @@ const EditDocumentComponet = props => {
   );
 };
 
-export default EditDocumentComponet;
+export default EditDocumentComponent;

@@ -1,7 +1,7 @@
 import React from "react";
 import NewDocumentComponent from "./NewDocumentComponent";
 import axios from "axios";
-
+const acceptedFileTypes = ["image/*", "application/pdf"];
 class NewDocumentContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,8 @@ class NewDocumentContainer extends React.Component {
       username: "migle",
       documentTypeTitle: "",
       typeList: [],
-      selectedFiles: null,
+      mainFile: null,
+      selectedAdditionalFiles: null,
       isOpen: false,
       percentage: 0
       //documentState: "default state",
@@ -44,9 +45,28 @@ class NewDocumentContainer extends React.Component {
     this.setState({ documentTypeTitle: event.target.value });
   };
 
-  onFileSelectHandler = event => {
-    console.log(event.target.files);
-    this.setState({ [event.target.name]: event.target.files });
+  // onFileSelectHandler = event => {
+  //   console.log(event.target.files);
+  //   this.setState({ [event.target.name]: event.target.files });
+  // };
+
+  onUpdateMainFile = fileItems => {
+    // this.setState({
+    //   mainFile: null
+    // });
+    this.setState({
+      mainFile: fileItems.map(fileItem => fileItem.file)
+    });
+    console.log(this.state.mainFile);
+  };
+  onUpdateAdditionalFiles = fileItems => {
+    // this.setState({
+    //   selectedAdditionalFiles: null
+    // });
+    this.setState({
+      selectedAdditionalFiles: fileItems.map(fileItem => fileItem.file)
+    });
+    console.log(this.state.selectedAdditionalFiles);
   };
 
   // downloadHandler = (event) => {
@@ -91,26 +111,27 @@ class NewDocumentContainer extends React.Component {
 
   //TODO
   handleSubmit = event => {
-    console.log("Atėjau į Submit handlerį");
     event.preventDefault();
     //Turiu padaryti failo progreso barą matomą
     this.openFileTransferPopup();
-
+    let isFileNamesSame = false;
+    let correctFileExtensions = true;
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
-      title: this.state.title,
+      title: this.state.title
       //username: this.state.username
     };
-    console.log("Čia spausdina modelį");
-    console.log(model);
+    console.log("Model: " + model);
     let file = new FormData();
-    if (this.state.selectedFiles.length === 1) {
-      file.append(
-        "file",
-        this.state.selectedFiles[0],
-        this.state.selectedFiles[0].name
-      );
+    // Check if attachment naming is correct #BaDdEsIgN
+
+    if (
+      this.state.mainFile.length === 1 &&
+      (this.state.selectedAdditionalFiles === null ||
+        this.state.selectedAdditionalFiles.length === 0)
+    ) {
+      file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
       file.append("model", JSON.stringify(model));
       axios
         .post("http://localhost:8081/api/docs", file, {
@@ -130,29 +151,77 @@ class NewDocumentContainer extends React.Component {
         .then(response => this.props.history.push(`/createdDocuments`))
         .then(res => console.log(res))
         .catch(err => console.log("KLAIDA SUBMITE" + err));
-    } else {
-      //   for (let i = 0; i < this.state.selectedFiles.length; i++) {
-      //     file.append(
-      //       "file",
-      //       this.state.selectedFiles[i],
-      //       this.state.selectedFiles[i].name
-      //     );
-      //     console.log(this.state.selectedFiles[i]);
-      //     console.log(this.state.selectedFiles[i].name);
-      //   }
-      //   Axios.post("http://localhost:8081/api/files/upload", file, {
-      //     onUploadProgress: progressEvent => {
-      //       console.log(
-      //         "Upload progress: " +
-      //           (progressEvent.loaded / progressEvent.total) * 100 +
-      //           "%"
-      //       );
-      //     }
-      //   })
-      //     .then(res => console.log(res))
-      //     .catch(err => console.log(err));
+    } else if (
+      this.state.mainFile.length === 1 &&
+      this.state.selectedAdditionalFiles.length > 0
+    ) {
+      if (this.state.selectedAdditionalFiles.length > 1) {
+        for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+          for (let j = 0; j < this.state.selectedAdditionalFiles.length; j++) {
+            if (
+              this.state.selectedAdditionalFiles[i].name ===
+                this.state.selectedAdditionalFiles[j].name &&
+              i !== j
+            ) {
+              isFileNamesSame = true;
+              return;
+            }
+          }
+        }
+      }
+      let acceptedFileTypes = ["pdf", "jpeg", "png"];
+      this.state.selectedAdditionalFiles.forEach(file => {
+        if (!acceptedFileTypes.includes(file.name.split(".").pop())) {
+          correctFileExtensions = false;
+          return;
+        }
+      });
+      // Checking file extensions
+      this.state.selectedAdditionalFiles.forEach(file => {
+        if (file.name === this.state.mainFile[0].name) {
+          isFileNamesSame = true;
+        }
+      });
+
+      if (isFileNamesSame === true) {
+        alert("Please select files with different names");
+        isFileNamesSame = false;
+      } else if (correctFileExtensions === false) {
+        // alert("Please select files of correct file extension.");
+        correctFileExtensions = false;
+      } else {
+        file.append(
+          "file",
+          this.state.mainFile[0],
+          this.state.mainFile[0].name
+        );
+        for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+          file.append(
+            "file",
+            this.state.selectedAdditionalFiles[i],
+            this.state.selectedAdditionalFiles[i].name
+          );
+          file.append("model", JSON.stringify(model));
+
+          console.log(this.state.selectedAdditionalFiles[i]);
+          console.log(this.state.selectedAdditionalFiles[i].name);
+        }
+        axios
+          .post("http://localhost:8081/api/docs", file, {
+            onUploadProgress: progressEvent => {
+              console.log(
+                "Upload progress: " +
+                  (progressEvent.loaded / progressEvent.total) * 100 +
+                  "%"
+              );
+            }
+          })
+          .then(res => this.props.history.push(`/createdDocuments`))
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      }
     }
-    console.log("Toks yra failas" + file);
+    console.log("Toks yra failas" + file.getAll);
   };
 
   componentDidMount() {
@@ -181,20 +250,25 @@ class NewDocumentContainer extends React.Component {
 
   render() {
     return (
-      <NewDocumentComponent
-        type={this.state.type}
-        typeList={this.state.typeList}
-        percentage={this.state.percentage}
-        isOpen={this.state.isOpen}
-        handleChangeOfTitle={this.handleChangeOfTitle}
-        handleChangeOfDescription={this.handleChangeOfDescription}
-        handleChangeOfType={this.handleChangeOfType}
-        onFileSelectHandler={this.onFileSelectHandler}
-        //downloadHandler={this.downloadHandler}
-        handleSubmit={this.handleSubmit}
-        openFileTransferPopup={this.openFileTransferPopup}
-        closeFileTransferPopup={this.closeFileTransferPopup}
-      />
+      <React.Fragment>
+        <NewDocumentComponent
+          type={this.state.type}
+          typeList={this.state.typeList}
+          percentage={this.state.percentage}
+          isOpen={this.state.isOpen}
+          handleChangeOfTitle={this.handleChangeOfTitle}
+          handleChangeOfDescription={this.handleChangeOfDescription}
+          handleChangeOfType={this.handleChangeOfType}
+          onUpdateMainFile={this.onUpdateMainFile}
+          onUpdateAdditionalFiles={this.onUpdateAdditionalFiles}
+          //downloadHandler={this.downloadHandler}
+          mainFileUploaded={this.state.mainFile !== null}
+          handleSubmit={this.handleSubmit}
+          openFileTransferPopup={this.openFileTransferPopup}
+          closeFileTransferPopup={this.closeFileTransferPopup}
+          acceptedFileTypes={acceptedFileTypes}
+        />
+      </React.Fragment>
     );
   }
 }

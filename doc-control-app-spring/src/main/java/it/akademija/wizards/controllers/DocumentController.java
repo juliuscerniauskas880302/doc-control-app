@@ -153,10 +153,16 @@ public class DocumentController {
     @ApiOperation(value = "download document main file")
     @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity downloadAFile(@PathVariable final String id) throws FileNotFoundException {
-        return fileService.downloadFile(id);
+    public ResponseEntity downloadMainFile(@PathVariable final String id) throws FileNotFoundException {
+        return fileService.downloadMainFile(id);
     }
 
+    @ApiOperation(value = "download document main file")
+    @RequestMapping(value = "/{id}/{fileName}/download", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity downloadFile(@PathVariable final String id, @PathVariable final String fileName) throws FileNotFoundException {
+        return fileService.downloadFile(id, fileName);
+    }
     @ApiOperation(value = "download additionalFiles")
     @RequestMapping(value = "/{id}/download/attachments", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
