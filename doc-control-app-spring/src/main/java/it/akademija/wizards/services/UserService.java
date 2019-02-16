@@ -19,6 +19,7 @@ import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -62,12 +63,22 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public List<UserGetCommand> getUsers() {
-        return userRepository.findAll().stream().map(user -> {
+    public UserPageGetCommand getUsers(Integer pageNumber, Integer pageLimit) {
+        Pageable pageable;
+        Sort sort = Sort.by("firstname").ascending().and(Sort.by("lastname")).ascending();
+        if (pageNumber != null && pageLimit != null) {
+            pageable = PageRequest.of(pageNumber, pageLimit, sort);
+        } else {
+            pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+        }
+        Page<User> pageUser = userRepository.findAll(pageable);
+        List<UserGetCommand> userList = pageUser.stream().map(user -> {
             UserGetCommand userGetCommand = new UserGetCommand();
             BeanUtils.copyProperties(user, userGetCommand);
             return userGetCommand;
         }).collect(Collectors.toList());
+        UserPageGetCommand userPageGetCommand = new UserPageGetCommand(userList, pageUser.getTotalElements(), pageUser.getTotalPages());
+        return userPageGetCommand;
     }
 
     @Transactional(readOnly = true)
