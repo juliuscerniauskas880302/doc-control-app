@@ -23,14 +23,14 @@ import java.util.Set;
 @Api(value = "users")
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
-@RequestMapping (value = "/api/users")
+@RequestMapping(value = "/api/users")
 public class UserController {
 
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -46,13 +46,27 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<UserGetCommand> getUser() {
-         return userService.getUsers();
+        return userService.getUsers();
+    }
+
+    @ApiOperation(value = "get pageable users")
+    @RequestMapping(value = "/{page}/{recordsPerPage}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserGetCommand> getPageableUser(@PathVariable final int page, @PathVariable final int recordsPerPage) {
+        return userService.getPageableUsers(page, recordsPerPage);
+    }
+
+    @ApiOperation(value = "get users count")
+    @RequestMapping(value = "/total", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Long getUsersCount() {
+        return userService.getUsersCount();
     }
 
     @ApiOperation(value = "get user by username")
     @RequestMapping(value = "/{username}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserGetCommand getUserByUsername(@PathVariable String username){
+    public UserGetCommand getUserByUsername(@PathVariable String username) {
         return userService.getUser(username);
     }
 
@@ -60,8 +74,8 @@ public class UserController {
     @ApiOperation(value = "get user's documents")
     @RequestMapping(value = "/docs/{state}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List <DocumentGetCommand> getDocumentsByUsername(@CurrentUser UserPrincipal userPrincipal,
-                                                            @PathVariable(value = "state") String state){
+    public List<DocumentGetCommand> getDocumentsByUsername(@CurrentUser UserPrincipal userPrincipal,
+                                                           @PathVariable(value = "state") String state) {
         return userService.getUserDocuments(userPrincipal.getUsername(), state);
     }
 
@@ -74,14 +88,14 @@ public class UserController {
     @ApiOperation(value = "update user by username")
     @RequestMapping(value = "/{username}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateUserByUsername(@RequestBody UserUpdateCommand userUpdateCommand, @PathVariable(value = "username") String username){
+    public void updateUserByUsername(@RequestBody UserUpdateCommand userUpdateCommand, @PathVariable(value = "username") String username) {
         userService.updateUser(username, userUpdateCommand);
     }
 
     @ApiOperation(value = "delete user by username")
     @RequestMapping(value = "/{username}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUserByUsername(@PathVariable String username){
+    public void deleteUserByUsername(@PathVariable String username) {
         userService.deleteUser(username);
     }
 
@@ -125,7 +139,7 @@ public class UserController {
     @ApiOperation(value = "checks if user is allowed to submit/review documents")
     @RequestMapping(value = "/action/{action}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public boolean isActionAllowed (@CurrentUser UserPrincipal userPrincipal, @PathVariable String action) {
+    public boolean isActionAllowed(@CurrentUser UserPrincipal userPrincipal, @PathVariable String action) {
         return userService.isActionAllowed(userPrincipal.getUsername(), action);
     }
 

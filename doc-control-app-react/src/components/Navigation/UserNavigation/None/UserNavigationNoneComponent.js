@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import avatar from "../../../../css/images/avatar.png";
-import NavLink from "../../../Utilities/Navigation/NavLink";
 
 export default class UserNavigationNoneComponent extends Component {
   constructor(props) {

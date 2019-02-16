@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "popper.js";
-import "jquery";
 import "bootstrap";
 
 import Authentication from "./components/Authentication/Authentication";

@@ -19,6 +19,9 @@ import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -257,9 +260,9 @@ public class UserService {
                 BeanUtils.copyProperties(documentType, documentTypeGetCommand);
                 return documentTypeGetCommand;
             }).collect(Collectors.toSet());
-         }
+        }
         throw new NullPointerException("User does not exist");
-     }
+    }
 
     @Transactional
     public boolean isActionAllowed(String username, String action) {
@@ -278,5 +281,17 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public List<UserGetCommand> getPageableUsers(int page, int recordsPerPage) {
+        Pageable userPage = PageRequest.of(page, recordsPerPage, Sort.by("firstname").descending().and(Sort.by("lastname")));
+        return userRepository.findAll(userPage).stream().map(user -> {
+            UserGetCommand userGetCommand = new UserGetCommand();
+            BeanUtils.copyProperties(user, userGetCommand);
+            return userGetCommand;
+        }).collect(Collectors.toList());
+    }
 
+    public Long getUsersCount() {
+        return userRepository.count();
+    }
 }
