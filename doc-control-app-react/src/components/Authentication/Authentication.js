@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import LoginContainer from "./LoginContainer";
 import AdminNavigationContainer from "../Navigation/AdminNavigation/AdminNavigationContainer";
-import UserNavigationContainer from "../Navigation/UserNavigation/UserNavigationContainer";
-
 import Axios from "axios";
 import UserNavigationNoneContainer from "../Navigation/UserNavigation/None/UserNavigationNoneContainer";
 import UserNavigationReviewContainer from "../Navigation/UserNavigation/Review/UserNavigationReviewContainer";
@@ -29,14 +27,11 @@ export default class Authentication extends Component {
   getUserGroups = () => {
     Axios.get("http://localhost:8081/api/users/action/review")
       .then(res => {
-        console.log("review grupeje? ", res.data);
-        console.log("true = true ", res.data === true);
         this.setState({ review: res.data });
       })
       .catch(err => console.log(err));
     Axios.get("http://localhost:8081/api/users/action/submit")
       .then(res => {
-        console.log("submit grupeje? ", res.data);
         this.setState({ submit: res.data });
       })
       .catch(err => console.log(err));

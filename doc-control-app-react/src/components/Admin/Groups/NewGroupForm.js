@@ -27,16 +27,15 @@ export default class NewGroupForm extends Component {
   getAllGroups = () => {
     Axios.get("http://localhost:8081/api/groups")
       .then(res => {
-        console.log("Visos grupes: ", res.data);
         this.setState({ allGroups: res.data });
       })
       .catch(err => {
         console.log(err);
       });
   };
+
   getAllUsers = () => {
     Axios.get("http://localhost:8081/api/users").then(res => {
-      console.log(res.data);
       this.setState({ allUsers: res.data });
     });
   };
@@ -211,7 +210,6 @@ export default class NewGroupForm extends Component {
   };
 
   showUsersCheckBox = () => {
-    console.log("nu nassd");
     if (this.state.allUsers.length === 0) {
       return <div>Nėra vartotojų</div>;
     }
@@ -289,17 +287,7 @@ export default class NewGroupForm extends Component {
         userIdListToRemove.push(el.username);
       }
     });
-    console.log("User id's to add: ", userIdListToAdd);
-    console.log("User id's to remove: ", userIdListToRemove);
 
-    // Axios.delete(
-    //   "http://localhost:8081/api/groups/" +
-    //     this.state.selectedGroupForAddUsers +
-    //     "/users",
-    //   { data: { users: userIdListToRemove } }
-    // )
-    //   .then()
-    //   .catch();
     Axios.post(
       "http://localhost:8081/api/groups/" +
         this.state.selectedGroupForAddUsers +

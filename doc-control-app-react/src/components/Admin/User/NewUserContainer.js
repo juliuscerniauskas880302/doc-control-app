@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import NewUserComponent from "./NewUserComponent";
-
 export default class NewUserContainer extends Component {
   constructor(props) {
     super(props);
@@ -25,26 +24,29 @@ export default class NewUserContainer extends Component {
     let lastname = this.capitalizeFirstLetter(this.state.lastname);
     let username = this.state.username.toLocaleLowerCase();
 
-    this.setState({
-      firstname: firstname,
-      lastname: lastname,
-      username: username,
-      isAdmin: JSON.parse(this.state.isAdmin)
-    });
-    console.log("Esama busena", this.state);
-    Axios.post("http://localhost:8081/api/users", this.state)
-      .then(res => {
-        console.log("New user added");
-        this.props.history.push("/");
-      })
-      .catch(err => {
-        this.handleMessageInput(
-          err.response.data.message,
-          "alert alert-danger fixed-top text-center",
-          2500
-        );
-        console.log("Grizo err:", err.response.data);
-      });
+    this.setState(
+      {
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        isAdmin: JSON.parse(this.state.isAdmin)
+      },
+      () => {
+        Axios.post("http://localhost:8081/api/users", this.state)
+          .then(res => {
+            console.log("New user added");
+            this.props.history.push("/");
+          })
+          .catch(err => {
+            this.handleMessageInput(
+              err.response.data.message,
+              "alert alert-danger fixed-top text-center",
+              2500
+            );
+            console.log("Grizo err:", err.response.data);
+          });
+      }
+    );
   };
 
   capitalizeFirstLetter = string => {
@@ -77,20 +79,10 @@ export default class NewUserContainer extends Component {
           showMessage: { message: "", messageType: "", show: false }
         },
         () => {
-          console.log(this.state);
           return null;
         }
       );
     }
-    // if (this.state.showMessage.show) {
-    //   return (
-    //     <div className={this.state.showMessage.messageType}>
-    //       {this.state.showMessage.message}
-    //     </div>
-    //   );
-    // } else {
-    //   return null;
-    // }
   };
 
   render() {
