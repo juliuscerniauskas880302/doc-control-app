@@ -35,6 +35,9 @@ export class UserContainer extends Component {
   getAllUsersFromServer = (pageNumber, pageLimit) => {
     Axios.get(
       "http://localhost:8081/api/users/" + (pageNumber - 1) + "/" + pageLimit
+      // "http://localhost:8081/api/users/", {
+      //   params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+      // }
     )
       .then(res => {
         this.setState({ users: res.data });
