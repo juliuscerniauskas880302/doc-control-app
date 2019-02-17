@@ -23,13 +23,15 @@ export default class NewUserContainer extends Component {
     let firstname = this.capitalizeFirstLetter(this.state.firstname);
     let lastname = this.capitalizeFirstLetter(this.state.lastname);
     let username = this.state.username.toLocaleLowerCase();
+    let email = this.state.email.toLocaleLowerCase();
 
     this.setState(
       {
         firstname: firstname,
         lastname: lastname,
         username: username,
-        isAdmin: JSON.parse(this.state.isAdmin)
+        isAdmin: JSON.parse(this.state.isAdmin),
+        email: email
       },
       () => {
         Axios.post("http://localhost:8081/api/users", this.state)
@@ -96,7 +98,7 @@ export default class NewUserContainer extends Component {
           namePatternTitle="Please enter only letters"
           usernamePattern=""
           usernamePatternTitle=""
-          emailPattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+          emailPattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           emailPatternTitle=""
           passwordPattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
           passwordPatternTitle="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"

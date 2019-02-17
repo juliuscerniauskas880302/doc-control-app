@@ -25,6 +25,8 @@ export default function NewUserComponent(props) {
                     </label>
                     <div className="col-md-9">
                       <input
+                        minLength="2"
+                        maxLength="50"
                         type="text"
                         name="firstname"
                         placeholder="Vardas"
@@ -42,6 +44,8 @@ export default function NewUserComponent(props) {
                     </label>
                     <div className="col-md-9">
                       <input
+                        minLength="2"
+                        maxLength="50"
                         type="text"
                         name="lastname"
                         placeholder="Pavardė"
@@ -59,6 +63,8 @@ export default function NewUserComponent(props) {
                     </label>
                     <div className="col-md-9">
                       <input
+                        minLength="2"
+                        maxLength="15"
                         type="text"
                         name="username"
                         placeholder="Vartotojo vardas"

@@ -21,24 +21,53 @@ export default class UpdateUser extends Component {
       "http://localhost:8081/api/users/" + this.props.match.params.username
     )
       .then(res => {
-        this.setState(res.data);
+        this.setState(
+          {
+            firstname: res.data.firstname,
+            lastname: res.data.lastname,
+            email: res.data.email,
+            username: res.data.username,
+            isAdmin: res.data.admin
+          },
+          () => {
+            console.log(this.state);
+          }
+        );
       })
       .catch(err => {
         console.log(err);
       });
   };
+  capitalizeFirstLetter = string => {
+    string = string.toLocaleLowerCase();
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   onUpdateClickHandler = event => {
-    console.log(event);
     event.preventDefault();
-    Axios.put(
-      "http://localhost:8081/api/users/" + this.props.match.params.username,
-      this.state
-    )
-      .then(res => {
-        this.props.history.push("/");
-      })
-      .catch(err => {});
+    let firstname = this.capitalizeFirstLetter(this.state.firstname);
+    let lastname = this.capitalizeFirstLetter(this.state.lastname);
+    let email = this.state.email.toLocaleLowerCase();
+
+    this.setState(
+      {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        isAdmin: JSON.parse(this.state.isAdmin)
+      },
+      () => {
+        Axios.put(
+          "http://localhost:8081/api/users/" + this.props.match.params.username,
+          this.state
+        )
+          .then(res => {
+            console.log(res.data);
+            //this.props.history.push("/");
+          })
+          .catch(err => {});
+      }
+    );
   };
 
   onUpdatePasswordHandler = event => {
@@ -61,7 +90,19 @@ export default class UpdateUser extends Component {
   };
 
   onValueChangeHandler = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    if (event.target.name === "isAdmin") {
+      this.setState(
+        {
+          [event.target.name]: JSON.parse(event.target.value)
+        },
+        () => {
+          console.log(this.state);
+        }
+      );
+    } else
+      this.setState({ [event.target.name]: event.target.value }, () => {
+        console.log(this.state);
+      });
   };
 
   goBack = () => {
@@ -71,6 +112,26 @@ export default class UpdateUser extends Component {
     this.props.history.push(
       "/users/groups/" + this.props.match.params.username
     );
+  };
+  options = () => {
+    if (this.state.isAdmin) {
+      return (
+        <React.Fragment>
+          <option selected value={true}>
+            Administratorius
+          </option>
+          <option value={false}>Paprastas vartotojas</option>
+        </React.Fragment>
+      );
+    } else
+      return (
+        <React.Fragment>
+          <option value={true}>Administratorius</option>
+          <option selected value={false}>
+            Paprastas vartotojas
+          </option>
+        </React.Fragment>
+      );
   };
 
   render() {
@@ -97,6 +158,8 @@ export default class UpdateUser extends Component {
                       </label>
                       <div className="col-md-9">
                         <input
+                          minLength="2"
+                          maxLength="50"
                           onChange={event => this.onValueChangeHandler(event)}
                           type="text"
                           name="firstname"
@@ -113,6 +176,8 @@ export default class UpdateUser extends Component {
                       </label>
                       <div className="col-md-9">
                         <input
+                          minLength="2"
+                          maxLength="50"
                           onChange={event => this.onValueChangeHandler(event)}
                           type="text"
                           name="lastname"
@@ -148,13 +213,31 @@ export default class UpdateUser extends Component {
                           type="email"
                           name="email"
                           value={this.state.email}
-                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                           required
                           className="form-control form-control-warning"
                         />
                         <small className="form-text text-muted ml-3">
                           pvz@pvz.lt
                         </small>
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label className="col-sm-3 form-control-label">
+                        Rolė
+                      </label>
+                      <div className="col-md-9">
+                        <select
+                          onChange={event => this.onValueChangeHandler(event)}
+                          type="text"
+                          name="isAdmin"
+                          required
+                          className="form-control form-control-warning"
+                        >
+                          {/* <option value={true}>Administratorius</option>
+                          <option value={false}>Paprastas vartotojas</option> */}
+                          {this.options()}
+                        </select>
                       </div>
                     </div>
 
