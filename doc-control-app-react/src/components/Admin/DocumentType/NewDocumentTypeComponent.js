@@ -21,6 +21,8 @@ export default function NewDocumentTypeComponent(props) {
                     </label>
                     <div className="col-md-9">
                       <input
+                        minLength="2"
+                        maxLength="30"
                         placeholder="Dokumento tipo pavadinimas"
                         onChange={event => props.onValueChangeHandler(event)}
                         value={props.state.title}
@@ -85,6 +87,8 @@ export default function NewDocumentTypeComponent(props) {
                     </label>
                     <div className="col-md-9">
                       <input
+                        minLength="2"
+                        maxLength="30"
                         placeholder="Naujas pavadinimas"
                         onChange={event => props.onValueChangeHandler(event)}
                         type="text"

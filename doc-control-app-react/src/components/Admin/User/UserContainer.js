@@ -159,7 +159,7 @@ export class UserContainer extends Component {
                 <div>
                   <div className="px-5">
                     <select
-                      class="ui compact selection dropdown"
+                      className="ui compact selection dropdown"
                       name="recordsPerPage"
                       onChange={event => this.onValueChangeHandler(event)}
                     >
@@ -168,7 +168,7 @@ export class UserContainer extends Component {
                       <option value={50}>50</option>
                       <option value={100}>100</option>
                     </select>
-                    <div class="ui tag label label">Rodyti per puslapį</div>
+                    <div className="ui tag label label">Rodyti per puslapį</div>
                   </div>
                 </div>
 

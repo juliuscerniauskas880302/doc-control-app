@@ -18,6 +18,8 @@ export default function NewGroupComponent(props) {
                   </label>
                   <div className="col-md-9">
                     <input
+                      minLength="2"
+                      maxLength="30"
                       placeholder="Pavadinimas"
                       onChange={props.onChange}
                       type="text"
@@ -81,6 +83,8 @@ export default function NewGroupComponent(props) {
                   </label>
                   <div className="col-md-9">
                     <input
+                      minLength="2"
+                      maxLength="30"
                       placeholder="Naujas pavadinimas"
                       onChange={props.onChange}
                       type="text"
