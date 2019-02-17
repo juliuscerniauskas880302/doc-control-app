@@ -8,14 +8,14 @@ export class UserContainer extends Component {
     this.state = {
       users: [],
       totalUsers: 0,
-      recordsPerPage: 20,
+      recordsPerPage: 15,
       activePage: 1
     };
   }
 
   componentDidMount = () => {
     //this.setState({ users: userData });
-    this.getUserCount();
+    //this.getUserCount();
     this.getAllUsersFromServer(
       this.state.activePage,
       this.state.recordsPerPage
@@ -31,16 +31,16 @@ export class UserContainer extends Component {
         console.log(err);
       });
   };
-
+  // "http://localhost:8081/api/users/" + (pageNumber - 1) + "/" + pageLimit
   getAllUsersFromServer = (pageNumber, pageLimit) => {
-    Axios.get(
-      "http://localhost:8081/api/users/" + (pageNumber - 1) + "/" + pageLimit
-      // "http://localhost:8081/api/users/", {
-      //   params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
-      // }
-    )
+    Axios.get("http://localhost:8081/api/users/", {
+      params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+    })
       .then(res => {
-        this.setState({ users: res.data });
+        this.setState({
+          users: res.data.userList,
+          totalUsers: res.data.totalElements
+        });
       })
       .catch(err => {
         console.log(err);
@@ -97,10 +97,21 @@ export class UserContainer extends Component {
   };
 
   handlePaginationChange = (e, { activePage }) => {
-    console.log(activePage);
     this.setState({ activePage }, () => {
       this.getAllUsersFromServer(activePage, this.state.recordsPerPage);
     });
+  };
+
+  onValueChangeHandler = event => {
+    this.setState(
+      { [event.target.name]: event.target.value, activePage: 1 },
+      () => {
+        this.getAllUsersFromServer(
+          this.state.activePage,
+          this.state.recordsPerPage
+        );
+      }
+    );
   };
 
   render() {
@@ -142,6 +153,22 @@ export class UserContainer extends Component {
                       onPageChange={this.handlePaginationChange}
                       totalPages={pageCount}
                     />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="px-5">
+                    <select
+                      class="ui compact selection dropdown"
+                      name="recordsPerPage"
+                      onChange={event => this.onValueChangeHandler(event)}
+                    >
+                      <option value={15}>15</option>
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                    <div class="ui tag label label">Rodyti per puslapį</div>
                   </div>
                 </div>
 
