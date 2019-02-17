@@ -36,7 +36,7 @@ export default class NewGroupForm extends Component {
 
   getAllUsers = () => {
     Axios.get("http://localhost:8081/api/users").then(res => {
-      this.setState({ allUsers: res.data });
+      this.setState({ allUsers: res.data.userList });
     });
   };
 
@@ -290,8 +290,8 @@ export default class NewGroupForm extends Component {
 
     Axios.post(
       "http://localhost:8081/api/groups/" +
-        this.state.selectedGroupForAddUsers +
-        "/users",
+      this.state.selectedGroupForAddUsers +
+      "/users",
       { users: userIdListToAdd }
     )
       .then(res => {
