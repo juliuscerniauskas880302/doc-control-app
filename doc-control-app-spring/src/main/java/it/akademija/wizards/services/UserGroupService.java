@@ -12,6 +12,7 @@ import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
@@ -40,7 +41,7 @@ public class UserGroupService {
 
     @Transactional(readOnly = true)
     public List<UserGroupGetCommand> getUserGroups() {
-        return userGroupRepository.findAll().stream().map(userGroup -> {
+        return userGroupRepository.findAll(Sort.by(Sort.Order.asc("title").ignoreCase())).stream().map(userGroup -> {
             UserGroupGetCommand userGroupGetCommand = new UserGroupGetCommand();
             BeanUtils.copyProperties(userGroup, userGroupGetCommand);
             return userGroupGetCommand;
