@@ -144,10 +144,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
     }
 
     private boolean usernameExists(String username) {
-        for (UserGetCommand userGetCommand: userService.getUsers()) {
-            if (userGetCommand.getUsername().equals(username)) return true;
-        }
-        return false;
+        return userRepository.existsByUsername(username);
     }
 
     private boolean groupExists(String title) {
