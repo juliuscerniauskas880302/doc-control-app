@@ -65,7 +65,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserPageGetCommand getUsers(Integer pageNumber, Integer pageLimit) {
         Pageable pageable;
-        Sort sort = Sort.by("firstname").ascending().and(Sort.by("lastname")).ascending();
+        Sort sort = Sort.by(Sort.Order.asc("firstname").ignoreCase()).and(Sort.by(Sort.Order.asc("lastname").ignoreCase()));
         if (pageNumber != null && pageLimit != null) {
             pageable = PageRequest.of(pageNumber, pageLimit, sort);
         } else {
@@ -294,7 +294,8 @@ public class UserService {
 
     @Transactional
     public List<UserGetCommand> getPageableUsers(int page, int recordsPerPage) {
-        Pageable userPage = PageRequest.of(page, recordsPerPage, Sort.by("firstname").descending().and(Sort.by("lastname")));
+        Sort sort = Sort.by(Sort.Order.asc("firstname").ignoreCase()).and(Sort.by(Sort.Order.asc("lastname").ignoreCase()));
+        Pageable userPage = PageRequest.of(page, recordsPerPage, sort);
         return userRepository.findAll(userPage).stream().map(user -> {
             UserGetCommand userGetCommand = new UserGetCommand();
             BeanUtils.copyProperties(user, userGetCommand);

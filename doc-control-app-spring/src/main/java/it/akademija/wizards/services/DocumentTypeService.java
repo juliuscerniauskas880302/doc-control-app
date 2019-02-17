@@ -11,6 +11,7 @@ import it.akademija.wizards.repositories.DocumentTypeRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class DocumentTypeService {
     //GET
     @Transactional(readOnly = true)
     public List<DocumentTypeGetCommand> getDocumentTypes() {
-        return documentTypeRepository.findAll().stream().map(docType -> {
+        return documentTypeRepository.findAll(Sort.by(Sort.Order.asc("title").ignoreCase())).stream().map(docType -> {
             DocumentTypeGetCommand documentTypeGetCommand = new DocumentTypeGetCommand();
             BeanUtils.copyProperties(docType, documentTypeGetCommand);
             return documentTypeGetCommand;
