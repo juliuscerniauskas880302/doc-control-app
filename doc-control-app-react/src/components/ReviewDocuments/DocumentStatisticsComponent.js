@@ -1,43 +1,32 @@
-import React from "react";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import DocumentStatisticsChar from './DocumentStatisticsChat';
+//import './DocumentStyle.css';
 
-import CanvasJSReact from '../canvasjs-2.3.1/canvasjs.react';
-//var CanvasJSReact = require('./canvasjs.react');
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-
-let label1 = "Atostogų prašymas";
-let value1 = 11;
-let label2 = "Atleidimo iš darbo prašymas";
-let value2 = 14;
-
-class DocumentStatisticsComponent extends React.Component {
-    componentDidMount() {
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            // title: {
-            //     text: "Pateikti dokumentai"
-            // },
-            data: [
-                {
-                    type: "bar",
-                    dataPoints: [
-                        { label: label1, y: value1 },
-                        { label: label2, y: value2 },
-                        { label: "Pašalpos prašymas", y: 25 },
-                        { label: "Prašymas suteikti tarnybinį automobilį", y: 30 },
-                        { label: "Prašymas padidinti atlyginimą", y: 28 }
-                    ]
-                }
-            ]
-        });
-        chart.render();
-    }
-    render() {
-        return (
-            <div id="chartContainer" style={{ height: 360 + "px", width: 50 + "%" }}>
+const DocumentStatisticsComponent = (props) => {
+    return (
+        <div className="card">
+            {/* <div className="card-header">
+                <h6 className="text-uppercase mb-0">{props.documentType}</h6> 
+            </div> */}
+            <div className="card-body">
+            <button className="btn btn-primary" type="button" data-toggle="collapse" data-target={"#" + props.idName} aria-expanded="false" aria-controls={props.idName}>
+                    {props.documentType}
+                </button>
+                <div className="collapse" id={props.idName}>
+                    <div className="card card-body">
+                        <DocumentStatisticsChar
+                            chartContainerName={"chartContainer" + props.idName}
+                            submitted={props.submitted}
+                            accepted={props.accepted}
+                            rejected={props.rejected}
+                        />
+                    </div>
+                </div>
             </div>
-        );
-    }
+        </div>
+
+    );
 }
 
-export default DocumentStatisticsComponent;                       
+export default DocumentStatisticsComponent;
