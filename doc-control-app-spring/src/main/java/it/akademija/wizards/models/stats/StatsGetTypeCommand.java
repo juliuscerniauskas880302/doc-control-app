@@ -3,14 +3,14 @@ package it.akademija.wizards.models.stats;
 public class StatsGetTypeCommand {
 
     private String title;
-    private Long submittedDocuments;
-    private Long acceptedDocuments;
-    private Long rejectedDocuments;
+    private Integer submittedDocuments;
+    private Integer acceptedDocuments;
+    private Integer rejectedDocuments;
 
     public StatsGetTypeCommand() {
     }
 
-    public StatsGetTypeCommand(String title, Long submittedDocuments, Long acceptedDocuments, Long rejectedDocuments) {
+    public StatsGetTypeCommand(String title, Integer submittedDocuments, Integer acceptedDocuments, Integer rejectedDocuments) {
         this.title = title;
         this.submittedDocuments = submittedDocuments;
         this.acceptedDocuments = acceptedDocuments;
@@ -25,27 +25,27 @@ public class StatsGetTypeCommand {
         this.title = title;
     }
 
-    public Long getSubmittedDocuments() {
+    public Integer getSubmittedDocuments() {
         return submittedDocuments;
     }
 
-    public void setSubmittedDocuments(Long submittedDocuments) {
+    public void setSubmittedDocuments(Integer submittedDocuments) {
         this.submittedDocuments = submittedDocuments;
     }
 
-    public Long getAcceptedDocuments() {
+    public Integer getAcceptedDocuments() {
         return acceptedDocuments;
     }
 
-    public void setAcceptedDocuments(Long acceptedDocuments) {
+    public void setAcceptedDocuments(Integer acceptedDocuments) {
         this.acceptedDocuments = acceptedDocuments;
     }
 
-    public Long getRejectedDocuments() {
+    public Integer getRejectedDocuments() {
         return rejectedDocuments;
     }
 
-    public void setRejectedDocuments(Long rejectedDocuments) {
+    public void setRejectedDocuments(Integer rejectedDocuments) {
         this.rejectedDocuments = rejectedDocuments;
     }
 }
