@@ -25,23 +25,5 @@ public class StatsController {
         this.statsService = statsService;
     }
 
-    @ApiOperation(value = "View document type submission stats")
-    @GetMapping("/docTypes")
-    public StatsGetTypeCommand getDocumentTypeSubmissionStats (
-            @ApiParam(value = "The Document Type ID", required = true) @PathVariable String documentTypeId,
-            @RequestParam(value = "fromDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
-            @RequestParam(value = "toDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
-            @CurrentUser UserPrincipal userPrincipal) {
-        return statsService.getDocumentTypeSubmissionStats(userPrincipal.getUsername(), documentTypeId, fromDate, toDate);
-    }
-
-    @ApiOperation(value = "View top submitting users")
-    @GetMapping("/docTypes/users")
-    public List<StatsGetUserCommand> getTopSubmittingUsersByDocType (
-            @ApiParam(value = "The Document Type ID", required = true) @PathVariable String documentTypeId,
-            @RequestParam(value = "userCount", required = false) Integer userCount,
-            @CurrentUser UserPrincipal userPrincipal) {
-        return statsService.getTopSubmittingUsersByDocType(userPrincipal.getUsername(), documentTypeId, userCount);
-    }
 
 }
