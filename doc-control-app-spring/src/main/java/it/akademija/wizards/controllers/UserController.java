@@ -2,6 +2,7 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
@@ -135,6 +136,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Set<DocumentTypeGetCommand> getUserSubmissionDocTypes(@CurrentUser UserPrincipal userPrincipal) {
         return userService.getUserSubmissionDocTypes(userPrincipal.getUsername());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @ApiOperation(value = "get users review doc types")
+    @RequestMapping(value = "/reviewDocTypes", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<DocumentTypeGetCommand> getUserReviewDocTypes(@CurrentUser UserPrincipal userPrincipal) {
+        return userService.getUserReviewDocTypes(userPrincipal.getUsername());
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

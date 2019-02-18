@@ -303,7 +303,17 @@ public class UserService {
         }).collect(Collectors.toList());
     }
 
+    @Transactional
     public Long getUsersCount() {
         return userRepository.count();
+    }
+
+    @Transactional
+    public List<DocumentTypeGetCommand> getUserReviewDocTypes(String username) {
+        return userRepository.findDocTypesUserCanReview(username).stream().map(documentType -> {
+            DocumentTypeGetCommand documentTypeGetCommand = new DocumentTypeGetCommand();
+            BeanUtils.copyProperties(documentType, documentTypeGetCommand);
+            return documentTypeGetCommand;
+        }).collect(Collectors.toList());
     }
 }
