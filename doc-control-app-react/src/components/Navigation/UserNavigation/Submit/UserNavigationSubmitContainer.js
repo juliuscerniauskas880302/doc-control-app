@@ -9,6 +9,7 @@ import EditDocumentContainer from "../../../CreateEditDocument/EditDocumentConta
 import ResourceNotFoundCompoentn from "../../../Errors/ResourceNotFoundComponent";
 import Axios from "axios";
 import UserNavigationSubmitComponent from "./UserNavigationSubmitComponent";
+import NavigationComponent from "../../NavigationComponent";
 
 export default class UserNavigationSubmitContainer extends Component {
   checkToken = () => {
@@ -28,7 +29,26 @@ export default class UserNavigationSubmitContainer extends Component {
       <div>
         <BrowserRouter>
           <div>
-            <UserNavigationSubmitComponent {...this.props}>
+            <NavigationComponent
+              navigation={[
+                {
+                  to: "/newDocument",
+                  name: "Naujas dokumentas",
+                  icon: "fas fa-file-signature  mr-3 text-gray"
+                },
+                {
+                  to: "/",
+                  name: "Pateikti",
+                  icon: "fas fa-file-alt mr-3 text-gray"
+                },
+                {
+                  to: "/createdDocuments",
+                  name: "Sukurti",
+                  icon: "fas fa-file mr-3 text-gray"
+                }
+              ]}
+              {...this.props}
+            >
               <Switch>
                 <Route
                   exact
@@ -68,7 +88,7 @@ export default class UserNavigationSubmitContainer extends Component {
                 <Route path="*" component={ResourceNotFoundCompoentn} />
                 <Route component={ResourceNotFoundCompoentn} />
               </Switch>
-            </UserNavigationSubmitComponent>
+            </NavigationComponent>
           </div>
         </BrowserRouter>
       </div>

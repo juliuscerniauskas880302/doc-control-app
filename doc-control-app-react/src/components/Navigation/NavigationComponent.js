@@ -1,41 +1,29 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./Navigation.css";
+import React, { Component } from "react";
+import avatar from "../../css/images/avatar.png";
+import HeaderSideBar from "./HeaderSideBar";
 
-const Navigation = props => {
-  return (
-    <div className="navigation">
-      <ul className="navigation_ul">
-        <li className="nav-item active">
-          <Link to="/users">Users</Link>|&nbsp;
-        </li>
-        <li className="nav-item active">
-          <Link to="/users2/add">New User</Link>|&nbsp;
-        </li>
-        <li>
-          <Link to="/groups/add">New Group</Link>|&nbsp;
-        </li>
-        <li>
-          <Link to="/document_types/add">New Document Type</Link>|&nbsp;
-        </li>
-        <li>
-          <Link to="/userdocument/add">Testing</Link>|&nbsp;
-        </li>
-        <li>
-          <Link to="/document_types/groups">Types=>Groups</Link>|&nbsp;
-        </li>
-        {/* //////////////////////////////////////// */}
-        <li className="nav-item active">
-          <Link to="/">Pateikti</Link> |&nbsp;
-        </li>
-        <li className="nav-item active">
-          <Link to="/createdDocuments">Sukurti</Link> |&nbsp;
-        </li>
-        <li className="nav-item active">
-          <Link to="/reviewDocuments">Peržiūrėti</Link> |&nbsp;
-        </li>
-      </ul>
-    </div>
-  );
-};
-export default Navigation;
+export default class NavigationComponent extends Component {
+  render() {
+    let data = JSON.parse(localStorage.getItem("user"));
+    let user;
+    if (data) {
+      user = data;
+    } else {
+      user = { firstname: "", lastname: "" };
+      this.props.history.push("/login");
+    }
+    return (
+      <React.Fragment>
+        <HeaderSideBar
+          title="Dokumentų valdymas"
+          user={user}
+          avatar={avatar}
+          logout={this.props.logout}
+          role={user.admin ? "Administratorius" : "Paprastas vartotojas"}
+          nav={this.props.navigation}
+          {...this.props}
+        />
+      </React.Fragment>
+    );
+  }
+}

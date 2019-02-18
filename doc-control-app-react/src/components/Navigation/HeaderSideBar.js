@@ -1,33 +1,23 @@
-import React, { Component } from "react";
-import avatar from "../../../../css/images/avatar.png";
+import React from "react";
+import NavigationLink from "./NavigationLink";
 
-export default class UserNavigationNoneComponent extends Component {
+export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.showMenu = true;
-    this.state = { showMenu: "sidebar py-3" };
+    this.state = { menuClass: "sidebar py-3" };
   }
 
   toggleMenu = () => {
     this.showMenu = !this.showMenu;
     if (this.showMenu) {
-      this.setState({ showMenu: "sidebar py-3 show" });
+      this.setState({ menuClass: "sidebar py-3 show" });
     } else {
-      this.setState({ showMenu: "sidebar py-3 shrink" });
+      this.setState({ menuClass: "sidebar py-3 shrink" });
     }
   };
 
   render() {
-    let data = JSON.parse(localStorage.getItem("user"));
-    let user;
-    let role;
-    if (data) {
-      role = data.admin ? "Administratorius" : "Paprastas vartotojas";
-      user = data;
-    } else {
-      user = { firstname: "", lastname: "" };
-      this.props.history.push("/login");
-    }
     return (
       <React.Fragment>
         <header className="header">
@@ -39,7 +29,7 @@ export default class UserNavigationNoneComponent extends Component {
               <i className="fas fa-file fa-4x" />
             </div>
             <div className="font-weight-bold text-uppercase ">
-              Dokumentu valdymas
+              {this.props.title}
             </div>
             <ul className="ml-auto d-flex align-items-center list-unstyled mb-0">
               <li className="nav-item dropdown ml-auto">
@@ -51,8 +41,8 @@ export default class UserNavigationNoneComponent extends Component {
                   className="nav-link dropdown-toggle"
                 >
                   <img
-                    src={avatar}
-                    alt="Jason Doe"
+                    src={this.props.avatar}
+                    alt="avatar"
                     style={{ maxWidth: "2.5rem" }}
                     className="img-fluid rounded-circle shadow"
                   />
@@ -60,9 +50,11 @@ export default class UserNavigationNoneComponent extends Component {
                 <div aria-labelledby="userInfo" className="dropdown-menu">
                   <div className="dropdown-item">
                     <strong className="d-block text-uppercase headings-font-family">
-                      {user.firstname + " " + user.lastname}
+                      {this.props.user.firstname +
+                        " " +
+                        this.props.user.lastname}
                     </strong>
-                    <small>{role}</small>
+                    <small>{this.props.role}</small>
                   </div>
                   <div className="dropdown-divider" />
                   <button
@@ -76,8 +68,17 @@ export default class UserNavigationNoneComponent extends Component {
             </ul>
           </nav>
         </header>
-
-        <div className="d-flex align-items-stretch">{this.props.children}</div>
+        <div className="d-flex align-items-stretch ">
+          <div id="sidebar" className={this.state.menuClass}>
+            <div className="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">
+              <i className="fas fa-tools fa-3x" />
+              <p>Meniu</p>
+              <div className="line" />
+            </div>
+            <NavigationLink navigation={this.props.nav} />
+          </div>
+          {this.props.children}
+        </div>
       </React.Fragment>
     );
   }

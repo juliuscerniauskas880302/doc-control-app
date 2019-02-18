@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
-
 import UserContainer from "../../Admin/User/UserContainer";
 import NewUserContainer from "../../Admin/User/NewUserContainer";
 import UpdateUserContainer from "../../Admin/User/UpdateUserContainer";
@@ -9,28 +8,43 @@ import NewDocumentTypeContainer from "../../Admin/DocumentType/NewDocumentTypeCo
 import TypesInGroups from "../../Admin/Types_in_groups/TypesInGroups";
 import EditUserGroups from "../../Admin/Groups/EditUserGroups";
 import ResourceNotFoundComponent from "../../Errors/ResourceNotFoundComponent";
-import AdminNavigationComponent from "../AdminNavigation/AdminNavigationComponent";
-import Axios from "axios";
+import { checkToken } from "../../Utilities/CheckToken";
+import NavigationComponent from "../NavigationComponent";
 
 export default class AdminNavigationContainer extends Component {
-  checkToken = () => {
-    let token = JSON.parse(localStorage.getItem("accessToken"));
-    if (token) {
-      Axios.defaults.headers.Authorization = `Bearer ${token}`;
-    } else {
-      localStorage.clear("user");
-      localStorage.clear("accessToken");
-      delete Axios.defaults.headers.Authorization;
+  render() {
+    if (!checkToken()) {
       this.props.history.push("/login");
     }
-  };
-
-  render() {
-    this.checkToken();
     return (
       <div>
         <BrowserRouter>
-          <AdminNavigationComponent {...this.props}>
+          <NavigationComponent
+            navigation={[
+              { to: "/", name: "Pagrindinis", icon: "fas fa-users text-gray" },
+              {
+                to: "/users/add",
+                name: "Naujas vartotojas",
+                icon: "fas fa-user ml-1 text-gray"
+              },
+              {
+                to: "/groups/add",
+                name: "Grupės",
+                icon: "fas fa-clipboard-list  ml-1 text-gray"
+              },
+              {
+                to: "/types/add",
+                name: "Dokumentų tipai",
+                icon: "fas fa-file-signature ml-1 text-gray"
+              },
+              {
+                to: "/document_types/groups",
+                name: "Siųsti / Peržiūrėti",
+                icon: "fas fa-clipboard ml-1 text-gray"
+              }
+            ]}
+            {...this.props}
+          >
             <Switch>
               <Route path="/" component={UserContainer} exact />
               <Route path="/users/add" component={NewUserContainer} exact />
@@ -58,7 +72,7 @@ export default class AdminNavigationContainer extends Component {
               <Route path="*" component={ResourceNotFoundComponent} />
               <Route component={ResourceNotFoundComponent} />
             </Switch>
-          </AdminNavigationComponent>
+          </NavigationComponent>
         </BrowserRouter>
       </div>
     );

@@ -222,7 +222,10 @@ class ReviewDocumentsContainer extends React.Component {
                   <div className="card-body">
                     <div className="row">
                       <div className="col-12">
-                        <table className="table table-striped">
+                        <table
+                          className="ui celled table"
+                          style={{ width: "100%" }}
+                        >
                           <thead className="thead-inverse">
                             <tr>
                               <th>Autorius</th>
