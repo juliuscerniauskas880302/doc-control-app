@@ -3,31 +3,40 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import ReviewDocumentsContainer from "../../../ReviewDocuments/ReviewDocumentsContainer";
 import OneReviewDocumentsContainer from "../../../ReviewDocuments/OneReviewDocumentContainer";
 import ResourceNotFoundComponent from "../../../Errors/ResourceNotFoundComponent";
-
-import Axios from "axios";
-import UserNavigationReviewComponent from "./UserNavigationReviewComponent";
 import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatisticsContainer";
 import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsContainer";
+import { checkToken } from "../../../Utilities/CheckToken";
+import NavigationComponent from "../../NavigationComponent";
 
 export default class UserNavigationReviewContainer extends Component {
-  checkToken = () => {
-    let token = JSON.parse(localStorage.getItem("accessToken"));
-    if (token) {
-      Axios.defaults.headers.Authorization = `Bearer ${token}`;
-    } else {
-      localStorage.clear("user");
-      localStorage.clear("accessToken");
-      delete Axios.defaults.headers.Authorization;
+  render() {
+    if (!checkToken()) {
       this.props.history.push("/login");
     }
-  };
-  render() {
-    this.checkToken();
     return (
       <div>
         <BrowserRouter>
           <div>
-            <UserNavigationReviewComponent {...this.props}>
+            <NavigationComponent
+              navigation={[
+                {
+                  to: "/",
+                  name: "Dokumentai peržiūrai",
+                  icon: "fas fa-file-alt mr-3 text-gray"
+                },
+                {
+                  to: "/documentStatistics",
+                  name: "Dokumentų statistika",
+                  icon: "fas fa-chart-pie mr-3 text-gray"
+                },
+                {
+                  to: "/userStatistics",
+                  name: "Vartotojų statistika",
+                  icon: "fas fa-chart-line mr-3 text-gray"
+                }
+              ]}
+              {...this.props}
+            >
               <Switch>
                 <Route exact path="/" component={ReviewDocumentsContainer} />
                 <Route
@@ -53,7 +62,7 @@ export default class UserNavigationReviewContainer extends Component {
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
               </Switch>
-            </UserNavigationReviewComponent>
+            </NavigationComponent>
           </div>
         </BrowserRouter>
       </div>

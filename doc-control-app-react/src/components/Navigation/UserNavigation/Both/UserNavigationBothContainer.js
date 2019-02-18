@@ -9,29 +9,64 @@ import OneReviewDocumentsContainer from "../../../ReviewDocuments/OneReviewDocum
 import NewDocumentContainer from "../../../CreateEditDocument/NewDocumentContainer";
 import EditDocumentContainer from "../../../CreateEditDocument/EditDocumentContainer";
 import ResourceNotFoundComponent from "../../../Errors/ResourceNotFoundComponent";
-import UserNavigationBothComponent from "./UserNavigationBothComponent";
 import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsContainer";
 import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatisticsContainer";
-import Axios from "axios";
+import { checkToken } from "../../../Utilities/CheckToken";
+import NavigationComponent from "../../NavigationComponent";
+
 export default class UserNavigationBothContainer extends Component {
-  checkToken = () => {
-    let token = JSON.parse(localStorage.getItem("accessToken"));
-    if (token) {
-      Axios.defaults.headers.Authorization = `Bearer ${token}`;
-    } else {
-      localStorage.clear("user");
-      localStorage.clear("accessToken");
-      delete Axios.defaults.headers.Authorization;
+  render() {
+    if (!checkToken()) {
       this.props.history.push("/login");
     }
-  };
-  render() {
-    this.checkToken();
     return (
       <div>
         <BrowserRouter>
           <div>
-            <UserNavigationBothComponent {...this.props}>
+            <NavigationComponent
+              navigation={[
+                {
+                  to: "/newDocument",
+                  name: "Naujas dokumentas",
+                  icon: "fas fa-file-signature  mr-3 text-gray"
+                },
+                {
+                  topTab: {
+                    title: "Dokumentų pateikimas",
+                    icon: "far fa-address-book mr-2 text-gray"
+                  },
+                  to: "/",
+                  name: "Pateikti",
+                  icon: "fas fa-file-alt mr-3 text-gray"
+                },
+                {
+                  bottomTab: "true",
+                  to: "/createdDocuments",
+                  name: "Sukurti",
+                  icon: "fas fa-file mr-3 text-gray"
+                },
+                {
+                  topTab: {
+                    title: "Dokumentų peržiūra",
+                    icon: "far fa-address-book mr-2 text-gray"
+                  },
+                  to: "/reviewDocuments",
+                  name: "Peržiūrėti",
+                  icon: "fas fa-file-contract  mr-3 text-gray"
+                },
+                {
+                  to: "/documentStatistics",
+                  name: "Dokumentų statistika",
+                  icon: "fas fa-chart-pie mr-3 text-gray"
+                },
+                {
+                  to: "/userStatistics",
+                  name: "Vartotojų statistika",
+                  icon: "fas fa-chart-line mr-3 text-gray"
+                }
+              ]}
+              {...this.props}
+            >
               <Switch>
                 <Route
                   exact
@@ -91,7 +126,7 @@ export default class UserNavigationBothContainer extends Component {
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
               </Switch>
-            </UserNavigationBothComponent>
+            </NavigationComponent>
           </div>
         </BrowserRouter>
       </div>

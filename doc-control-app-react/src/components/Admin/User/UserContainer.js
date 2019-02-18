@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import UserComponent from "./UserComponent";
 import Axios from "axios";
 import { Pagination } from "semantic-ui-react";
+import SemanticUserTable from "./SemanticUserTable";
+
 export class UserContainer extends Component {
   constructor(props) {
     super(props);
@@ -47,7 +49,7 @@ export class UserContainer extends Component {
       });
   };
 
-  showAllUsers = () => {
+  showAllUsersSemanticUI = () => {
     if (this.state.users.length === 0) {
       return <h2 className="">Duomenys yra kraunami iš serverio....</h2>;
     }
@@ -55,7 +57,7 @@ export class UserContainer extends Component {
       let isAdmin =
         user.admin === false ? "Paprastas vartotojas" : "Administratorius";
       return (
-        <UserComponent
+        <SemanticUserTable
           number={index + 1}
           key={user.username}
           firstname={user.firstname}
@@ -68,7 +70,7 @@ export class UserContainer extends Component {
       );
     });
     return (
-      <table className="table table-striped table-sm card-text">
+      <table className="ui celled table" style={{ width: "100%" }}>
         <thead>
           <tr>
             <th>#</th>
@@ -117,7 +119,6 @@ export class UserContainer extends Component {
   render() {
     const { totalUsers, recordsPerPage, activePage } = this.state;
     let pageCount = Math.ceil(totalUsers / recordsPerPage);
-
     return (
       <div className="page-holder w-100 d-flex flex-wrap">
         <div className="container-fluid px-xl-5">
@@ -172,7 +173,7 @@ export class UserContainer extends Component {
                   </div>
                 </div>
 
-                <div className="card-body">{this.showAllUsers()}</div>
+                <div className="card-body">{this.showAllUsersSemanticUI()}</div>
               </div>
             </div>
           </section>
