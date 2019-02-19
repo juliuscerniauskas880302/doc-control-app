@@ -2,50 +2,47 @@ package it.akademija.wizards.models.stats;
 
 public class StatsGetTypeCommand {
 
-    private String title;
-    private Integer submittedDocuments;
-    private Integer acceptedDocuments;
-    private Integer rejectedDocuments;
+    private String documentTypeTitle;
+    private Long submittedCount;
+    private Long approvedCount;
+    private Long rejectedCount;
 
-    public StatsGetTypeCommand() {
+    public StatsGetTypeCommand(String documentTypeTitle, Long submittedCount, Long approvedCount, Long rejectedCount) {
+        this.documentTypeTitle = documentTypeTitle;
+        this.submittedCount = submittedCount;
+        this.approvedCount = approvedCount;
+        this.rejectedCount = rejectedCount;
     }
 
-    public StatsGetTypeCommand(String title, Integer submittedDocuments, Integer acceptedDocuments, Integer rejectedDocuments) {
-        this.title = title;
-        this.submittedDocuments = submittedDocuments;
-        this.acceptedDocuments = acceptedDocuments;
-        this.rejectedDocuments = rejectedDocuments;
+    public String getDocumentTypeTitle() {
+        return documentTypeTitle;
     }
 
-    public String getTitle() {
-        return title;
+    public void setDocumentTypeTitle(String documentTypeTitle) {
+        this.documentTypeTitle = documentTypeTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Long getSubmittedCount() {
+        return submittedCount;
     }
 
-    public Integer getSubmittedDocuments() {
-        return submittedDocuments;
+    public void setSubmittedCount(Long submittedCount) {
+        this.submittedCount = submittedCount;
     }
 
-    public void setSubmittedDocuments(Integer submittedDocuments) {
-        this.submittedDocuments = submittedDocuments;
+    public Long getApprovedCount() {
+        return approvedCount;
     }
 
-    public Integer getAcceptedDocuments() {
-        return acceptedDocuments;
+    public void setApprovedCount(Long approvedCount) {
+        this.approvedCount = approvedCount;
     }
 
-    public void setAcceptedDocuments(Integer acceptedDocuments) {
-        this.acceptedDocuments = acceptedDocuments;
+    public Long getRejectedCount() {
+        return rejectedCount;
     }
 
-    public Integer getRejectedDocuments() {
-        return rejectedDocuments;
-    }
-
-    public void setRejectedDocuments(Integer rejectedDocuments) {
-        this.rejectedDocuments = rejectedDocuments;
+    public void setRejectedCount(Long rejectedCount) {
+        this.rejectedCount = rejectedCount;
     }
 }
