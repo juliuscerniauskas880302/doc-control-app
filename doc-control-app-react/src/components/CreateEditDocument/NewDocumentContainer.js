@@ -8,7 +8,7 @@ class NewDocumentContainer extends React.Component {
     this.state = {
       //id: "default kodas",
       title: "default title",
-      description: "default description",
+      description: "",
       username: "migle",
       documentTypeTitle: "",
       typeList: [],

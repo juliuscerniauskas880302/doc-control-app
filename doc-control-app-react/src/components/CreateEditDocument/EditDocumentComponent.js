@@ -56,7 +56,6 @@ const EditDocumentComponent = props => {
                         //pattern={props.namePattern}
                         //title={props.namePatternTitle}
                         value={props.description}
-                        required
                         onChange={props.handleChangeOfDescription}
                       />
                     </div>
