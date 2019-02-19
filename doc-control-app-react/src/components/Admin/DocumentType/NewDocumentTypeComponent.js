@@ -14,7 +14,7 @@ export default function NewDocumentTypeComponent(props) {
                 </h3>
               </div>
               <div className="card-body">
-                <form onSubmit={e => props.onCLickAddNewDocTypeHandler(e)}>
+                <form onSubmit={e => props.onClickAddNewDocTypeHandler(e)}>
                   <div className="form-group row">
                     <label className="col-md-3 form-control-label">
                       Dokumento tipo pavadinimas

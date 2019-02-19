@@ -9,8 +9,7 @@ export default class NewDocumentTypeForm extends Component {
       title: "",
       selectedDocTypeTitle: "",
       newTitle: "",
-      allDocumentTypes: [],
-      showMessage: { message: "", messageType: "", show: false }
+      allDocumentTypes: []
     };
   }
 
@@ -43,7 +42,7 @@ export default class NewDocumentTypeForm extends Component {
     if (this.state.allDocumentTypes.length === 0) {
       return (
         <option value="" disabled>
-          No available document types...
+          Nėra jokių dokumentų tipų....
         </option>
       );
     } else {
@@ -59,13 +58,17 @@ export default class NewDocumentTypeForm extends Component {
     }
   };
 
-  onCLickAddNewDocTypeHandler = e => {
+  onClickAddNewDocTypeHandler = e => {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
     Axios.post("http://localhost:8081/api/doctypes", title)
       .then(res => {
-        this.handleMessageInput("Naujas dokumento tipas buvo pridėtas", "alert alert-info fixed-top text-center", 2500);
+        this.props.showResponseMessage(
+          "Naujas dokumento tipas buvo pridėtas",
+          "success",
+          2500
+        );
         this.setState({ title: "" });
         this.getAllDocumentTypes();
       })
@@ -94,12 +97,16 @@ export default class NewDocumentTypeForm extends Component {
       "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID()
     )
       .then(res => {
-        this.handleMessageInput("Dokumento tipas buvo sėkmingai ištrintas", "alert alert-info fixed-top text-center", 2500);
+        this.props.showResponseMessage(
+          "Dokumento tipas buvo sėkmingai ištrintas",
+          "success",
+          2500
+        );
         this.setState({ newTitle: "" });
         this.getAllDocumentTypes();
       })
       .catch(err => {
-        console.log(err);
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500);
       });
   };
 
@@ -112,47 +119,24 @@ export default class NewDocumentTypeForm extends Component {
       title
     )
       .then(res => {
-        this.handleMessageInput("Dokumento tipas buvo sėkmingai atnaujintas", "alert alert-info fixed-top text-center", 2500);
+        this.props.showResponseMessage(
+          "Dokumento tipas buvo sėkmingai atnaujintas",
+          "success",
+          2500
+        );
         this.setState({ newTitle: "" });
         this.getAllDocumentTypes();
       })
       .catch(err => {
-        console.log(err);
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500);
       });
   };
-
-  handleMessageInput = (message, messageType, timeout) => {
-    let data = {
-      message: message,
-      messageType: messageType,
-      show: true
-    }
-    this.setState({ showMessage: data }, () => {
-      let data = {
-        message: "",
-        messageType: "",
-        show: false
-      }
-      setTimeout(() => { this.setState({ showMessage: data }) }, timeout);
-    });
-  }
-
-  showMessage = () => {
-    if (this.state.showMessage.show) {
-      return (<div className={this.state.showMessage.messageType}>
-        {this.state.showMessage.message}
-      </div>);
-    } else {
-      return null;
-    }
-  }
 
   render() {
     return (
       <React.Fragment>
-        {this.showMessage()}
         <NewDocumentTypeComponent
-          onCLickAddNewDocTypeHandler={this.onCLickAddNewDocTypeHandler}
+          onClickAddNewDocTypeHandler={this.onClickAddNewDocTypeHandler}
           onValueChangeHandler={this.onValueChangeHandler}
           onDeleteCLickHandler={this.onDeleteCLickHandler}
           showAllDocumentTypes={this.showAllDocumentTypes}

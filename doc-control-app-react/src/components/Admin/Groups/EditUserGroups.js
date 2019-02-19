@@ -35,8 +35,8 @@ export default class EditUserGroups extends Component {
   getAllUserGroups = () => {
     Axios.get(
       "http://localhost:8081/api/users/" +
-      this.props.match.params.username +
-      "/groups"
+        this.props.match.params.username +
+        "/groups"
     )
       .then(res => {
         this.setState({ userGroups: res.data });
@@ -60,7 +60,7 @@ export default class EditUserGroups extends Component {
     if (this.state.userGroups.length === 0) {
       return (
         <option value="" disabled>
-          User doens't belong to any group
+          Vartotojas nepriklauso jokioms grupėms
         </option>
       );
     } else {
@@ -141,18 +141,31 @@ export default class EditUserGroups extends Component {
     this.state.selectedAddGroup.forEach(el => {
       groupIdList.id.push(el);
     });
-
     Axios.put(
       "http://localhost:8081/api/users/" +
-      this.props.match.params.username +
-      "/groups",
+        this.props.match.params.username +
+        "/groups",
       groupIdList
     )
       .then(res => {
-        console.log("should load user groups");
+        if (groupIdList.id.length === 1) {
+          this.props.showResponseMessage(
+            "Grupė sėkmingai pridėta",
+            "success",
+            2500
+          );
+        } else {
+          this.props.showResponseMessage(
+            "Grupės sėkmingai pridėtos",
+            "success",
+            2500
+          );
+        }
         this.getAllUserGroups();
       })
-      .catch(err => console.log(err));
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
   };
 
   onClickRemoveGroupFromUserHandler = () => {
@@ -168,14 +181,29 @@ export default class EditUserGroups extends Component {
     });
     Axios.delete(
       "http://localhost:8081/api/users/" +
-      this.props.match.params.username +
-      "/groups",
+        this.props.match.params.username +
+        "/groups",
       { data: groupIdList }
     )
       .then(res => {
+        if (groupIdList.id.length === 1) {
+          this.props.showResponseMessage(
+            "Grupė sekmingai pašalinta",
+            "success",
+            2500
+          );
+        } else {
+          this.props.showResponseMessage(
+            "Grupės sekmingai pašalintos",
+            "success",
+            2500
+          );
+        }
         this.getAllUserGroups();
       })
-      .catch(err => console.log(err));
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
   };
 
   render() {

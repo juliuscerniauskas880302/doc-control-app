@@ -8,8 +8,9 @@ import NewDocumentContainer from "../../../CreateEditDocument/NewDocumentContain
 import EditDocumentContainer from "../../../CreateEditDocument/EditDocumentContainer";
 import ResourceNotFoundCompoentn from "../../../Errors/ResourceNotFoundComponent";
 import Axios from "axios";
-import UserNavigationSubmitComponent from "./UserNavigationSubmitComponent";
 import NavigationComponent from "../../NavigationComponent";
+import CSV from "../../../Testing/CSV";
+import ResponseMessage from "../../../Utilities/ResponseMessage";
 
 export default class UserNavigationSubmitContainer extends Component {
   checkToken = () => {
@@ -26,72 +27,74 @@ export default class UserNavigationSubmitContainer extends Component {
   render() {
     this.checkToken();
     return (
-      <div>
-        <BrowserRouter>
-          <div>
-            <NavigationComponent
-              navigation={[
-                {
-                  to: "/newDocument",
-                  name: "Naujas dokumentas",
-                  icon: "fas fa-file-signature  mr-3 text-gray"
-                },
-                {
-                  to: "/",
-                  name: "Pateikti",
-                  icon: "fas fa-file-alt mr-3 text-gray"
-                },
-                {
-                  to: "/createdDocuments",
-                  name: "Sukurti",
-                  icon: "fas fa-file mr-3 text-gray"
-                }
-              ]}
-              {...this.props}
-            >
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  component={UserSubmittedDocumentsContainer}
-                />
-                <Route
-                  exact
-                  path="/createdDocuments"
-                  component={UserCreatedDocumentsContainer}
-                />
-                <Route
-                  exact
-                  path="/createdDocuments/:documentId"
-                  component={OneCreatedDocumentsContainer}
-                />
-                <Route
-                  exact
-                  path="/submittedDocuments/:documentId"
-                  component={OneSubmittedDocumentsContainer}
-                />
-                <Route
-                  exact
-                  path="/admin/newDocument"
-                  component={NewDocumentContainer}
-                />
-                <Route
-                  exact
-                  path="/newDocument"
-                  component={NewDocumentContainer}
-                />
-                <Route
-                  exact
-                  path="/admin/Documents/:documentId"
-                  component={EditDocumentContainer}
-                />
-                <Route path="*" component={ResourceNotFoundCompoentn} />
-                <Route component={ResourceNotFoundCompoentn} />
-              </Switch>
-            </NavigationComponent>
-          </div>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        <NavigationComponent
+          navigation={[
+            {
+              to: "/newDocument",
+              name: "Naujas dokumentas",
+              icon: "fas fa-file-signature  mr-3 text-gray"
+            },
+            {
+              to: "/",
+              name: "Pateikti",
+              icon: "fas fa-file-alt mr-3 text-gray"
+            },
+            {
+              to: "/createdDocuments",
+              name: "Sukurti",
+              icon: "fas fa-file mr-3 text-gray"
+            },
+            {
+              to: "/downloadCSV",
+              name: "Atsisiusti csv",
+              icon: "fas fa-file mr-3 text-gray"
+            }
+          ]}
+          {...this.props}
+        >
+          <Switch>
+            <Route exact path="/" component={UserSubmittedDocumentsContainer} />
+            <Route
+              exact
+              path="/createdDocuments"
+              component={UserCreatedDocumentsContainer}
+            />
+            <Route
+              exact
+              path="/createdDocuments/:documentId"
+              component={OneCreatedDocumentsContainer}
+            />
+            <Route
+              exact
+              path="/submittedDocuments/:documentId"
+              component={OneSubmittedDocumentsContainer}
+            />
+            <Route
+              exact
+              path="/admin/newDocument"
+              component={NewDocumentContainer}
+            />
+            <Route exact path="/newDocument" component={NewDocumentContainer} />
+            <Route
+              exact
+              path="/admin/Documents/:documentId"
+              component={EditDocumentContainer}
+            />
+            <Route
+              exact
+              path="/downloadCSV"
+              render={props => (
+                <ResponseMessage>
+                  <CSV {...props} />
+                </ResponseMessage>
+              )}
+            />
+            <Route path="*" component={ResourceNotFoundCompoentn} />
+            <Route component={ResourceNotFoundCompoentn} />
+          </Switch>
+        </NavigationComponent>
+      </BrowserRouter>
     );
   }
 }
