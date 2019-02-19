@@ -12,21 +12,21 @@ let value2 = 14;
 let label3 = "Atmesta";
 let value3 = 5;
 
-class DocumentStatisticsChat extends React.Component {
+class DocumentStatisticsChart extends React.Component {
     constructor (props){
         super(props);
     }
     
     componentDidMount() {
         console.log("Spausdinu iš ChartComponent");
-        console.log("Chart konteinerio vardas yra " + this.props.chartContainerName);
+        console.log("Chart konteinerio vardas yra " + this.props.idName);
         console.log("Submitted yra - " + this.props.submitted)
         // Originali eilutė -> var chart = new CanvasJS.Chart("chartContainer", {
-        var chart = new CanvasJS.Chart(this.props.chartContainerName, {
+        var chart = new CanvasJS.Chart(this.props.idName, {
             animationEnabled: true,
-            // title: {
-            //     text: "Pateikti dokumentai"
-            // },
+            title: {
+                text: this.props.documentType
+            },
             data: [
                 {
                     type: "column",
@@ -42,10 +42,10 @@ class DocumentStatisticsChat extends React.Component {
     }
     render() {
         return (
-            <div id={this.props.chartContainerName} style={{ height: 360 + "px", width: 50 + "%" }}>
+            <div id={this.props.idName} style={{ height: 360 + "px", width: 100 + "%", margin: 50 + "px", textAlign: "center" }}>
             </div>
         );
     }
 }
 
-export default DocumentStatisticsChat;                       
+export default DocumentStatisticsChart;                       
