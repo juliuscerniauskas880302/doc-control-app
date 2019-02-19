@@ -2,6 +2,8 @@ package it.akademija.wizards.repositories;
 
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
+import it.akademija.wizards.models.stats.TypeUserStats;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +21,10 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " AND d.creationDate BETWEEN :dateFrom AND :dateTo" +
             " GROUP BY dt.title")
     List<StatsGetTypeCommand> getDocumentTypesStats(@Param("docIDs") List<String> docIDs, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
+
+    @Query("SELECT new it.akademija.wizards.models.stats.TypeUserStats(u.firstname, u.lastname, COUNT(d.id))" +
+            " FROM Document d JOIN d.documentType dt JOIN d.author u" +
+            " WHERE dt.id = :documentTypeId AND d.documentState <> it.akademija.wizards.enums.DocumentState.CREATED" +
+            " GROUP BY u.firstname, u.lastname ORDER BY COUNT(d.id) DESC")
+    List<TypeUserStats> getTopSubmittingUsersForDocType(@Param("documentTypeId") String documentTypeId, Pageable pageable);
 }
