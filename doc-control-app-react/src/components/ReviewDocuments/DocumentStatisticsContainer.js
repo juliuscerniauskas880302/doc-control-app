@@ -1,6 +1,8 @@
 import React from 'react';
+import DocumentStatisticsFormComponent from './DocumentStatisticsFormComponent';
 import DocumentStatisticsComponent from './DocumentStatisticsComponent';
 import axios from 'axios';
+import './StatisticsStyle.css'
 
 class DocumentStatisticsContainer extends React.Component {
     constructor(props) {
@@ -8,9 +10,12 @@ class DocumentStatisticsContainer extends React.Component {
         this.state = {
             startDate: "2019-01-01",
             endDate: "2019-12-31",
-            submittedDocumentsList: [],
-            acceptedDocumentsList: [],
-            rejectedDocumentsList: [],
+            selectedDocTypes: [],
+            typeList: [],
+            fullDocumentList: [],
+            //submittedDocumentsList: [],
+            //acceptedDocumentsList: [],
+            //rejectedDocumentsList: [],
             loading: "Kraunami duomenys. Prašome palaukti."
         };
     }
@@ -25,32 +30,68 @@ class DocumentStatisticsContainer extends React.Component {
         console.log("Pabaigos data yra " + this.state.endDate);
     };
 
-    handleChartUpdate() {
-        console.log("Atnaujinu diagramų duomenis")
+    handleChangeOfSelectedDocTypes = event => {
+        //console.log("Ką aš gaunu iš multiselekto?");
+        //console.log("Reikšmė - " + event.target.value);
+        this.setState({ selectedDocTypes: [...event.target.selectedOptions].map(o => o.value) });
+        console.log("Pasirinkti dokumentai yra " + this.state.selectedDocTypes);
+    };
+
+    handleChartUpdate = event => {
+        event.preventDefault();
+        console.log("Atnaujinu diagramų duomenis");
+        //Nusiskaitau statistikos duomenis
+        axios.post("http://localhost:8081/api/stats/docTypes", 
+            { documentTypes: this.state.selectedDocTypes, fromDate: this.state.startDate, toDate: this.state.endDate }
+        ).then(response => {
+            console.log("Nuskaitinėju dokumentų tipų statistikos duomenis");
+            this.setState({fullDocumentList: response.data});
+            
+        })
+        .catch(error => {
+            console.log("KLAIDA!!!! Nenuskaitė dokumentų tipų statistikos" + error);
+        });
     }
 
     componentDidMount() {
         //TODO
         //dabar neteisingu adresu ima dokumentus - ima is esamo vartotojo sukurtu dokumentų
         //perdaryti, kad imtų iš tų dokumentų, kuriuos vartotojas gali peržiūrėti.
+
+        //Nuskaitau dokumentų tipus
         axios
-            .get("http://localhost:8081/api/users/docs/submitted")
+            .get("http://localhost:8081/api/users/reviewDocTypes")
             .then(response => {
-                console.log("Esu statistikoje");
-                var acceptedOnly = response.data.filter(item => item.documentState === "ACCEPTED");
-                var rejectedOnly = response.data.filter(item => item.documentState === "REJECTED");
-                console.log("acceptedOnly masyvo ilgis - " + acceptedOnly.length);
-                console.log("Pirmas dokumentas su statusu ACCEPTED: " + acceptedOnly[0].documentState);
-                console.log("Pirmas dokumentas su statusu REJECTED: " + rejectedOnly[0].documentState);
-                this.setState({ submittedDocumentsList: response.data.map(item => item.title) });
-                console.log(
-                    "Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?"
-                );
+                //Anskčiau iš dokumentų tipo atsakymo išrinkdavau tik pavadinimus
+                //this.setState({ typeList: response.data.map(item => item.title) });
+                //Dabar pasiimu pilną masyvą
+                this.setState({ typeList: response.data });
+                console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
                 console.log(this.state.typeList);
             })
             .catch(error => {
-                console.log("KLAIDA!!!!" + error);
+                console.log("KLAIDA!!!! Nenuskaitė tipų!!!!" + error);
             });
+
+        //Čia yra neteisingas statistikos duomenų ėmimas
+        // axios
+        //     .get("http://localhost:8081/api/users/docs/submitted")
+        //     .then(response => {
+        //         console.log("Esu statistikoje");
+        //         var acceptedOnly = response.data.filter(item => item.documentState === "ACCEPTED");
+        //         var rejectedOnly = response.data.filter(item => item.documentState === "REJECTED");
+        //         console.log("acceptedOnly masyvo ilgis - " + acceptedOnly.length);
+        //         console.log("Pirmas dokumentas su statusu ACCEPTED: " + acceptedOnly[0].documentState);
+        //         console.log("Pirmas dokumentas su statusu REJECTED: " + rejectedOnly[0].documentState);
+        //         this.setState({ submittedDocumentsList: response.data.map(item => item.title) });
+        //         console.log(
+        //             "Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?"
+        //         );
+        //         console.log(this.state.typeList);
+        //     })
+        //     .catch(error => {
+        //         console.log("KLAIDA!!!!" + error);
+        //     });
     }
 
     render() {
@@ -73,18 +114,8 @@ class DocumentStatisticsContainer extends React.Component {
             rejected: 6
         },
         ];
-        var statisticsCardList = dataFromServer.map((item, index) => {
-            return (
-                <DocumentStatisticsComponent
-                    key={index}
-                    idName={"docType" + index}
-                    documentType={item.documentType}
-                    submitted={item.submitted}
-                    accepted={item.accepted}
-                    rejected={item.rejected}
-                />
-            );
-        })
+
+        //var typeList = ["Atostogų prašymas", "Pašalpos prašymas", "Prašymas padidinti atlyginimą"];
 
         return (
             <div className="page-holder w-100 d-flex flex-wrap">
@@ -96,28 +127,24 @@ class DocumentStatisticsContainer extends React.Component {
                                     <h6 className="text-uppercase mb-0">Pateiktų dokumentų statistika</h6>
                                 </div>
                                 <div className="card-body">
-                                    <div className="row">
-                                        Pasirinkite laikotarpį:
+                                    <div className="row justify-content-md-center">
+                                        <DocumentStatisticsFormComponent
+                                            startDate={this.state.startDate}
+                                            endDate={this.state.endDate}
+                                            handleChangeOfStartDate={this.handleChangeOfStartDate}
+                                            handleChangeOfEndDate={this.handleChangeOfEndDate}
+                                            typeList={this.state.typeList}
+                                            handleChangeOfSelectedDocTypes={this.handleChangeOfSelectedDocTypes}
+                                            handleChartUpdate={this.handleChartUpdate}
+                                        />
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-2">
-                                            <label htmlFor="startingDate">Nuo: </label>
-                                            <input type="date" name="startingDate" value={this.state.startDate} onChange={this.handleChangeOfStartDate}></input>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <label htmlFor="endingDate">Nuo: </label>
-                                            <input type="date" name="endingDate" value={this.state.endDate} onChange={this.handleChangeOfEndDate}></input>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <button className="btn submitButton" type="submit">
-                                                Atnaujinti
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            {statisticsCardList}
-                                        </div>
+
+                                    <div className="row justify-content-md-center">
+                                        {/* <div className="col-12"> */}
+                                        <DocumentStatisticsComponent
+                                            statisticsData={this.state.fullDocumentList}
+                                        />
+                                        {/* </div> */}
                                     </div>
                                 </div>
                             </div>
