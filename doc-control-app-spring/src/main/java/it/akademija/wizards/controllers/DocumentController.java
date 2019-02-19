@@ -157,6 +157,13 @@ public class DocumentController {
         return fileService.downloadMainFile(id);
     }
 
+    @ApiOperation(value = "download csv file")
+    @RequestMapping(value = "/csv/download", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity downloadCSV(@CurrentUser UserPrincipal userPrincipal){
+        return documentService.downloadCSV(userPrincipal.getUsername());
+    }
+
     @ApiOperation(value = "download document main file")
     @RequestMapping(value = "/{id}/{fileName}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)

@@ -5,6 +5,8 @@ import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -40,11 +42,11 @@ public class FileService {
 
     // DELETES ONE FILE IN DOCUMENT
     @Transactional
-    public ResponseEntity<String> deleteFileByFileName (
+    public ResponseEntity<String> deleteFileByFileName(
             String documentId,
-            String fileName){
+            String fileName) {
         Document document = resourceFinder.getDocument(documentId);
-        if(document.getPath().equals(fileName)){
+        if (document.getPath().equals(fileName)) {
             deleteMainFile(document);
         } else {
             deleteAdditionalFiles(document, fileName);
@@ -65,7 +67,7 @@ public class FileService {
         if (file.exists()) {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName +"\"");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"");
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             headers.setContentType(mediaType);
@@ -88,7 +90,7 @@ public class FileService {
         if (file.exists()) {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath +"\"");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath + "\"");
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             headers.setContentType(mediaType);
@@ -98,6 +100,7 @@ public class FileService {
         return ResponseEntity.notFound().build();
 
     }
+
     // GET ALL ATTACHMENTS WITH FOLDERS
     @Transactional
     public ResponseEntity downloadAllDocuments(String username) throws IOException {
@@ -179,7 +182,7 @@ public class FileService {
         File path = new File(pathName
                 + File.separator
                 + document.getAuthor().getUsername()
-                +   File.separator
+                + File.separator
                 + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(document.getCreationDate())));
         path.mkdirs();
         for (int i = 0; i < multipartFile.length; i++) {
@@ -274,6 +277,80 @@ public class FileService {
         ));
     }
 
+    @Transactional
+    public ResponseEntity downloadCSV(User user) {
+        if (user != null) {
+            String csvFilePath = pathName
+                    + File.separator
+                    + user.getUsername()
+                    + File.separator
+                    + user.getUsername()
+                    + ".csv";
+            List<Document> documents = user.getDocuments();
+            try (
+                    BufferedWriter writer = Files.newBufferedWriter(Paths.get(csvFilePath));
+
+
+                    CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                            .withHeader(
+                                    "Autorius",
+                                    "Pavadinimas",
+                                    "Aprasymas",
+                                    "Sukurimo data",
+                                    "Dokumento tipas",
+                                    "Dokumento busena",
+                                    "Issiuntimo data",
+                                    "Patvirtinimo data",
+                                    "Atmetimo data",
+                                    "Perziurejo",
+                                    "Atmetimo prizastis"
+                            )
+                    )
+            ) {
+                for (Document doc : documents) {
+                    User reviewer = doc.getReviewer();
+                    String reviewerFullName = "";
+                    if(reviewer != null){
+                        reviewerFullName = reviewer.getFirstname() + " " +reviewer.getLastname();
+                    }
+                    csvPrinter.printRecord(
+                            doc.getAuthor().getFirstname() + " " + doc.getAuthor().getLastname(),
+                            doc.getTitle(),
+                            doc.getDescription(),
+                            doc.getCreationDate(),
+                            doc.getDocumentType().getTitle(),
+                            doc.getDocumentState(),
+                            doc.getSubmissionDate(),
+                            doc.getApprovalDate(),
+                            doc.getRejectionDate(),
+                            reviewerFullName,
+                            doc.getRejectionReason()
+                    );
+                }
+
+
+                csvPrinter.flush();
+                MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, csvFilePath);
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(csvFilePath));
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + user.getUsername() + ".csv" + "\"");
+                headers.add("Access-Control-Expose-Headers",
+                        HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+                headers.setContentType(mediaType);
+                return ResponseEntity.ok().headers(headers).
+                        body(resource);
+
+
+            } catch (IOException ex) {
+                return new ResponseEntity("Could not create csv file", HttpStatus.EXPECTATION_FAILED);
+            }
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+
     //    Zip folders
     private void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
         if (fileToZip == null || !fileToZip.exists()) {
@@ -281,7 +358,7 @@ public class FileService {
         }
 
         String zipEntryName = fileToZip.getName();
-        if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
+        if (parrentDirectoryName != null && !parrentDirectoryName.isEmpty()) {
             zipEntryName = parrentDirectoryName + File.separator + fileToZip.getName();
         }
 
@@ -304,8 +381,8 @@ public class FileService {
         }
     }
 
-    private void deleteFolder(File folder){
-        if(folder.exists()) {
+    private void deleteFolder(File folder) {
+        if (folder.exists()) {
             for (String s : Objects.requireNonNull(folder.list())) {
                 File currentFile = new File(folder.getPath(), s);
                 boolean delete = currentFile.delete();
@@ -322,8 +399,9 @@ public class FileService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
+
     //    Date format
-    private String formatLocalDateTime(LocalDateTime localDateTime){
+    private String formatLocalDateTime(LocalDateTime localDateTime) {
         DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss", Locale.US);
         return localDateTime.format(dataTimeFormatter);
     }
