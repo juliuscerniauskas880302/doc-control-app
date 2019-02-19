@@ -58,7 +58,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Change if you want to fill in databse with random data on startup
-        boolean fillInDatabase = true;
+        boolean fillInDatabase = false;
         int groups = 12;
         int users = 381;
         int docTypes = 17;

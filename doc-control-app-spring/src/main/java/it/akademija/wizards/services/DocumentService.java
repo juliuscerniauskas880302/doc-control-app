@@ -141,6 +141,14 @@ public class DocumentService {
             throw new BadRequestException("User doesn't have permission to review this type of document");
         }
     }
+    @Transactional
+    public ResponseEntity<?> downloadCSV(String username){
+        User user = resourceFinder.getUser(username);
+        if(user !=null){
+            return fileService.downloadCSV(user);
+        }
+        else return new ResponseEntity("User not found",HttpStatus.NOT_FOUND);
+    }
 
     //PRIVATE METHODS
     private boolean allowedToReviewDocument(String username, Document document) {
