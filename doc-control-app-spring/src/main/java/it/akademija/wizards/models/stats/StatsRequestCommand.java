@@ -6,14 +6,16 @@ import java.util.List;
 public class StatsRequestCommand {
 
     private List<String> documentTypes;
+    private Integer usersPerType;
     private Date fromDate;
     private Date toDate;
 
     public StatsRequestCommand() {
     }
 
-    public StatsRequestCommand(List<String> documentTypes, Date fromDate, Date toDate) {
+    public StatsRequestCommand(List<String> documentTypes, Date fromDate, Date toDate, Integer usersPerType) {
         this.documentTypes = documentTypes;
+        this.usersPerType = usersPerType;
         this.fromDate = fromDate;
         this.toDate = toDate;
     }
@@ -40,5 +42,13 @@ public class StatsRequestCommand {
 
     public void setToDate(Date toDate) {
         this.toDate = toDate;
+    }
+
+    public Integer getUsersPerType() {
+        return usersPerType;
+    }
+
+    public void setUsersPerType(Integer usersPerType) {
+        this.usersPerType = usersPerType;
     }
 }

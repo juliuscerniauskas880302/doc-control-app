@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
+import it.akademija.wizards.models.stats.StatsGetUserCommand;
 import it.akademija.wizards.models.stats.StatsRequestCommand;
 import it.akademija.wizards.services.StatsService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,5 +35,13 @@ public class StatsController {
                statsRequestCommand.getDocumentTypes(),
                statsRequestCommand.getFromDate(),
                statsRequestCommand.getToDate());
+    }
+
+    @ApiOperation("Get Top Submitting Users For Doc Types")
+    @PostMapping("/docTypes/users")
+    public List<StatsGetUserCommand> getTopSubmittingUsersForDocType(
+            @ApiParam(value = "Object for Stats Retrieval", required = true)
+            @Valid @RequestBody StatsRequestCommand statsRequestCommand) {
+        return statsService.getTopSubmittingUsersForDocType(statsRequestCommand.getDocumentTypes(), statsRequestCommand.getUsersPerType());
     }
 }
