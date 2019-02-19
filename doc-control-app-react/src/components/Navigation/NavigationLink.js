@@ -2,7 +2,6 @@ import React from "react";
 import NavLink from "../../components/Utilities/Navigation/NavLink";
 
 export default function NavigationLink(props) {
-  console.log(props);
   let allLinks = () => {
     let data = props.navigation.map((nav, index) => {
       let topTab = nav.topTab ? (

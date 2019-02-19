@@ -11,8 +11,7 @@ export default class TypesInGroups extends Component {
       submission: [],
       review: [],
       isChecked: false,
-      selectedType: null,
-      showMessage: { message: "", messageType: "", show: false }
+      selectedType: null
     };
   }
 
@@ -213,33 +212,31 @@ export default class TypesInGroups extends Component {
     }
     Axios.delete(
       "http://localhost:8081/api/doctypes/" +
-      this.state.selectedType +
-      "/groups/" +
-      groupType,
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
       { data: groupIdListToRemove }
     )
       .then()
       .catch();
     Axios.post(
       "http://localhost:8081/api/doctypes/" +
-      this.state.selectedType +
-      "/groups/" +
-      groupType,
+        this.state.selectedType +
+        "/groups/" +
+        groupType,
       groupIdListToAdd
     )
       .then(res => {
-        this.handleMessageInput(
-          "Duomenys atnaujinti",
-          "alert alert-info fixed-top text-center",
-          2500
-        );
+        this.props.showResponseMessage("Duomenys atnaujinti", "success", 2500);
         if (groupType === "review") {
           this.loadReviewGroups(this.state.selectedType);
         } else {
           this.loadSubmmisionGroups(this.state.selectedType);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
   };
 
   handleMessageInput = (message, messageType, timeout) => {
@@ -275,7 +272,6 @@ export default class TypesInGroups extends Component {
   render() {
     return (
       <React.Fragment>
-        {this.showMessage()}
         <div className="page-holder w-100 d-flex flex-wrap">
           <div className="container-fluid px-xl-5">
             <section className="pt-5">

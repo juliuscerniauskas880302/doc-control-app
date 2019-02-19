@@ -63,16 +63,28 @@ export default class UpdateUser extends Component {
         )
           .then(res => {
             console.log(res.data);
+            console.log(this.props);
+            this.props.showResponseMessage(
+              "Vartotojo duomenys atnaujinti",
+              "success",
+              2500
+            );
             //this.props.history.push("/");
           })
-          .catch(err => {});
+          .catch(err => {
+            this.props.showResponseMessage(
+              "Įvyko klaida atnaujinant duomenis",
+              "danger",
+              2500
+            );
+          });
       }
     );
   };
 
   onUpdatePasswordHandler = event => {
-    console.log("Username to change pass:", this.props.match.params.username);
-    console.log("New password: ", this.state.password);
+    // console.log("Username to change pass:", this.props.match.params.username);
+    // console.log("New password: ", this.state.password);
     let newPassword = { password: this.state.password };
     event.preventDefault();
     Axios.put(
@@ -82,27 +94,27 @@ export default class UpdateUser extends Component {
       newPassword
     )
       .then(res => {
-        console.log("Password has been changed");
+        this.props.showResponseMessage(
+          "Slaptažodis sėkmingai pakeistas",
+          "success",
+          2500
+        );
       })
       .catch(err => {
-        console.log(err);
+        this.props.showResponseMessage(
+          "Įvyko klaida keičiant slaptažodį",
+          "warning",
+          2500
+        );
       });
   };
 
   onValueChangeHandler = event => {
     if (event.target.name === "isAdmin") {
-      this.setState(
-        {
-          [event.target.name]: JSON.parse(event.target.value)
-        },
-        () => {
-          console.log(this.state);
-        }
-      );
-    } else
-      this.setState({ [event.target.name]: event.target.value }, () => {
-        console.log(this.state);
+      this.setState({
+        [event.target.name]: JSON.parse(event.target.value)
       });
+    } else this.setState({ [event.target.name]: event.target.value });
   };
 
   goBack = () => {
