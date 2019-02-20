@@ -1,14 +1,18 @@
 package it.akademija.wizards.models.user;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class UserUpdateCommand {
 
-    @NotNull(message = "Firstname is required")
+    @NotBlank(message = "Firstname is required")
+    @Size(min = 2, max = 50, message = "firstname must be 2-50 characters long")
     private String firstname;
 
-    @NotNull(message = "Lastname is required")
+    @NotBlank(message = "Lastname is required")
+    @Size(min = 2, max = 50, message = "lastname must be 2-50 characters long")
     private String lastname;
 
     @Email(message = "Email format is invalid")

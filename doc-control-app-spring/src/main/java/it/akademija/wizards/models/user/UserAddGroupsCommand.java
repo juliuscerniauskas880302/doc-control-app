@@ -7,7 +7,6 @@ import java.util.List;
 public class UserAddGroupsCommand {
 
     @NotNull
-
     private List<String> id;
 
     public UserAddGroupsCommand() {
