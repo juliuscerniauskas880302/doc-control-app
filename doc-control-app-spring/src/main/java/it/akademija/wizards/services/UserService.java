@@ -316,4 +316,20 @@ public class UserService {
             return documentTypeGetCommand;
         }).collect(Collectors.toList());
     }
+
+    @Transactional
+    public List<UserGetGroupDocTypes> getUserGroupsWithDocTypes(String username) {
+        Long start = System.currentTimeMillis();
+        List<UserGetGroupDocTypes> userGetGroupDocTypesList=  userRepository.findByUsername(username).getUserGroups().stream().map(userGroup -> {
+            UserGetGroupDocTypes userGetGroupDocTypes = new UserGetGroupDocTypes();
+            userGetGroupDocTypes.setGroupTitle(userGroup.getTitle());
+            userGetGroupDocTypes.setReviewDocTypes(userGroup.getReviewDocumentType().stream().map(DocumentType::getTitle).collect(Collectors.toList()));
+            userGetGroupDocTypes.setSubmitDocTypes(userGroup.getSubmissionDocumentType().stream().map(DocumentType::getTitle).collect(Collectors.toList()));
+            return userGetGroupDocTypes;
+        }).collect(Collectors.toList());
+        Long end = System.currentTimeMillis();
+        Long diff = end - start;
+        System.out.println("Interval " + diff);
+        return userGetGroupDocTypesList;
+    }
 }
