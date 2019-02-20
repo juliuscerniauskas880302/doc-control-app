@@ -2,7 +2,6 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
@@ -152,6 +151,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public boolean isActionAllowed(@CurrentUser UserPrincipal userPrincipal, @PathVariable String action) {
         return userService.isActionAllowed(userPrincipal.getUsername(), action);
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @ApiOperation(value = "get user groups and review/submission document types")
+    @GetMapping("/groupDetails")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserGetGroupDocTypes> getUserGroupsWithDocTypes(@CurrentUser UserPrincipal userPrincipal) {
+       return userService.getUserGroupsWithDocTypes(userPrincipal.getUsername());
     }
 
 
