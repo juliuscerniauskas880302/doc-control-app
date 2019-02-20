@@ -1,7 +1,8 @@
 import React from "react";
 import NavigationLink from "./NavigationLink";
+import { withRouter } from "react-router";
 
-export default class Header extends React.Component {
+class HeaderSideBar extends React.Component {
   constructor(props) {
     super(props);
     this.showMenu = true;
@@ -56,6 +57,15 @@ export default class Header extends React.Component {
                     </strong>
                     <small>{this.props.role}</small>
                   </div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => {
+                      this.props.history.push("/user/profile");
+                      // this.props.history.go();
+                    }}
+                  >
+                    Profilis
+                  </div>
                   <div className="dropdown-divider" />
                   <button
                     className="dropdown-item"
@@ -83,3 +93,5 @@ export default class Header extends React.Component {
     );
   }
 }
+
+export default withRouter(HeaderSideBar);

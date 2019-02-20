@@ -14,8 +14,7 @@ export default class NewGroupForm extends Component {
       allGroups: [],
       allUsers: [],
       groupUsers: [],
-      selectedGroupForAddUsers: null,
-      showMessage: { message: "", messageType: "", show: false }
+      selectedGroupForAddUsers: null
     };
   }
 
@@ -87,9 +86,9 @@ export default class NewGroupForm extends Component {
     title.title = this.state.title;
     Axios.post("http://localhost:8081/api/groups", title)
       .then(res => {
-        this.handleMessageInput(
+        this.props.showResponseMessage(
           "Nauja grupė buvo sėkmingai pridėta",
-          "alert alert-info fixed-top text-center",
+          "success",
           2500
         );
         this.setState({ title: "" });
@@ -106,16 +105,16 @@ export default class NewGroupForm extends Component {
       "http://localhost:8081/api/groups/" + this.getSelectedGroupID()
     )
       .then(res => {
-        this.handleMessageInput(
+        this.props.showResponseMessage(
           "Grupė buvo sėkmingai ištrinta",
-          "alert alert-info fixed-top text-center",
+          "success",
           2500
         );
         this.setState({ newTitle: "" });
         this.getAllGroups();
       })
       .catch(err => {
-        console.log(err);
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500);
       });
   };
 
@@ -128,47 +127,17 @@ export default class NewGroupForm extends Component {
       title
     )
       .then(res => {
-        this.handleMessageInput(
+        this.props.showResponseMessage(
           "Grupė buvo sėkmingai atnaujinta",
-          "alert alert-info fixed-top text-center",
+          "success",
           2500
         );
         this.setState({ newTitle: "" });
         this.getAllGroups();
       })
       .catch(err => {
-        console.log(err);
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500);
       });
-  };
-
-  handleMessageInput = (message, messageType, timeout) => {
-    let data = {
-      message: message,
-      messageType: messageType,
-      show: true
-    };
-    this.setState({ showMessage: data }, () => {
-      let data = {
-        message: "",
-        messageType: "",
-        show: false
-      };
-      setTimeout(() => {
-        this.setState({ showMessage: data });
-      }, timeout);
-    });
-  };
-
-  showMessage = () => {
-    if (this.state.showMessage.show) {
-      return (
-        <div className={this.state.showMessage.messageType}>
-          {this.state.showMessage.message}
-        </div>
-      );
-    } else {
-      return null;
-    }
   };
 
   onSelectedGroupForAddUsersHandler = e => {
@@ -290,25 +259,26 @@ export default class NewGroupForm extends Component {
 
     Axios.post(
       "http://localhost:8081/api/groups/" +
-      this.state.selectedGroupForAddUsers +
-      "/users",
+        this.state.selectedGroupForAddUsers +
+        "/users",
       { users: userIdListToAdd }
     )
       .then(res => {
-        this.handleMessageInput(
+        this.props.showResponseMessage(
           "Vartotojų priskyrimas įvykdytas",
-          "alert alert-info fixed-top text-center",
+          "success",
           2500
         );
         this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
       })
-      .catch(err => console.log(err));
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
   };
 
   render() {
     return (
       <React.Fragment>
-        {this.showMessage()}
         <div className="page-holder w-100 d-flex flex-wrap">
           <div className="container-fluid px-xl-5">
             <section className="pt-5">

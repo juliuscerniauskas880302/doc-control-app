@@ -11,6 +11,7 @@ import ResourceNotFoundComponent from "../../Errors/ResourceNotFoundComponent";
 import { checkToken } from "../../Utilities/CheckToken";
 import NavigationComponent from "../NavigationComponent";
 import ResponseMessage from "../../Utilities/ResponseMessage";
+import Profile from "../Profile";
 
 export default class AdminNavigationContainer extends Component {
   render() {
@@ -46,9 +47,42 @@ export default class AdminNavigationContainer extends Component {
           {...this.props}
         >
           <Switch>
-            <Route path="/" component={UserContainer} exact />
-            <Route path="/users/add" component={NewUserContainer} exact />
-            <Route path="/groups/add" component={NewGroupForm} exact />
+            <Route
+              path="/"
+              render={props => (
+                <ResponseMessage>
+                  <UserContainer {...props} />
+                </ResponseMessage>
+              )}
+              exact
+            />
+            <Route
+              path="/user/profile"
+              render={props => (
+                <ResponseMessage>
+                  <Profile {...props} />
+                </ResponseMessage>
+              )}
+              exact
+            />
+            <Route
+              path="/users/add"
+              render={props => (
+                <ResponseMessage>
+                  <NewUserContainer {...props} />
+                </ResponseMessage>
+              )}
+              exact
+            />
+            <Route
+              path="/groups/add"
+              render={props => (
+                <ResponseMessage>
+                  <NewGroupForm {...props} />
+                </ResponseMessage>
+              )}
+              exact
+            />
             <Route
               path="/document_types/groups"
               render={props => (

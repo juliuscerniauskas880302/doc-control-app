@@ -36,16 +36,19 @@ export default class NewUserContainer extends Component {
       () => {
         Axios.post("http://localhost:8081/api/users", this.state)
           .then(res => {
-            console.log("New user added");
+            this.props.showResponseMessage(
+              "Vartotojas sėkmingai sukurtas",
+              "success",
+              2500
+            );
             this.props.history.push("/");
           })
           .catch(err => {
-            this.handleMessageInput(
+            this.props.showResponseMessage(
               err.response.data.message,
-              "alert alert-danger fixed-top text-center",
+              "danger",
               2500
             );
-            console.log("Grizo err:", err.response.data);
           });
       }
     );
