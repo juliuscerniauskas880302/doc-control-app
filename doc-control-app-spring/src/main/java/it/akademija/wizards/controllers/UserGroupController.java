@@ -46,13 +46,6 @@ public class UserGroupController {
         userGroupService.createUserGroup(userGroupCreateCommand);
     }
 
-    @ApiOperation(value = "add document types to group")
-    @RequestMapping(value = "/{id}/doctypes", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addDocTypesToGroup(@RequestBody UserGroupAddDocTypesCommand userGroupAddDocTypesCommand, @PathVariable(value = "id") String id) {
-
-    }
-
     @ApiOperation(value = "update user group")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
