@@ -9,8 +9,8 @@ class DocumentStatisticsContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate: "2019-01-01",
-            endDate: "2019-12-31",
+            startDate: new Date().getFullYear() + "-01-01",
+            endDate: new Date().getFullYear() + "-12-31",
             selectedDocTypes: [],
             typeList: [],
             fullDocumentList: [],
