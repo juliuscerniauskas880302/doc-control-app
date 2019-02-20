@@ -75,6 +75,12 @@ public class DatabaseFiller {
     @Transactional
     public void createUsers(int usersCount) {
         List<User> users = new ArrayList<>();
+        Role roleAdmin = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
+                () -> new AppException("Admin Role not set")
+        );
+        Role roleUser = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                () -> new AppException("User Role not set")
+        );
         for (int i = 1; i <= usersCount; i++ ) {
             boolean isAdmin = (int) Math.floor(Math.random() * 11) < 3;
             User user = new User();
@@ -84,16 +90,7 @@ public class DatabaseFiller {
             user.setLastname(randomStringGenerator(12));
             user.setEmail("user" + i + "@" + randomStringGenerator(5) + ".lt");
             user.setAdmin(isAdmin);
-            Role userRole = null;
-            if (isAdmin) {
-                userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
-                        () -> new AppException("Admin Role not set")
-                );
-            } else {
-                userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
-                        () -> new AppException("User Role not set")
-                );
-            }
+            Role userRole = isAdmin? roleAdmin : roleUser;
             user.getRoles().add(userRole);
             users.add(user);
         }
@@ -105,9 +102,7 @@ public class DatabaseFiller {
         user.setLastname("rootenis");
         user.setEmail("rootas@rooteninc.com");
         user.setAdmin(true);
-        user.getRoles().add(roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
-                () -> new AppException("Admin Role not set")
-        ));
+        user.getRoles().add(roleAdmin);
         users.add(user);
         userRepository.saveAll(users);
     }
