@@ -53,6 +53,8 @@ public class CommandLineAppRunner implements CommandLineRunner {
     @Autowired
     private
     DatabaseFiller databaseFiller;
+    @Autowired
+    private DataBaseFillerWithFaker dataBaseFillerWithFaker;
 
     @Override
     public void run(String... args) throws Exception {
@@ -74,6 +76,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
 
             // ENTER groups, users, docTypes, avgDocsPerUser
             databaseFiller.fillInDatabaseWithData(groups, users, docTypes, avqDocsForUser);
+            //dataBaseFillerWithFaker.fillInDatabaseWithData(groups, users, docTypes, avqDocsForUser);
         }
 
             //ROLES

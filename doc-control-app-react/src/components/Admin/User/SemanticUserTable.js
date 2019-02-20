@@ -29,6 +29,7 @@ export default function SemanticUserTable(props) {
       <th scope="row">{props.number}</th>
       <td>{props.firstname}</td>
       <td>{props.lastname}</td>
+      <td>{props.username}</td>
       <td>{props.email}</td>
       <td>{props.isAdmin}</td>
       <td>

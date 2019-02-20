@@ -54,26 +54,50 @@ export default class UserNavigationSubmitContainer extends Component {
           {...this.props}
         >
           <Switch>
-            <Route exact path="/" component={UserSubmittedDocumentsContainer} />
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <ResponseMessage>
+                  <UserSubmittedDocumentsContainer {...props} />
+                </ResponseMessage>
+              )}
+            />
             <Route
               exact
               path="/createdDocuments"
-              component={UserCreatedDocumentsContainer}
+              render={props => (
+                <ResponseMessage>
+                  <UserCreatedDocumentsContainer {...props} />
+                </ResponseMessage>
+              )}
             />
             <Route
               exact
               path="/createdDocuments/:documentId"
-              component={OneCreatedDocumentsContainer}
+              render={props => (
+                <ResponseMessage>
+                  <OneCreatedDocumentsContainer {...props} />
+                </ResponseMessage>
+              )}
             />
             <Route
               exact
               path="/submittedDocuments/:documentId"
-              component={OneSubmittedDocumentsContainer}
+              render={props => (
+                <ResponseMessage>
+                  <OneSubmittedDocumentsContainer {...props} />
+                </ResponseMessage>
+              )}
             />
             <Route
               exact
               path="/admin/newDocument"
-              component={NewDocumentContainer}
+              render={props => (
+                <ResponseMessage>
+                  <NewDocumentContainer {...props} />
+                </ResponseMessage>
+              )}
             />
             <Route
               exact
@@ -87,7 +111,11 @@ export default class UserNavigationSubmitContainer extends Component {
             <Route
               exact
               path="/admin/Documents/:documentId"
-              component={EditDocumentContainer}
+              render={props => (
+                <ResponseMessage>
+                  <EditDocumentContainer {...props} />
+                </ResponseMessage>
+              )}
             />
             <Route
               exact
