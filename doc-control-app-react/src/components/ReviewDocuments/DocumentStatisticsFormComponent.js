@@ -2,8 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const DocumentStatisticsFormComponent = (props) => {
+    for(var i = 0; i < 3; i++){
+        console.log("Masyvo elementas " + props.typeList[i]);
+    }
+    
     let optionList = props.typeList.map(v => (
-        <option value={v.id}>{v.title}</option>
+        <option key={v.id} value={v.id}>{v.title}</option>
     ));
     return (
         <form onSubmit={props.handleChartUpdate}>
