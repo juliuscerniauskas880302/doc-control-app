@@ -181,7 +181,11 @@ public class DatabaseFiller {
                 for (int i = 1; i <= docsToCreate; i++) {
                     Document document = new Document();
                     document.setAuthor(user);
-                    if (i%2 == 0) {
+                    if (i % 5 == 0) {
+                        document.setDocumentState(DocumentState.REJECTED);
+                    } else if (i % 3 == 0) {
+                        document.setDocumentState(DocumentState.ACCEPTED);
+                    } else if (i % 2 == 0) {
                         document.setDocumentState(DocumentState.SUBMITTED);
                     } else {
                         document.setDocumentState(DocumentState.CREATED);
