@@ -13,6 +13,7 @@ import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsCont
 import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatisticsContainer";
 import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
+import ResponseMessage from "../../../Utilities/ResponseMessage";
 
 export default class UserNavigationBothContainer extends Component {
   render() {
@@ -71,57 +72,101 @@ export default class UserNavigationBothContainer extends Component {
                 <Route
                   exact
                   path="/"
-                  component={UserSubmittedDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <UserSubmittedDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/createdDocuments"
-                  component={UserCreatedDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <UserCreatedDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/createdDocuments/:documentId"
-                  component={OneCreatedDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <OneCreatedDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/submittedDocuments/:documentId"
-                  component={OneSubmittedDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <OneSubmittedDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/reviewDocuments"
-                  component={ReviewDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <ReviewDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/reviewDocuments/:documentId"
-                  component={OneReviewDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <OneReviewDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/admin/newDocument"
-                  component={NewDocumentContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <NewDocumentContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/newDocument"
-                  component={NewDocumentContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <NewDocumentContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/admin/Documents/:documentId"
-                  component={EditDocumentContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <EditDocumentContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/documentStatistics"
-                  component={DocumentStatisticsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <DocumentStatisticsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/userStatistics"
-                  component={UserStatisticsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <UserStatisticsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />

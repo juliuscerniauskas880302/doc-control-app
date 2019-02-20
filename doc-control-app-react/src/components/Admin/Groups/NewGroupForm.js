@@ -3,6 +3,7 @@ import Axios from "axios";
 import NewGroupComponent from "./NewGroupComponent";
 import EditGroupUsers from "./EditGroupUsers";
 import ButtonComponent from "../../Utilities/ButtonComponent";
+import { Pagination } from "semantic-ui-react";
 
 export default class NewGroupForm extends Component {
   constructor(props) {
@@ -14,13 +15,16 @@ export default class NewGroupForm extends Component {
       allGroups: [],
       allUsers: [],
       groupUsers: [],
-      selectedGroupForAddUsers: null
+      selectedGroupForAddUsers: null,
+      totalUsers: 0,
+      recordsPerPage: 15,
+      activePage: 1
     };
   }
 
   componentDidMount = () => {
     this.getAllGroups();
-    this.getAllUsers();
+    this.getAllUsers(this.state.activePage, this.state.recordsPerPage);
   };
 
   getAllGroups = () => {
@@ -33,9 +37,26 @@ export default class NewGroupForm extends Component {
       });
   };
 
-  getAllUsers = () => {
-    Axios.get("http://localhost:8081/api/users").then(res => {
-      this.setState({ allUsers: res.data.userList });
+  getAllUsers = (pageNumber, pageLimit) => {
+    console.log("Page requested: ", pageNumber);
+    Axios.get("http://localhost:8081/api/users/", {
+      params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+    })
+      .then(res => {
+        this.setState({
+          allUsers: res.data.userList,
+          totalUsers: res.data.totalElements
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage }, () => {
+      this.getAllUsers(activePage, this.state.recordsPerPage);
+      this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
     });
   };
 
@@ -179,6 +200,8 @@ export default class NewGroupForm extends Component {
   };
 
   showUsersCheckBox = () => {
+    const { totalUsers, recordsPerPage, activePage } = this.state;
+    let pageCount = Math.ceil(totalUsers / recordsPerPage);
     if (this.state.allUsers.length === 0) {
       return <div>Nėra vartotojų</div>;
     }
@@ -188,9 +211,10 @@ export default class NewGroupForm extends Component {
     let data = this.state.groupUsers.map((user, index) => {
       return (
         <tr key={index}>
-          <th scope="row">{index + 1}</th>
-          <td>{user.username}</td>
+          <th scope="row">{index + 1 + recordsPerPage * (activePage - 1)}</th>
+          <td>{user.firstname}</td>
           <td>{user.lastname}</td>
+          <td>{user.username}</td>
           <td>{user.email}</td>
           <td>
             <input
@@ -210,13 +234,19 @@ export default class NewGroupForm extends Component {
           Pažymėkite vartotojus, kuriuos noriti pridėti ir spauskite mygtuką
           "Atnaujinti".
         </p>
+        <Pagination
+          activePage={activePage}
+          onPageChange={this.handlePaginationChange}
+          totalPages={pageCount}
+        />
         <div className="line" />
-        <table className="table table-striped">
+        <table className="ui celled table" style={{ width: "100%" }}>
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col">Vardas</th>
               <th scope="col">Pavardė</th>
+              <th scope="col">Vartotojo vardas</th>
               <th scope="col">Paštas</th>
               <th scope="col">Pridėti</th>
             </tr>

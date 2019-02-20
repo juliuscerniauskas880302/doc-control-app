@@ -57,10 +57,13 @@ export class UserContainer extends Component {
         user.admin === false ? "Paprastas vartotojas" : "Administratorius";
       return (
         <SemanticUserTable
-          number={index + 1}
+          number={
+            index + 1 + this.state.recordsPerPage * (this.state.activePage - 1)
+          }
           key={user.username}
           firstname={user.firstname}
           lastname={user.lastname}
+          username={user.username}
           email={user.email}
           isAdmin={isAdmin}
           delete={() => this.onDeleteClickHandler(user.username)}
@@ -75,6 +78,7 @@ export class UserContainer extends Component {
             <th>#</th>
             <th>Vardas</th>
             <th>Pavardė</th>
+            <th>Vartotojo vardas</th>
             <th>El. paštas</th>
             <th>Teisės</th>
             <th>Veiksmai</th>

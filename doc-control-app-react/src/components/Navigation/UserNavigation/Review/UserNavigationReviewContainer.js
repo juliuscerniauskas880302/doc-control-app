@@ -7,6 +7,7 @@ import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatis
 import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsContainer";
 import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
+import ResponseMessage from "../../../Utilities/ResponseMessage";
 
 export default class UserNavigationReviewContainer extends Component {
   render() {
@@ -38,26 +39,50 @@ export default class UserNavigationReviewContainer extends Component {
               {...this.props}
             >
               <Switch>
-                <Route exact path="/" component={ReviewDocumentsContainer} />
+                <Route
+                  exact
+                  path="/"
+                  render={props => (
+                    <ResponseMessage>
+                      <ReviewDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
+                />
                 <Route
                   exact
                   path="/reviewDocuments"
-                  component={ReviewDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <ReviewDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/reviewDocuments/:documentId"
-                  component={OneReviewDocumentsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <OneReviewDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/documentStatistics"
-                  component={DocumentStatisticsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <DocumentStatisticsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route
                   exact
                   path="/userStatistics"
-                  component={UserStatisticsContainer}
+                  render={props => (
+                    <ResponseMessage>
+                      <UserStatisticsContainer {...props} />
+                    </ResponseMessage>
+                  )}
                 />
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />

@@ -11,6 +11,30 @@ export default class NewDocumentTypeForm extends Component {
       newTitle: "",
       allDocumentTypes: []
     };
+    this.data = [
+      {
+        groupTitle: "Kebabu naikintojai",
+        reviewDocTypes: [
+          "Prasymas naikinti kebabus",
+          "Prasymas gaminti kebabus"
+        ],
+        submitDocTypes: [
+          "Prasymas gaminti kebabys",
+          "Atelidimas is darbo",
+          "...."
+        ]
+      },
+      {
+        groupTitle: "Administracija",
+        reviewDocTypes: ["Prasymas padidinti alga", "......", "......"],
+        submitDocTypes: [
+          "Prasymas padidinti alga",
+          "Atelidimas is darbo",
+          "....",
+          "....."
+        ]
+      }
+    ];
   }
 
   componentDidMount = () => {
