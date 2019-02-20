@@ -127,7 +127,8 @@ const NewDocumentComponet = props => {
                     </div> */}
                     <div className="col-md-12 col-lg-4">
                       <FilePond
-                        labelIdle="Įkelkite pagrindinę bylą."
+                        labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
+                        // labelIdle="Įkelkite pagrindinę bylą."
                         labelFileTypeNotAllowed="Netinkamas bylos formatas."
                         fileValidateTypeLabelExpectedTypes="Įkelkite pdf formato bylą."
                         labelButtonRemoveItem="Pašalinti"
@@ -143,7 +144,7 @@ const NewDocumentComponet = props => {
                     <div className="col-md-12 col-lg-4">
                       {props.mainFileUploaded ? (
                         <FilePond
-                          labelIdle="Įkelkite papildomas bylas."
+                          // labelIdle="Įkelkite papildomas bylas."
                           labelFileTypeNotAllowed="Netinkamas bylos formatas."
                           fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
                           labelButtonRemoveItem="Pašalinti"

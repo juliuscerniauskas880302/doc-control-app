@@ -51,18 +51,12 @@ class NewDocumentContainer extends React.Component {
   // };
 
   onUpdateMainFile = fileItems => {
-    // this.setState({
-    //   mainFile: null
-    // });
     this.setState({
       mainFile: fileItems.map(fileItem => fileItem.file)
     });
     console.log(this.state.mainFile);
   };
   onUpdateAdditionalFiles = fileItems => {
-    // this.setState({
-    //   selectedAdditionalFiles: null
-    // });
     this.setState({
       selectedAdditionalFiles: fileItems.map(fileItem => fileItem.file)
     });
@@ -112,7 +106,6 @@ class NewDocumentContainer extends React.Component {
   //TODO
   handleSubmit = event => {
     event.preventDefault();
-    //Turiu padaryti failo progreso barą matomą
     this.openFileTransferPopup();
     let isFileNamesSame = false;
     let correctFileExtensions = true;
@@ -120,13 +113,16 @@ class NewDocumentContainer extends React.Component {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
       title: this.state.title
-      //username: this.state.username
     };
-    console.log("Model: " + model);
     let file = new FormData();
     // Check if attachment naming is correct #BaDdEsIgN
-
-    if (
+    if (this.state.mainFile === null) {
+      this.props.showResponseMessage(
+        "Pridėkite pagrindinę bylą.",
+        "danger",
+        2500
+      );
+    } else if (
       this.state.mainFile.length === 1 &&
       (this.state.selectedAdditionalFiles === null ||
         this.state.selectedAdditionalFiles.length === 0)
@@ -169,14 +165,15 @@ class NewDocumentContainer extends React.Component {
           }
         }
       }
-      let acceptedFileTypes = ["pdf", "jpeg", "png"];
+      // Checking file extensions
+      let acceptedFileTypes = ["pdf", "jpg", "png"];
       this.state.selectedAdditionalFiles.forEach(file => {
         if (!acceptedFileTypes.includes(file.name.split(".").pop())) {
           correctFileExtensions = false;
           return;
         }
       });
-      // Checking file extensions
+      //Checking file naming
       this.state.selectedAdditionalFiles.forEach(file => {
         if (file.name === this.state.mainFile[0].name) {
           isFileNamesSame = true;
@@ -184,10 +181,18 @@ class NewDocumentContainer extends React.Component {
       });
 
       if (isFileNamesSame === true) {
-        alert("Please select files with different names");
+        this.props.showResponseMessage(
+          "Bylų pavadinimai vienodi. Pasirinkite kitas bylas arba jas pervadinkite.",
+          "danger",
+          2500
+        );
         isFileNamesSame = false;
       } else if (correctFileExtensions === false) {
-        // alert("Please select files of correct file extension.");
+        this.props.showResponseMessage(
+          "Prisegtos bylos nėra teisingo formato.",
+          "danger",
+          2500
+        );
         correctFileExtensions = false;
       } else {
         file.append(
@@ -267,6 +272,7 @@ class NewDocumentContainer extends React.Component {
           openFileTransferPopup={this.openFileTransferPopup}
           closeFileTransferPopup={this.closeFileTransferPopup}
           acceptedFileTypes={acceptedFileTypes}
+          // whatFile={this.state.whatFile}
         />
       </React.Fragment>
     );
