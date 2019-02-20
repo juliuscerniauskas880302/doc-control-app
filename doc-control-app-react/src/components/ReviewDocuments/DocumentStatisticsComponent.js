@@ -1,19 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import DocumentStatisticsChart from './DocumentStatisticsChart';
-//import './DocumentStyle.css';
 
 const DocumentStatisticsComponent = (props) => {
+    console.log("statisticsData yra "+ props.statisticsData.submitted);
     var statisticsCardList = props.statisticsData.map((item, index) => {
-        //console.log("Spausdinu iš diagramų masyvo darymo");
-        //console.log("Item pirmas - " + item.document);
+        console.log("Spausdinu iš diagramų masyvo darymo");
+        console.log("Item " + index + " - " + item.documentTypeTitle);
+        console.log("Item " + index + " - " + item.submittedCount);
+        console.log("Item " + index + " - " + item.approvedCount);
+        console.log("Item " + index + " - " + item.rejectedCount);
+        
         return (
             <DocumentStatisticsChart
-                key={index}
+                //v-for="list of charts"
+                key={item.documentTypeTitle}
                 idName={"docType" + index}
                 documentType={item.documentTypeTitle}
                 submitted={item.submittedCount}
-                accepted={item.acceptedCount}
+                accepted={item.approvedCount}
                 rejected={item.rejectedCount}
             />
         );

@@ -2,9 +2,10 @@ import React from 'react';
 import DocumentStatisticsFormComponent from './DocumentStatisticsFormComponent';
 import DocumentStatisticsComponent from './DocumentStatisticsComponent';
 import axios from 'axios';
-import './StatisticsStyle.css'
 
 class DocumentStatisticsContainer extends React.Component {
+    _isMounted = false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -22,12 +23,12 @@ class DocumentStatisticsContainer extends React.Component {
 
     handleChangeOfStartDate = event => {
         this.setState({ startDate: event.target.value });
-        console.log("Pradžios data yra " + this.state.startDate);
+        //console.log("Pradžios data yra " + this.state.startDate);
     };
 
     handleChangeOfEndDate = event => {
         this.setState({ endDate: event.target.value });
-        console.log("Pabaigos data yra " + this.state.endDate);
+        //console.log("Pabaigos data yra " + this.state.endDate);
     };
 
     handleChangeOfSelectedDocTypes = event => {
@@ -39,14 +40,13 @@ class DocumentStatisticsContainer extends React.Component {
 
     handleChartUpdate = event => {
         event.preventDefault();
-        console.log("Atnaujinu diagramų duomenis");
+        console.log("Atnaujinu diagramų duomenis. Iš handleChartUpdate");
         //Nusiskaitau statistikos duomenis
         axios.post("http://localhost:8081/api/stats/docTypes", 
             { documentTypes: this.state.selectedDocTypes, fromDate: this.state.startDate, toDate: this.state.endDate }
         ).then(response => {
             console.log("Nuskaitinėju dokumentų tipų statistikos duomenis");
-            this.setState({fullDocumentList: response.data});
-            
+            this.setState({fullDocumentList: response.data});    
         })
         .catch(error => {
             console.log("KLAIDA!!!! Nenuskaitė dokumentų tipų statistikos" + error);
@@ -54,6 +54,7 @@ class DocumentStatisticsContainer extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         //TODO
         //dabar neteisingu adresu ima dokumentus - ima is esamo vartotojo sukurtu dokumentų
         //perdaryti, kad imtų iš tų dokumentų, kuriuos vartotojas gali peržiūrėti.
@@ -62,12 +63,12 @@ class DocumentStatisticsContainer extends React.Component {
         axios
             .get("http://localhost:8081/api/users/reviewDocTypes")
             .then(response => {
-                //Anskčiau iš dokumentų tipo atsakymo išrinkdavau tik pavadinimus
+                //Anksčiau iš dokumentų tipo atsakymo išrinkdavau tik pavadinimus
                 //this.setState({ typeList: response.data.map(item => item.title) });
                 //Dabar pasiimu pilną masyvą
                 this.setState({ typeList: response.data });
-                console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
-                console.log(this.state.typeList);
+                //console.log("Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?");
+                //console.log(this.state.typeList);
             })
             .catch(error => {
                 console.log("KLAIDA!!!! Nenuskaitė tipų!!!!" + error);
@@ -92,6 +93,10 @@ class DocumentStatisticsContainer extends React.Component {
         //     .catch(error => {
         //         console.log("KLAIDA!!!!" + error);
         //     });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -143,6 +148,7 @@ class DocumentStatisticsContainer extends React.Component {
                                         {/* <div className="col-12"> */}
                                         <DocumentStatisticsComponent
                                             statisticsData={this.state.fullDocumentList}
+                                            keyValueForChartComponent={this.state.keyValueForChartComponent}
                                         />
                                         {/* </div> */}
                                     </div>
