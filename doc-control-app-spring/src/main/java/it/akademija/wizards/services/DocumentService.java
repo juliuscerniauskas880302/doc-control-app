@@ -51,6 +51,8 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getDocumentsToReview(String username) {
+//        return  documentRepository.getDocumentsForReview(username)
+//        .stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
         return documentRepository.findAll()
                 .stream()
                 .filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED))
