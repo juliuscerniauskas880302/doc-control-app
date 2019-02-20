@@ -148,7 +148,6 @@ class DocumentStatisticsContainer extends React.Component {
                                         {/* <div className="col-12"> */}
                                         <DocumentStatisticsComponent
                                             statisticsData={this.state.fullDocumentList}
-                                            keyValueForChartComponent={this.state.keyValueForChartComponent}
                                         />
                                         {/* </div> */}
                                     </div>
