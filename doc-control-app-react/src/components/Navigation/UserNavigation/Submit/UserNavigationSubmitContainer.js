@@ -75,7 +75,15 @@ export default class UserNavigationSubmitContainer extends Component {
               path="/admin/newDocument"
               component={NewDocumentContainer}
             />
-            <Route exact path="/newDocument" component={NewDocumentContainer} />
+            <Route
+              exact
+              path="/newDocument"
+              render={props => (
+                <ResponseMessage>
+                  <NewDocumentContainer {...props} />
+                </ResponseMessage>
+              )}
+            />
             <Route
               exact
               path="/admin/Documents/:documentId"
