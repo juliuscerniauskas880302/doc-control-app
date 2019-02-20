@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import UserComponent from "./UserComponent";
 import Axios from "axios";
 import { Pagination } from "semantic-ui-react";
 import SemanticUserTable from "./SemanticUserTable";
@@ -88,7 +87,12 @@ export class UserContainer extends Component {
 
   onDeleteClickHandler = id => {
     Axios.delete("http://localhost:8081/api/users/" + id)
-      .then(() => this.getAllUsersFromServer())
+      .then(() =>
+        this.getAllUsersFromServer(
+          this.state.activePage,
+          this.state.recordsPerPage
+        )
+      )
       .catch(err => {
         console.log(err);
       });
