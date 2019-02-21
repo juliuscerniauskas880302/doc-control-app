@@ -1,7 +1,7 @@
 import React from "react";
 import NavigationLink from "./NavigationLink";
 import { withRouter } from "react-router";
-
+import flagLT from "../../css/images/lt-flag.png";
 class HeaderSideBar extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +27,9 @@ class HeaderSideBar extends React.Component {
               onClick={() => this.toggleMenu()}
               className="sidebar-toggler text-gray-600 mr-4 mr-lg-5 "
             >
-              <i className="fas fa-file fa-4x" />
+              <i className="flag-lt">
+                <img src={flagLT} alt="flag" />
+              </i>
             </div>
             <div className="font-weight-bold text-uppercase ">
               {this.props.title}
@@ -80,11 +82,6 @@ class HeaderSideBar extends React.Component {
         </header>
         <div className="d-flex align-items-stretch ">
           <div id="sidebar" className={this.state.menuClass}>
-            <div className="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">
-              <i className="fas fa-tools fa-3x" />
-              <p>Meniu</p>
-              <div className="line" />
-            </div>
             <NavigationLink navigation={this.props.nav} />
           </div>
           {this.props.children}

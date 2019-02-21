@@ -14,6 +14,7 @@ import DocumentStatisticsContainer from "../../../ReviewDocuments/DocumentStatis
 import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
+import Profile from "../../Profile";
 
 export default class UserNavigationBothContainer extends Component {
   render() {
@@ -167,6 +168,15 @@ export default class UserNavigationBothContainer extends Component {
                       <UserStatisticsContainer {...props} />
                     </ResponseMessage>
                   )}
+                />
+                <Route
+                  path="/user/profile"
+                  render={props => (
+                    <ResponseMessage>
+                      <Profile {...props} />
+                    </ResponseMessage>
+                  )}
+                  exact
                 />
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />

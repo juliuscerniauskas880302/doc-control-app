@@ -11,7 +11,7 @@ import Axios from "axios";
 import NavigationComponent from "../../NavigationComponent";
 import CSV from "../../../Testing/CSV";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
-
+import Profile from "../../Profile";
 export default class UserNavigationSubmitContainer extends Component {
   checkToken = () => {
     let token = JSON.parse(localStorage.getItem("accessToken"));
@@ -125,6 +125,15 @@ export default class UserNavigationSubmitContainer extends Component {
                   <CSV {...props} />
                 </ResponseMessage>
               )}
+            />
+            <Route
+              path="/user/profile"
+              render={props => (
+                <ResponseMessage>
+                  <Profile {...props} />
+                </ResponseMessage>
+              )}
+              exact
             />
             <Route path="*" component={ResourceNotFoundCompoentn} />
             <Route component={ResourceNotFoundCompoentn} />
