@@ -84,13 +84,13 @@ export default class EditUserGroups extends Component {
       );
     } else {
       let groups = this.state.allGroups
-        .map(group => {
+        .map((group, index) => {
           // console.log(this.state.userGroups);
           // console.log(this.state.userGroups.includes("group.title"));
 
           let shouldShow = true;
 
-          this.state.userGroups.forEach(g => {
+          this.state.userGroups.forEach((g, index) => {
             if (g.title === group.title) {
               shouldShow = false;
             }
@@ -98,7 +98,7 @@ export default class EditUserGroups extends Component {
 
           if (shouldShow)
             return (
-              <option key={group.title} value={group.id}>
+              <option key={group.title + index} value={group.id}>
                 {group.title}
               </option>
             );
