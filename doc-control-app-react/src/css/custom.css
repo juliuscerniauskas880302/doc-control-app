@@ -68,4 +68,12 @@
     height: auto;
 }
 
+.customFilePond {
+    background-color: grey;
+}
+.customFileSpan {
+    vertical-align: 30%;
+    
+
+}
 

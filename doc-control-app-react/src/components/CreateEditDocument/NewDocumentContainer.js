@@ -60,7 +60,6 @@ class NewDocumentContainer extends React.Component {
     this.setState({
       selectedAdditionalFiles: fileItems.map(fileItem => fileItem.file)
     });
-    console.log(this.state.selectedAdditionalFiles);
   };
 
   // downloadHandler = (event) => {
@@ -103,6 +102,10 @@ class NewDocumentContainer extends React.Component {
   //   return filename;
   // };
 
+  validate = (event, fileItem) => {
+    console.log(event);
+    console.log(fileItem);
+  };
   //TODO
   handleSubmit = event => {
     event.preventDefault();
@@ -272,7 +275,7 @@ class NewDocumentContainer extends React.Component {
           openFileTransferPopup={this.openFileTransferPopup}
           closeFileTransferPopup={this.closeFileTransferPopup}
           acceptedFileTypes={acceptedFileTypes}
-          // whatFile={this.state.whatFile}
+          validate={this.validate}
         />
       </React.Fragment>
     );
