@@ -14,6 +14,8 @@ import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,16 +50,16 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public List<DocumentGetCommand> getDocumentsToReview(String username) {
-//        return  documentRepository.getDocumentsForReview(username)
-//        .stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
-        return documentRepository.findAll()
-                .stream()
-                .filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED))
-                .filter(document -> !document.getAuthor().getUsername().equals(username)
-                        && this.allowedToReviewDocument(username, document))
-                .map(mapper::entityToGetCommand)
-                .collect(Collectors.toList());
+    public List<DocumentGetCommand> getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
+        String searchable = searchFor != null ? searchFor : "";
+        Pageable pageable;
+        if (pageNumber != null && pageLimit != null) {
+            pageable = PageRequest.of(pageNumber, pageLimit);
+        } else {
+            pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        }
+        return documentRepository.getDocumentsForReview(username, searchable.toLowerCase().trim(), pageable)
+        .stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -82,7 +84,7 @@ public class DocumentService {
         } else {
             throw new BadRequestException("User doesn't have permission to create this type of document");
         }
-        return new ResponseEntity<>( HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //UPDATE
