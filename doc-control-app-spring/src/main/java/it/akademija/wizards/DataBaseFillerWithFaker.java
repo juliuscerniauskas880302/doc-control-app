@@ -74,7 +74,7 @@ public class DataBaseFillerWithFaker {
         for (int i = 1; i <= usersCount; i++) {
             boolean isAdmin = (int) Math.floor(Math.random() * 11) < 3;
             User user = new User();
-            user.setUsername(faker.superhero().name()+i);
+            user.setUsername(faker.ancient().titan().concat("" + i));
             user.setPassword(passwordEncoder.encode("root"));
             user.setFirstname(faker.name().firstName());
             user.setLastname(faker.name().lastName());
@@ -103,7 +103,7 @@ public class DataBaseFillerWithFaker {
         List<UserGroup> newUserGroups = new ArrayList<>();
         for (int i = 1; i <= groupsCount; i++) {
             UserGroup userGroup = new UserGroup();
-            userGroup.setTitle(faker.company().industry());
+            userGroup.setTitle(faker.company().industry()+i);
             newUserGroups.add(userGroup);
         }
         userGroupRepository.saveAll(newUserGroups);
@@ -115,7 +115,7 @@ public class DataBaseFillerWithFaker {
         List<DocumentType> documentTypes = new ArrayList<>();
         for (int i = 1; i <= docTypesCount; i++) {
             DocumentType documentType = new DocumentType();
-            documentType.setTitle(faker.book().title());
+            documentType.setTitle(faker.book().title()+i);
             documentTypes.add(documentType);
         }
         documentTypeRepository.saveAll(documentTypes);
