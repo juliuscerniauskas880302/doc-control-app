@@ -70,14 +70,19 @@ class ReviewDocumentsContainer extends React.Component {
 
   getAllDocumentsFromServer = (pageNumber, pageLimit) => {
     axios
-      .get("http://localhost:8081/api/users/docs/created", {
+      .get("http://localhost:8081/api/docs/review", {
         //wrong path
-        params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+        params: {
+          searchFor: "",
+          pageNumber: pageNumber - 1,
+          pageLimit: pageLimit
+        }
       })
       .then(res => {
+        console.log(res.data);
         this.setState({
           documents: res.data.documentList,
-          totalDocs: res.data.totalElements
+          totalDocs: res.data.totalPages
         });
       })
       .catch(err => {
@@ -198,22 +203,21 @@ class ReviewDocumentsContainer extends React.Component {
   };
 
   componentDidMount() {
-    // Not implemented in backend
-    // this.getAllDocumentsFromServer(
-    //   this.state.activePage,
-    //   this.state.recordsPerPage
-    // );
+    this.getAllDocumentsFromServer(
+      this.state.activePage,
+      this.state.recordsPerPage
+    );
 
-    axios
-      .get("http://localhost:8081/api/docs/review")
-      .then(response => {
-        this.setState({ documents: response.data });
-        console.log("Koks atiduodamas dokumentų sąrašas?");
-        console.log(this.state.documents);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // axios
+    //   .get("http://localhost:8081/api/docs/review")
+    //   .then(response => {
+    //     this.setState({ documents: response.data });
+    //     console.log("Koks atiduodamas dokumentų sąrašas?");
+    //     console.log(this.state.documents);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   }
 
   render() {
