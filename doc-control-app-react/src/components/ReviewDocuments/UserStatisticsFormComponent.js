@@ -12,14 +12,15 @@ const UserStatisticsFormComponent = (props) => {
         <form onSubmit={props.handleChartUpdate}>
             <div className="form-row justify-content-md-center">
                 <div className="form-group">
-                    <label htmlFor="docTypes">Pasirinkite dokumentų tipus:</label>
+                    <h5 style={{margin: "10px"}}>Pasirinkite dokumentų tipus:</h5>
+                    {/* <label htmlFor="docTypes">Pasirinkite dokumentų tipus:</label> */}
                     <select multiple className="form-control" id="docTypes" onChange={props.handleChangeOfSelectedDocTypes}>
                        {optionList}
                     </select>
                 </div>
             </div>
             <div className="form-row justify-content-md-center">
-            Pasirinkite atvaizduojamų darbuotojų skaičių:
+                <h5 style={{margin: "10px"}}>Pasirinkite atvaizduojamų darbuotojų skaičių:</h5>
             </div>
             <div className="form-row justify-content-md-center">
                 {/* <label htmlFor="numberOfEmployees">Pasirinkite atvaizduojamų darbuotojų skaičių: </label> */}
