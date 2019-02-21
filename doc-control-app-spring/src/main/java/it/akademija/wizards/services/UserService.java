@@ -1,10 +1,6 @@
 package it.akademija.wizards.services;
 
-import it.akademija.wizards.entities.Document;
-import it.akademija.wizards.entities.Role;
-import it.akademija.wizards.entities.DocumentType;
-import it.akademija.wizards.entities.User;
-import it.akademija.wizards.entities.UserGroup;
+import it.akademija.wizards.entities.*;
 import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.enums.RoleName;
 import it.akademija.wizards.exception.AppException;
@@ -12,10 +8,10 @@ import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
-import it.akademija.wizards.security.payload.ApiResponse;
 import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
+import it.akademija.wizards.security.payload.ApiResponse;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

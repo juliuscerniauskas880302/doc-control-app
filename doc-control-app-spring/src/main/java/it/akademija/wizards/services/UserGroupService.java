@@ -5,7 +5,6 @@ import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.usergroup.GroupAddUsersCommand;
-import it.akademija.wizards.models.usergroup.GroupRemoveUsersCommand;
 import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.UserGroupRepository;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;

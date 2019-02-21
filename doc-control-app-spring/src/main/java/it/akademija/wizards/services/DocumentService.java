@@ -14,17 +14,15 @@ import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

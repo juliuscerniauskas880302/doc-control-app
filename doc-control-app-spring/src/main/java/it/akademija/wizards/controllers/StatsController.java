@@ -1,7 +1,6 @@
 package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
@@ -9,7 +8,10 @@ import it.akademija.wizards.models.stats.StatsGetUserCommand;
 import it.akademija.wizards.models.stats.StatsRequestCommand;
 import it.akademija.wizards.services.StatsService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;

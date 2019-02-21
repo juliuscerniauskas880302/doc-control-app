@@ -1,8 +1,8 @@
 package it.akademija.wizards.configs;
 
-import it.akademija.wizards.security.services.CustomUserDetailsService;
 import it.akademija.wizards.security.jwt.JwtAuthenticationEntryPoint;
 import it.akademija.wizards.security.jwt.JwtAuthenticationFilter;
+import it.akademija.wizards.security.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
