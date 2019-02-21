@@ -8,7 +8,7 @@ import UserStatisticsContainer from "../../../ReviewDocuments/UserStatisticsCont
 import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
-
+import Profile from "../../Profile";
 export default class UserNavigationReviewContainer extends Component {
   render() {
     if (!checkToken()) {
@@ -83,6 +83,15 @@ export default class UserNavigationReviewContainer extends Component {
                       <UserStatisticsContainer {...props} />
                     </ResponseMessage>
                   )}
+                />
+                <Route
+                  path="/user/profile"
+                  render={props => (
+                    <ResponseMessage>
+                      <Profile {...props} />
+                    </ResponseMessage>
+                  )}
+                  exact
                 />
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
