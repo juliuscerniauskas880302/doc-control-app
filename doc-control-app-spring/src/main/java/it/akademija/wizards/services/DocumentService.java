@@ -6,16 +6,15 @@ import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.exception.BadRequestException;
-import it.akademija.wizards.models.document.DocumentCreateCommand;
-import it.akademija.wizards.models.document.DocumentGetCommand;
-import it.akademija.wizards.models.document.DocumentReviewCommand;
-import it.akademija.wizards.models.document.DocumentUpdateCommand;
+import it.akademija.wizards.models.document.*;
 import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,16 +49,18 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public List<DocumentGetCommand> getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
+    public DocumentPageGetCommand getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
         String searchable = searchFor != null ? searchFor : "";
         Pageable pageable;
+        Sort sort = Sort.by("submissionDate").descending();
         if (pageNumber != null && pageLimit != null) {
-            pageable = PageRequest.of(pageNumber, pageLimit);
+            pageable = PageRequest.of(pageNumber, pageLimit, sort);
         } else {
-            pageable = PageRequest.of(0, Integer.MAX_VALUE);
+            pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
         }
-        return documentRepository.getDocumentsForReview(username, searchable.toLowerCase().trim(), pageable)
-        .stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
+        Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable.toLowerCase().trim(), pageable);
+        List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
+        return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
     }
 
     @Transactional(readOnly = true)

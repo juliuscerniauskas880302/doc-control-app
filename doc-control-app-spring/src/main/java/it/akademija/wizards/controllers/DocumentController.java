@@ -3,11 +3,7 @@ package it.akademija.wizards.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import it.akademija.wizards.models.document.DocumentCreateCommand;
-import it.akademija.wizards.models.document.DocumentGetCommand;
-import it.akademija.wizards.models.document.DocumentReviewCommand;
-import it.akademija.wizards.models.document.DocumentUpdateCommand;
+import it.akademija.wizards.models.document.*;
 import it.akademija.wizards.security.models.CurrentUser;
 import it.akademija.wizards.security.models.UserPrincipal;
 import it.akademija.wizards.services.DocumentService;
@@ -52,7 +48,7 @@ public class DocumentController {
     @ApiOperation(value = "get all documents review")
     @RequestMapping(value = "/review", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<DocumentGetCommand> getDocumentsToReview(
+    public DocumentPageGetCommand getDocumentsToReview(
             @CurrentUser UserPrincipal userPrincipal,
             @RequestParam(value = "searchFor", required = false) String searchFor,
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
