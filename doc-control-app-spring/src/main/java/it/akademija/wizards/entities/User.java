@@ -1,6 +1,7 @@
 package it.akademija.wizards.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;

@@ -1,8 +1,8 @@
 package it.akademija.wizards.controllers;
 
+import it.akademija.wizards.security.jwt.JwtTokenProvider;
 import it.akademija.wizards.security.payload.JwtAuthenticationResponse;
 import it.akademija.wizards.security.payload.LoginRequest;
-import it.akademija.wizards.security.jwt.JwtTokenProvider;
 import it.akademija.wizards.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

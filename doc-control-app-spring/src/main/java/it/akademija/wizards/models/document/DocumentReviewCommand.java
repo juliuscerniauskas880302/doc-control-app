@@ -1,10 +1,6 @@
 package it.akademija.wizards.models.document;
 
-import it.akademija.wizards.entities.DocumentType;
-import it.akademija.wizards.entities.User;
 import it.akademija.wizards.enums.DocumentState;
-
-import java.util.Date;
 
 public class DocumentReviewCommand {
 

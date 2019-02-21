@@ -1,8 +1,5 @@
 package it.akademija.wizards.models.document;
 
-import it.akademija.wizards.entities.DocumentType;
-import it.akademija.wizards.entities.User;
-
 ;
 
 public class DocumentUpdateCommand {

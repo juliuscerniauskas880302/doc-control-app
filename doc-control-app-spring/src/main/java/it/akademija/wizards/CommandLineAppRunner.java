@@ -6,7 +6,6 @@ import it.akademija.wizards.models.documenttype.DocumentTypeCreateCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.UserAddGroupsCommand;
 import it.akademija.wizards.models.user.UserCreateCommand;
-import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.*;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 

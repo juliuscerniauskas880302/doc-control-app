@@ -2,10 +2,7 @@ package it.akademija.wizards.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
-
 import io.swagger.annotations.ApiOperation;
-
-import it.akademija.wizards.entities.User;
 import it.akademija.wizards.models.document.DocumentCreateCommand;
 import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.document.DocumentReviewCommand;
@@ -13,23 +10,19 @@ import it.akademija.wizards.models.document.DocumentUpdateCommand;
 import it.akademija.wizards.security.models.CurrentUser;
 import it.akademija.wizards.security.models.UserPrincipal;
 import it.akademija.wizards.services.DocumentService;
-
 import it.akademija.wizards.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-
-
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
-import javax.validation.Valid;
 import java.io.*;
-
-
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
