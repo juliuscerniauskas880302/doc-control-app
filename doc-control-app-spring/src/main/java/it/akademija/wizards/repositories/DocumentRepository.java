@@ -28,7 +28,12 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " GROUP BY u.firstname, u.lastname ORDER BY COUNT(d.id) DESC")
     List<TypeUserStats> getTopSubmittingUsersForDocType(@Param("documentTypeId") String documentTypeId, Pageable pageable);
 
-    @Query("SELECT d FROM Document d WHERE d.id IN (SELECT DISTINCT d.id FROM Document d JOIN d.documentType dt JOIN dt.reviewUserGroups rug JOIN rug.users u WHERE u.username = :username AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED AND u <> d.author)")
+    @Query("SELECT d FROM Document d WHERE d.id IN (SELECT DISTINCT d.id FROM Document d" +
+            " JOIN d.documentType dt" +
+            " JOIN dt.reviewUserGroups rug" +
+            " JOIN rug.users u WHERE u.username = :username" +
+            " AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED" +
+            " AND u <> d.author)")
     List<Document> getDocumentsForReview(@Param(value = "username") String username);
 
 }
