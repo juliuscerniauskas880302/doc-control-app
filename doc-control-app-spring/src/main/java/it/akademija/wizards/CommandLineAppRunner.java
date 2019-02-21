@@ -60,7 +60,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Change if you want to fill in databse with random data on startup
-        boolean fillInDatabase = !false;
+        boolean fillInDatabase = true;
         int groups = 12;
         int users = 381;
         int docTypes = 17;
@@ -75,7 +75,7 @@ public class CommandLineAppRunner implements CommandLineRunner {
                 && documentTypeRepository.count() == 0) {
 
             // ENTER groups, users, docTypes, avgDocsPerUser
-//            databaseFiller.fillInDatabaseWithData(groups, users, docTypes, avqDocsForUser);
+            //databaseFiller.fillInDatabaseWithData(groups, users, docTypes, avqDocsForUser);
             dataBaseFillerWithFaker.fillInDatabaseWithData(groups, users, docTypes, avqDocsForUser);
         }
 

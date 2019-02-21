@@ -2,11 +2,15 @@ import React from "react";
 import ReviewDocumentsComponent from "./ReviewDocumentsComponent";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Pagination } from "semantic-ui-react";
 
 class ReviewDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      totalDocs: 0,
+      recordsPerPage: 15,
+      activePage: 1,
       //tikram kode turės būti tuščias masyvas
       //documents: '',
       //laikina bazikė
@@ -63,6 +67,28 @@ class ReviewDocumentsContainer extends React.Component {
   //     });
   //     //this.handleReject();
   // }
+
+  getAllDocumentsFromServer = (pageNumber, pageLimit) => {
+    axios
+      .get("http://localhost:8081/api/users/docs/created", {
+        //wrong path
+        params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+      })
+      .then(res => {
+        this.setState({
+          documents: res.data.documentList,
+          totalDocs: res.data.totalElements
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage }, () => {
+      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage);
+    });
+  };
 
   handleChangeOfRejectionReason = event => {
     this.setState({ rejectionReason: event.target.value });
@@ -172,6 +198,12 @@ class ReviewDocumentsContainer extends React.Component {
   };
 
   componentDidMount() {
+    // Not implemented in backend
+    // this.getAllDocumentsFromServer(
+    //   this.state.activePage,
+    //   this.state.recordsPerPage
+    // );
+
     axios
       .get("http://localhost:8081/api/docs/review")
       .then(response => {
@@ -185,6 +217,8 @@ class ReviewDocumentsContainer extends React.Component {
   }
 
   render() {
+    const { totalDocs, recordsPerPage, activePage } = this.state;
+    let pageCount = Math.ceil(totalDocs / recordsPerPage);
     if (this.state.documents) {
       const documentCard = this.state.documents.map((document, index) => {
         return (
@@ -218,6 +252,13 @@ class ReviewDocumentsContainer extends React.Component {
                     <h6 className="text-uppercase mb-0">
                       Peržiūrimi dokumentai
                     </h6>
+                  </div>
+                  <div className="d-flex flex-row py-4 px-3 align-items-center">
+                    <Pagination
+                      activePage={activePage}
+                      onPageChange={this.handlePaginationChange}
+                      totalPages={pageCount}
+                    />
                   </div>
                   <div className="card-body">
                     <div className="row">
