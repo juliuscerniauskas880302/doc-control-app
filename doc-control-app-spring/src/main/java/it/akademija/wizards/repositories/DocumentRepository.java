@@ -33,7 +33,14 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " JOIN dt.reviewUserGroups rug" +
             " JOIN rug.users u WHERE u.username = :username" +
             " AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED" +
-            " AND u <> d.author)")
-    List<Document> getDocumentsForReview(@Param(value = "username") String username);
+            " AND u <> d.author" +
+            " AND (lower(d.author.username) like %:searchFor%" +
+            " OR lower(d.title) like %:searchFor%" +
+            " OR lower(d.description) like %:searchFor%" +
+            " OR lower(d.id) like %:searchFor%" +
+            " OR lower(dt.title) like %:searchFor%))")
+    List<Document> getDocumentsForReview(@Param(value = "username") String username,
+                                         @Param(value = "searchFor") String searchFor,
+                                         Pageable pageable);
 
 }
