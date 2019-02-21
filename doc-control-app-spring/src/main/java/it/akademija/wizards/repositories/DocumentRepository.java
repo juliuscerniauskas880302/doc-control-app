@@ -34,7 +34,7 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " JOIN rug.users u WHERE u.username = :username" +
             " AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED" +
             " AND u <> d.author" +
-            " AND (lower(d.author.username) like %:searchFor%" +
+            " AND (lower(CONCAT(d.author.firstname, ' ', d.author.lastname)) like %:searchFor% " +
             " OR lower(d.title) like %:searchFor%" +
             " OR lower(d.description) like %:searchFor%" +
             " OR lower(d.id) like %:searchFor%" +
