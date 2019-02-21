@@ -82,7 +82,7 @@ class ReviewDocumentsContainer extends React.Component {
         console.log(res.data);
         this.setState({
           documents: res.data.documentList,
-          totalDocs: res.data.totalPages
+          totalDocs: res.data.totalElements
         });
       })
       .catch(err => {
@@ -134,12 +134,23 @@ class ReviewDocumentsContainer extends React.Component {
             .post("http://localhost:8081/api/docs/review/" + id, docInfo)
             .then(response => {
               axios
-                .get("http://localhost:8081/api/docs/review")
-                .then(response => {
-                  this.setState({ documents: response.data });
+                .get("http://localhost:8081/api/docs/review", {
+                  //wrong path
+                  params: {
+                    searchFor: "",
+                    pageNumber: this.state.activePage - 1,
+                    pageLimit: this.state.recordsPerPage
+                  }
                 })
-                .catch(error => {
-                  console.log("KLAIDA BANDANT ATMESTI" + error);
+                .then(res => {
+                  console.log(res.data);
+                  this.setState({
+                    documents: res.data.documentList,
+                    totalDocs: res.data.totalPages
+                  });
+                })
+                .catch(err => {
+                  console.log(err);
                 });
             });
         } else {
@@ -192,17 +203,28 @@ class ReviewDocumentsContainer extends React.Component {
       .post("http://localhost:8081/api/docs/review/" + id, docInfo)
       .then(response => {
         axios
-          .get("http://localhost:8081/api/docs/review")
-          .then(response => {
-            this.setState({ documents: response.data });
+          .get("http://localhost:8081/api/docs/review", {
+            //wrong path
+            params: {
+              searchFor: "",
+              pageNumber: this.state.activePage - 1,
+              pageLimit: this.state.recordsPerPage
+            }
           })
-          .catch(error => {
-            console.log(error);
+          .then(res => {
+            console.log(res.data);
+            this.setState({
+              documents: res.data.documentList,
+              totalDocs: res.data.totalPages
+            });
+          })
+          .catch(err => {
+            console.log(err);
           });
       });
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getAllDocumentsFromServer(
       this.state.activePage,
       this.state.recordsPerPage
@@ -218,7 +240,7 @@ class ReviewDocumentsContainer extends React.Component {
     //   .catch(error => {
     //     console.log(error);
     //   });
-  }
+  };
 
   render() {
     const { totalDocs, recordsPerPage, activePage } = this.state;
