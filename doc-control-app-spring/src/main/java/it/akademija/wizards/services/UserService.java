@@ -40,7 +40,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, Mapper mapper) {
@@ -73,8 +73,7 @@ public class UserService {
             BeanUtils.copyProperties(user, userGetCommand);
             return userGetCommand;
         }).collect(Collectors.toList());
-        UserPageGetCommand userPageGetCommand = new UserPageGetCommand(userList, pageUser.getTotalElements(), pageUser.getTotalPages());
-        return userPageGetCommand;
+        return new UserPageGetCommand(userList, pageUser.getTotalElements(), pageUser.getTotalPages());
     }
 
     @Transactional(readOnly = true)
@@ -92,12 +91,12 @@ public class UserService {
     @Transactional
     public ResponseEntity<?> createUser(UserCreateCommand userCreateCommand) {
         if (userRepository.existsByUsername(userCreateCommand.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
         if (userRepository.existsByEmail(userCreateCommand.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -259,7 +258,7 @@ public class UserService {
         if (user != null) {
             Set<UserGroup> userGroups = user.getUserGroups();
             Set<DocumentType> submissionDocTypes = new HashSet<>();
-            userGroups.stream().forEach(userGroup -> {
+            userGroups.forEach(userGroup -> {
                 submissionDocTypes.addAll(userGroup.getSubmissionDocumentType());
             });
             return submissionDocTypes.stream().map(documentType -> {
@@ -315,17 +314,12 @@ public class UserService {
 
     @Transactional
     public List<UserGetGroupDocTypes> getUserGroupsWithDocTypes(String username) {
-        Long start = System.currentTimeMillis();
-        List<UserGetGroupDocTypes> userGetGroupDocTypesList=  userRepository.findByUsername(username).getUserGroups().stream().map(userGroup -> {
+        return userRepository.findByUsername(username).getUserGroups().stream().map(userGroup -> {
             UserGetGroupDocTypes userGetGroupDocTypes = new UserGetGroupDocTypes();
             userGetGroupDocTypes.setGroupTitle(userGroup.getTitle());
             userGetGroupDocTypes.setReviewDocTypes(userGroup.getReviewDocumentType().stream().map(DocumentType::getTitle).collect(Collectors.toList()));
             userGetGroupDocTypes.setSubmitDocTypes(userGroup.getSubmissionDocumentType().stream().map(DocumentType::getTitle).collect(Collectors.toList()));
             return userGetGroupDocTypes;
         }).collect(Collectors.toList());
-        Long end = System.currentTimeMillis();
-        Long diff = end - start;
-        System.out.println("Interval " + diff);
-        return userGetGroupDocTypesList;
     }
 }
