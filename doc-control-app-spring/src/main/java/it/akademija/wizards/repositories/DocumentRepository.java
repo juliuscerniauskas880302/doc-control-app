@@ -3,6 +3,7 @@ package it.akademija.wizards.repositories;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
 import it.akademija.wizards.models.stats.TypeUserStats;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,7 +40,7 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " OR lower(d.description) like %:searchFor%" +
             " OR lower(d.id) like %:searchFor%" +
             " OR lower(dt.title) like %:searchFor%))")
-    List<Document> getDocumentsForReview(@Param(value = "username") String username,
+    Page<Document> getDocumentsForReview(@Param(value = "username") String username,
                                          @Param(value = "searchFor") String searchFor,
                                          Pageable pageable);
 
