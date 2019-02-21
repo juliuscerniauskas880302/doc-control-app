@@ -6,11 +6,8 @@ var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 let label1 = "Pateikta";
-let value1 = 11;
 let label2 = "Priimta";
-let value2 = 14;
 let label3 = "Atmesta";
-let value3 = 5;
 
 class DocumentStatisticsChart extends React.Component {
     constructor (props){

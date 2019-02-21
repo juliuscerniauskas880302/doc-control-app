@@ -12,17 +12,18 @@ const DocumentStatisticsFormComponent = (props) => {
     return (
         <form onSubmit={props.handleChartUpdate}>
             <div className="form-row justify-content-md-center">
-                Pasirinkite laikotarpį:
+                <h5 style={{margin: "10px"}}>Pasirinkite laikotarpį:</h5>
             </div>
             <div className="form-row justify-content-md-center">
-                <label htmlFor="startingDate">Nuo: </label>
+                <label htmlFor="startingDate">Nuo:&nbsp;</label>
                 <input type="date" name="startingDate" value={props.startDate} onChange={props.handleChangeOfStartDate}></input>
-                <label htmlFor="endingDate">Nuo: </label>
+                <label htmlFor="endingDate">&nbsp;Iki:&nbsp;</label>
                 <input type="date" name="endingDate" value={props.endDate} onChange={props.handleChangeOfEndDate}></input>
             </div>
             <div className="form-row justify-content-md-center">
                 <div className="form-group">
-                    <label htmlFor="docTypes">Pasirinkite dokumentų tipus:</label>
+                    <h5 style={{margin: "10px"}}>Pasirinkite dokumentų tipus:</h5>
+                    {/* <label htmlFor="docTypes">Pasirinkite dokumentų tipus:</label> */}
                     <select multiple className="form-control" id="docTypes" onChange={props.handleChangeOfSelectedDocTypes}>
                        {optionList}
                     </select>

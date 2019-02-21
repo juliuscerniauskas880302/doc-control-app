@@ -73,26 +73,6 @@ class DocumentStatisticsContainer extends React.Component {
             .catch(error => {
                 console.log("KLAIDA!!!! Nenuskaitė tipų!!!!" + error);
             });
-
-        //Čia yra neteisingas statistikos duomenų ėmimas
-        // axios
-        //     .get("http://localhost:8081/api/users/docs/submitted")
-        //     .then(response => {
-        //         console.log("Esu statistikoje");
-        //         var acceptedOnly = response.data.filter(item => item.documentState === "ACCEPTED");
-        //         var rejectedOnly = response.data.filter(item => item.documentState === "REJECTED");
-        //         console.log("acceptedOnly masyvo ilgis - " + acceptedOnly.length);
-        //         console.log("Pirmas dokumentas su statusu ACCEPTED: " + acceptedOnly[0].documentState);
-        //         console.log("Pirmas dokumentas su statusu REJECTED: " + rejectedOnly[0].documentState);
-        //         this.setState({ submittedDocumentsList: response.data.map(item => item.title) });
-        //         console.log(
-        //             "Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?"
-        //         );
-        //         console.log(this.state.typeList);
-        //     })
-        //     .catch(error => {
-        //         console.log("KLAIDA!!!!" + error);
-        //     });
     }
 
     componentWillUnmount() {
@@ -100,27 +80,26 @@ class DocumentStatisticsContainer extends React.Component {
     }
 
     render() {
-        var dataFromServer = [{
-            documentType: "Atostogų prašymas",
-            submitted: 15,
-            accepted: 16,
-            rejected: 5
-        },
-        {
-            documentType: "Pašalpos prašymas",
-            submitted: 5,
-            accepted: 6,
-            rejected: 5
-        },
-        {
-            documentType: "Prašymas padidinti atlyginimą",
-            submitted: 13,
-            accepted: 4,
-            rejected: 6
-        },
-        ];
-
-        //var typeList = ["Atostogų prašymas", "Pašalpos prašymas", "Prašymas padidinti atlyginimą"];
+        // TESTINIAI DUOMENYS
+        // var dataFromServer = [{
+        //     documentType: "Atostogų prašymas",
+        //     submitted: 15,
+        //     accepted: 16,
+        //     rejected: 5
+        // },
+        // {
+        //     documentType: "Pašalpos prašymas",
+        //     submitted: 5,
+        //     accepted: 6,
+        //     rejected: 5
+        // },
+        // {
+        //     documentType: "Prašymas padidinti atlyginimą",
+        //     submitted: 13,
+        //     accepted: 4,
+        //     rejected: 6
+        // },
+        // ];
 
         return (
             <div className="page-holder w-100 d-flex flex-wrap">
@@ -159,8 +138,6 @@ class DocumentStatisticsContainer extends React.Component {
             </div>
         );
     }
-
-
 }
 
 export default DocumentStatisticsContainer;

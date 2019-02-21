@@ -2,14 +2,7 @@ import React from 'react';
 import DocumentStatisticsChart from './DocumentStatisticsChart';
 
 const DocumentStatisticsComponent = (props) => {
-    console.log("statisticsData yra "+ props.statisticsData.submitted);
     var statisticsCardList = props.statisticsData.map((item, index) => {
-        console.log("Spausdinu iš diagramų masyvo darymo");
-        console.log("Item " + index + " - " + item.documentTypeTitle);
-        console.log("Item " + index + " - " + item.submittedCount);
-        console.log("Item " + index + " - " + item.approvedCount);
-        console.log("Item " + index + " - " + item.rejectedCount);
-        
         return (
             <DocumentStatisticsChart
                 //v-for="list of charts"
