@@ -49,15 +49,8 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public List<DocumentGetCommand> getDocumentsToReview(String username) {
-//        return  documentRepository.getDocumentsForReview(username)
-//        .stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
-        return documentRepository.findAll()
-                .stream()
-                .filter(document -> document.getDocumentState().equals(DocumentState.SUBMITTED))
-                .filter(document -> !document.getAuthor().getUsername().equals(username)
-                        && this.allowedToReviewDocument(username, document))
-                .map(mapper::entityToGetCommand)
-                .collect(Collectors.toList());
+        return documentRepository.getDocumentsForReview(username)
+        .stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -82,7 +75,7 @@ public class DocumentService {
         } else {
             throw new BadRequestException("User doesn't have permission to create this type of document");
         }
-        return new ResponseEntity<>( HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //UPDATE
