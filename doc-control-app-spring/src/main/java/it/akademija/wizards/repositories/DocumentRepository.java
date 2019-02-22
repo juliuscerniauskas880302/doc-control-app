@@ -3,6 +3,7 @@ package it.akademija.wizards.repositories;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
 import it.akademija.wizards.models.stats.TypeUserStats;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,7 +29,19 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " GROUP BY u.firstname, u.lastname ORDER BY COUNT(d.id) DESC")
     List<TypeUserStats> getTopSubmittingUsersForDocType(@Param("documentTypeId") String documentTypeId, Pageable pageable);
 
-    @Query("SELECT d FROM Document d WHERE d.id IN (SELECT DISTINCT d.id FROM Document d JOIN d.documentType dt JOIN dt.reviewUserGroups rug JOIN rug.users u WHERE u.username = :username AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED AND u <> d.author)")
-    List<Document> getDocumentsForReview(@Param(value = "username") String username);
+    @Query("SELECT d FROM Document d WHERE d.id IN (SELECT DISTINCT d.id FROM Document d" +
+            " JOIN d.documentType dt" +
+            " JOIN dt.reviewUserGroups rug" +
+            " JOIN rug.users u WHERE u.username = :username" +
+            " AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED" +
+            " AND u <> d.author" +
+            " AND (lower(CONCAT(d.author.firstname, ' ', d.author.lastname)) like %:searchFor% " +
+            " OR lower(d.title) like %:searchFor%" +
+            " OR lower(d.description) like %:searchFor%" +
+            " OR lower(d.id) like %:searchFor%" +
+            " OR lower(dt.title) like %:searchFor%))")
+    Page<Document> getDocumentsForReview(@Param(value = "username") String username,
+                                         @Param(value = "searchFor") String searchFor,
+                                         Pageable pageable);
 
 }

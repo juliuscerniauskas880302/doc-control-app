@@ -1,6 +1,7 @@
 import React from "react";
 import UserCreatedDocumentsComponent from "./UserCreatedDocumentsComponent";
 import axios from "axios";
+import { Pagination } from "semantic-ui-react";
 
 //bandymas
 // window.onunload = function() {
@@ -12,6 +13,9 @@ class UserCreatedDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      totalDocs: 0,
+      recordsPerPage: 15,
+      activePage: 1,
       //tikram kode turės būti tuščias masyvas
       //documents: '',
       //laikina bazikė
@@ -48,6 +52,27 @@ class UserCreatedDocumentsContainer extends React.Component {
       loading: "Loading documents. Please wait..."
     };
   }
+
+  getAllDocumentsFromServer = (pageNumber, pageLimit) => {
+    axios
+      .get("http://localhost:8081/api/users/docs/created", {
+        params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+      })
+      .then(res => {
+        this.setState({
+          documents: res.data.documentList,
+          totalDocs: res.data.totalElements
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage }, () => {
+      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage);
+    });
+  };
 
   handleDelete = id => {
     //let currentUser = JSON.parse(localStorage.getItem("user")).username;
@@ -92,6 +117,12 @@ class UserCreatedDocumentsContainer extends React.Component {
   };
 
   componentDidMount() {
+    // Not implemented in backend
+    // this.getAllDocumentsFromServer(
+    //   this.state.activePage,
+    //   this.state.recordsPerPage
+    // );
+
     //let currentUser = JSON.parse(localStorage.getItem('user')).username;
     //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
     let resourcePath = "http://localhost:8081/api/users/docs/created";
@@ -108,6 +139,8 @@ class UserCreatedDocumentsContainer extends React.Component {
   }
 
   render() {
+    const { totalDocs, recordsPerPage, activePage } = this.state;
+    let pageCount = Math.ceil(totalDocs / recordsPerPage);
     if (this.state.documents) {
       const documentCard = this.state.documents.map((document, index) => {
         return (
@@ -131,6 +164,13 @@ class UserCreatedDocumentsContainer extends React.Component {
                 <div className="card">
                   <div className="card-header">
                     <h6 className="text-uppercase mb-0">Sukurti dokumentai</h6>
+                  </div>
+                  <div className="d-flex flex-row py-4 px-3 align-items-center">
+                    <Pagination
+                      activePage={activePage}
+                      onPageChange={this.handlePaginationChange}
+                      totalPages={pageCount}
+                    />
                   </div>
                   <div className="card-body">
                     <div className="row">

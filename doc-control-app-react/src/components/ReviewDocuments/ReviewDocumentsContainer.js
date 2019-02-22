@@ -3,12 +3,16 @@ import ReviewDocumentsComponent from "./ReviewDocumentsComponent";
 import SearchField from "./SearchField";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Pagination } from "semantic-ui-react";
 
 class ReviewDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.updateDelay = null;
     this.state = {
+      totalDocs: 0,
+      recordsPerPage: 15,
+      activePage: 1,
       //tikram kode turės būti tuščias masyvas
       //documents: '',
       //laikina bazikė
@@ -68,8 +72,6 @@ class ReviewDocumentsContainer extends React.Component {
   //     //this.handleReject();
   // }
 
-
-
   handleChangeOfSearchField = event => {
     this.setState({ searchField: event.target.value });
     console.log("Padariau paieškos lauko pakeitimą");
@@ -84,13 +86,40 @@ class ReviewDocumentsContainer extends React.Component {
           {params: { searchFor: this.state.searchField }}
         ).then(response => {
           console.log("Nuskaitinėju atfiltruotą peržiūrimų dokumentų sąrašą");
-          this.setState({ documents: response.data });
+          this.setState({ documents: response.data.documentList });
         })
         .catch(error => {
           console.log("KLAIDA!!!! Nenuskaitė peržiūrimų dokumentų sąrašo" + error);
         });
     //clearInterval(this.updateDelay);
   }
+
+  getAllDocumentsFromServer = (pageNumber, pageLimit) => {
+    axios
+      .get("http://localhost:8081/api/docs/review", {
+        //wrong path
+        params: {
+          searchFor: "",
+          pageNumber: pageNumber - 1,
+          pageLimit: pageLimit
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          documents: res.data.documentList,
+          totalDocs: res.data.totalElements
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage }, () => {
+      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage);
+    });
+  };
 
   handleChangeOfRejectionReason = event => {
     this.setState({ rejectionReason: event.target.value });
@@ -131,12 +160,23 @@ class ReviewDocumentsContainer extends React.Component {
             .post("http://localhost:8081/api/docs/review/" + id, docInfo)
             .then(response => {
               axios
-                .get("http://localhost:8081/api/docs/review")
-                .then(response => {
-                  this.setState({ documents: response.data });
+                .get("http://localhost:8081/api/docs/review", {
+                  //wrong path
+                  params: {
+                    searchFor: "",
+                    pageNumber: this.state.activePage - 1,
+                    pageLimit: this.state.recordsPerPage
+                  }
                 })
-                .catch(error => {
-                  console.log("KLAIDA BANDANT ATMESTI" + error);
+                .then(res => {
+                  console.log(res.data);
+                  this.setState({
+                    documents: res.data.documentList,
+                    totalDocs: res.data.totalPages
+                  });
+                })
+                .catch(err => {
+                  console.log(err);
                 });
             });
         } else {
@@ -189,30 +229,48 @@ class ReviewDocumentsContainer extends React.Component {
       .post("http://localhost:8081/api/docs/review/" + id, docInfo)
       .then(response => {
         axios
-          .get("http://localhost:8081/api/docs/review")
-          .then(response => {
-            this.setState({ documents: response.data });
+          .get("http://localhost:8081/api/docs/review", {
+            //wrong path
+            params: {
+              searchFor: "",
+              pageNumber: this.state.activePage - 1,
+              pageLimit: this.state.recordsPerPage
+            }
           })
-          .catch(error => {
-            console.log(error);
+          .then(res => {
+            console.log(res.data);
+            this.setState({
+              documents: res.data.documentList,
+              totalDocs: res.data.totalPages
+            });
+          })
+          .catch(err => {
+            console.log(err);
           });
       });
   };
 
-  componentDidMount() {
-    axios
-      .get("http://localhost:8081/api/docs/review")
-      .then(response => {
-        this.setState({ documents: response.data });
-        console.log("Koks atiduodamas dokumentų sąrašas?");
-        console.log(this.state.documents);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  componentDidMount = () => {
+    this.getAllDocumentsFromServer(
+      this.state.activePage,
+      this.state.recordsPerPage
+    );
+
+    // axios
+    //   .get("http://localhost:8081/api/docs/review")
+    //   .then(response => {
+    //     this.setState({ documents: response.data });
+    //     console.log("Koks atiduodamas dokumentų sąrašas?");
+    //     console.log(this.state.documents);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+  };
 
   render() {
+    const { totalDocs, recordsPerPage, activePage } = this.state;
+    let pageCount = Math.ceil(totalDocs / recordsPerPage);
     if (this.state.documents) {
       const documentCard = this.state.documents.map((document, index) => {
         return (
@@ -246,6 +304,13 @@ class ReviewDocumentsContainer extends React.Component {
                     <h6 className="text-uppercase mb-0">
                       Peržiūrimi dokumentai
                     </h6>
+                  </div>
+                  <div className="d-flex flex-row py-4 px-3 align-items-center">
+                    <Pagination
+                      activePage={activePage}
+                      onPageChange={this.handlePaginationChange}
+                      totalPages={pageCount}
+                    />
                   </div>
                   <div className="card-body">
                     <SearchField searchField={this.state.searchField} handleChangeOfSearchField={this.handleChangeOfSearchField} />
