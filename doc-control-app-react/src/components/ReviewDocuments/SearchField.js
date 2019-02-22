@@ -3,7 +3,7 @@ import React from 'react';
 const SearchField = (props) => {
     return (
         <div className="row" style={{ margin: "10px" }}>
-            <label htmlFor="searchField">Paieškos frazė:</label>
+            <label htmlFor="searchField">Paieškos frazė:&nbsp;</label>
             <input
                 name="searchField"
                 type="text"

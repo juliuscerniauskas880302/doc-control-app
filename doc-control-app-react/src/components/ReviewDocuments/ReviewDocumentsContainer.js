@@ -8,14 +8,11 @@ import { Pagination } from "semantic-ui-react";
 class ReviewDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.updateDelay = null;
+    this.updateDelay = -999;
     this.state = {
       totalDocs: 0,
       recordsPerPage: 15,
       activePage: 1,
-      //tikram kode turės būti tuščias masyvas
-      //documents: '',
-      //laikina bazikė
       searchField: "",
       documentId: "", //naudojamas tik vienu atveju, kai daromas REJECT
       documents: [
@@ -48,7 +45,7 @@ class ReviewDocumentsContainer extends React.Component {
       ],
       loading: "Kraunami dokumentai. Prašome palaukti..."
     };
-
+    this.updateDocumentListWithSearchArgument=this.updateDocumentListWithSearchArgument.bind(this);
   }
 
   // openPopup = (id) => {
@@ -73,25 +70,44 @@ class ReviewDocumentsContainer extends React.Component {
   // }
 
   handleChangeOfSearchField = event => {
-    this.setState({ searchField: event.target.value });
+    this.setState({ searchField: event.target.value }, () => {
+      
+    });
+    if(this.updateDelay === -999){
+      console.log("updateDelay yra " + this.updateDelay);
+      this.updateDelay = setInterval(this.updateDocumentListWithSearchArgument, 2000);
+    } else {
+      console.log("updateDelay yra (iš else) " + this.updateDelay);
+    }
+    
+    
     console.log("Padariau paieškos lauko pakeitimą");
     //this.updateDelay = setInterval(this.updateDocumentListWithSearchArgument(), 4000);
-    //setTimeout( this.updateDocumentListWithSearchArgument(), 3000);
+    //setTimeout( this.updateDocumentListWithSearchArgument, 3000);
+    //this.updateDocumentListWithSearchArgument();
   }
 
   updateDocumentListWithSearchArgument() {
     console.log("Kreipiausi į serverį duomenų");
-    
+    clearInterval(this.updateDelay);
+    this.updateDelay = -999;
     axios.get("http://localhost:8081/api/docs/review",
-          {params: { searchFor: this.state.searchField }}
+          {params: {
+            searchFor: this.state.searchField,
+            pageNumber: this.state.activePage - 1,
+            pageLimit: this.state.recordsPerPage
+          }}
         ).then(response => {
           console.log("Nuskaitinėju atfiltruotą peržiūrimų dokumentų sąrašą");
-          this.setState({ documents: response.data.documentList });
+          this.setState({
+            documents: response.data.documentList,
+            totalDocs: response.data.totalPages
+           });
         })
         .catch(error => {
           console.log("KLAIDA!!!! Nenuskaitė peržiūrimų dokumentų sąrašo" + error);
         });
-    //clearInterval(this.updateDelay);
+    
   }
 
   getAllDocumentsFromServer = (pageNumber, pageLimit) => {
