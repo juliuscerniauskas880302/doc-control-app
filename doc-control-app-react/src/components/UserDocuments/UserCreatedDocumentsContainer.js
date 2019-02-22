@@ -55,7 +55,7 @@ class UserCreatedDocumentsContainer extends React.Component {
 
   getAllDocumentsFromServer = (pageNumber, pageLimit) => {
     axios
-      .get("http://localhost:8081/api/users/docs/created", {
+      .get("http://localhost:8081/api/docs/user/created", {
         params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
       })
       .then(res => {
@@ -118,24 +118,24 @@ class UserCreatedDocumentsContainer extends React.Component {
 
   componentDidMount() {
     // Not implemented in backend
-    // this.getAllDocumentsFromServer(
-    //   this.state.activePage,
-    //   this.state.recordsPerPage
-    // );
+    this.getAllDocumentsFromServer(
+      this.state.activePage,
+      this.state.recordsPerPage
+    );
 
     //let currentUser = JSON.parse(localStorage.getItem('user')).username;
     //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
-    let resourcePath = "http://localhost:8081/api/users/docs/created";
-    axios
-      .get(resourcePath)
-      .then(response => {
-        this.setState({ documents: response.data });
-        console.log("Koks gautas dokumentų sąrašas iš 'Sukurtų'?");
-        console.log(this.state.documents);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // let resourcePath = "http://localhost:8081/api/users/docs/created";
+    // axios
+    //   .get(resourcePath)
+    //   .then(response => {
+    //     this.setState({ documents: response.data });
+    //     console.log("Koks gautas dokumentų sąrašas iš 'Sukurtų'?");
+    //     console.log(this.state.documents);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   }
 
   render() {
