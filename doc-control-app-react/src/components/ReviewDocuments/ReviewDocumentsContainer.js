@@ -1,15 +1,18 @@
 import React from "react";
 import ReviewDocumentsComponent from "./ReviewDocumentsComponent";
+import SearchField from "./SearchField";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 class ReviewDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.updateDelay = null;
     this.state = {
       //tikram kode turės būti tuščias masyvas
       //documents: '',
       //laikina bazikė
+      searchField: "",
       documentId: "", //naudojamas tik vienu atveju, kai daromas REJECT
       documents: [
         {
@@ -41,6 +44,7 @@ class ReviewDocumentsContainer extends React.Component {
       ],
       loading: "Kraunami dokumentai. Prašome palaukti..."
     };
+
   }
 
   // openPopup = (id) => {
@@ -64,6 +68,30 @@ class ReviewDocumentsContainer extends React.Component {
   //     //this.handleReject();
   // }
 
+
+
+  handleChangeOfSearchField = event => {
+    this.setState({ searchField: event.target.value });
+    console.log("Padariau paieškos lauko pakeitimą");
+    //this.updateDelay = setInterval(this.updateDocumentListWithSearchArgument(), 4000);
+    //setTimeout( this.updateDocumentListWithSearchArgument(), 3000);
+  }
+
+  updateDocumentListWithSearchArgument() {
+    console.log("Kreipiausi į serverį duomenų");
+    
+    axios.get("http://localhost:8081/api/docs/review",
+          {params: { searchFor: this.state.searchField }}
+        ).then(response => {
+          console.log("Nuskaitinėju atfiltruotą peržiūrimų dokumentų sąrašą");
+          this.setState({ documents: response.data });
+        })
+        .catch(error => {
+          console.log("KLAIDA!!!! Nenuskaitė peržiūrimų dokumentų sąrašo" + error);
+        });
+    //clearInterval(this.updateDelay);
+  }
+
   handleChangeOfRejectionReason = event => {
     this.setState({ rejectionReason: event.target.value });
     //console.log("Atmetimo priežastis yra " + this.state.rejectionReason);
@@ -82,7 +110,7 @@ class ReviewDocumentsContainer extends React.Component {
       confirmButtonText: "Patvirtinti",
       cancelButtonText: "Atšaukti"
     }).then(
-      function(result) {
+      function (result) {
         // result.value will containt the input value
         // const swalWithBootstrapButtons = Swal.mixin({
         //     confirmButtonClass: 'btn btn-success',
@@ -202,9 +230,9 @@ class ReviewDocumentsContainer extends React.Component {
             }
             handleAccept={this.handleAccept}
             handleReject={this.handleReject}
-            // openPopup={this.openPopup}
-            // closePopupCancelReject={this.closePopupCancelReject}
-            // closePopupAcceptReject={this.closePopupAcceptReject}
+          // openPopup={this.openPopup}
+          // closePopupCancelReject={this.closePopupCancelReject}
+          // closePopupAcceptReject={this.closePopupAcceptReject}
           />
         );
       });
@@ -220,6 +248,7 @@ class ReviewDocumentsContainer extends React.Component {
                     </h6>
                   </div>
                   <div className="card-body">
+                    <SearchField searchField={this.state.searchField} handleChangeOfSearchField={this.handleChangeOfSearchField} />
                     <div className="row">
                       <div className="col-12">
                         <table
