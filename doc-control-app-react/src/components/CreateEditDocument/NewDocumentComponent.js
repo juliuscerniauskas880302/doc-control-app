@@ -100,32 +100,10 @@ const NewDocumentComponet = props => {
                   </div>
 
                   <div className="form-group row">
-                    <label className="col-md-4 col-lg-2 form-control-label">
+                    <label className="col-md-2 col-lg-2 form-control-label">
                       Pasirinkite pridedamus failus:
                     </label>
-                    {/* <div className="col-md-2"> */}
-                    {/* <input
-                        onChange={props.onFileSelectHandler}
-                        id="Upload file"
-                        name="selectedFiles"
-                        className="input-file"
-                        type="file"
-                        required
-                        accept=".pdf, .jpg, .png"
-                      /> */}
-                    {/* </div> */}
-                    {/* <div className="col-md-2">
-                      <input
-                        onChange={props.onFileSelectHandler}
-                        id="Upload files"
-                        name="selectedAdditionalFiles"
-                        className="input-file"
-                        type="file"
-                        multiple
-                        accept=".pdf, .jpg, .png"
-                      />
-                    </div> */}
-                    <div className="col-md-12 col-lg-4">
+                    <div className="col-md-6 col-lg-4">
                       <FilePond
                         labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
                         // labelIdle="Įkelkite pagrindinę bylą."
@@ -142,7 +120,8 @@ const NewDocumentComponet = props => {
                         acceptedFileTypes={["application/pdf"]}
                       />
                     </div>
-                    <div className="col-md-12 col-lg-4">
+                    <div className="col-md-2 col-lg-2 form-control-label" />
+                    <div className="col-md-6 offset-md-2 col-lg-4">
                       {props.mainFileUploaded && (
                         <FilePond
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
