@@ -1,5 +1,6 @@
 import React from "react";
 import ReviewDocumentsComponent from "./ReviewDocumentsComponent";
+import SearchField from "./SearchField";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Pagination } from "semantic-ui-react";
@@ -7,13 +8,12 @@ import { Pagination } from "semantic-ui-react";
 class ReviewDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.updateDelay = -999;
     this.state = {
       totalDocs: 0,
       recordsPerPage: 15,
       activePage: 1,
-      //tikram kode turės būti tuščias masyvas
-      //documents: '',
-      //laikina bazikė
+      searchField: "",
       documentId: "", //naudojamas tik vienu atveju, kai daromas REJECT
       documents: [
         {
@@ -24,56 +24,54 @@ class ReviewDocumentsContainer extends React.Component {
           documentTypeTitle: "Type1r",
           submissionDate: "2019.01.26",
           rejectionReason: ""
-          //isOpen: false
         }
-        // {
-        //     id: "Kodas2r",
-        //     author: {},
-        //     title: "Title2r",
-        //     description: "Description2r",
-        //     documentTypeTitle: "Type2r",
-        //     submissionDate: "2019.01.27"
-        // },
-        // {
-        //     id: "Kodas3r",
-        //     author: {},
-        //     title: "Title3r",
-        //     description: "Description3r",
-        //     documentTypeTitle: "Type3r",
-        //     submissionDate: "2019.01.28"
-        // }
       ],
       loading: "Kraunami dokumentai. Prašome palaukti..."
     };
+    this.updateDocumentListWithSearchArgument=this.updateDocumentListWithSearchArgument.bind(this);
   }
 
-  // openPopup = (id) => {
-  //     this.setState({
-  //         isOpen: true,
-  //         documentId: id
-  //     });
-  // }
+  handleChangeOfSearchField = event => {
+    this.setState({ searchField: event.target.value }, () => {
+      
+    });
+    if(this.updateDelay === -999){
+      console.log("updateDelay yra " + this.updateDelay);
+      this.updateDelay = setInterval(this.updateDocumentListWithSearchArgument, 2000);
+    } else {
+      console.log("updateDelay yra (iš else) " + this.updateDelay);
+    }
+    console.log("Padariau paieškos lauko pakeitimą");
+  }
 
-  // closePopupCancelReject = () => {
-  //     this.setState({
-  //         isOpen: false,
-  //         rejectionReason: ""
-  //     });
-  // }
+  updateDocumentListWithSearchArgument() {
+    console.log("Kreipiausi į serverį duomenų");
+    clearInterval(this.updateDelay);
+    this.updateDelay = -999;
+    axios.get("http://localhost:8081/api/docs/review",
+          {params: {
+            searchFor: this.state.searchField,
+            pageNumber: this.state.activePage - 1,
+            pageLimit: this.state.recordsPerPage
+          }}
+        ).then(response => {
+          console.log("Nuskaitinėju atfiltruotą peržiūrimų dokumentų sąrašą");
+          this.setState({
+            documents: response.data.documentList,
+            totalDocs: response.data.totalElements
+           });
+        })
+        .catch(error => {
+          console.log("KLAIDA!!!! Nenuskaitė peržiūrimų dokumentų sąrašo" + error);
+        });
+  }
 
-  // closePopupAcceptReject = () => {
-  //     this.setState({
-  //         isOpen: false,
-  //     });
-  //     //this.handleReject();
-  // }
-
-  getAllDocumentsFromServer = (pageNumber, pageLimit) => {
+  getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
     axios
       .get("http://localhost:8081/api/docs/review", {
         //wrong path
         params: {
-          searchFor: "",
+          searchFor: searchFor,
           pageNumber: pageNumber - 1,
           pageLimit: pageLimit
         }
@@ -91,7 +89,7 @@ class ReviewDocumentsContainer extends React.Component {
   };
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage);
+      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage, this.state.searchField);
     });
   };
 
@@ -113,7 +111,7 @@ class ReviewDocumentsContainer extends React.Component {
       confirmButtonText: "Patvirtinti",
       cancelButtonText: "Atšaukti"
     }).then(
-      function(result) {
+      function (result) {
         // result.value will containt the input value
         // const swalWithBootstrapButtons = Swal.mixin({
         //     confirmButtonClass: 'btn btn-success',
@@ -227,7 +225,8 @@ class ReviewDocumentsContainer extends React.Component {
   componentDidMount = () => {
     this.getAllDocumentsFromServer(
       this.state.activePage,
-      this.state.recordsPerPage
+      this.state.recordsPerPage,
+      this.state.searchField
     );
 
     // axios
@@ -262,9 +261,6 @@ class ReviewDocumentsContainer extends React.Component {
             }
             handleAccept={this.handleAccept}
             handleReject={this.handleReject}
-            // openPopup={this.openPopup}
-            // closePopupCancelReject={this.closePopupCancelReject}
-            // closePopupAcceptReject={this.closePopupAcceptReject}
           />
         );
       });
@@ -287,6 +283,7 @@ class ReviewDocumentsContainer extends React.Component {
                     />
                   </div>
                   <div className="card-body">
+                    <SearchField searchField={this.state.searchField} handleChangeOfSearchField={this.handleChangeOfSearchField} />
                     <div className="row">
                       <div className="col-12">
                         <table
