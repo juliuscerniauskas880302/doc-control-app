@@ -24,50 +24,12 @@ class ReviewDocumentsContainer extends React.Component {
           documentTypeTitle: "Type1r",
           submissionDate: "2019.01.26",
           rejectionReason: ""
-          //isOpen: false
         }
-        // {
-        //     id: "Kodas2r",
-        //     author: {},
-        //     title: "Title2r",
-        //     description: "Description2r",
-        //     documentTypeTitle: "Type2r",
-        //     submissionDate: "2019.01.27"
-        // },
-        // {
-        //     id: "Kodas3r",
-        //     author: {},
-        //     title: "Title3r",
-        //     description: "Description3r",
-        //     documentTypeTitle: "Type3r",
-        //     submissionDate: "2019.01.28"
-        // }
       ],
       loading: "Kraunami dokumentai. Prašome palaukti..."
     };
     this.updateDocumentListWithSearchArgument=this.updateDocumentListWithSearchArgument.bind(this);
   }
-
-  // openPopup = (id) => {
-  //     this.setState({
-  //         isOpen: true,
-  //         documentId: id
-  //     });
-  // }
-
-  // closePopupCancelReject = () => {
-  //     this.setState({
-  //         isOpen: false,
-  //         rejectionReason: ""
-  //     });
-  // }
-
-  // closePopupAcceptReject = () => {
-  //     this.setState({
-  //         isOpen: false,
-  //     });
-  //     //this.handleReject();
-  // }
 
   handleChangeOfSearchField = event => {
     this.setState({ searchField: event.target.value }, () => {
@@ -79,12 +41,7 @@ class ReviewDocumentsContainer extends React.Component {
     } else {
       console.log("updateDelay yra (iš else) " + this.updateDelay);
     }
-    
-    
     console.log("Padariau paieškos lauko pakeitimą");
-    //this.updateDelay = setInterval(this.updateDocumentListWithSearchArgument(), 4000);
-    //setTimeout( this.updateDocumentListWithSearchArgument, 3000);
-    //this.updateDocumentListWithSearchArgument();
   }
 
   updateDocumentListWithSearchArgument() {
@@ -107,15 +64,14 @@ class ReviewDocumentsContainer extends React.Component {
         .catch(error => {
           console.log("KLAIDA!!!! Nenuskaitė peržiūrimų dokumentų sąrašo" + error);
         });
-    
   }
 
-  getAllDocumentsFromServer = (pageNumber, pageLimit) => {
+  getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
     axios
       .get("http://localhost:8081/api/docs/review", {
         //wrong path
         params: {
-          searchFor: "",
+          searchFor: searchFor,
           pageNumber: pageNumber - 1,
           pageLimit: pageLimit
         }
@@ -133,7 +89,7 @@ class ReviewDocumentsContainer extends React.Component {
   };
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage);
+      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage, this.state.searchField);
     });
   };
 
@@ -269,7 +225,8 @@ class ReviewDocumentsContainer extends React.Component {
   componentDidMount = () => {
     this.getAllDocumentsFromServer(
       this.state.activePage,
-      this.state.recordsPerPage
+      this.state.recordsPerPage,
+      this.state.searchField
     );
 
     // axios
@@ -304,9 +261,6 @@ class ReviewDocumentsContainer extends React.Component {
             }
             handleAccept={this.handleAccept}
             handleReject={this.handleReject}
-          // openPopup={this.openPopup}
-          // closePopupCancelReject={this.closePopupCancelReject}
-          // closePopupAcceptReject={this.closePopupAcceptReject}
           />
         );
       });
