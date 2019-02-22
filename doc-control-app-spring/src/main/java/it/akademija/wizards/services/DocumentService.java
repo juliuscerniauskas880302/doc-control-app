@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -132,13 +133,38 @@ public class DocumentService {
             DocumentUpdateCommand documentUpdateCommand,
             MultipartFile[] multipartFile) {
         Document document = resourceFinder.getDocument(id);
+//        Allow to edit only CREATED documents
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
+//          Delete additional files
+            for (String filePath :
+                    documentUpdateCommand.getAdditionalFilePathsToDelete()
+                    ) {
+                fileService.deleteFileByFileName(document, filePath);
+            }
+
             if (multipartFile.length != 0) {
+//            Delete main file only and only if a new one is attached
+                System.out.println("_________________________" +
+                        documentUpdateCommand.getMainFilePathToDelete());
+                System.out.println("_________________________" + document.getPath());
+            if(documentUpdateCommand.getMainFilePathToDelete() != null &&
+                    documentUpdateCommand.getMainFilePathToDelete().equals(document.getPath())){
                 try {
+
                     fileService.deleteMainFile(document);
                     fileService.uploadFiles(document, multipartFile);
                 } catch (IOException e) {
                     return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                    try{
+                        for (MultipartFile mf :
+                                multipartFile) {
+                            fileService.uploadAdditionalFile(document, mf);
+                        }
+                    } catch (IOException e){
+                        return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+                    }
                 }
             }
             documentRepository.save(mapper.updateCommandToEntity(documentUpdateCommand, document));

@@ -43,15 +43,9 @@ public class FileService {
     // DELETES ONE FILE IN DOCUMENT
     @Transactional
     public ResponseEntity<String> deleteFileByFileName(
-            String documentId,
+            Document document,
             String fileName) {
-        Document document = resourceFinder.getDocument(documentId);
-        if (document.getPath().equals(fileName)) {
-            deleteMainFile(document);
-        } else {
             deleteAdditionalFiles(document, fileName);
-        }
-
         return new ResponseEntity<>("File " + fileName + " was deleted.", HttpStatus.CREATED);
     }
 
@@ -83,20 +77,41 @@ public class FileService {
     public ResponseEntity downloadFile(String documentId, String filePath) throws FileNotFoundException {
         Document document = resourceFinder.getDocument(documentId);
 //        String originalFileName = document.getPath();
-        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, filePath);
-        File file = new File(getDocumentFolder(document).getPath()
-                + File.separator
-                + document.getPath());
-        if (file.exists()) {
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath + "\"");
-            headers.add("Access-Control-Expose-Headers",
-                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
-            headers.setContentType(mediaType);
-            return ResponseEntity.ok().headers(headers).
-                    body(resource);
+
+        if(filePath.equals(document.getPath())) {
+
+            File file = new File(getDocumentFolder(document).getPath()
+                    + File.separator
+                    + document.getPath());
+            if (file.exists()) {
+                MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, filePath);
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath + "\"");
+                headers.add("Access-Control-Expose-Headers",
+                        HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+                headers.setContentType(mediaType);
+                return ResponseEntity.ok().headers(headers).
+                        body(resource);
+            }
+        } else if (document.getAdditionalFilePaths().contains(filePath)){
+            File file = new File(getDocumentFolder(document).getPath()
+                    + File.separator
+                    + filePath);
+            if (file.exists()) {
+                MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, filePath);
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath + "\"");
+                headers.add("Access-Control-Expose-Headers",
+                        HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+                headers.setContentType(mediaType);
+                return ResponseEntity.ok().headers(headers).
+                        body(resource);
+            }
         }
+
+
         return ResponseEntity.notFound().build();
 
     }
@@ -143,7 +158,7 @@ public class FileService {
     }
 
     @Transactional
-    public void uploadFile(Document document, MultipartFile multipartFile) throws IOException {
+    public void uploadMainFile(Document document, MultipartFile multipartFile) throws IOException {
         File folder = getDocumentFolder(document);
 //        File path = new File(pathName
 //                + File.separator
@@ -174,8 +189,34 @@ public class FileService {
         perms.add(PosixFilePermission.OTHERS_READ);
         Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
     }
-
-
+    @Transactional
+    public void uploadAdditionalFile(Document document, MultipartFile multipartFile) throws IOException {
+        File folder = getDocumentFolder(document);
+        boolean mkdirs = folder.mkdirs();
+        String originalFileName = multipartFile.getOriginalFilename();
+        List<String> additionalFilePaths = document.getAdditionalFilePaths();
+        additionalFilePaths.add(originalFileName);
+        document.setAdditionalFilePaths(additionalFilePaths);
+        byte[] buf = new byte[1024];
+        assert originalFileName != null;
+        File file = new File(folder.getPath(), originalFileName);
+        try (InputStream inputStream = multipartFile.getInputStream();
+             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            int numRead;
+            while ((numRead = inputStream.read(buf)) >= 0) {
+                fileOutputStream.write(buf, 0, numRead);
+            }
+        }
+        Set<PosixFilePermission> perms = new HashSet<>();
+        // add owners permission
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+        perms.add(PosixFilePermission.GROUP_READ);
+        perms.add(PosixFilePermission.GROUP_WRITE);
+        // add others permissions
+        perms.add(PosixFilePermission.OTHERS_READ);
+        Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
+    }
     @Transactional
     public void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
 
@@ -218,6 +259,8 @@ public class FileService {
     @Transactional
     public void deleteAllFiles(Document document) {
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
+            document.setAdditionalFilePaths(null);
+            document.setPath(null);
             File folder = getDocumentFolder(document);
             deleteFolder(folder);
         } else {
@@ -253,6 +296,7 @@ public class FileService {
                             + p);
                     boolean delete = files.delete();
                 }
+                document.getAdditionalFilePaths().remove(fileName);
                 if (Objects.requireNonNull(folder.list()).length == 0) {
                     deleteFolder(folder);
                 }
@@ -405,6 +449,7 @@ public class FileService {
         DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss", Locale.US);
         return localDateTime.format(dataTimeFormatter);
     }
+
 
 
 }

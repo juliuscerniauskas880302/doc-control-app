@@ -135,6 +135,7 @@ const NewDocumentComponet = props => {
                         name="selectedFiles"
                         required
                         allowMultiple={false}
+                        // onaddfile={props.validate}
                         onupdatefiles={fileItem =>
                           props.onUpdateMainFile(fileItem)
                         }
@@ -142,9 +143,9 @@ const NewDocumentComponet = props => {
                       />
                     </div>
                     <div className="col-md-12 col-lg-4">
-                      {props.mainFileUploaded ? (
+                      {props.mainFileUploaded && (
                         <FilePond
-                          // labelIdle="Įkelkite papildomas bylas."
+                          labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                           labelFileTypeNotAllowed="Netinkamas bylos formatas."
                           fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
                           labelButtonRemoveItem="Pašalinti"
@@ -159,8 +160,6 @@ const NewDocumentComponet = props => {
                             "image/jpeg"
                           ]}
                         />
-                      ) : (
-                        ""
                       )}
                     </div>
 

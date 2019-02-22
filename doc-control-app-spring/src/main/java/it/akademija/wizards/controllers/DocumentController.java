@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -170,7 +171,7 @@ public class DocumentController {
         return documentService.downloadCSV(userPrincipal.getUsername());
     }
 
-    @ApiOperation(value = "download document main file")
+    @ApiOperation(value = "download document file")
     @RequestMapping(value = "/{id}/{fileName}/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity downloadFile(@PathVariable final String id, @PathVariable final String fileName) throws FileNotFoundException {
@@ -238,12 +239,12 @@ public class DocumentController {
     }
 
 
-    @ApiOperation(value = "delete file by document Id and file name")
-    @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteFile(@PathVariable String id, @PathVariable String filename){
-        fileService.deleteFileByFileName(id, filename);
-    }
+//    @ApiOperation(value = "delete file by document Id and file name")
+//    @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
+//    @ResponseStatus(HttpStatus.ACCEPTED)
+//    public void deleteFile(@PathVariable String id, @PathVariable String filename){
+//        fileService.deleteFileByFileName(id, filename);
+//    }
 
 
 }
