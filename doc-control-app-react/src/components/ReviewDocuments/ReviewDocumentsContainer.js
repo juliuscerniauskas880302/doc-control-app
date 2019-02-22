@@ -28,45 +28,16 @@ class ReviewDocumentsContainer extends React.Component {
       ],
       loading: "Kraunami dokumentai. Prašome palaukti..."
     };
-    this.updateDocumentListWithSearchArgument=this.updateDocumentListWithSearchArgument.bind(this);
   }
 
   handleChangeOfSearchField = event => {
-    this.setState({ searchField: event.target.value }, () => {
-      
-    });
-    if(this.updateDelay === -999){
-      console.log("updateDelay yra " + this.updateDelay);
-      this.updateDelay = setInterval(this.updateDocumentListWithSearchArgument, 2000);
-    } else {
-      console.log("updateDelay yra (iš else) " + this.updateDelay);
-    }
-    console.log("Padariau paieškos lauko pakeitimą");
-  }
-
-  updateDocumentListWithSearchArgument() {
-    console.log("Kreipiausi į serverį duomenų");
+    this.setState({ searchField: event.target.value });
     clearInterval(this.updateDelay);
-    this.updateDelay = -999;
-    axios.get("http://localhost:8081/api/docs/review",
-          {params: {
-            searchFor: this.state.searchField,
-            pageNumber: this.state.activePage - 1,
-            pageLimit: this.state.recordsPerPage
-          }}
-        ).then(response => {
-          console.log("Nuskaitinėju atfiltruotą peržiūrimų dokumentų sąrašą");
-          this.setState({
-            documents: response.data.documentList,
-            totalDocs: response.data.totalElements
-           });
-        })
-        .catch(error => {
-          console.log("KLAIDA!!!! Nenuskaitė peržiūrimų dokumentų sąrašo" + error);
-        });
+    this.updateDelay = setInterval(() => this.getAllDocumentsFromServer(this.state.activePage, this.state.recordsPerPage, this.state.searchField), 1000);
   }
 
   getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
+    clearInterval(this.updateDelay);
     axios
       .get("http://localhost:8081/api/docs/review", {
         //wrong path
