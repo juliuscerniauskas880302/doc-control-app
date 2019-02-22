@@ -101,7 +101,7 @@ class ReviewDocumentsContainer extends React.Component {
           console.log("Nuskaitinėju atfiltruotą peržiūrimų dokumentų sąrašą");
           this.setState({
             documents: response.data.documentList,
-            totalDocs: response.data.totalPages
+            totalDocs: response.data.totalElements
            });
         })
         .catch(error => {
