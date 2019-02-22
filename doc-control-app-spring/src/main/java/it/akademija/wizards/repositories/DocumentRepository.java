@@ -1,6 +1,8 @@
 package it.akademija.wizards.repositories;
 
 import it.akademija.wizards.entities.Document;
+import it.akademija.wizards.entities.User;
+import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
 import it.akademija.wizards.models.stats.TypeUserStats;
 import org.springframework.data.domain.Page;
@@ -44,4 +46,6 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
                                          @Param(value = "searchFor") String searchFor,
                                          Pageable pageable);
 
+    Page<Document> findByAuthorAndDocumentStateIn(User user, List<DocumentState> documentStates, Pageable pageable);
 }
+

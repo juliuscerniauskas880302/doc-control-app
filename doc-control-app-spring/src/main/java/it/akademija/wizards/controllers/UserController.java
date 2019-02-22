@@ -2,7 +2,6 @@ package it.akademija.wizards.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
@@ -51,13 +50,6 @@ public class UserController {
         return userService.getUsers(pageNumber, pageLimit);
     }
 
-    @ApiOperation(value = "get pageable users")
-    @RequestMapping(value = "/{page}/{recordsPerPage}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<UserGetCommand> getPageableUser(@PathVariable final int page, @PathVariable final int recordsPerPage) {
-        return userService.getPageableUsers(page, recordsPerPage);
-    }
-
     @ApiOperation(value = "get users count")
     @RequestMapping(value = "/total", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -70,15 +62,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserGetCommand getUserByUsername(@PathVariable String username) {
         return userService.getUser(username);
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @ApiOperation(value = "get user's documents")
-    @RequestMapping(value = "/docs/{state}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<DocumentGetCommand> getDocumentsByUsername(@CurrentUser UserPrincipal userPrincipal,
-                                                           @PathVariable(value = "state") String state) {
-        return userService.getUserDocuments(userPrincipal.getUsername(), state);
     }
 
     @ApiOperation(value = "create new user")

@@ -1,10 +1,8 @@
 package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.*;
-import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.enums.RoleName;
 import it.akademija.wizards.exception.AppException;
-import it.akademija.wizards.models.document.DocumentGetCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
@@ -12,7 +10,6 @@ import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.security.payload.ApiResponse;
-import it.akademija.wizards.services.auxiliary.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +32,6 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserGroupRepository userGroupRepository;
-    private Mapper mapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,10 +39,9 @@ public class UserService {
     private RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, Mapper mapper) {
+    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository) {
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
-        this.mapper = mapper;
     }
 
     public UserRepository getUserRepository() {
@@ -194,26 +189,6 @@ public class UserService {
         return false;
     }
 
-    @Transactional(readOnly = true)
-    public List<DocumentGetCommand> getUserDocuments(String username, String state) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            List<DocumentGetCommand> documents = new ArrayList<>();
-            if (state.toLowerCase().equals("created")) {
-                documents = user.getDocuments().stream()
-                        .filter(document -> document.getDocumentState().equals(DocumentState.CREATED))
-                        .map(mapper::entityToGetCommand).collect(Collectors.toList());
-            } else if (state.toLowerCase().equals("submitted")) {
-                documents = user.getDocuments().stream()
-                        .filter(document -> !document.getDocumentState().equals(DocumentState.CREATED))
-                        .map(mapper::entityToGetCommand).collect(Collectors.toList());
-            }
-            return documents;
-        } else {
-            throw new NullPointerException("User does not exist");
-        }
-    }
-
     @Transactional
     public void addGroupsToUser(UserAddGroupsCommand userAddGroupsCommand, String username) {
         User user = userRepository.findByUsername(username);
@@ -285,17 +260,6 @@ public class UserService {
         } else {
             throw new NullPointerException("User does not exist");
         }
-    }
-
-    @Transactional
-    public List<UserGetCommand> getPageableUsers(int page, int recordsPerPage) {
-        Sort sort = Sort.by(Sort.Order.asc("firstname").ignoreCase()).and(Sort.by(Sort.Order.asc("lastname").ignoreCase()));
-        Pageable userPage = PageRequest.of(page, recordsPerPage, sort);
-        return userRepository.findAll(userPage).stream().map(user -> {
-            UserGetCommand userGetCommand = new UserGetCommand();
-            BeanUtils.copyProperties(user, userGetCommand);
-            return userGetCommand;
-        }).collect(Collectors.toList());
     }
 
     @Transactional
