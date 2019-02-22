@@ -8,6 +8,7 @@ import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.exception.BadRequestException;
 import it.akademija.wizards.models.document.*;
 import it.akademija.wizards.repositories.DocumentRepository;
+import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +39,8 @@ public class DocumentService {
     private ResourceFinder resourceFinder;
     @Autowired
     private Mapper mapper;
+    @Autowired
+    private UserRepository userRepository;
 
     //GET
     @Transactional(readOnly = true)
@@ -61,6 +65,39 @@ public class DocumentService {
         Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable.toLowerCase().trim(), pageable);
         List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
         return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
+    }
+
+    @Transactional(readOnly = true)
+    public DocumentPageGetCommand getUserDocumentsByState(String username, String state, Integer pageNumber, Integer pageLimit) {
+        if (state == null) {
+            throw new NullPointerException("State must be provided");
+        }
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            List<DocumentState> documentStates = new ArrayList<>();
+            if (state.toLowerCase().equals("created")) {
+                documentStates.add(DocumentState.CREATED);
+            } else if (state.toLowerCase().equals("submitted")) {
+                documentStates.add(DocumentState.SUBMITTED);
+                documentStates.add(DocumentState.ACCEPTED);
+                documentStates.add(DocumentState.REJECTED);
+            } else {
+                throw new IllegalArgumentException("Correct document state must be provided");
+            }
+            Pageable pageable;
+            Sort sort = Sort.by("creationDate").descending();
+            if (pageNumber != null && pageLimit != null) {
+                pageable = PageRequest.of(pageNumber, pageLimit, sort);
+            } else {
+                pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+            }
+            Page<Document> pageDocument = documentRepository.findByAuthorAndDocumentStateIn(user, documentStates, pageable);
+            List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
+            return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
+
+        } else {
+            throw new NullPointerException("User does not exist");
+        }
     }
 
     @Transactional(readOnly = true)

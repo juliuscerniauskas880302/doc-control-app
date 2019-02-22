@@ -56,6 +56,18 @@ public class DocumentController {
         return documentService.getDocumentsToReview(userPrincipal.getUsername(), searchFor, pageNumber, pageLimit);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @ApiOperation(value = "get user's documents by state")
+    @RequestMapping(value = "/user/{state}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public DocumentPageGetCommand getUserDocumentsByState(
+            @CurrentUser UserPrincipal userPrincipal,
+            @PathVariable(value = "state") String state,
+            @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+            @RequestParam(value = "pageLimit", required = false) Integer pageLimit) {
+        return documentService.getUserDocumentsByState(userPrincipal.getUsername(), state, pageNumber, pageLimit);
+    }
+
     @ApiOperation(value = "get document by document Id")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
