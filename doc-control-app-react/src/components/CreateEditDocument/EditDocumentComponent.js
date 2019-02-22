@@ -35,16 +35,17 @@ const EditDocumentComponent = props => {
 
       {props.paths.map((path, i) => {
         return (
-          <div className="">
+          <div className="" key={i}>
             {" "}
             {path && (
-              <div className="col-md-4" key={i}>
+              <div className="col-md-4">
                 <p>
                   <i
                     className="fas fa-times-circle fa-2x"
                     title="Pašalinti failą"
                     id={path}
-                    onClick={event => props.deleteFileHandler(event)}
+                    name="additionalFilePathsToDelete"
+                    onClick={event => props.deleteAdditionalFileHandler(event)}
                   />
                   &nbsp; <span className="customFileSpan">{path}</span> &nbsp;{" "}
                   <i
@@ -167,14 +168,16 @@ const EditDocumentComponent = props => {
                       <label className="col-md-2 form-control-label">
                         Pridėtas failas:
                       </label>
-
                       <div className="col-md-4">
                         <p>
                           <i
                             className="fas fa-times-circle fa-2x"
                             id={props.path}
+                            name="mainFilePathToDelete"
                             title="Pašalinti failą"
-                            onClick={event => props.deleteFileHandler(event)}
+                            onClick={event =>
+                              props.deleteMainFileHandler(event)
+                            }
                           />
                           &nbsp;{" "}
                           <span className="customFileSpan">{props.path}</span>{" "}
@@ -182,7 +185,8 @@ const EditDocumentComponent = props => {
                           <i
                             className="mygtukas fas fa-arrow-circle-down fa-2x"
                             title="Atsisiųsti pridėtą failą"
-                            onClick={() => props.downloadHandler()}
+                            id={props.path}
+                            onClick={event => props.fileDownloadHandler(event)}
                           />
                         </p>
                       </div>
