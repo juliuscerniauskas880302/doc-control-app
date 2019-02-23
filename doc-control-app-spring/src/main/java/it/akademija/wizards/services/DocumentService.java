@@ -55,7 +55,7 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentPageGetCommand getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
-        String searchable = searchFor != null ? searchFor : "";
+        String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
         Pageable pageable;
         Sort sort = Sort.by("submissionDate").descending();
         if (pageNumber != null && pageLimit != null) {
@@ -63,36 +63,39 @@ public class DocumentService {
         } else {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
         }
-        Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable.toLowerCase().trim(), pageable);
+        Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable);
         List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
         return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
     }
 
     @Transactional(readOnly = true)
-    public DocumentPageGetCommand getUserDocumentsByState(String username, String state, Integer pageNumber, Integer pageLimit) {
+    public DocumentPageGetCommand getUserDocumentsByState(String username, String state, String searchFor, Integer pageNumber, Integer pageLimit) {
         if (state == null) {
             throw new NullPointerException("State must be provided");
         }
         User user = userRepository.findByUsername(username);
         if (user != null) {
             List<DocumentState> documentStates = new ArrayList<>();
+            Sort sort;
             if (state.toLowerCase().equals("created")) {
                 documentStates.add(DocumentState.CREATED);
+                sort = Sort.by("creationDate").descending();
             } else if (state.toLowerCase().equals("submitted")) {
                 documentStates.add(DocumentState.SUBMITTED);
                 documentStates.add(DocumentState.ACCEPTED);
                 documentStates.add(DocumentState.REJECTED);
+                sort = Sort.by("submissionDate").descending();
             } else {
                 throw new IllegalArgumentException("Correct document state must be provided");
             }
+            String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
             Pageable pageable;
-            Sort sort = Sort.by("creationDate").descending();
             if (pageNumber != null && pageLimit != null) {
                 pageable = PageRequest.of(pageNumber, pageLimit, sort);
             } else {
                 pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
             }
-            Page<Document> pageDocument = documentRepository.findByAuthorAndDocumentStateIn(user, documentStates, pageable);
+            Page<Document> pageDocument = documentRepository.findByAuthorAndDocumentStateIn(user, documentStates, searchable, pageable);
             List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
             return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
 

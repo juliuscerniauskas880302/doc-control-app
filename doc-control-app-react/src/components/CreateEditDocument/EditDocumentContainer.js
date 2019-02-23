@@ -116,7 +116,7 @@ class EditDocumentContainer extends React.Component {
   //TODO
   handleSubmit = event => {
     event.preventDefault();
-    this.openFileTransferPopup();
+    // this.openFileTransferPopup();
     console.log(this.state.mainFilePathToDelete);
     let isFileNamesSame = false;
     let correctFileExtensions = true;
@@ -131,15 +131,14 @@ class EditDocumentContainer extends React.Component {
     console.log(file);
 
     // Checking if main file is attached if it was deleted
-    if (this.state.mainFile === null && this.state.paths === null) {
+    if (this.state.mainFile === null && this.state.path === null) {
       this.props.showResponseMessage(
         "Pridėkite pagrindinę bylą.",
         "danger",
         2500
       );
-    }
-    // Adding main file if it has unique name
-    else if (
+    } else if (
+      // Adding main file if it has unique name
       this.state.mainFile !== null &&
       (this.state.selectedAdditionalFiles === null ||
         this.state.selectedAdditionalFiles.length === 0)
@@ -290,6 +289,26 @@ class EditDocumentContainer extends React.Component {
           .then(res => console.log(res))
           .catch(err => console.log(err));
       }
+    } else if (this.state.additionalFilePathsToDelete !== null) {
+      file.append("model", JSON.stringify(model));
+      axios
+        .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+          onUploadProgress: progressEvent => {
+            this.setState({
+              percentage: Math.round(
+                (progressEvent.loaded / progressEvent.total) * 100
+              )
+            });
+            console.log(
+              "Upload progress: " +
+                (progressEvent.loaded / progressEvent.total) * 100 +
+                "%"
+            );
+          }
+        })
+        .then(response => this.props.history.push(`/createdDocuments`))
+        .then(res => console.log(res))
+        .catch(err => console.log("KLAIDA SUBMITE" + err));
     }
     console.log("Toks yra failas" + file.getAll);
   };

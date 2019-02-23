@@ -27,41 +27,31 @@ const EditDocumentComponent = props => {
     //<option value = {v}>{v}</option>
     <option key={v}>{v}</option>
   ));
-  let AdditionalFiles = props.paths && (
-    <div className="form-group  ">
-      <label className="col-md-2 form-control-label row">
-        Pridėti papildomi failai:
-      </label>
+  let AdditionalFiles =
+    props.paths &&
+    props.paths.map((path, i) => {
+      return (
+        path && (
+          <p key={i}>
+            <i
+              className="fas fa-times-circle fa-2x"
+              title="Pašalinti failą"
+              id={path}
+              name="additionalFilePathsToDelete"
+              onClick={event => props.deleteAdditionalFileHandler(event)}
+            />{" "}
+            &nbsp; <span className="customFileSpan">{path}</span> &nbsp;{" "}
+            <i
+              className="mygtukas fas fa-arrow-circle-down fa-2x"
+              id={path}
+              title="Atsisiųsti pridėtą failą"
+              onClick={event => props.fileDownloadHandler(event)}
+            />
+          </p>
+        )
+      );
+    });
 
-      {props.paths.map((path, i) => {
-        return (
-          <div className="" key={i}>
-            {" "}
-            {path && (
-              <div className="col-md-4">
-                <p>
-                  <i
-                    className="fas fa-times-circle fa-2x"
-                    title="Pašalinti failą"
-                    id={path}
-                    name="additionalFilePathsToDelete"
-                    onClick={event => props.deleteAdditionalFileHandler(event)}
-                  />
-                  &nbsp; <span className="customFileSpan">{path}</span> &nbsp;{" "}
-                  <i
-                    className="mygtukas fas fa-arrow-circle-down fa-2x"
-                    id={path}
-                    title="Atsisiųsti pridėtą failą"
-                    onClick={event => props.fileDownloadHandler(event)}
-                  />
-                </p>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
   return (
     <div className="page-holder w-100 d-flex flex-wrap">
       <div className="container-fluid px-xl-5">
@@ -94,7 +84,6 @@ const EditDocumentComponent = props => {
                       />
                     </div>
                   </div>
-
                   <div className="form-group row">
                     <label className="col-md-2 form-control-label">
                       Dokumento aprašymas:
@@ -114,7 +103,6 @@ const EditDocumentComponent = props => {
                       />
                     </div>
                   </div>
-
                   <div className="form-group row">
                     <label className="col-md-2 form-control-label">
                       Dokumento tipas:
@@ -131,40 +119,9 @@ const EditDocumentComponent = props => {
                       </select>
                     </div>
                   </div>
-
-                  {!props.path && (
+                  {/* {!props.path && } */}
+                  {props.path ? (
                     <div className="form-group row">
-                      <label className="col-md-2 form-control-label">
-                        Pasirinkite pridedamą failą:
-                      </label>
-                      <div className="col-md-12">
-                        <FilePond
-                          labelIdle='<span className="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
-                          // labelIdle="Įkelkite pagrindinę bylą."
-                          labelFileTypeNotAllowed="Netinkamas bylos formatas."
-                          fileValidateTypeLabelExpectedTypes="Įkelkite pdf formato bylą."
-                          labelButtonRemoveItem="Pašalinti"
-                          name="selectedFiles"
-                          required
-                          allowMultiple={false}
-                          // onaddfile={props.validate}
-                          onupdatefiles={fileItem =>
-                            props.onUpdateMainFile(fileItem)
-                          }
-                          acceptedFileTypes={["application/pdf"]}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <FileTransferPopup
-                          show={props.isOpen}
-                          onClose={props.closeFileTransferPopup}
-                          percentage={props.percentage}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  {props.path && (
-                    <div className="row">
                       <label className="col-md-2 form-control-label">
                         Pridėtas failas:
                       </label>
@@ -191,25 +148,69 @@ const EditDocumentComponent = props => {
                         </p>
                       </div>
                     </div>
+                  ) : (
+                    <div className="form-group row">
+                      <label className="col-md-2 col-lg-2 form-control-label">
+                        Pasirinkite pridedamus failus:
+                      </label>
+                      <div className="col-md-5">
+                        {" "}
+                        <FilePond
+                          labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
+                          // labelIdle="Įkelkite pagrindinę bylą."
+                          labelFileTypeNotAllowed=""
+                          fileValidateTypeLabelExpectedTypes=""
+                          labelButtonRemoveItem="Pašalinti"
+                          name="selectedFiles"
+                          allowMultiple={false}
+                          // onaddfile={props.validate}
+                          onupdatefiles={fileItem =>
+                            props.onUpdateMainFile(fileItem)
+                          }
+                          acceptedFileTypes={["application/pdf"]}
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <FileTransferPopup
+                          show={props.isOpen}
+                          onClose={props.closeFileTransferPopup}
+                          percentage={props.percentage}
+                        />
+                      </div>
+                    </div>
                   )}
+                  <div className="form-group row">
+                    <label className="col-md-2 form-control-label ">
+                      {props.paths && props.paths.length === 0
+                        ? ""
+                        : "Pridėti papildomi failai:"}
+                    </label>
+                    <div className="col-md-4">{AdditionalFiles}</div>
+                  </div>
+                  <div className="row">
+                    <label className="col-md-2 form-control-label ">
+                      Pasirinkite pridedamus failus:
+                    </label>
+                    <div className="col-md-5">
+                      <FilePond
+                        labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
+                        labelFileTypeNotAllowed=""
+                        fileValidateTypeLabelExpectedTypes=""
+                        labelButtonRemoveItem="Pašalinti"
+                        name="selectedAdditionalFiles"
+                        allowMultiple={true}
+                        onupdatefiles={fileItems =>
+                          props.onUpdateAdditionalFiles(fileItems)
+                        }
+                        acceptedFileTypes={[
+                          "application/pdf",
+                          "image/png",
+                          "image/jpeg"
+                        ]}
+                      />
+                    </div>
+                  </div>
 
-                  {AdditionalFiles}
-                  <FilePond
-                    labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
-                    labelFileTypeNotAllowed="Netinkamas bylos formatas."
-                    fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
-                    labelButtonRemoveItem="Pašalinti"
-                    name="selectedAdditionalFiles"
-                    allowMultiple={true}
-                    onupdatefiles={fileItems =>
-                      props.onUpdateAdditionalFiles(fileItems)
-                    }
-                    acceptedFileTypes={[
-                      "application/pdf",
-                      "image/png",
-                      "image/jpeg"
-                    ]}
-                  />
                   <div className="form-group row">
                     <div className="col-md-9">
                       <button className="btn submitButton" type="submit">

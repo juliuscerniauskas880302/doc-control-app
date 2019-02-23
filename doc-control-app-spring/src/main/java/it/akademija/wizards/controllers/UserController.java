@@ -45,9 +45,10 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserPageGetCommand getUser(
+            @RequestParam(value = "searchFor", required = false) String searchFor,
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageLimit", required = false) Integer pageLimit) {
-        return userService.getUsers(pageNumber, pageLimit);
+        return userService.getUsers(searchFor, pageNumber, pageLimit);
     }
 
     @ApiOperation(value = "get users count")

@@ -1,7 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const OneCreatedDocumentComponent = (props) => {
+const OneCreatedDocumentComponent = props => {
+  let AdditionalFiles =
+    props.paths &&
+    props.paths.map((path, i) => {
+      return (
+        path && (
+          <p key={i}>
+            &nbsp; <span className="customFileSpan"> {path}</span> &nbsp;{" "}
+            <i
+              className="mygtukas fas fa-arrow-circle-down fa-2x"
+              id={path}
+              title="Atsisiųsti pridėtą failą"
+              onClick={event => props.fileDownloadHandler(event)}
+            />
+          </p>
+        )
+      );
+    });
   return (
     <div className="page-holder w-100 d-flex flex-wrap">
       <div className="container-fluid px-xl-5">
@@ -12,7 +29,7 @@ const OneCreatedDocumentComponent = (props) => {
                 <h6 className="text-uppercase mb-0">Sukurtas dokumentas</h6>
               </div>
               <div className="card-body">
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-3">
                     <p>Numeris:</p>
                   </div>
@@ -20,7 +37,7 @@ const OneCreatedDocumentComponent = (props) => {
                     <p>{props.id}</p>
                   </div>
                 </div>
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-3">
                     <p>Pavadinimas:</p>
                   </div>
@@ -28,7 +45,7 @@ const OneCreatedDocumentComponent = (props) => {
                     <p>{props.title}</p>
                   </div>
                 </div>
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-3">
                     <p>Aprašymas:</p>
                   </div>
@@ -36,7 +53,7 @@ const OneCreatedDocumentComponent = (props) => {
                     <p>{props.description}</p>
                   </div>
                 </div>
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-3">
                     <p>Tipas:</p>
                   </div>
@@ -44,7 +61,7 @@ const OneCreatedDocumentComponent = (props) => {
                     <p>{props.type}</p>
                   </div>
                 </div>
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-3">
                     <p>Sukūrimo data:</p>
                   </div>
@@ -52,56 +69,74 @@ const OneCreatedDocumentComponent = (props) => {
                     <p>{props.creationDate}</p>
                   </div>
                 </div>
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-3">
                     <p>Pridėtas failas:</p>
                   </div>
                   <div className="col-9">
-                    <p>{props.path} &nbsp; <i className="mygtukas fas fa-download fa-2x" title="Atsisiųsti pridėtą failą" onClick={() => props.downloadHandler()} /></p>
+                    <p>
+                      {props.path} &nbsp;{" "}
+                      <i
+                        className="mygtukas fas fa-arrow-circle-down fa-2x"
+                        id={props.path}
+                        title="Atsisiųsti pridėtą failą"
+                        onClick={event => props.fileDownloadHandler(event)}
+                      />
+                    </p>
                   </div>
                 </div>
+                {props.paths && props.paths.length !== 0 ? (
+                  <div className="form-group row">
+                    <div className="col-3">
+                      <p>Papildomos bylos:</p>
+                    </div>
+                    <div className="">{AdditionalFiles}</div>
+                  </div>
+                ) : (
+                  ""
+                )}
+
                 <div className="row">
-                  <div className="col-12">
+                  <div className="">
                     <Link
                       to={`/admin/Documents/${props.id}`}
-                      className="btn submitButtonAlt"
+                      className="btn submitButtonAlt m-1"
                       type="button"
                     >
                       Redaguoti
                     </Link>
-                    &nbsp;
+
                     <button
-                      className="btn deleteButton"
+                      className="btn deleteButton mx-1"
                       type="submit"
                       onClick={props.handleDelete}
                     >
                       Trinti
                     </button>
-                    &nbsp;
+
                     <button
-                      className="btn submitButton"
+                      className="btn submitButton mx-1"
                       type="submit"
                       onClick={props.handleSubmit}
                     >
                       Pateikti
                     </button>
-                    &nbsp;
+
                     <Link
                       to={`/createdDocuments`}
-                      className="btn goBackButton"
+                      className="btn goBackButton mx-1"
                       type="button"
                     >
                       Atgal
                     </Link>
-                    &nbsp;
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-      </div >
-    </div >
+      </div>
+    </div>
 
     // <div className="container-fluid">
     //     <div className="row">

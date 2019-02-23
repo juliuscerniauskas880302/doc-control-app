@@ -54,7 +54,8 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public UserPageGetCommand getUsers(Integer pageNumber, Integer pageLimit) {
+    public UserPageGetCommand getUsers(String searchFor, Integer pageNumber, Integer pageLimit) {
+        String searchable = searchFor != null ? searchFor.trim().toLowerCase() : "";
         Pageable pageable;
         Sort sort = Sort.by(Sort.Order.asc("firstname").ignoreCase()).and(Sort.by(Sort.Order.asc("lastname").ignoreCase()));
         if (pageNumber != null && pageLimit != null) {
@@ -62,7 +63,7 @@ public class UserService {
         } else {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
         }
-        Page<User> pageUser = userRepository.findAll(pageable);
+        Page<User> pageUser = userRepository.findAllAndSearch(searchable, pageable);
         List<UserGetCommand> userList = pageUser.stream().map(user -> {
             UserGetCommand userGetCommand = new UserGetCommand();
             BeanUtils.copyProperties(user, userGetCommand);

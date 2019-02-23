@@ -74,6 +74,18 @@
 .customFileSpan {
     vertical-align: 30%;
     
-
 }
-
+.filepond--panel-root {
+    border-radius: 5em;
+}
+.filepond--panel-root {
+    background-color: transparent;
+    border: 2px solid #2c3340;
+}
+.filepond--root {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+    font-size: 1.1em;
+        
+}
