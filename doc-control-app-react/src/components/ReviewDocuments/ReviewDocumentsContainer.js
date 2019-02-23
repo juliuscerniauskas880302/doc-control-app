@@ -4,27 +4,29 @@ import SearchField from "./SearchField";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Pagination } from "semantic-ui-react";
+import Loading from "../Utilities/Loading";
 
 class ReviewDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.updateDelay = -999;
     this.state = {
+      loaded: true,
       totalDocs: 0,
       recordsPerPage: 15,
       activePage: 1,
       searchField: "",
       documentId: "", //naudojamas tik vienu atveju, kai daromas REJECT
       documents: [
-        {
-          id: "Kodas1r",
-          author: {},
-          title: "Title1r",
-          description: "Description1r",
-          documentTypeTitle: "Type1r",
-          submissionDate: "2019.01.26",
-          rejectionReason: ""
-        }
+        // {
+        //   id: "Kodas1r",
+        //   author: {},
+        //   title: "Title1r",
+        //   description: "Description1r",
+        //   documentTypeTitle: "Type1r",
+        //   submissionDate: "2019.01.26",
+        //   rejectionReason: ""
+        // }
       ],
       loading: "Kraunami dokumentai. Prašome palaukti..."
     };
@@ -33,11 +35,20 @@ class ReviewDocumentsContainer extends React.Component {
   handleChangeOfSearchField = event => {
     this.setState({ searchField: event.target.value });
     clearInterval(this.updateDelay);
-    this.updateDelay = setInterval(() => this.getAllDocumentsFromServer(this.state.activePage, this.state.recordsPerPage, this.state.searchField), 1000);
-  }
+    this.updateDelay = setInterval(
+      () =>
+        this.getAllDocumentsFromServer(
+          this.state.activePage,
+          this.state.recordsPerPage,
+          this.state.searchField
+        ),
+      1000
+    );
+  };
 
   getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
     clearInterval(this.updateDelay);
+    this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
     axios
       .get("http://localhost:8081/api/docs/review", {
         //wrong path
@@ -48,7 +59,11 @@ class ReviewDocumentsContainer extends React.Component {
         }
       })
       .then(res => {
-        console.log(res.data);
+        this.setState({ loaded: true });
+        if (this.timer) {
+          clearTimeout(this.timer);
+          this.timer = 0;
+        }
         this.setState({
           documents: res.data.documentList,
           totalDocs: res.data.totalElements
@@ -60,7 +75,11 @@ class ReviewDocumentsContainer extends React.Component {
   };
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage, this.state.searchField);
+      this.getAllDocumentsFromServer(
+        activePage,
+        this.state.recordsPerPage,
+        this.state.searchField
+      );
     });
   };
 
@@ -82,7 +101,7 @@ class ReviewDocumentsContainer extends React.Component {
       confirmButtonText: "Patvirtinti",
       cancelButtonText: "Atšaukti"
     }).then(
-      function (result) {
+      function(result) {
         // result.value will containt the input value
         // const swalWithBootstrapButtons = Swal.mixin({
         //     confirmButtonClass: 'btn btn-success',
@@ -235,6 +254,30 @@ class ReviewDocumentsContainer extends React.Component {
           />
         );
       });
+
+      let show = this.state.loaded ? (
+        <div className="row">
+          <div className="col-12">
+            <table className="ui celled table" style={{ width: "100%" }}>
+              <thead className="thead-inverse">
+                <tr>
+                  <th>Autorius</th>
+                  <th>Numeris</th>
+                  <th>Pavadinimas</th>
+                  <th>Aprašymas</th>
+                  <th>Tipas</th>
+                  <th>Pateikimo data</th>
+                  <th>Operacijos</th>
+                </tr>
+              </thead>
+              <tbody>{documentCard}</tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <Loading />
+      );
+
       return (
         <div className="page-holder w-100 d-flex flex-wrap">
           <div className="container-fluid px-xl-5">
@@ -254,28 +297,11 @@ class ReviewDocumentsContainer extends React.Component {
                     />
                   </div>
                   <div className="card-body">
-                    <SearchField searchField={this.state.searchField} handleChangeOfSearchField={this.handleChangeOfSearchField} />
-                    <div className="row">
-                      <div className="col-12">
-                        <table
-                          className="ui celled table"
-                          style={{ width: "100%" }}
-                        >
-                          <thead className="thead-inverse">
-                            <tr>
-                              <th>Autorius</th>
-                              <th>Numeris</th>
-                              <th>Pavadinimas</th>
-                              <th>Aprašymas</th>
-                              <th>Tipas</th>
-                              <th>Pateikimo data</th>
-                              <th>Operacijos</th>
-                            </tr>
-                          </thead>
-                          <tbody>{documentCard}</tbody>
-                        </table>
-                      </div>
-                    </div>
+                    <SearchField
+                      searchField={this.state.searchField}
+                      handleChangeOfSearchField={this.handleChangeOfSearchField}
+                    />
+                    {show}
                   </div>
                 </div>
               </div>
