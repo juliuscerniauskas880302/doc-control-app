@@ -82,16 +82,13 @@ class UserCreatedDocumentsContainer extends React.Component {
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(id);
-    axios.delete("http://localhost:8081/api/docs/" + id).then(response => {
-      axios
-        .get("http://localhost:8081/api/users/docs/created")
-        .then(response => {
-          this.setState({ documents: response.data });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    });
+    axios.delete("http://localhost:8081/api/docs/" + id)
+      .then(response => {
+        this.getAllDocumentsFromServer(
+          this.state.activePage,
+          this.state.recordsPerPage
+        );
+      });
   };
 
   handleSubmit = id => {
@@ -105,14 +102,10 @@ class UserCreatedDocumentsContainer extends React.Component {
     axios
       .put("http://localhost:8081/api/docs/" + id + "/submit")
       .then(response => {
-        axios
-          .get("http://localhost:8081/api/users/docs/created")
-          .then(response => {
-            this.setState({ documents: response.data });
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        this.getAllDocumentsFromServer(
+          this.state.activePage,
+          this.state.recordsPerPage
+        );
       });
   };
 
