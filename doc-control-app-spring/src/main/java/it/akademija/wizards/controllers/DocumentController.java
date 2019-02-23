@@ -64,8 +64,9 @@ public class DocumentController {
             @CurrentUser UserPrincipal userPrincipal,
             @PathVariable(value = "state") String state,
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-            @RequestParam(value = "pageLimit", required = false) Integer pageLimit) {
-        return documentService.getUserDocumentsByState(userPrincipal.getUsername(), state, pageNumber, pageLimit);
+            @RequestParam(value = "pageLimit", required = false) Integer pageLimit,
+            @RequestParam(value = "searchFor", required = false) String searchFor) {
+        return documentService.getUserDocumentsByState(userPrincipal.getUsername(), state, searchFor, pageNumber, pageLimit);
     }
 
     @ApiOperation(value = "get document by document Id")

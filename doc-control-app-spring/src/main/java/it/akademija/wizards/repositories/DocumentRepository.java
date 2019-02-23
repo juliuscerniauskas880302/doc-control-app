@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,15 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
                                          @Param(value = "searchFor") String searchFor,
                                          Pageable pageable);
 
-    Page<Document> findByAuthorAndDocumentStateIn(User user, List<DocumentState> documentStates, Pageable pageable);
+    @Query("SELECT d FROM Document d WHERE d.author = :user AND d.documentState IN :documentStates" +
+            " AND (lower(d.title) like %:searchFor%" +
+            " OR lower(d.description) like %:searchFor%" +
+            " OR lower(d.id) like %:searchFor%" +
+            " OR lower(d.documentType.title) like %:searchFor%)")
+    Page<Document> findByAuthorAndDocumentStateIn(
+            @Param(value = "user") User user,
+            @Param(value = "documentStates") List<DocumentState> documentStates,
+            @Param(value = "searchFor") String searchFor,
+            Pageable pageable);
 }
 
