@@ -1,5 +1,6 @@
 import React from "react";
 import UserSubmittedDocumentsComponent from "./UserSubmittedDocumentsComponent";
+import SearchField from "../ReviewDocuments/SearchField";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Pagination } from "semantic-ui-react";
@@ -7,13 +8,12 @@ import { Pagination } from "semantic-ui-react";
 class UserSubmittedDocumentsContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.updateDelay = -999;
     this.state = {
       totalDocs: 0,
       recordsPerPage: 15,
       activePage: 1,
-      //tikram kode turės būti tuščias masyvas
-      //documents: '',
-      //laikina bazikė
+      searchField: "",
       documents: [
         {
           id: "Testas",
@@ -23,39 +23,35 @@ class UserSubmittedDocumentsContainer extends React.Component {
           documentState: "Testas",
           submissionDate: "2019.01.26"
         }
-        // {
-        //   id: "Kodas1",
-        //   title: "Title1",
-        //   description: "Description1",
-        //   documentTypeTitle: "Type1",
-        //   documentState: "State1",
-        //   submissionDate: "2019.01.26"
-        // },
-        // {
-        //   id: "Kodas2",
-        //   title: "Title2",
-        //   description: "Description2",
-        //   tydocumentTypeTitle: "Type2",
-        //   documentState: "State2",
-        //   submissionDate: "2019.01.27"
-        // },
-        // {
-        //   id: "Kodas3",
-        //   title: "Title3",
-        //   description: "Description3",
-        //   documentTypeTitle: "Type3",
-        //   documentState: "State3",
-        //   submissionDate: "2019.01.28"
-        // }
       ],
       loading: "Kraunami duomenys. Prašome palaukti."
     };
   }
 
-  getAllDocumentsFromServer = (pageNumber, pageLimit) => {
+  handleChangeOfSearchField = event => {
+    this.setState({ searchField: event.target.value });
+    clearInterval(this.updateDelay);
+    this.updateDelay = setInterval(
+      () =>
+        this.getAllDocumentsFromServer(
+          this.state.activePage,
+          this.state.recordsPerPage,
+          this.state.searchField
+        ),
+      1000
+    );
+  };
+  
+  getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
+    clearInterval(this.updateDelay);
+    this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
     axios
       .get("http://localhost:8081/api/docs/user/submitted", {
-        params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+        params: {
+          searchFor: searchFor,
+          pageNumber: pageNumber - 1,
+          pageLimit: pageLimit,
+        }
       })
       .then(res => {
         this.setState({
@@ -70,7 +66,11 @@ class UserSubmittedDocumentsContainer extends React.Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllDocumentsFromServer(activePage, this.state.recordsPerPage);
+      this.getAllDocumentsFromServer(
+        activePage,
+        this.state.recordsPerPage,
+        this.state.searchField
+      );
     });
   };
 
@@ -114,7 +114,8 @@ class UserSubmittedDocumentsContainer extends React.Component {
     // Not implemented in backend
     this.getAllDocumentsFromServer(
       this.state.activePage,
-      this.state.recordsPerPage
+      this.state.recordsPerPage,
+      this.state.searchField
     );
 
     //let currentUser = JSON.parse(localStorage.getItem('user')).username;
@@ -185,6 +186,10 @@ class UserSubmittedDocumentsContainer extends React.Component {
                   <div className="card-body">
                     <div className="row">
                       <div className="col-12">
+                        <SearchField
+                         searchField={this.state.searchField}
+                         handleChangeOfSearchField={this.handleChangeOfSearchField}
+                        />  
                         <table
                           className="ui celled table"
                           style={{ width: "100%" }}

@@ -194,7 +194,7 @@ class ReviewDocumentsContainer extends React.Component {
           .get("http://localhost:8081/api/docs/review", {
             //wrong path
             params: {
-              searchFor: "",
+              searchFor: this.searchField,
               pageNumber: this.state.activePage - 1,
               pageLimit: this.state.recordsPerPage
             }
