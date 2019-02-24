@@ -150,20 +150,11 @@ class OneCreatedDocumentContainer extends React.Component {
             path: response.data.path,
             paths: response.data.additionalFilePaths,
             prefix: response.data.prefix
-            //filename: realFileName
           });
         } else {
           console.log("SetState nebuvo padarytas");
         }
       })
-      // .then(() => {
-      //     console.log("Ar čia atėjooooooooo?");
-      //     console.log(this.state.path.lastIndexOf(this.state.prefix));
-      //     if(this.state.path.lastIndexOf(this.state.prefix) !== -1){
-      //         this.filename = this.state.path.substring(0, this.state.path.lastIndexOf(this.state.prefix));
-      //     }
-      //     console.log("Failo pavadinimas gaunasi" + this.filename);
-      // })
       .catch(error => {
         console.log(error);
       });
@@ -175,23 +166,21 @@ class OneCreatedDocumentContainer extends React.Component {
 
   render() {
     return (
-      <div>
-        <OneCreatedDocumentComponent
-          id={this.state.id}
-          title={this.state.title}
-          description={this.state.description}
-          type={this.state.documentTypeTitle}
-          creationDate={this.state.creationDate.substring(0, 10)}
-          path={this.state.path}
-          paths={this.state.paths}
-          prefix={this.state.prefix}
-          //filename={this.state.filename}
-          downloadHandler={this.downloadHandler}
-          handleDelete={this.handleDelete}
-          handleSubmit={this.handleSubmit}
-          fileDownloadHandler={this.fileDownloadHandler}
-        />
-      </div>
+      <OneCreatedDocumentComponent
+        id={this.state.id}
+        title={this.state.title}
+        description={this.state.description}
+        type={this.state.documentTypeTitle}
+        creationDate={this.state.creationDate.substring(0, 10)}
+        path={this.state.path}
+        paths={this.state.paths}
+        prefix={this.state.prefix}
+        //filename={this.state.filename}
+        downloadHandler={this.downloadHandler}
+        handleDelete={this.handleDelete}
+        handleSubmit={this.handleSubmit}
+        fileDownloadHandler={this.fileDownloadHandler}
+      />
     );
   }
 }

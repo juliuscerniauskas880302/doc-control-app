@@ -153,7 +153,7 @@ const EditDocumentComponent = props => {
                       <label className="col-md-2 col-lg-2 form-control-label">
                         Pasirinkite pridedamus failus:
                       </label>
-                      <div className="col-md-5">
+                      <div className="col-md-6 col-lg-4">
                         {" "}
                         <FilePond
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
@@ -191,7 +191,7 @@ const EditDocumentComponent = props => {
                     <label className="col-md-2 form-control-label ">
                       Pasirinkite pridedamus failus:
                     </label>
-                    <div className="col-md-5">
+                    <div className="col-md-6 col-lg-4">
                       <FilePond
                         labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                         labelFileTypeNotAllowed=""

@@ -1,7 +1,6 @@
-
-import React from 'react';
-import OneSubmittedDocumentComponent from './OneSubmittedDocumentComponent';
-import axios from 'axios';
+import React from "react";
+import OneSubmittedDocumentComponent from "./OneSubmittedDocumentComponent";
+import axios from "axios";
 
 class OneSubmittedDocumentContainer extends React.Component {
   constructor(props, context) {
@@ -18,15 +17,40 @@ class OneSubmittedDocumentContainer extends React.Component {
       reviewer: {},
       rejectionReason: "",
       path: "",
+      paths: null,
       prefix: ""
       //filename: "Nėra pridėto failo"
     };
   }
 
-  downloadHandler = (event) => {
+  // downloadHandler = event => {
+  //   axios({
+  //     url: "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+  //     method: "GET",
+  //     responseType: "blob" // important
+  //   }).then(response => {
+  //     var filename = this.extractFileName(
+  //       response.headers["content-disposition"]
+  //     );
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", filename); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   });
+  // };
+
+  fileDownloadHandler = event => {
+    console.log(event.target);
     axios({
       url:
-        "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+        "http://localhost:8081/api/docs/" +
+        this.state.id +
+        "/" +
+        event.target.id +
+        "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -58,16 +82,20 @@ class OneSubmittedDocumentContainer extends React.Component {
     return filename;
   };
 
-
   componentDidMount() {
     const position = this.props.match.params.documentId;
     //let currentUser = "migle";
-    let resourcePath = 'http://localhost:8081/api/docs/' + position;
-    axios.get(resourcePath)
-      .then((response) => {
+    let resourcePath = "http://localhost:8081/api/docs/" + position;
+    axios
+      .get(resourcePath)
+      .then(response => {
         //this.setState(response.data);
-        console.log("-----------------Response data id yra: " + response.data.id);
-        console.log("-----------------Response data title yra: " + response.data.title);
+        console.log(
+          "-----------------Response data id yra: " + response.data.id
+        );
+        console.log(
+          "-----------------Response data title yra: " + response.data.title
+        );
         //buvo naudota, kai PATH buvo ne vien tik failo pavadinimas, bet dar ir PREFIX katu
         //var realFileName = "";
         //    if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
@@ -84,42 +112,61 @@ class OneSubmittedDocumentContainer extends React.Component {
           rejectionDate: response.data.rejectionDate,
           reviewer: response.data.reviewer,
           rejectionReason: response.data.rejectionReason,
+          paths: response.data.additionalFilePaths,
           path: response.data.path,
-          prefix: response.data.prefix,
+          prefix: response.data.prefix
           //filename: realFileName
-        })
-
+        });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
 
   render() {
     return (
-      <div>
-        <OneSubmittedDocumentComponent
-          id={this.state.id}
-          title={this.state.title}
-          description={this.state.description}
-          type={this.state.documentTypeTitle}
-          //sena versija su agliškomis būsenomis
-          //state={this.state.documentState.toLowerCase().charAt(0).toUpperCase() + this.state.documentState.toLowerCase().slice(1)}
-          state={this.state.documentState === "SUBMITTED" ? "Pateiktas"
-            : this.state.documentState === "ACCEPTED" ? "Priimtas"
-              : "Atmestas"
-          }
-          submissionDate={this.state.submissionDate ? this.state.submissionDate.substring(0, 10) : ""}
-          approvalDate={this.state.approvalDate ? this.state.approvalDate.substring(0, 10) : ""}
-          rejectionDate={this.state.rejectionDate ? this.state.rejectionDate.substring(0, 10) : ""}
-          reviewer={this.state.reviewer ? this.state.reviewer.firstname + " " + this.state.reviewer.lastname : ""}
-          rejectionReason={this.state.rejectionReason}
-          path={this.state.path}
-          prefix={this.state.prefix}
-          //filename={this.state.filename}
-          downloadHandler={this.downloadHandler}
-        />
-      </div>
+      <OneSubmittedDocumentComponent
+        id={this.state.id}
+        title={this.state.title}
+        description={this.state.description}
+        type={this.state.documentTypeTitle}
+        //sena versija su agliškomis būsenomis
+        //state={this.state.documentState.toLowerCase().charAt(0).toUpperCase() + this.state.documentState.toLowerCase().slice(1)}
+        state={
+          this.state.documentState === "SUBMITTED"
+            ? "Pateiktas"
+            : this.state.documentState === "ACCEPTED"
+            ? "Priimtas"
+            : "Atmestas"
+        }
+        submissionDate={
+          this.state.submissionDate
+            ? this.state.submissionDate.substring(0, 10)
+            : ""
+        }
+        approvalDate={
+          this.state.approvalDate
+            ? this.state.approvalDate.substring(0, 10)
+            : ""
+        }
+        rejectionDate={
+          this.state.rejectionDate
+            ? this.state.rejectionDate.substring(0, 10)
+            : ""
+        }
+        reviewer={
+          this.state.reviewer
+            ? this.state.reviewer.firstname + " " + this.state.reviewer.lastname
+            : ""
+        }
+        rejectionReason={this.state.rejectionReason}
+        path={this.state.path}
+        paths={this.state.paths}
+        prefix={this.state.prefix}
+        //filename={this.state.filename}
+        // downloadHandler={this.downloadHandler}
+        fileDownloadHandler={this.fileDownloadHandler}
+      />
     );
   }
 }
