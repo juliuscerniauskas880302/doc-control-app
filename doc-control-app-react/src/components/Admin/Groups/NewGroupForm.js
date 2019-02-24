@@ -38,7 +38,6 @@ export default class NewGroupForm extends Component {
   };
 
   getAllUsers = (pageNumber, pageLimit) => {
-    console.log("Page requested: ", pageNumber);
     Axios.get("http://localhost:8081/api/users/", {
       params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
     })
