@@ -8,7 +8,7 @@ const OneCreatedDocumentComponent = props => {
       return (
         path && (
           <p key={i}>
-            &nbsp; <span className="customFileSpan"> {path}</span> &nbsp;{" "}
+            <span className="customFileSpan"> {path}</span> &nbsp;{" "}
             <i
               className="mygtukas fas fa-arrow-circle-down fa-2x"
               id={path}
@@ -90,7 +90,7 @@ const OneCreatedDocumentComponent = props => {
                     <div className="col-3">
                       <p>Papildomos bylos:</p>
                     </div>
-                    <div className="">{AdditionalFiles}</div>
+                    <div className="col-9">{AdditionalFiles}</div>
                   </div>
                 ) : (
                   ""
