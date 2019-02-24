@@ -77,23 +77,9 @@ export default class NewUserContainer extends Component {
     });
   };
 
-  showMessage = () => {
-    if (this.state.showMessage === undefined) {
-      this.setState(
-        {
-          showMessage: { message: "", messageType: "", show: false }
-        },
-        () => {
-          return null;
-        }
-      );
-    }
-  };
-
   render() {
     return (
       <React.Fragment>
-        {this.showMessage()}
         <NewUserComponent
           onSubmit={this.onSubmitHandler}
           onChange={this.onValueChangeHandler}

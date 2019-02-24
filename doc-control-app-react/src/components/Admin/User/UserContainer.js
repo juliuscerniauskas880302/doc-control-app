@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Axios from "axios";
 import { Pagination } from "semantic-ui-react";
 import SemanticUserTable from "./SemanticUserTable";
+import SearchField from "../../ReviewDocuments/SearchField";
 
 export class UserContainer extends Component {
   constructor(props) {
@@ -10,17 +11,34 @@ export class UserContainer extends Component {
       users: [],
       totalUsers: 0,
       recordsPerPage: 15,
-      activePage: 1
+      activePage: 1,
+      searchField: "",
+      dataLoaded: false
     };
+    this.typingTimeout = null;
   }
 
   componentDidMount = () => {
-    //this.setState({ users: userData });
-    //this.getUserCount();
     this.getAllUsersFromServer(
       this.state.activePage,
       this.state.recordsPerPage
     );
+  };
+
+  handleInputFieldChange = e => {
+    if (this.typingTimeout) clearTimeout(this.typingTimeout);
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (this.state.searchField !== "") {
+        this.typingTimeout = setTimeout(
+          this.getAllUsersFromServer(
+            this.state.activePage,
+            this.state.recordsPerPage,
+            this.state.searchField
+          ),
+          475
+        );
+      }
+    });
   };
 
   getUserCount = () => {
@@ -32,15 +50,20 @@ export class UserContainer extends Component {
         console.log(err);
       });
   };
-  // "http://localhost:8081/api/users/" + (pageNumber - 1) + "/" + pageLimit
-  getAllUsersFromServer = (pageNumber, pageLimit) => {
+
+  getAllUsersFromServer = (pageNumber, pageLimit, searchBy) => {
     Axios.get("http://localhost:8081/api/users/", {
-      params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
+      params: {
+        searchFor: searchBy,
+        pageNumber: pageNumber - 1,
+        pageLimit: pageLimit
+      }
     })
       .then(res => {
         this.setState({
           users: res.data.userList,
-          totalUsers: res.data.totalElements
+          totalUsers: res.data.totalElements,
+          dataLoaded: true
         });
       })
       .catch(err => {
@@ -49,8 +72,14 @@ export class UserContainer extends Component {
   };
 
   showAllUsersSemanticUI = () => {
-    if (this.state.users.length === 0) {
+    if (this.state.users.length === 0 && this.state.dataLoaded === false) {
       return <h2 className="">Duomenys yra kraunami iš serverio....</h2>;
+    } else if (
+      this.state.users.length === 0 &&
+      this.state.dataLoaded === true &&
+      this.state.totalUsers === 0
+    ) {
+      return <h2 className="">Duomenys nerasti</h2>;
     }
     let users = this.state.users.map((user, index) => {
       let isAdmin =
@@ -180,7 +209,10 @@ export class UserContainer extends Component {
                     <div className="ui tag label label">Rodyti per puslapį</div>
                   </div>
                 </div>
-
+                <SearchField
+                  searchField={this.state.searchField}
+                  handleChangeOfSearchField={this.handleInputFieldChange}
+                />
                 <div className="card-body">{this.showAllUsersSemanticUI()}</div>
               </div>
             </div>
