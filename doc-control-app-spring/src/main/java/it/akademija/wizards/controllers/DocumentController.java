@@ -45,17 +45,6 @@ public class DocumentController {
         return documentService.getSubmittedDocuments();
     }
 
-//    @ApiOperation(value = "get all documents review")
-//    @RequestMapping(value = "/review", method = RequestMethod.GET)
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    public DocumentPageGetCommand getDocumentsToReview(
-//            @CurrentUser UserPrincipal userPrincipal,
-//            @RequestParam(value = "searchFor", required = false) String searchFor,
-//            @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-//            @RequestParam(value = "pageLimit", required = false) Integer pageLimit) {
-//        return documentService.getDocumentsToReview(userPrincipal.getUsername(), searchFor, pageNumber, pageLimit);
-//    }
-
     @ApiOperation(value = "get all documents review")
     @RequestMapping(value = "/review", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)
