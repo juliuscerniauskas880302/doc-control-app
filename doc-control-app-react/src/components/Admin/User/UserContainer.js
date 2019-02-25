@@ -13,7 +13,8 @@ export class UserContainer extends Component {
       recordsPerPage: 15,
       activePage: 1,
       searchField: "",
-      dataLoaded: false
+      dataLoaded: false,
+      pageCount: 0
     };
     this.typingTimeout = null;
   }
@@ -26,9 +27,13 @@ export class UserContainer extends Component {
   };
 
   handleInputFieldChange = e => {
+    let oldState = this.state.searchField;
     if (this.typingTimeout) clearTimeout(this.typingTimeout);
     this.setState({ [e.target.name]: e.target.value }, () => {
-      if (this.state.searchField !== "") {
+      if (
+        this.state.searchField !== "" ||
+        (oldState.length === 1 && this.state.searchField.length === 0)
+      ) {
         this.typingTimeout = setTimeout(
           this.getAllUsersFromServer(
             this.state.activePage,
@@ -60,11 +65,21 @@ export class UserContainer extends Component {
       }
     })
       .then(res => {
-        this.setState({
-          users: res.data.userList,
-          totalUsers: res.data.totalElements,
-          dataLoaded: true
-        });
+        this.setState(
+          {
+            users: res.data.userList,
+            totalUsers: res.data.totalElements,
+            dataLoaded: true,
+            pageCount: Math.ceil(
+              res.data.totalElements / this.state.recordsPerPage
+            )
+          },
+          () => {
+            if (this.state.activePage > this.state.pageCount) {
+              this.setState({ activePage: this.state.pageCount });
+            }
+          }
+        );
       })
       .catch(err => {
         console.log(err);
@@ -95,7 +110,6 @@ export class UserContainer extends Component {
           username={user.username}
           email={user.email}
           isAdmin={isAdmin}
-          delete={() => this.onDeleteClickHandler(user.username)}
           update={() => this.onUpdateClickHandler(user.username)}
         />
       );
@@ -154,8 +168,8 @@ export class UserContainer extends Component {
   };
 
   render() {
-    const { totalUsers, recordsPerPage, activePage } = this.state;
-    let pageCount = Math.ceil(totalUsers / recordsPerPage);
+    // const { totalUsers, recordsPerPage, activePage } = this.state;
+    // let pageCount = Math.ceil(totalUsers / recordsPerPage);
     return (
       <div className="page-holder w-100 d-flex flex-wrap">
         <div className="container-fluid px-xl-5">
@@ -174,22 +188,39 @@ export class UserContainer extends Component {
                 <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
                   <div className="d-flex flex-row align-items-center">
                     <h2>
-                      <strong className="text-secondary">{totalUsers}</strong>{" "}
+                      <strong className="text-secondary">
+                        {this.state.totalUsers}
+                      </strong>{" "}
                       Vartotojai
                     </h2>
-                    {activePage && (
+                    {this.state.activePage && (
                       <span className="current-page d-inline-block h-100 pl-4 text-secondary">
                         Puslapis{" "}
-                        <span className="font-weight-bold">{activePage}</span> /{" "}
-                        <span className="font-weight-bold">{pageCount}</span>
+                        <span className="font-weight-bold">
+                          {this.state.activePage}
+                        </span>{" "}
+                        /{" "}
+                        <span className="font-weight-bold">
+                          {this.state.pageCount}
+                        </span>
                       </span>
                     )}
                   </div>
-                  <div className="d-flex flex-row py-4 align-items-center">
+                  <div>
                     <Pagination
-                      activePage={activePage}
+                      pageItem={{
+                        style: {
+                          minWidth: "0.4em",
+                          maxWidth: "3em",
+                          fontSize: "9px"
+                        }
+                      }}
+                      size="mini"
+                      activePage={this.state.activePage}
                       onPageChange={this.handlePaginationChange}
-                      totalPages={pageCount}
+                      totalPages={this.state.pageCount}
+                      firstItem={null}
+                      lastItem={null}
                     />
                   </div>
                 </div>
