@@ -21,6 +21,7 @@ export default class NavigationComponent extends Component {
           logout={this.props.logout}
           role={user.admin ? "Administratorius" : "Paprastas vartotojas"}
           nav={this.props.navigation}
+          type={this.props.type}
           {...this.props}
         />
       </React.Fragment>

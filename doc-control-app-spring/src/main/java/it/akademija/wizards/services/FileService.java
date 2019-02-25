@@ -121,6 +121,13 @@ public class FileService {
     public ResponseEntity downloadAllDocuments(String username) throws IOException {
         long time1 = System.currentTimeMillis();
         User user = resourceFinder.getUser(username);
+        String csvFilePath = pathName
+                + File.separator
+                + user.getUsername()
+                + File.separator
+                + user.getUsername()
+                + ".csv";
+        File csvFile = createCsv(user);
         List<Document> documents = user.getDocuments();
         if (documents != null) {
 
@@ -141,13 +148,19 @@ public class FileService {
                     return new ResponseEntity<>("Archiving failed", HttpStatus.BAD_REQUEST);
                 }
             }
+            try{
+                addDirToZipArchive(zs, csvFile, "" );
+            } catch (Exception e) {
+                return new ResponseEntity<>("Archiving CSV failed", HttpStatus.BAD_REQUEST);
+            }
             zs.flush();
             fos.flush();
             zs.close();
             fos.close();
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "compressed.zip" + "\"");
+
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + username + ".zip"+  "\"");
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             long time2 = System.currentTimeMillis();
@@ -393,21 +406,78 @@ public class FileService {
         }
 
     }
+//  Create CSV
+    private File createCsv(User user) {
+        String csvFilePath = pathName
+                + File.separator
+                + user.getUsername()
+                + File.separator
+                + user.getUsername()
+                + ".csv";
+        List<Document> documents = user.getDocuments();
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get(csvFilePath));
 
+
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader(
+                                "Autorius",
+                                "Pavadinimas",
+                                "Aprasymas",
+                                "Sukurimo data",
+                                "Dokumento tipas",
+                                "Dokumento busena",
+                                "Issiuntimo data",
+                                "Patvirtinimo data",
+                                "Atmetimo data",
+                                "Perziurejo",
+                                "Atmetimo prizastis"
+                        )
+                )
+        ) {
+            for (Document doc : documents) {
+                User reviewer = doc.getReviewer();
+                String reviewerFullName = "";
+                if (reviewer != null) {
+                    reviewerFullName = reviewer.getFirstname() + " " + reviewer.getLastname();
+                }
+                csvPrinter.printRecord(
+                        doc.getAuthor().getFirstname() + " " + doc.getAuthor().getLastname(),
+                        doc.getTitle(),
+                        doc.getDescription(),
+                        doc.getCreationDate(),
+                        doc.getDocumentType().getTitle(),
+                        doc.getDocumentState(),
+                        doc.getSubmissionDate(),
+                        doc.getApprovalDate(),
+                        doc.getRejectionDate(),
+                        reviewerFullName,
+                        doc.getRejectionReason()
+                );
+            }
+
+
+            csvPrinter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new File(csvFilePath);
+    }
+        ;
 
     //    Zip folders
-    private void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+    private void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parentDirectoryName) throws Exception {
         if (fileToZip == null || !fileToZip.exists()) {
             return;
         }
 
         String zipEntryName = fileToZip.getName();
-        if (parrentDirectoryName != null && !parrentDirectoryName.isEmpty()) {
-            zipEntryName = parrentDirectoryName + File.separator + fileToZip.getName();
+        if (parentDirectoryName != null && !parentDirectoryName.isEmpty()) {
+            zipEntryName = parentDirectoryName + File.separator + fileToZip.getName();
         }
 
         if (fileToZip.isDirectory()) {
-            System.out.println("+" + zipEntryName);
+            System.out.println(zipEntryName);
             for (File file : Objects.requireNonNull(fileToZip.listFiles())) {
                 addDirToZipArchive(zos, file, zipEntryName);
             }
