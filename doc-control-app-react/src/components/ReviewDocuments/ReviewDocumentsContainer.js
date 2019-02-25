@@ -47,6 +47,7 @@ class ReviewDocumentsContainer extends React.Component {
   };
 
   getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
+    let timeStart = new Date();
     clearInterval(this.updateDelay);
     this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
     axios
@@ -59,6 +60,10 @@ class ReviewDocumentsContainer extends React.Component {
         }
       })
       .then(res => {
+        let timeStop = new Date();
+        let timeDiff = timeStop - timeStart; //in ms
+        timeDiff /= 1000;
+        console.log("Time took to get results", timeDiff);
         this.setState({ loaded: true });
         if (this.timer) {
           clearTimeout(this.timer);
@@ -234,118 +239,114 @@ class ReviewDocumentsContainer extends React.Component {
   render() {
     const { totalDocs, recordsPerPage, activePage } = this.state;
     let pageCount = Math.ceil(totalDocs / recordsPerPage);
-    if (this.state.documents) {
-      const documentCard = this.state.documents.map((document, index) => {
-        return (
-          <ReviewDocumentsComponent
-            key={index}
-            id={document.id}
-            author={document.author.firstname + " " + document.author.lastname}
-            title={document.title}
-            description={document.description}
-            type={document.documentTypeTitle}
-            submissionDate={
-              document.submissionDate
-                ? document.submissionDate.substring(0, 10)
-                : ""
-            }
-            handleAccept={this.handleAccept}
-            handleReject={this.handleReject}
-          />
-        );
-      });
 
-      let show = this.state.loaded ? (
-        <div className="row">
-          <div className="col-12">
-            <table className="ui celled table" style={{ width: "100%" }}>
-              <thead className="thead-inverse">
-                <tr>
-                  <th>Autorius</th>
-                  <th>Numeris</th>
-                  <th>Pavadinimas</th>
-                  <th>Aprašymas</th>
-                  <th>Tipas</th>
-                  <th>Pateikimo data</th>
-                  <th>Operacijos</th>
-                </tr>
-              </thead>
-              <tbody>{documentCard}</tbody>
-            </table>
-          </div>
-        </div>
-      ) : (
-        <Loading />
-      );
-
+    const documentCard = this.state.documents.map((document, index) => {
       return (
-        <div className="page-holder w-100 d-flex flex-wrap">
-          <div className="container-fluid px-xl-5">
-            <section className="pt-5">
-              <div className="col-lg-12">
-                <div className="card">
-                  <div className="card-header">
-                    <h6 className="text-uppercase mb-0">
-                      Peržiūrimi dokumentai
-                    </h6>
-                  </div>
-                  <div className="d-flex flex-row py-4 px-3 align-items-center">
-                    <Pagination
-                      activePage={activePage}
-                      onPageChange={this.handlePaginationChange}
-                      totalPages={pageCount}
-                    />
-                  </div>
-                  <div className="card-body">
-                    <SearchField
-                      searchField={this.state.searchField}
-                      handleChangeOfSearchField={this.handleChangeOfSearchField}
-                    />
-                    {show}
-                  </div>
+        <ReviewDocumentsComponent
+          key={index}
+          id={document.id}
+          author={document.authorFirstname + " " + document.authorLastname}
+          title={document.title}
+          description={document.description}
+          type={document.documentTypeTitle}
+          submissionDate={
+            document.submissionDate
+              ? document.submissionDate.substring(0, 10)
+              : ""
+          }
+          handleAccept={this.handleAccept}
+          handleReject={this.handleReject}
+        />
+      );
+    });
+
+    let show = this.state.loaded ? (
+      <div className="row">
+        <div className="col-12">
+          <table className="ui celled table" style={{ width: "100%" }}>
+            <thead className="thead-inverse">
+              <tr>
+                <th>Autorius</th>
+                <th>Numeris</th>
+                <th>Pavadinimas</th>
+                <th>Aprašymas</th>
+                <th>Tipas</th>
+                <th>Pateikimo data</th>
+                <th>Operacijos</th>
+              </tr>
+            </thead>
+            <tbody>{documentCard}</tbody>
+          </table>
+        </div>
+      </div>
+    ) : (
+      <Loading />
+    );
+
+    return (
+      <div className="page-holder w-100 d-flex flex-wrap">
+        <div className="container-fluid px-xl-5">
+          <section className="pt-5">
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-header">
+                  <h6 className="text-uppercase mb-0">Peržiūrimi dokumentai</h6>
+                </div>
+                <div className="d-flex flex-row py-4 px-3 align-items-center">
+                  <Pagination
+                    activePage={activePage}
+                    onPageChange={this.handlePaginationChange}
+                    totalPages={pageCount}
+                  />
+                </div>
+                <div className="card-body">
+                  <SearchField
+                    searchField={this.state.searchField}
+                    handleChangeOfSearchField={this.handleChangeOfSearchField}
+                  />
+                  {show}
                 </div>
               </div>
-            </section>
-          </div>
+            </div>
+          </section>
         </div>
+      </div>
 
-        // <div className="container-fluid">
-        //     <div className="row">
-        //         <div className="col-2">
-        //             <h5>Autorius</h5>
-        //         </div>
-        //         <div className="col-2">
-        //             <h5>Numeris</h5>
-        //         </div>
-        //         <div className="col-2">
-        //             <h5>Pavadinimas</h5>
-        //         </div>
-        //         <div className="col-2">
-        //             <h5>Aprašymas</h5>
-        //         </div>
-        //         <div className="col-1">
-        //             <h5>Tipas</h5>
-        //         </div>
-        //         <div className="col-1">
-        //             <h5>Pateikimo data</h5>
-        //         </div>
-        //         <div className="col-1">
-        //             <h5>Operacijos</h5>
-        //         </div>
-        //     </div>
-        //     <div className="row">{documentCard}
-        //     </div>
-        //     {/* <RejectReasonPopUp show={this.state.isOpen}
-        //     onClose={this.closePopup}
-        //     handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
-        //     closePopupAcceptReject={this.closePopupAcceptReject}
-        //     closePopupCancelReject={this.closePopupCancelReject}
-        // >
-        // </RejectReasonPopUp> */}
-        // </div>
-      );
-    }
-    return this.state.loading;
+      // <div className="container-fluid">
+      //     <div className="row">
+      //         <div className="col-2">
+      //             <h5>Autorius</h5>
+      //         </div>
+      //         <div className="col-2">
+      //             <h5>Numeris</h5>
+      //         </div>
+      //         <div className="col-2">
+      //             <h5>Pavadinimas</h5>
+      //         </div>
+      //         <div className="col-2">
+      //             <h5>Aprašymas</h5>
+      //         </div>
+      //         <div className="col-1">
+      //             <h5>Tipas</h5>
+      //         </div>
+      //         <div className="col-1">
+      //             <h5>Pateikimo data</h5>
+      //         </div>
+      //         <div className="col-1">
+      //             <h5>Operacijos</h5>
+      //         </div>
+      //     </div>
+      //     <div className="row">{documentCard}
+      //     </div>
+      //     {/* <RejectReasonPopUp show={this.state.isOpen}
+      //     onClose={this.closePopup}
+      //     handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
+      //     closePopupAcceptReject={this.closePopupAcceptReject}
+      //     closePopupCancelReject={this.closePopupCancelReject}
+      // >
+      // </RejectReasonPopUp> */}
+      // </div>
+    );
   }
 }
 
