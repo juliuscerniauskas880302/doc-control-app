@@ -34,6 +34,7 @@ class ReviewDocumentsContainer extends React.Component {
 
   handleChangeOfSearchField = event => {
     this.setState({ searchField: event.target.value });
+    this.setState({activePage: 1});
     clearInterval(this.updateDelay);
     this.updateDelay = setInterval(
       () =>
