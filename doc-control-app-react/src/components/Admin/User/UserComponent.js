@@ -33,10 +33,6 @@ const User = props => {
       <td>{props.isAdmin}</td>
       <td>
         <i className="fas fa-info mx-1 fa-1x" onClick={props.update} />
-        <i
-          className="fas fa-user-times mx-1 fa-1x "
-          onClick={() => confirmDeltetion()}
-        />
       </td>
     </tr>
   );
