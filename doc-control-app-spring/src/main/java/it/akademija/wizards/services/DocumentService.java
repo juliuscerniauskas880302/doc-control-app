@@ -52,8 +52,23 @@ public class DocumentService {
                 .collect(Collectors.toList());
     }
 
+//    @Transactional(readOnly = true)
+//    public DocumentPageGetCommand getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
+//        String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
+//        Pageable pageable;
+//        Sort sort = Sort.by("submissionDate").descending();
+//        if (pageNumber != null && pageLimit != null) {
+//            pageable = PageRequest.of(pageNumber, pageLimit, sort);
+//        } else {
+//            pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+//        }
+//        Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable);
+//        List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
+//        return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
+//    }
+
     @Transactional(readOnly = true)
-    public DocumentPageGetCommand getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
+    public DocumentForReviewPage getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
         String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
         Pageable pageable;
         Sort sort = Sort.by("submissionDate").descending();
@@ -63,8 +78,14 @@ public class DocumentService {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
         }
         Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable);
-        List<DocumentGetCommand> documentList = pageDocument.stream().map(mapper::entityToGetCommand).collect(Collectors.toList());
-        return new DocumentPageGetCommand(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
+        List<DocumentGetReviewCommand> documentList = pageDocument.stream().map(document -> {
+            return new DocumentGetReviewCommand(
+                    document.getAuthor().getFirstname(),
+                    document.getAuthor().getLastname(),
+                    document.getId(),
+                    document.getTitle(), document.getDescription(), document.getDocumentType().getTitle(), document.getSubmissionDate());
+        }).collect(Collectors.toList());
+        return new DocumentForReviewPage(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
     }
 
     @Transactional(readOnly = true)
