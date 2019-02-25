@@ -41,11 +41,17 @@ export default class UserNavigationBothContainer extends Component {
                   name: "Pateikti",
                   icon: "fas fa-file-alt mr-3 text-gray"
                 },
+
                 {
-                  bottomTab: "true",
                   to: "/createdDocuments",
                   name: "Sukurti",
                   icon: "fas fa-file mr-3 text-gray"
+                },
+                {
+                  bottomTab: "true",
+                  name: "Bylų atsisiuntimas",
+                  icon: "fas fa-copy mr-3 text-gray",
+                  type: "dropdown"
                 },
                 {
                   topTab: {
@@ -178,6 +184,7 @@ export default class UserNavigationBothContainer extends Component {
                   )}
                   exact
                 />
+
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
               </Switch>

@@ -9,7 +9,6 @@ import EditDocumentContainer from "../../../CreateEditDocument/EditDocumentConta
 import ResourceNotFoundCompoentn from "../../../Errors/ResourceNotFoundComponent";
 import Axios from "axios";
 import NavigationComponent from "../../NavigationComponent";
-import CSV from "../../../Testing/CSV";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
 import Profile from "../../Profile";
 export default class UserNavigationSubmitContainer extends Component {
@@ -24,6 +23,7 @@ export default class UserNavigationSubmitContainer extends Component {
       this.props.history.push("/login");
     }
   };
+
   render() {
     this.checkToken();
     return (
@@ -45,10 +45,11 @@ export default class UserNavigationSubmitContainer extends Component {
               name: "Sukurti",
               icon: "fas fa-file mr-3 text-gray"
             },
+
             {
-              to: "/downloadCSV",
-              name: "Atsisiusti csv",
-              icon: "fas fa-file mr-3 text-gray"
+              name: "Bylų atsisiuntimas",
+              icon: "fas fa-copy mr-3 text-gray",
+              type: "dropdown"
             }
           ]}
           {...this.props}
@@ -117,15 +118,7 @@ export default class UserNavigationSubmitContainer extends Component {
                 </ResponseMessage>
               )}
             />
-            <Route
-              exact
-              path="/downloadCSV"
-              render={props => (
-                <ResponseMessage>
-                  <CSV {...props} />
-                </ResponseMessage>
-              )}
-            />
+
             <Route
               path="/user/profile"
               render={props => (
@@ -135,6 +128,7 @@ export default class UserNavigationSubmitContainer extends Component {
               )}
               exact
             />
+
             <Route path="*" component={ResourceNotFoundCompoentn} />
             <Route component={ResourceNotFoundCompoentn} />
           </Switch>

@@ -1,5 +1,4 @@
  .btn {
-    border-radius: 10px !important;
     width: 12em;
 
 }
@@ -88,4 +87,7 @@
         'Segoe UI Symbol';
     font-size: 1.1em;
         
+}
+.dropdown-item{
+     font-size: 12px;
 }
