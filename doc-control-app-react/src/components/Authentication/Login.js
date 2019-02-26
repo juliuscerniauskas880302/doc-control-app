@@ -35,7 +35,7 @@ const Login = ({
                 Dokumentų Valdymo Sistema v 1.0.0
               </h1>
               <h2 className="mb-4">Sveiki sugrįžę!</h2>
-              <h1>{wrongData()}</h1>
+              {wrongData()}
               <form id="loginForm" className="mt-4" onSubmit={e => onSubmit(e)}>
                 <div className="form-group mb-4">
                   <input

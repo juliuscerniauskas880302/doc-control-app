@@ -76,7 +76,11 @@ export class UserContainer extends Component {
           },
           () => {
             if (this.state.activePage > this.state.pageCount) {
-              this.setState({ activePage: this.state.pageCount });
+              if (this.state.pageCount === 0) {
+                this.setState({ activePage: 1 });
+              } else {
+                this.setState({ activePage: this.state.pageCount });
+              }
             }
           }
         );
