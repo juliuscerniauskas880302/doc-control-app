@@ -62,12 +62,8 @@ public class DocumentService {
         } else {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
         }
-        Page<Document> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable);
-        List<DocumentGetReviewCommand> documentList = pageDocument.stream().map(document -> new DocumentGetReviewCommand(document.getAuthor().getFirstname(),
-             document.getAuthor().getLastname(),
-             document.getId(),
-             document.getTitle(), document.getDescription(), document.getDocumentType().getTitle(), document.getSubmissionDate())).collect(Collectors.toList());
-        return new DocumentForReviewPage(documentList, pageDocument.getTotalElements(), pageDocument.getTotalPages());
+        Page<DocumentGetReviewCommand> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable);
+        return new DocumentForReviewPage(pageDocument.getContent(), pageDocument.getTotalElements(), pageDocument.getTotalPages());
     }
 
     @Transactional(readOnly = true)

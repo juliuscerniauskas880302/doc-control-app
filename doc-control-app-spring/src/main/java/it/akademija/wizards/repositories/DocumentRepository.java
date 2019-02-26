@@ -3,6 +3,7 @@ package it.akademija.wizards.repositories;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.enums.DocumentState;
+import it.akademija.wizards.models.document.DocumentGetReviewCommand;
 import it.akademija.wizards.models.stats.StatsGetTypeCommand;
 import it.akademija.wizards.models.stats.TypeUserStats;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,9 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " GROUP BY u.firstname, u.lastname ORDER BY COUNT(d.id) DESC")
     List<TypeUserStats> getTopSubmittingUsersForDocType(@Param("documentTypeId") String documentTypeId, Pageable pageable);
 
-    @Query("SELECT d FROM Document d WHERE d.id IN (SELECT DISTINCT d.id FROM Document d" +
+    @Query("SELECT DISTINCT new it.akademija.wizards.models.document.DocumentGetReviewCommand(" +
+            "d.author.firstname, d.author.lastname, d.id, d.title, d.description, d.documentType.title, d.submissionDate)" +
+            " FROM Document d" +
             " JOIN d.documentType dt" +
             " JOIN dt.reviewUserGroups rug" +
             " JOIN rug.users u WHERE u.username = :username" +
@@ -42,10 +45,10 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
             " OR lower(d.title) like %:searchFor%" +
             " OR lower(d.description) like %:searchFor%" +
             " OR lower(d.id) like %:searchFor%" +
-            " OR lower(dt.title) like %:searchFor%))")
-    Page<Document> getDocumentsForReview(@Param(value = "username") String username,
-                                         @Param(value = "searchFor") String searchFor,
-                                         Pageable pageable);
+            " OR lower(dt.title) like %:searchFor%)")
+    Page<DocumentGetReviewCommand> getDocumentsForReview(@Param(value = "username") String username,
+                                                         @Param(value = "searchFor") String searchFor,
+                                                         Pageable pageable);
 
     @Query("SELECT d FROM Document d WHERE d.author = :user AND d.documentState IN :documentStates" +
             " AND (lower(d.title) like %:searchFor%" +
