@@ -28,10 +28,7 @@ export default function NavigationLink(props) {
       ) : (
         <React.Fragment key={`nav-${index}`}>
           {topTab}
-          <NavLink
-            to={window.location.pathname}
-            style={{ textDecoration: "none" }}
-          >
+          <NavLink to="#" style={{ textDecoration: "none" }}>
             <li className="dropdown sidebar-list-item">
               <div
                 className="sidebar-link text-muted"
