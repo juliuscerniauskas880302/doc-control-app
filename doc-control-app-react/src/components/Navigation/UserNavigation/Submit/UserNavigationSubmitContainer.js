@@ -47,6 +47,7 @@ export default class UserNavigationSubmitContainer extends Component {
             },
 
             {
+              to: "",
               name: "Bylų atsisiuntimas",
               icon: "fas fa-copy mr-3 text-gray",
               type: "dropdown"
