@@ -124,5 +124,10 @@
         <appender-ref ref="DOCUMENTFILE" />
         <appender-ref ref="STDOUT" />
     </logger>
+
+    <logger name="${BASEPCKG}.controllers.AuthController" level="info" additivity="false">
+        <appender-ref ref="USERFILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
  
 </configuration>
