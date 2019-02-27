@@ -45,11 +45,6 @@ class NewDocumentContainer extends React.Component {
     this.setState({ documentTypeTitle: event.target.value });
   };
 
-  // onFileSelectHandler = event => {
-  //   console.log(event.target.files);
-  //   this.setState({ [event.target.name]: event.target.files });
-  // };
-
   onUpdateMainFile = fileItems => {
     this.setState({
       mainFile: fileItems.map(fileItem => fileItem.file)
@@ -62,54 +57,18 @@ class NewDocumentContainer extends React.Component {
     });
   };
 
-  // downloadHandler = (event) => {
-  //   // 70a73980-02d1-4e63-a577-6e59b25c976b
-  //   // Axios.get(
-  //   //   "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download"
-  //   // ).then(res => FileSaver.saveAs(res.data, "effectiveFileName"));
-
-  //   axios({
-  //     url:
-  //       "http://localhost:8081/api/docs/70a73980-02d1-4e63-a577-6e59b25c976b/download", //doc id
-  //     method: "GET",
-  //     responseType: "blob" // important
-  //   }).then(response => {
-  //     var filename = this.extractFileName(
-  //       response.headers["content-disposition"]
-  //     );
-  //     const url = window.URL.createObjectURL(new Blob([response.data]));
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.setAttribute("download", filename); //or any other extension
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   });
-  // };
-
-  // extractFileName = contentDispositionValue => {
-  //   var filename = "";
-  //   if (
-  //     contentDispositionValue &&
-  //     contentDispositionValue.indexOf("attachment") !== -1
-  //   ) {
-  //     var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-  //     var matches = filenameRegex.exec(contentDispositionValue);
-  //     if (matches != null && matches[1]) {
-  //       filename = matches[1].replace(/['"]/g, "");
-  //     }
-  //   }
-  //   return filename;
-  // };
-
   validate = (event, fileItem) => {
     console.log(event);
     console.log(fileItem);
   };
-  //TODO
+  validateFileExtensions = file => {
+    let acceptedFileTypes = ["pdf", "jpg", "png"];
+    if (!acceptedFileTypes.includes(file.name.split(".").pop())) {
+      return;
+    }
+  };
   handleSubmit = event => {
     event.preventDefault();
-    this.openFileTransferPopup();
     let isFileNamesSame = false;
     let correctFileExtensions = true;
     let model = {
@@ -269,7 +228,6 @@ class NewDocumentContainer extends React.Component {
           handleChangeOfType={this.handleChangeOfType}
           onUpdateMainFile={this.onUpdateMainFile}
           onUpdateAdditionalFiles={this.onUpdateAdditionalFiles}
-          //downloadHandler={this.downloadHandler}
           mainFileUploaded={this.state.mainFile !== null}
           handleSubmit={this.handleSubmit}
           openFileTransferPopup={this.openFileTransferPopup}
