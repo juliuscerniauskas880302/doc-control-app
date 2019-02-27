@@ -9,6 +9,8 @@ import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
+import it.akademija.wizards.services.auxiliary.Auth;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserGroupService {
 
@@ -61,13 +64,16 @@ public class UserGroupService {
         UserGroup userGroup = new UserGroup();
         BeanUtils.copyProperties(userGroupCreateCommand, userGroup);
         userGroupRepository.save(userGroup);
+        log.info("Vartotojas '" + Auth.getUsername() + "' sukūrė naują grupę '" + userGroup.getTitle() + "'.");
     }
 
     @Transactional
     public void updateUserGroup(UserGroupCreateCommand userGroupCreateCommand, String id) {
         UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        String oldUserGroupTitle = userGroup.getTitle();
         BeanUtils.copyProperties(userGroupCreateCommand, userGroup);
         userGroupRepository.save(userGroup);
+        log.info("Vartotojas '" + Auth.getUsername() + "' pakeitė grupės '" + oldUserGroupTitle + "' pavadinimą į '" + userGroup.getTitle() + "'.");
     }
 
     @Transactional
@@ -81,6 +87,7 @@ public class UserGroupService {
                 reviewDocumentType.removeReviewUserGroup(userGroup);
             }
             userGroupRepository.deleteById(id);
+            log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė grupę '" + userGroup.getTitle() + "'.");
         }
     }
 
@@ -91,6 +98,9 @@ public class UserGroupService {
             List<User> userList = userRepository.findAllByUsernameIn(groupAddUsersCommand.getUsers());
             userGroup.setUsers(new HashSet<>(userList));
             userGroupRepository.save(userGroup);
+            log.info("Vartotojas '" + Auth.getUsername() + "' į grupę '" + userGroup.getTitle() + "' įtraukė naujus vartotojus arba pašalino buvusius.");
+            //TO DO
+            //Čia reikėtų iki naujo sąrašo užtvirtinimo, nuskaityti esamą ir tada palyginti abu sąrašus.
             return getGroupsUsers(id);
         } else {
             throw new NullPointerException("User group does not exist");
