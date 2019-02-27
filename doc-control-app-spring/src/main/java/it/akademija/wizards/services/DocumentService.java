@@ -9,8 +9,10 @@ import it.akademija.wizards.exception.BadRequestException;
 import it.akademija.wizards.models.document.*;
 import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.repositories.UserRepository;
+import it.akademija.wizards.services.auxiliary.Auth;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class DocumentService {
 
     @Autowired
@@ -121,6 +124,7 @@ public class DocumentService {
                 return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
             }
             documentRepository.save(document);
+            log.info("Vartotojas '" + Auth.getUsername() + "' sukūrė naują dokumentą, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "'.");
         } else {
             throw new BadRequestException("User doesn't have permission to create this type of document");
         }
@@ -169,6 +173,7 @@ public class DocumentService {
                 }
             }
             documentRepository.save(mapper.updateCommandToEntity(documentUpdateCommand, document));
+            log.info("Vartotojas '" + Auth.getUsername() + "' koregavo dokumentą, kurio id '" + id + "'.");
         } else {
             throw new BadRequestException("Submitted documents cannot be updated");
         }
@@ -183,6 +188,7 @@ public class DocumentService {
         fileService.deleteAllFiles(document);
         author.removeDocument(document);
         documentRepository.delete(document);
+        log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė dokumentą, kurio id '" + id + "'.");
     }
 
     //SUBMIT
@@ -191,6 +197,7 @@ public class DocumentService {
         Document document = resourceFinder.getDocument(id);
         document.setSubmissionDate(new Date());
         document.setDocumentState(DocumentState.SUBMITTED);
+        log.info("Vartotojas '" + Auth.getUsername() + "' pateikė dokumentą, kurio id '" + id + "'.");
     }
 
     //REVIEW
@@ -202,12 +209,19 @@ public class DocumentService {
             document.setDocumentState(documentReviewCommand.getDocumentState());
             document.setReviewer(reviewer);
             document.setReviewDate();
-            if (document.getDocumentState().equals(DocumentState.REJECTED))
+            if (document.getDocumentState().equals(DocumentState.REJECTED)){
                 document.setRejectionReason(documentReviewCommand.getRejectionReason());
+            }
+            if(document.getDocumentState().equals(DocumentState.REJECTED)){
+                log.info("Vartotojas '" + Auth.getUsername() + "' atmetė dokumentą, kurio id '" + id + "'.");
+            } else {
+                log.info("Vartotojas '" + Auth.getUsername() + "' priėmė dokumentą, kurio id '" + id + "'.");
+            }
         } else {
             throw new BadRequestException("User doesn't have permission to review this type of document");
         }
     }
+
     @Transactional
     public ResponseEntity<?> downloadCSV(String username){
         User user = resourceFinder.getUser(username);

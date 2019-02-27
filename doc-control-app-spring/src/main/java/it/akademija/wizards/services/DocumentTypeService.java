@@ -9,6 +9,8 @@ import it.akademija.wizards.models.user.UserRemoveGroupsCommand;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
 import it.akademija.wizards.repositories.DocumentTypeRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
+import it.akademija.wizards.services.auxiliary.Auth;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -18,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
+@Slf4j
 public class DocumentTypeService {
 
     @Autowired
@@ -49,14 +53,17 @@ public class DocumentTypeService {
         DocumentType documentType = new DocumentType();
         BeanUtils.copyProperties(documentTypeCreateCommand, documentType);
         documentTypeRepository.save(documentType);
+        log.info("Vartotojas '" + Auth.getUsername() + "' sukūrė naują dokumentų tipą '" + documentType.getTitle() + "'.");
     }
 
     //UPDATE
     @Transactional
     public void updateDocumentType(String id, DocumentTypeCreateCommand documentTypeCreateCommand) {
         DocumentType documentType = this.getDocTypeFromDB(id);
+        String oldDocumentTypeTitle = documentType.getTitle();
         BeanUtils.copyProperties(documentTypeCreateCommand, documentType);
         documentTypeRepository.save(documentType);
+        log.info("Vartotojas '" + Auth.getUsername() + "' pakeitė dokumento '" + oldDocumentTypeTitle + "' pavadinimą į '" + documentType.getTitle() + "'.");
     }
 
     //DELETE
@@ -68,6 +75,7 @@ public class DocumentTypeService {
             documentType.removeReviewUserGroup(userGroup);
         }
         documentTypeRepository.delete(documentType);
+        log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė dokumentų tipą '" + documentType.getTitle() + "'.");
     }
 
     //GET GROUPS
@@ -104,6 +112,9 @@ public class DocumentTypeService {
             else if (groupType.equals("review")) documentType.addReviewUserGroup(userGroup);
         }
         documentTypeRepository.save(documentType);
+        log.info("Vartotojas '" + Auth.getUsername() + "' koregavo dokumentų tipo '" + documentType.getTitle() + "' priskyrimus vartotojų grupėms.");
+        //TO DO
+        //Reikia surasti būdą pasižiūrėti kokios grupės jau buvo pažymėtos iki šio pakeitimo.
     }
 
     //REMOVE GROUPS
@@ -116,6 +127,10 @@ public class DocumentTypeService {
             else if (groupType.equals("review")) documentType.removeReviewUserGroup(userGroup);
         }
         documentTypeRepository.save(documentType);
+        log.info("Įvyko grupės trynimas");
+        //log.info("Vartotojas '" + Auth.getUsername() + "' koregavo dokumentų tipo '" + documentType.getTitle() + "' priskyrimus vartotojų grupėms.");
+        //TO DO
+        //Čia reikia sužiūrėti kaip vyskta grupės pašalinimas
     }
 
 
