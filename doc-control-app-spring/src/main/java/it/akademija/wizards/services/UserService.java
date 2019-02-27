@@ -10,6 +10,7 @@ import it.akademija.wizards.repositories.RoleRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.security.payload.ApiResponse;
+import it.akademija.wizards.services.auxiliary.Auth;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -113,7 +114,7 @@ public class UserService {
         }
         user.getRoles().add(userRole);
         User result = userRepository.save(user);
-        log.info("Sukurtas naujas vartotojas.");
+        log.info("Vartotojas '" + Auth.getUsername() + "' sukūrė naują vartotoją '" + result.getUsername() + "'.");
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
@@ -164,6 +165,7 @@ public class UserService {
         }
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userRepository.save(user);
+        log.info("Vartotojas '" + Auth.getUsername() + "' koregavo vartotojo '" + user.getUsername() + "' duomenis.");
     }
 
     @Transactional
@@ -177,6 +179,7 @@ public class UserService {
                 document.setAuthor(null);
             }
             userRepository.delete(user);
+            log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė vartotoją '" + user.getUsername() + "'.");
         } else {
             throw new NullPointerException("User does not exist");
         }
@@ -188,6 +191,7 @@ public class UserService {
         if (user != null) {
             user.setPassword(passwordEncoder.encode(userPassCommand.getPassword()));
             userRepository.save(user);
+            log.info("Vartotojas '" + Auth.getUsername() + "' pakeitė vartotojo '" + user.getUsername() + "' slaptažodį.");
             return true;
         }
         return false;
@@ -202,6 +206,11 @@ public class UserService {
                 user.addGroup(userGroup);
             }
             userRepository.save(user);
+            for (UserGroup userGroup : userGroupList) {
+                log.info("Vartotojas '" + user.getUsername() + "' įtrauktas į grupę '" + userGroup.getTitle() + "'.");
+            }
+            //System.out.println(Auth.getUsername());
+            //log.info("Vartotojas '" + Auth.getUsername() + "' įtraukė vartotoją '" + user.getUsername() + "' į grupę '" + " kažkokią");
         }
     }
 
@@ -214,6 +223,9 @@ public class UserService {
                 user.removeGroup(userGroup);
             }
             userRepository.save(user);
+            for (UserGroup userGroup : userGroupList) {
+                log.info("Vartotojas '" + user.getUsername() + "' pašaltintas iš grupės '" + userGroup.getTitle() + "'.");
+            }
         }
     }
 
