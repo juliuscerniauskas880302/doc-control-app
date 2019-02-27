@@ -4,6 +4,8 @@ import it.akademija.wizards.security.jwt.JwtTokenProvider;
 import it.akademija.wizards.security.payload.JwtAuthenticationResponse;
 import it.akademija.wizards.security.payload.LoginRequest;
 import it.akademija.wizards.services.UserService;
+import it.akademija.wizards.services.auxiliary.Auth;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/auth")
+@Slf4j
 public class AuthController {
 
     @Autowired
@@ -40,6 +43,7 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("Prie sistemos prisijungė vartotojas '" + Auth.getUsername() + "'.");
 
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
