@@ -22,12 +22,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserService {
 
     private UserRepository userRepository;
@@ -111,6 +113,7 @@ public class UserService {
         }
         user.getRoles().add(userRole);
         User result = userRepository.save(user);
+        log.info("Sukurtas naujas vartotojas.");
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
