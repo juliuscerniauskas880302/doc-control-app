@@ -207,10 +207,8 @@ public class UserService {
             }
             userRepository.save(user);
             for (UserGroup userGroup : userGroupList) {
-                log.info("Vartotojas '" + user.getUsername() + "' įtrauktas į grupę '" + userGroup.getTitle() + "'.");
+                log.info("Vartotojas '" + Auth.getUsername() + "' įtraukė vartotoją '" + user.getUsername() + "' į grupę '" + userGroup.getTitle() + "'.");
             }
-            //System.out.println(Auth.getUsername());
-            //log.info("Vartotojas '" + Auth.getUsername() + "' įtraukė vartotoją '" + user.getUsername() + "' į grupę '" + " kažkokią");
         }
     }
 
@@ -224,7 +222,7 @@ public class UserService {
             }
             userRepository.save(user);
             for (UserGroup userGroup : userGroupList) {
-                log.info("Vartotojas '" + user.getUsername() + "' pašaltintas iš grupės '" + userGroup.getTitle() + "'.");
+                log.info("Vartotojas '" + Auth.getUsername() + "' pašalino vartotoją '" + user.getUsername() + "' iš grupės '" + userGroup.getTitle() + "'.");
             }
         }
     }
