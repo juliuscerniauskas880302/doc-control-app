@@ -10,6 +10,15 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "document", indexes = {
+        @Index(name = "idx_doc_title", columnList = "title"),
+        @Index(name = "idx_doc_description", columnList = "description"),
+        @Index(name = "idx_doc_author", columnList = "author_id"),
+        @Index(name = "idx_doc_type", columnList = "doctype_id"),
+        @Index(name = "idx_doc_credate", columnList = "creation_date"),
+        @Index(name = "idx_doc_subdate", columnList = "submission_date"),
+        @Index(name = "idx_doc_state", columnList = "document_state")
+})
 public class Document {
 
     @Id
@@ -28,23 +37,29 @@ public class Document {
     private List<String> additionalFilePaths = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @NotNull
+    @Column(name = "document_state", nullable = false)
     private DocumentState documentState;
 
     @ManyToOne
-    @JoinColumn(name = "doctype_id")
+    @JoinColumn(name = "doctype_id", nullable = false)
     private DocumentType documentType;
 
     @NotNull
+    @Column(name = "title", nullable = false)
     private String title;
 
     @NotNull
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "creation_date")
     private Date creationDate;
 
+    @Column(name = "submission_date")
     private Date submissionDate;
 
     private Date approvalDate;
