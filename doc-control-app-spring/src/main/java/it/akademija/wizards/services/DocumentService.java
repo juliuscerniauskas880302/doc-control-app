@@ -8,6 +8,7 @@ import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.exception.BadRequestException;
 import it.akademija.wizards.models.document.*;
 import it.akademija.wizards.repositories.DocumentRepository;
+import it.akademija.wizards.repositories.DocumentTypeRepository;
 import it.akademija.wizards.repositories.UserRepository;
 import it.akademija.wizards.services.auxiliary.Mapper;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
@@ -23,9 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +40,8 @@ public class DocumentService {
     private Mapper mapper;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private DocumentTypeRepository documentTypeRepository;
 
     //GET
     @Transactional(readOnly = true)
@@ -61,9 +62,15 @@ public class DocumentService {
             pageable = PageRequest.of(pageNumber, pageLimit, sort);
         } else {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+        };
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            List<DocumentType> documentTypeList = documentTypeRepository.findAllByGroupsAndUser(user);
+            Page<DocumentGetReviewCommand> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable, documentTypeList);
+            return new DocumentForReviewPage(pageDocument.getContent(), pageDocument.getTotalElements(), pageDocument.getTotalPages());
+        } else {
+            throw new NullPointerException("User " + username + " not found");
         }
-        Page<DocumentGetReviewCommand> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable);
-        return new DocumentForReviewPage(pageDocument.getContent(), pageDocument.getTotalElements(), pageDocument.getTotalPages());
     }
 
     @Transactional(readOnly = true)

@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "document_type", indexes = {
+        @Index(name = "ix_dt_title", columnList = "title")
+})
 public class DocumentType {
 
     @Id
@@ -13,7 +16,7 @@ public class DocumentType {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    @Column(unique = true)
+    @Column(name = "title", unique = true)
     private String title;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

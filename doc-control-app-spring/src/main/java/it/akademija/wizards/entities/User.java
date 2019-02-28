@@ -9,22 +9,30 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(name = "user", indexes = {
+        @Index(name = "idx_user_name", columnList = "username", unique = true),
+        @Index(name = "idx_user_firstname", columnList = "firstname"),
+        @Index(name = "idx_user_lastname", columnList = "lastname")
+
+})
 public class User {
     @Id
     @GeneratedValue(generator ="uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    @Column(unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @NotNull
     private String password;
 
     @NotNull
+    @Column(name = "firstname")
     private String firstname;
 
     @NotNull
+    @Column(name = "lastname")
     private String lastname;
 
     @NotNull
