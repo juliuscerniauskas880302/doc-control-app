@@ -88,9 +88,7 @@ public class FileService {
     public ResponseEntity downloadFile(String documentId, String filePath) throws FileNotFoundException {
         Document document = resourceFinder.getDocument(documentId);
 //        String originalFileName = document.getPath();
-
         if(filePath.equals(document.getPath())) {
-
             File file = new File(getDocumentFolder(document).getPath()
                     + File.separator
                     + document.getPath());
@@ -105,6 +103,7 @@ public class FileService {
                 return ResponseEntity.ok().headers(headers).
                         body(resource);
             }
+            log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui failo '" +  file.getName() + "' nėra.");
         } else if (document.getAdditionalFilePaths().contains(filePath)){
             File file = new File(getDocumentFolder(document).getPath()
                     + File.separator
@@ -120,9 +119,8 @@ public class FileService {
                 return ResponseEntity.ok().headers(headers).
                         body(resource);
             }
+            log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui failo '" +  file.getName() + "' nėra.");
         }
-
-
         return ResponseEntity.notFound().build();
 
     }
