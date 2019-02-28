@@ -4,7 +4,9 @@ import it.akademija.wizards.configs.MediaTypeUtils;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.enums.DocumentState;
+import it.akademija.wizards.services.auxiliary.Auth;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
+@Slf4j
 public class FileService {
 
     private static final String pathName = "documents";
@@ -46,6 +49,8 @@ public class FileService {
             Document document,
             String fileName) {
             deleteAdditionalFiles(document, fileName);
+
+        log.info("Vartotojas '" + Auth.getUsername() + "' dokumentui, kurio id '" + document.getId() + "', ištrynė pridėtą failą '" + fileName + "'.");
         return new ResponseEntity<>("File " + fileName + " was deleted.", HttpStatus.CREATED);
     }
 
@@ -65,9 +70,15 @@ public class FileService {
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             headers.setContentType(mediaType);
+            //TO DO
+            //NEVEIKIA LOG
+            log.info("Vartotojas '" + Auth.getUsername() + "'. Pagrindinis failas atsiųstas.");
             return ResponseEntity.ok().headers(headers).
                     body(resource);
         }
+        //TO DO
+        //NEVEIKIA LOG
+        log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui pagrindinio failo nėra.");
         return ResponseEntity.notFound().build();
 
     }
@@ -145,12 +156,14 @@ public class FileService {
                 try {
                     addDirToZipArchive(zs, documentFile, "");
                 } catch (Exception e) {
+                    log.error("Vartotojas '" + Auth.getUsername() + "'. Nepavyko suformuoti dokumentų archyvo.");
                     return new ResponseEntity<>("Archiving failed", HttpStatus.BAD_REQUEST);
                 }
             }
             try{
                 addDirToZipArchive(zs, csvFile, "" );
             } catch (Exception e) {
+                log.error("Vartotojas '" + Auth.getUsername() + "'. Nepavyko suformuoti dokumentų archyvo.");
                 return new ResponseEntity<>("Archiving CSV failed", HttpStatus.BAD_REQUEST);
             }
             zs.flush();
@@ -165,6 +178,7 @@ public class FileService {
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             long time2 = System.currentTimeMillis();
             System.out.println(time2 - time1);
+            log.info("Vartotojas '" + Auth.getUsername() + "' atsisiuntė savo dokumentų archyvą csv formatu kartu su pridėtais failais.");
             return ResponseEntity.ok().headers(headers).body(resource);
         }
         return ResponseEntity.notFound().build();
@@ -394,11 +408,13 @@ public class FileService {
                 headers.add("Access-Control-Expose-Headers",
                         HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
                 headers.setContentType(mediaType);
+                log.info("Vartotojas '" + Auth.getUsername() + "' atsisiuntė savo dokumentų archyvą csv formatu.");
                 return ResponseEntity.ok().headers(headers).
                         body(resource);
 
 
             } catch (IOException ex) {
+                log.error("Vartotojas '" + Auth.getUsername() + "'. Negalima sukurti csv failo.");
                 return new ResponseEntity("Could not create csv file", HttpStatus.EXPECTATION_FAILED);
             }
         } else {
@@ -459,6 +475,7 @@ public class FileService {
 
             csvPrinter.flush();
         } catch (IOException e) {
+            log.error("Vartotojas '" + Auth.getUsername() + "'. Negalima sukurti csv failo.");
             e.printStackTrace();
         }
         return new File(csvFilePath);
@@ -468,6 +485,9 @@ public class FileService {
     //    Zip folders
     private void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parentDirectoryName) throws Exception {
         if (fileToZip == null || !fileToZip.exists()) {
+            //log.info("Ar čia ką nors patikrino?");
+            //log.info("Failas - " + fileToZip);
+            log.error("Vartototas '" + Auth.getUsername() + "'. Generuojant dokumentų archyvą nerasta direktorija '" + fileToZip + "'.");
             return;
         }
 

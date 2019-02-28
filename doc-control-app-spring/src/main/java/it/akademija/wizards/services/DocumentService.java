@@ -72,6 +72,7 @@ public class DocumentService {
     @Transactional(readOnly = true)
     public DocumentPageGetCommand getUserDocumentsByState(String username, String state, String searchFor, Integer pageNumber, Integer pageLimit) {
         if (state == null) {
+            log.error("Vartotojas '" + Auth.getUsername() + "' nepadavė dokumento būklės, norint gauti visų dokumentų sąrašą.");
             throw new NullPointerException("State must be provided");
         }
         User user = userRepository.findByUsername(username);
@@ -87,6 +88,7 @@ public class DocumentService {
                 documentStates.add(DocumentState.REJECTED);
                 sort = Sort.by("submissionDate").descending();
             } else {
+                log.error("Vartotojas '" + Auth.getUsername() + "' nepadavė tinkamos dokumento būklės, norint gauti visų dokumentų sąrašą.");
                 throw new IllegalArgumentException("Correct document state must be provided");
             }
             String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
@@ -121,11 +123,13 @@ public class DocumentService {
             try {
                 fileService.uploadFiles(document, multipartFile);
             } catch (IOException e) {
+                log.error("Vartotojas '" + Auth.getUsername() + "', kurdamas naują dokumentą, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "', bandė pridėti neegzistuojantį failą.");
                 return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
             }
             documentRepository.save(document);
             log.info("Vartotojas '" + Auth.getUsername() + "' sukūrė naują dokumentą, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "'.");
         } else {
+            log.warn("Vartotojas '" + Auth.getUsername() + "', neturi teisės kurti dokumento, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "'.");
             throw new BadRequestException("User doesn't have permission to create this type of document");
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -159,6 +163,7 @@ public class DocumentService {
                     fileService.deleteMainFile(document);
                     fileService.uploadFiles(document, multipartFile);
                 } catch (IOException e) {
+                    log.error("Vartotojas '" + Auth.getUsername() + "', redaguodamas dokumentą, kurio id '" + id + "', bandė pridėti neegzistuojantį failą.");
                     return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
                 }
             } else {
@@ -168,6 +173,7 @@ public class DocumentService {
                             fileService.uploadAdditionalFile(document, mf);
                         }
                     } catch (IOException e){
+                        log.error("Vartotojas '" + Auth.getUsername() + "', redaguodamas dokumentą, kurio id '" + id + "', bandė pridėti neegzistuojantį failą.");
                         return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
                     }
                 }
@@ -175,6 +181,7 @@ public class DocumentService {
             documentRepository.save(mapper.updateCommandToEntity(documentUpdateCommand, document));
             log.info("Vartotojas '" + Auth.getUsername() + "' koregavo dokumentą, kurio id '" + id + "'.");
         } else {
+            log.warn("Vartotojas '" + Auth.getUsername() + "' norėjo koreguoti jau pateiktą dokumentą, kurio id '" + id + "'.");
             throw new BadRequestException("Submitted documents cannot be updated");
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -218,6 +225,7 @@ public class DocumentService {
                 log.info("Vartotojas '" + Auth.getUsername() + "' priėmė dokumentą, kurio id '" + id + "'.");
             }
         } else {
+            log.warn("Vartotojas '" + Auth.getUsername() + "' bandė peržiūrėti dokumentą, kurio id '" + id + "', bet neturi tam teisių.");
             throw new BadRequestException("User doesn't have permission to review this type of document");
         }
     }
@@ -228,7 +236,10 @@ public class DocumentService {
         if(user !=null){
             return fileService.downloadCSV(user);
         }
-        else return new ResponseEntity("User not found",HttpStatus.NOT_FOUND);
+        else {
+            log.warn("Vartotojas '" + Auth.getUsername() + "' bandė atsisiųsti neegzistuojančio vartotojo '" + username + "' dokumentų archyvą (csv).");
+            return new ResponseEntity("User not found",HttpStatus.NOT_FOUND);
+        }
     }
 
     //PRIVATE METHODS
