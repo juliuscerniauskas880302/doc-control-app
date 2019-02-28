@@ -22,7 +22,7 @@ registerPlugin(
   FilePondPluginFileValidateType
 );
 
-const NewDocumentComponet = props => {
+const NewDocumentComponent = props => {
   let optionList = props.typeList.map(v => (
     //<option value = {v}>{v}</option>
     <option key={v}>{v}</option>
@@ -53,9 +53,9 @@ const NewDocumentComponet = props => {
                         //pattern={props.namePattern}
                         value={props.title}
                         pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                        name="title"
                         required
-                        onChange={props.handleChangeOfTitle}
-                        //title={props.namePatternTitle}
+                        onChange={props.handleChange}
                       />
                     </div>
                   </div>
@@ -70,12 +70,10 @@ const NewDocumentComponet = props => {
                         cols="50"
                         type="text"
                         className="form-control form-control-success"
-                        //name="lastname"
                         placeholder="Įveskite aprašymą"
-                        //pattern={props.namePattern}
-                        //title={props.namePatternTitle}
                         value={props.description}
-                        onChange={props.handleChangeOfDescription}
+                        name="description"
+                        onChange={props.handleChange}
                       />
                     </div>
                   </div>
@@ -89,7 +87,8 @@ const NewDocumentComponet = props => {
                         className="form-control form-control-success"
                         value={props.type}
                         required
-                        onChange={props.handleChangeOfType}
+                        name="documentTypeTitle"
+                        onChange={props.handleChange}
                       >
                         <option value="" hidden>
                           Pasirinkite...
@@ -111,9 +110,7 @@ const NewDocumentComponet = props => {
                         fileValidateTypeLabelExpectedTypes="Įkelkite pdf formato bylą."
                         labelButtonRemoveItem="Pašalinti"
                         name="selectedFiles"
-                        required
                         allowMultiple={false}
-                        // onaddfile={props.validate}
                         onupdatefiles={fileItem =>
                           props.onUpdateMainFile(fileItem)
                         }
@@ -126,27 +123,31 @@ const NewDocumentComponet = props => {
                         <FilePond
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                           labelFileTypeNotAllowed="Netinkamas bylos formatas."
-                          fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
+                          fileValidateTypeLabelExpectedTypes=""
+                          // fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
                           labelButtonRemoveItem="Pašalinti"
                           name="selectedAdditionalFiles"
                           allowMultiple={true}
                           onupdatefiles={fileItems =>
                             props.onUpdateAdditionalFiles(fileItems)
                           }
+                          // fileValidateTypeDetectType={(source, type) =>
+                          //   props.fileValidate(source, type)
+                          // }
                           acceptedFileTypes={[
                             "application/pdf",
                             "image/png",
-                            "image/jpeg"
+                            "image/jpg"
                           ]}
                         />
                       )}
                     </div>
 
-                    {/* <FileTransferPopup
+                    <FileTransferPopup
                       show={props.isOpen}
                       onClose={props.closeFileTransferPopup}
                       percentage={props.percentage}
-                    /> */}
+                    />
                   </div>
 
                   <div className="form-group row">
@@ -163,67 +164,7 @@ const NewDocumentComponet = props => {
         </section>
       </div>
     </div>
-
-    // <form onSubmit={props.handleSubmit}>
-    //     <div className="form-row">
-    //         <div className="col-md-12 mb-12">
-    //             <h5>Naujo dokumento suvedimas</h5>
-    //         </div>
-    //     </div>
-    //     <div className="form-row">
-    //         <div className="col-md-4 mb-3">
-    //             <label htmlFor="validationDefault01">Dokumento pavadinimas:</label>
-    //             <input type="text" className="form-control" id="validationDefault01" placeholder="Įveskite pavadinimą" value={props.title} pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$" required onChange={props.handleChangeOfTitle}></input>
-    //         </div>
-    //     </div>
-    //     <div className="form-row">
-    //         <div className="col-md-4 mb-3">
-    //             <label htmlFor="validationDefault02">Dokumento aprašymas:</label>
-    //             <input type="text" className="form-control" id="validationDefault02" placeholder="Įveskite aprašymą" value={props.description} required onChange={props.handleChangeOfDescription}></input>
-    //         </div>
-    //     </div>
-
-    //     <div className="form-row">
-    //         <div className="col-md-4 mb-3">
-    //             <label htmlFor="validationDefault03">Dokumento tipas</label>
-    //             <select className="form-control" value={props.type} required onChange={props.handleChangeOfType}>
-    //                 <option hidden>Pasirinkite...</option>
-    //                 {optionList}
-    //             </select>
-    //         </div>
-    //     </div>
-
-    //     <div className="form-row">
-    //         <div className="col-md-2 mb-2">
-    //             <label htmlFor="Upload file">Pasirinkite pridedamą failą</label>
-    //             <div className="input-group mb-1">
-    //                 <input
-    //                     onChange={props.onFileSelectHandler}
-    //                     id="Upload file"
-    //                     name="selectedFiles"
-    //                     className="input-file"
-    //                     type="file"
-    //                     required
-    //                     accept=".pdf, .jpg, .png"
-    //                 />
-    //             </div>
-    //         </div>
-    //         <div className="col-md-1 mb-1">
-    //             <FileTransferPopup show={props.isOpen}
-    //                 onClose={props.closeFileTransferPopup}
-    //                 percentage={props.percentage}
-    //             />
-    //         </div>
-    //     </div>
-    //     {/* <div className="form-row">
-    //         <div className="col-md-4 mb-3">
-    //         <button className="btn btn-primary" type="button" onClick={() => props.downloadHandler()}>Prisegti</button>
-    //         </div>
-    //     </div> */}
-
-    //     <button className="btn btn-primary" type="submit" >Išsaugoti</button>
-    // </form>
   );
 };
 
-export default NewDocumentComponet;
+export default NewDocumentComponent;
