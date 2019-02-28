@@ -65,7 +65,7 @@ public class DocumentService {
             pageable = PageRequest.of(pageNumber, pageLimit, sort);
         } else {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
-        };
+        }
         User user = userRepository.findByUsername(username);
         if (user != null) {
             List<DocumentType> documentTypeList = documentTypeRepository.findAllByGroupsAndUser(user);
