@@ -72,7 +72,7 @@ public class DocumentService {
     @Transactional(readOnly = true)
     public DocumentPageGetCommand getUserDocumentsByState(String username, String state, String searchFor, Integer pageNumber, Integer pageLimit) {
         if (state == null) {
-            log.error("Vartotojas '" + Auth.getUsername() + "' nepadavė dokumento būklės, norint gauti visų dokumentų sąrašą.");
+            log.warn("Vartotojas '" + Auth.getUsername() + "' nepadavė dokumento būklės, norint gauti visų dokumentų sąrašą.");
             throw new NullPointerException("State must be provided");
         }
         User user = userRepository.findByUsername(username);
@@ -88,7 +88,7 @@ public class DocumentService {
                 documentStates.add(DocumentState.REJECTED);
                 sort = Sort.by("submissionDate").descending();
             } else {
-                log.error("Vartotojas '" + Auth.getUsername() + "' nepadavė tinkamos dokumento būklės, norint gauti visų dokumentų sąrašą.");
+                log.warn("Vartotojas '" + Auth.getUsername() + "' nepadavė tinkamos dokumento būklės, norint gauti visų dokumentų sąrašą.");
                 throw new IllegalArgumentException("Correct document state must be provided");
             }
             String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
