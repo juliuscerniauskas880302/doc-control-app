@@ -205,7 +205,7 @@ const EditDocumentComponent = props => {
                         acceptedFileTypes={[
                           "application/pdf",
                           "image/png",
-                          "image/jpeg"
+                          "image/jpg"
                         ]}
                       />
                     </div>

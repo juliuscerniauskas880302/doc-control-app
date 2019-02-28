@@ -26,6 +26,7 @@ class EditDocumentContainer extends React.Component {
       mainFilePathToDelete: null
     };
   }
+  acceptedFileTypes = ["pdf", "jpg", "png"];
   toggleHidden() {
     this.setState({
       isHidden: !this.state.isHidden
@@ -112,14 +113,140 @@ class EditDocumentContainer extends React.Component {
     }
     return filename;
   };
+  /************************************************************************************* */
+  updateDocumentInfo = (file, model) => {
+    file.append("", "blob", "");
+    file.append("model", JSON.stringify(model));
+    axios
+      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+        onUploadProgress: progressEvent => {
+          this.setState({
+            percentage: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+      .then(response => this.props.history.push(`/createdDocuments`))
+      .then(res => console.log(res))
+      .catch(err => console.log("KLAIDA SUBMITE" + err));
+  };
+  uploadMainFile = (file, model) => {
+    file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
+    file.append("model", JSON.stringify(model));
+    axios
+      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+        onUploadProgress: progressEvent => {
+          this.setState({
+            percentage: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+      .then(response => this.props.history.push(`/createdDocuments`))
+      .then(res => console.log(res))
+      .catch(err => console.log("KLAIDA SUBMITE" + err));
+  };
 
-  //TODO
+  uploadMultipleFiles = (file, model) => {
+    file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
+    for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+      file.append(
+        "file",
+        this.state.selectedAdditionalFiles[i],
+        this.state.selectedAdditionalFiles[i].name
+      );
+      file.append("model", JSON.stringify(model));
+    }
+    axios
+      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+        onUploadProgress: progressEvent => {
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+      .then(() => this.props.history.push(`/createdDocuments`))
+      .catch(err => console.log(err));
+  };
+  uploadAdditionalFiles = (file, model) => {
+    file.append("model", JSON.stringify(model));
+    for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+      file.append(
+        "file",
+        this.state.selectedAdditionalFiles[i],
+        this.state.selectedAdditionalFiles[i].name
+      );
+    }
+    axios
+      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+        onUploadProgress: progressEvent => {
+          this.setState({
+            percentage: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
+          console.log(
+            "Upload progress: " +
+              (progressEvent.loaded / progressEvent.total) * 100 +
+              "%"
+          );
+        }
+      })
+      .then(response => this.props.history.push(`/createdDocuments`))
+      .then(res => console.log(res))
+      .catch(err => console.log("KLAIDA SUBMITE" + err));
+  };
+
+  checkDuplicates = array => {
+    return new Set(array).size !== array.length;
+  };
+  checkFileExtensions = (array, acceptedTypesArray) => {
+    let stopSubmit = false;
+    console.log(acceptedTypesArray);
+    array.forEach(element => {
+      if (!acceptedTypesArray.includes(element.split(".").pop())) {
+        stopSubmit = true;
+      }
+    });
+    return stopSubmit;
+  };
+  gatherAllFileNames = () => {
+    let fileNames = [];
+    if (this.state.mainFile !== null && this.state.mainFile.length !== 0) {
+      fileNames.push(this.state.mainFile[0].name);
+    }
+    if (this.state.path !== null) {
+      fileNames.push(this.state.path);
+    }
+    if (this.state.paths !== null)
+      this.state.paths.forEach(additionalFilePath => {
+        fileNames.push(additionalFilePath);
+      });
+    if (this.state.selectedAdditionalFiles !== null) {
+      this.state.selectedAdditionalFiles.forEach(additionalFilePath => {
+        fileNames.push(additionalFilePath.name);
+      });
+    }
+    return fileNames;
+  };
+  /************************************************************************************* */
   handleSubmit = event => {
     event.preventDefault();
-    // this.openFileTransferPopup();
-    console.log(this.state.mainFilePathToDelete);
-    let isFileNamesSame = false;
-    let correctFileExtensions = true;
+
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
@@ -128,189 +255,60 @@ class EditDocumentContainer extends React.Component {
       additionalFilePathsToDelete: this.state.additionalFilePathsToDelete
     };
     let file = new FormData();
-    console.log(file);
 
-    // Checking if main file is attached if it was deleted
-    if (this.state.mainFile === null && this.state.path === null) {
+    let fileNames = this.gatherAllFileNames();
+    console.log(this.checkFileExtensions(fileNames, this.acceptedFileTypes));
+    if (
+      this.state.path === null &&
+      (this.state.mainFile === null || this.state.mainFile.length === 0)
+    ) {
       this.props.showResponseMessage(
-        "Pridėkite pagrindinę bylą.",
+        "Įkelkite pagrindinę bylą.",
+        "danger",
+        2500
+      );
+    } else if (this.checkDuplicates(fileNames)) {
+      this.props.showResponseMessage(
+        "Bylų pavadinimai vienodi. Pasirinkite kitas bylas arba jas pervadinkite.",
+        "danger",
+        2500
+      );
+    } else if (this.checkFileExtensions(fileNames, this.acceptedFileTypes)) {
+      this.props.showResponseMessage(
+        "Prisegta byla nėra teisingo formato.",
         "danger",
         2500
       );
     } else if (
-      // Adding main file if it has unique name
+      // Update only additonalFile
+      this.state.selectedAdditionalFiles !== null &&
+      this.state.mainFile === null
+    ) {
+      this.uploadAdditionalFiles(file, model);
+    } else if (
+      // Update only mainFile
       this.state.mainFile !== null &&
       (this.state.selectedAdditionalFiles === null ||
         this.state.selectedAdditionalFiles.length === 0)
     ) {
-      // Check if new main file is not of the same name as additional files
-      if (this.state.paths !== null) {
-        this.state.paths.forEach(p => {
-          if (p === this.state.mainFile[0].name) {
-            this.props.showResponseMessage(
-              "Bylų pavadinimai turi būti unikalūs.",
-              "danger",
-              2500
-            );
-            isFileNamesSame = true;
-          }
-        });
-      }
-      if (isFileNamesSame === true) {
+      if (this.checkFileExtensions([this.state.mainFile[0].name], ["pdf"])) {
         this.props.showResponseMessage(
-          "Bylų pavadinimai vienodi. Pasirinkite kitas bylas arba jas pervadinkite.",
+          "Prisegta byla nėra teisingo formato.",
           "danger",
           2500
         );
       } else {
-        // Adding file
-        file.append(
-          "file",
-          this.state.mainFile[0],
-          this.state.mainFile[0].name
-        );
-        file.append("model", JSON.stringify(model));
-        axios
-          .put("http://localhost:8081/api/docs/" + this.state.id, file, {
-            onUploadProgress: progressEvent => {
-              this.setState({
-                percentage: Math.round(
-                  (progressEvent.loaded / progressEvent.total) * 100
-                )
-              });
-              console.log(
-                "Upload progress: " +
-                  (progressEvent.loaded / progressEvent.total) * 100 +
-                  "%"
-              );
-            }
-          })
-          .then(response => this.props.history.push(`/createdDocuments`))
-          .then(res => console.log(res))
-          .catch(err => console.log("KLAIDA SUBMITE" + err));
+        this.uploadMainFile(file, model);
       }
-    } else if (this.state.selectedAdditionalFiles !== null) {
-      // Check if additional files that are being added named unique
-      if (this.state.selectedAdditionalFiles.length > 1) {
-        for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
-          for (let j = 0; j < this.state.selectedAdditionalFiles.length; j++) {
-            if (
-              this.state.selectedAdditionalFiles[i].name ===
-                this.state.selectedAdditionalFiles[j].name &&
-              i !== j
-            ) {
-              isFileNamesSame = true;
-              return;
-            }
-          }
-        }
-      }
-      // Check if additional files do not contain same name as files that are in DB
-      if (this.state.paths !== null) {
-        this.state.paths.forEach(p => {
-          this.state.selectedAdditionalFiles.forEach(af => {
-            if (af.name === p) {
-              isFileNamesSame = true;
-              return;
-            }
-          });
-        });
-      }
-      //Check if additional files are not of the same name as main file
-      if (this.state.mainFile !== null) {
-        this.state.selectedAdditionalFiles.forEach(file => {
-          if (file.name === this.state.mainFile[0].name) {
-            isFileNamesSame = true;
-            return;
-          }
-        });
-      }
-      //Check if additional files are not of the same name as main file in DB
-      if (this.state.path !== null) {
-        this.state.selectedAdditionalFiles.forEach(file => {
-          if (file.name === this.state.path) {
-            isFileNamesSame = true;
-            return;
-          }
-        });
-      }
-
-      // Checking file extensions
-      let acceptedFileTypes = ["pdf", "jpg", "png"];
-      this.state.selectedAdditionalFiles.forEach(file => {
-        if (!acceptedFileTypes.includes(file.name.split(".").pop())) {
-          correctFileExtensions = false;
-          return;
-        }
-      });
-      // Errors
-      if (isFileNamesSame === true) {
-        this.props.showResponseMessage(
-          "Bylų pavadinimai vienodi. Pasirinkite kitas bylas arba jas pervadinkite.",
-          "danger",
-          2500
-        );
-        isFileNamesSame = false;
-      } else if (correctFileExtensions === false) {
-        this.props.showResponseMessage(
-          "Prisegtos bylos nėra teisingo formato.",
-          "danger",
-          2500
-        );
-        correctFileExtensions = false;
-      } else {
-        if (this.state.mainFile !== null && this.state.path === null) {
-          file.append(
-            "file",
-            this.state.mainFile[0],
-            this.state.mainFile[0].name
-          );
-        }
-        for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
-          file.append(
-            "file",
-            this.state.selectedAdditionalFiles[i],
-            this.state.selectedAdditionalFiles[i].name
-          );
-          console.log("_______________ I am appending!!!");
-          file.append("model", JSON.stringify(model));
-        }
-        axios
-          .put("http://localhost:8081/api/docs/" + this.state.id, file, {
-            onUploadProgress: progressEvent => {
-              console.log(
-                "Upload progress: " +
-                  (progressEvent.loaded / progressEvent.total) * 100 +
-                  "%"
-              );
-            }
-          })
-          .then(res => this.props.history.push(`/createdDocuments`))
-          .then(res => console.log(res))
-          .catch(err => console.log(err));
-      }
-    } else if (this.state.additionalFilePathsToDelete !== null) {
-      file.append("model", JSON.stringify(model));
-      axios
-        .put("http://localhost:8081/api/docs/" + this.state.id, file, {
-          onUploadProgress: progressEvent => {
-            this.setState({
-              percentage: Math.round(
-                (progressEvent.loaded / progressEvent.total) * 100
-              )
-            });
-            console.log(
-              "Upload progress: " +
-                (progressEvent.loaded / progressEvent.total) * 100 +
-                "%"
-            );
-          }
-        })
-        .then(response => this.props.history.push(`/createdDocuments`))
-        .then(res => console.log(res))
-        .catch(err => console.log("KLAIDA SUBMITE" + err));
+    } else if (
+      // Update both additionalFiles and mainFile
+      this.state.selectedAdditionalFiles !== null &&
+      this.state.mainFile !== null
+    ) {
+      this.uploadMultipleFiles(file, model);
+    } else {
+      this.updateDocumentInfo(file, model);
     }
-    console.log("Toks yra failas" + file.getAll);
   };
 
   onUpdateMainFile = fileItems => {
@@ -362,21 +360,6 @@ class EditDocumentContainer extends React.Component {
       .catch(error => {
         console.log("KLAIDA!!!!" + error);
       });
-    //});
-
-    //console.log("State user yra po visko" + this.state.username);
-    //console.log("Local storage user po visko " + currentUser.username)
-
-    //senas blogas
-    // axios.get('http://localhost:8081/api/doctypes')
-    //   .then((response) => {
-    //     this.setState({ typeList: response.data.map(item => item.title) });
-    //     console.log("Koks atiduodamas dokumentų tipų sąrašas (redagavime)?");
-    //     console.log(this.state.typeList);
-    //   })
-    //   .catch((error) => {
-    //     console.log("KLAIDA!!!!" + error);
-    //   });
 
     //Konkretaus dokumento duomenų nuskaitymas
     const position = this.props.match.params.documentId;

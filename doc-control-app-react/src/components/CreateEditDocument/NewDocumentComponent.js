@@ -53,8 +53,9 @@ const NewDocumentComponent = props => {
                         //pattern={props.namePattern}
                         value={props.title}
                         pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                        name="title"
                         required
-                        onChange={props.handleChangeOfTitle}
+                        onChange={props.handleChange}
                       />
                     </div>
                   </div>
@@ -71,7 +72,8 @@ const NewDocumentComponent = props => {
                         className="form-control form-control-success"
                         placeholder="Įveskite aprašymą"
                         value={props.description}
-                        onChange={props.handleChangeOfDescription}
+                        name="description"
+                        onChange={props.handleChange}
                       />
                     </div>
                   </div>
@@ -85,7 +87,8 @@ const NewDocumentComponent = props => {
                         className="form-control form-control-success"
                         value={props.type}
                         required
-                        onChange={props.handleChangeOfType}
+                        name="documentTypeTitle"
+                        onChange={props.handleChange}
                       >
                         <option value="" hidden>
                           Pasirinkite...
@@ -111,9 +114,6 @@ const NewDocumentComponent = props => {
                         onupdatefiles={fileItem =>
                           props.onUpdateMainFile(fileItem)
                         }
-                        fileValidateTypeDetectType={(source, type) => {
-                          console.log(source + " " + type);
-                        }}
                         acceptedFileTypes={["application/pdf"]}
                       />
                     </div>
@@ -123,27 +123,31 @@ const NewDocumentComponent = props => {
                         <FilePond
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                           labelFileTypeNotAllowed="Netinkamas bylos formatas."
-                          fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
+                          fileValidateTypeLabelExpectedTypes=""
+                          // fileValidateTypeLabelExpectedTypes="Tinkami formatai: pdf, png, jpeg."
                           labelButtonRemoveItem="Pašalinti"
                           name="selectedAdditionalFiles"
                           allowMultiple={true}
                           onupdatefiles={fileItems =>
                             props.onUpdateAdditionalFiles(fileItems)
                           }
+                          // fileValidateTypeDetectType={(source, type) =>
+                          //   props.fileValidate(source, type)
+                          // }
                           acceptedFileTypes={[
                             "application/pdf",
                             "image/png",
-                            "image/jpeg"
+                            "image/jpg"
                           ]}
                         />
                       )}
                     </div>
 
-                    {/* <FileTransferPopup
+                    <FileTransferPopup
                       show={props.isOpen}
                       onClose={props.closeFileTransferPopup}
                       percentage={props.percentage}
-                    /> */}
+                    />
                   </div>
 
                   <div className="form-group row">
