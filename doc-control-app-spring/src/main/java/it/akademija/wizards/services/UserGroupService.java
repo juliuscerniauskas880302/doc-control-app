@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -94,6 +95,11 @@ public class UserGroupService {
     @Transactional
     public List<UserGetCommand> addUsersToGroup(GroupAddUsersCommand groupAddUsersCommand, String id) {
         UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        Set<User> currentGroupUsers = userGroup.getUsers();
+        System.out.println();
+        System.out.println();
+        System.out.println("**********************************************************************");
+        System.out.println("*********************************************** SĄRAŠO DYDIS " + currentGroupUsers.size());
         if (userGroup != null) {
             List<User> userList = userRepository.findAllByUsernameIn(groupAddUsersCommand.getUsers());
             userGroup.setUsers(new HashSet<>(userList));
