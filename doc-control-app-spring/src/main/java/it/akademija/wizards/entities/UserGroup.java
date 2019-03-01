@@ -79,8 +79,9 @@ public class UserGroup {
     }
 
     public void setUsers(Set<User> users) {
-        this.users.stream().filter(user -> !users.contains(user)).forEach(user -> user.removeGroup(this));
-        users.forEach(user -> user.addGroup(this));
+        Set<User> oldUserList = new HashSet<>(this.users);
+        oldUserList.stream().filter(user -> !users.contains(user)).forEach(user -> user.removeGroup(this));
+        users.stream().filter(user -> !oldUserList.contains(user)).forEach(user -> user.addGroup(this));
     }
 
     public void addUser(User user) {

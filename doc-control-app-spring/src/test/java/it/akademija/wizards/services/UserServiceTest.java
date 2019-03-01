@@ -2,6 +2,7 @@ package it.akademija.wizards.services;
 
 import it.akademija.wizards.DocApplication;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @Ignore
     @Test
     public void shouldCorrectlyCheckIfUserCanSubmitDocuments() {
         boolean isJuliusAllowed = userService.isActionAllowed("julius", "submit");
@@ -27,6 +29,7 @@ public class UserServiceTest {
         Assert.assertTrue(isMigleAllowed);
     }
 
+    @Ignore
     @Test
     public void shouldCorrectlyCheckIfUserCanReviewDocuments() {
         boolean isJuliusAllowed = userService.isActionAllowed("julius", "review");
