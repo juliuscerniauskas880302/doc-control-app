@@ -20,8 +20,10 @@ public class UserGroup {
     @NotNull
     private String title;
 
+    @ManyToMany
     @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(mappedBy = "userGroups")
+    @JoinTable(name = "group_users", joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
 
 //    Types that this group can submit
@@ -79,19 +81,15 @@ public class UserGroup {
     }
 
     public void setUsers(Set<User> users) {
-        Set<User> oldUserList = new HashSet<>(this.users);
-        oldUserList.stream().filter(user -> !users.contains(user)).forEach(user -> user.removeGroup(this));
-        users.stream().filter(user -> !oldUserList.contains(user)).forEach(user -> user.addGroup(this));
+        this.users = users;
     }
 
     public void addUser(User user) {
         this.users.add(user);
-        user.addGroup(this);
     }
 
     public void removeUser(User user) {
         this.users.remove(user);
-        user.removeGroup(this);
     }
 
     public void addSubmissionType (DocumentType documentType){
