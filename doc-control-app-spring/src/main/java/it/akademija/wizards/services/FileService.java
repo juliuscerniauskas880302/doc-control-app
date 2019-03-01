@@ -70,17 +70,10 @@ public class FileService {
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             headers.setContentType(mediaType);
-            //TO DO
-            //NEVEIKIA LOG
-            log.info("Vartotojas '" + Auth.getUsername() + "'. Pagrindinis failas atsiųstas.");
             return ResponseEntity.ok().headers(headers).
                     body(resource);
         }
-        //TO DO
-        //NEVEIKIA LOG
-        log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui pagrindinio failo nėra.");
         return ResponseEntity.notFound().build();
-
     }
 
     //    DOWNLOAD DOCUMENT FILE
@@ -289,6 +282,7 @@ public class FileService {
             File folder = getDocumentFolder(document);
             deleteFolder(folder);
         } else {
+            log.warn("Vartotojas '" + Auth.getUsername() + "' bandė ištrinti pridėtą failą iš dokumento, kurio id '" + document.getId() + "', kai dokumentas jau yra pateiktas.");
             throw new IllegalArgumentException("Cannot delete file that is already submitted.");
         }
     }
