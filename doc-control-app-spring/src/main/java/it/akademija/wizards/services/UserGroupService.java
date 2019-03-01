@@ -96,10 +96,6 @@ public class UserGroupService {
     public List<UserGetCommand> addUsersToGroup(GroupAddUsersCommand groupAddUsersCommand, String id) {
         UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
         Set<User> currentGroupUsers = userGroup.getUsers();
-        System.out.println();
-        System.out.println();
-        System.out.println("**********************************************************************");
-        System.out.println("*********************************************** SĄRAŠO DYDIS " + currentGroupUsers.size());
         if (userGroup != null) {
             List<User> userList = userRepository.findAllByUsernameIn(groupAddUsersCommand.getUsers());
             userGroup.setUsers(new HashSet<>(userList));

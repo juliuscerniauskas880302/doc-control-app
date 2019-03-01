@@ -123,14 +123,15 @@ public class DocumentTypeService {
         DocumentType documentType = this.getDocTypeFromDB(id);
         List<UserGroup> userGroups = userGroupRepository.findAllById(userRemoveGroupsCommand.getId());
         for (UserGroup userGroup : userGroups) {
-            if(groupType.equals("submission")) documentType.removeSubmissionUserGroup(userGroup);
-            else if (groupType.equals("review")) documentType.removeReviewUserGroup(userGroup);
+            if(groupType.equals("submission")){
+                documentType.removeSubmissionUserGroup(userGroup);
+                //log.info("Vartotojas '" + Auth.getUsername() + "' dokumento tipą '" + documentType.getTitle() + "' pašalino iš kažkokios dokumentų teikimo grupės");
+            }
+            else if (groupType.equals("review")){
+                documentType.removeReviewUserGroup(userGroup);
+            }
         }
         documentTypeRepository.save(documentType);
-        log.info("Įvyko grupės trynimas");
-        //log.info("Vartotojas '" + Auth.getUsername() + "' koregavo dokumentų tipo '" + documentType.getTitle() + "' priskyrimus vartotojų grupėms.");
-        //TO DO
-        //Čia reikia sužiūrėti kaip vyskta grupės pašalinimas
     }
 
 
