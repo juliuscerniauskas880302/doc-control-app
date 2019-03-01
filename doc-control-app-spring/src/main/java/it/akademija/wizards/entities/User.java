@@ -1,5 +1,7 @@
 package it.akademija.wizards.entities;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -43,7 +45,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinTable(name = "group_users", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<UserGroup> userGroups;
 
     private boolean isAdmin;
@@ -139,12 +144,10 @@ public class User {
 
     public void addGroup(UserGroup userGroup){
         this.userGroups.add(userGroup);
-        userGroup.addUser(this);
     }
 
     public void removeGroup(UserGroup userGroup) {
         this.userGroups.remove(userGroup);
-        userGroup.removeUser(this);
     }
 
     public boolean isAdmin() {
