@@ -21,6 +21,7 @@ export default class UserNavigationBothContainer extends Component {
     if (!checkToken()) {
       this.props.history.push("/login");
     }
+
     return (
       <div>
         <BrowserRouter>
@@ -103,6 +104,15 @@ export default class UserNavigationBothContainer extends Component {
                     </ResponseMessage>
                   )}
                 />
+                {/* <Route
+                  exact
+                  path="#"
+                  render={props => {
+                    <ResponseMessage>
+                      <DownloadDropdown {...props}/>
+                    </ResponseMessage>
+                  }}
+                  /> */}
                 <Route
                   exact
                   path="/submittedDocuments/:documentId"
