@@ -104,15 +104,7 @@ export default class UserNavigationBothContainer extends Component {
                     </ResponseMessage>
                   )}
                 />
-                {/* <Route
-                  exact
-                  path="#"
-                  render={props => {
-                    <ResponseMessage>
-                      <DownloadDropdown {...props}/>
-                    </ResponseMessage>
-                  }}
-                  /> */}
+                z
                 <Route
                   exact
                   path="/submittedDocuments/:documentId"
@@ -194,7 +186,6 @@ export default class UserNavigationBothContainer extends Component {
                   )}
                   exact
                 />
-
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
               </Switch>
