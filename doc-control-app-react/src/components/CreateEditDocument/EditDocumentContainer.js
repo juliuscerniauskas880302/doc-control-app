@@ -133,7 +133,6 @@ class EditDocumentContainer extends React.Component {
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
-      .then(res => console.log(res))
       .catch(err => console.log("KLAIDA SUBMITE" + err));
   };
   uploadMainFile = (file, model) => {
@@ -155,7 +154,6 @@ class EditDocumentContainer extends React.Component {
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
-      .then(res => console.log(res))
       .catch(err => console.log("KLAIDA SUBMITE" + err));
   };
 
@@ -207,7 +205,6 @@ class EditDocumentContainer extends React.Component {
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
-      .then(res => console.log(res))
       .catch(err => console.log("KLAIDA SUBMITE" + err));
   };
 
@@ -315,7 +312,6 @@ class EditDocumentContainer extends React.Component {
     this.setState({
       mainFile: fileItems.map(fileItem => fileItem.file)
     });
-    console.log(this.state.mainFile);
   };
   onUpdateAdditionalFiles = fileItems => {
     this.setState({

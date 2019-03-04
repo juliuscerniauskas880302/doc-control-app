@@ -2,6 +2,7 @@ import React from "react";
 import NavigationLink from "./NavigationLink";
 import { withRouter } from "react-router";
 import flagLT from "../../css/images/lt-flag.png";
+import ResponseMessage from "../Utilities/ResponseMessage";
 class HeaderSideBar extends React.Component {
   constructor(props) {
     super(props);
@@ -82,7 +83,9 @@ class HeaderSideBar extends React.Component {
         </header>
         <div className="d-flex align-items-stretch ">
           <div id="sidebar" className={this.state.menuClass}>
-            <NavigationLink navigation={this.props.nav} />
+            <ResponseMessage>
+              <NavigationLink navigation={this.props.nav} {...this.props} />
+            </ResponseMessage>
           </div>
           {this.props.children}
         </div>

@@ -1,6 +1,7 @@
 import Axios from "axios";
 import extractFileName from "./ExtractFileName";
-export default function zipDownloadHandler(event) {
+export default function zipDownloadHandler(event, props) {
+  event.preventDefault();
   Axios({
     url: "http://localhost:8081/api/docs/download/all",
     method: "GET",
@@ -17,6 +18,6 @@ export default function zipDownloadHandler(event) {
       document.body.removeChild(link);
     })
     .catch(err => {
-      console.log(err);
+      props.showResponseMessage("Neturite dokumentų.", "danger", 2500);
     });
 }

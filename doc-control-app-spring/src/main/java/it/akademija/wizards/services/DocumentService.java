@@ -245,7 +245,7 @@ public class DocumentService {
         }
         else {
             log.warn("Vartotojas '" + Auth.getUsername() + "' bandė atsisiųsti neegzistuojančio vartotojo '" + username + "' dokumentų archyvą (csv).");
-            return new ResponseEntity("User not found",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
         }
     }
 

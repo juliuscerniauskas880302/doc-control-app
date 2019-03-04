@@ -131,13 +131,28 @@ public class FileService {
                 + ".csv";
         File csvFile = createCsv(user);
         List<Document> documents = user.getDocuments();
-        if (documents != null) {
+        if(documents.isEmpty()){
+            return new ResponseEntity<>("Neturite dokumentų.", HttpStatus.BAD_REQUEST);
+        }
+        else {
 
+            if (new File(pathName +
+                    File.separator +
+                    username +
+                    File.separator +
+                    "dokumentai.zip").exists()) {
+                boolean delete = new File(pathName +
+                        File.separator +
+                        username +
+                        File.separator +
+                        "dokumentai.zip").delete();
+            }
             File file = new File(pathName +
                     File.separator +
                     username +
                     File.separator +
                     "dokumentai.zip");
+
             FileOutputStream fos = new FileOutputStream(file);
             ZipOutputStream zs = new ZipOutputStream(fos);
 
@@ -151,8 +166,8 @@ public class FileService {
                     return new ResponseEntity<>("Archiving failed", HttpStatus.BAD_REQUEST);
                 }
             }
-            try{
-                addDirToZipArchive(zs, csvFile, "" );
+            try {
+                addDirToZipArchive(zs, csvFile, "");
             } catch (Exception e) {
                 log.error("Vartotojas '" + Auth.getUsername() + "'. Nepavyko suformuoti dokumentų archyvo.");
                 return new ResponseEntity<>("Archiving CSV failed", HttpStatus.BAD_REQUEST);
@@ -164,7 +179,7 @@ public class FileService {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             HttpHeaders headers = new HttpHeaders();
 
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + username + ".zip"+  "\"");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + username + ".zip" + "\"");
             headers.add("Access-Control-Expose-Headers",
                     HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
             long time2 = System.currentTimeMillis();
@@ -172,20 +187,15 @@ public class FileService {
             log.info("Vartotojas '" + Auth.getUsername() + "' atsisiuntė savo dokumentų archyvą csv formatu kartu su pridėtais failais.");
             return ResponseEntity.ok().headers(headers).body(resource);
         }
-        return ResponseEntity.notFound().build();
+
     }
 
     @Transactional
     public void uploadMainFile(Document document, MultipartFile multipartFile) throws IOException {
         File folder = getDocumentFolder(document);
-//        File path = new File(pathName
-//                + File.separator
-//                + document.getAuthor().getUsername()
-//                +   File.separator
-//                + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(document.getCreationDate())));
+
         boolean mkdirs = folder.mkdirs();
         String originalFileName = multipartFile.getOriginalFilename();
-//        String updatedFileName = originalFileName + document.getPrefix();
         document.setPath(originalFileName);
         byte[] buf = new byte[1024];
         assert originalFileName != null;
@@ -237,13 +247,16 @@ public class FileService {
     }
     @Transactional
     public void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
-
+        File folder = getDocumentFolder(document);
+        if(!folder.exists()) {
+            boolean mkdirs = folder.mkdirs();
+        }
         File path = new File(pathName
                 + File.separator
                 + document.getAuthor().getUsername()
                 + File.separator
                 + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(document.getCreationDate())));
-        path.mkdirs();
+
         for (int i = 0; i < multipartFile.length; i++) {
             String originalFileName = multipartFile[i].getOriginalFilename();
             if (i == 0) {
@@ -342,59 +355,11 @@ public class FileService {
 
     @Transactional
     public ResponseEntity downloadCSV(User user) {
-        if (user != null) {
-            String csvFilePath = pathName
-                    + File.separator
-                    + user.getUsername()
-                    + File.separator
-                    + user.getUsername()
-                    + ".csv";
-            List<Document> documents = user.getDocuments();
-            try (
-                    BufferedWriter writer = Files.newBufferedWriter(Paths.get(csvFilePath));
-
-
-                    CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                            .withHeader(
-                                    "Autorius",
-                                    "Pavadinimas",
-                                    "Aprasymas",
-                                    "Sukurimo data",
-                                    "Dokumento tipas",
-                                    "Dokumento busena",
-                                    "Issiuntimo data",
-                                    "Patvirtinimo data",
-                                    "Atmetimo data",
-                                    "Perziurejo",
-                                    "Atmetimo prizastis"
-                            )
-                    )
-            ) {
-                for (Document doc : documents) {
-                    User reviewer = doc.getReviewer();
-                    String reviewerFullName = "";
-                    if(reviewer != null){
-                        reviewerFullName = reviewer.getFirstname() + " " +reviewer.getLastname();
-                    }
-                    csvPrinter.printRecord(
-                            doc.getAuthor().getFirstname() + " " + doc.getAuthor().getLastname(),
-                            doc.getTitle(),
-                            doc.getDescription(),
-                            doc.getCreationDate(),
-                            doc.getDocumentType().getTitle(),
-                            doc.getDocumentState(),
-                            doc.getSubmissionDate(),
-                            doc.getApprovalDate(),
-                            doc.getRejectionDate(),
-                            reviewerFullName,
-                            doc.getRejectionReason()
-                    );
-                }
-
-
-                csvPrinter.flush();
-                MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, csvFilePath);
-                InputStreamResource resource = new InputStreamResource(new FileInputStream(csvFilePath));
+        if(!user.getDocuments().isEmpty()){
+        try{
+            File file = createCsv(user);
+                MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, file.getPath());
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(file.getPath()));
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + user.getUsername() + ".csv" + "\"");
                 headers.add("Access-Control-Expose-Headers",
@@ -403,30 +368,36 @@ public class FileService {
                 log.info("Vartotojas '" + Auth.getUsername() + "' atsisiuntė savo dokumentų archyvą csv formatu.");
                 return ResponseEntity.ok().headers(headers).
                         body(resource);
-
-
             } catch (IOException ex) {
+                System.out.println(ex);
                 log.error("Vartotojas '" + Auth.getUsername() + "'. Negalima sukurti csv failo.");
-                return new ResponseEntity("Could not create csv file", HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>("Could not create csv file", HttpStatus.EXPECTATION_FAILED);
             }
         } else {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User does not have any documents.", HttpStatus.NOT_FOUND);
         }
-
     }
 //  Create CSV
     private File createCsv(User user) {
+
+        File folder = new File(pathName
+                + File.separator
+                + user.getUsername()
+                + File.separator);
+        if(!folder.exists()) {
+            boolean mkdirs = folder.mkdirs();
+        }
         String csvFilePath = pathName
                 + File.separator
                 + user.getUsername()
                 + File.separator
                 + user.getUsername()
                 + ".csv";
+        File file = new File(csvFilePath);
+
         List<Document> documents = user.getDocuments();
         try (
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get(csvFilePath));
-
-
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader(
                                 "Autorius",
@@ -472,13 +443,11 @@ public class FileService {
         }
         return new File(csvFilePath);
     }
-        ;
+
 
     //    Zip folders
     private void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parentDirectoryName) throws Exception {
         if (fileToZip == null || !fileToZip.exists()) {
-            //log.info("Ar čia ką nors patikrino?");
-            //log.info("Failas - " + fileToZip);
             log.error("Vartototas '" + Auth.getUsername() + "'. Generuojant dokumentų archyvą nerasta direktorija '" + fileToZip + "'.");
             return;
         }

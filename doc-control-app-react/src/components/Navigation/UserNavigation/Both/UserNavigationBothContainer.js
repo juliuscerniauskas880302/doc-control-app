@@ -21,6 +21,7 @@ export default class UserNavigationBothContainer extends Component {
     if (!checkToken()) {
       this.props.history.push("/login");
     }
+
     return (
       <div>
         <BrowserRouter>
@@ -103,6 +104,7 @@ export default class UserNavigationBothContainer extends Component {
                     </ResponseMessage>
                   )}
                 />
+                z
                 <Route
                   exact
                   path="/submittedDocuments/:documentId"
@@ -184,7 +186,6 @@ export default class UserNavigationBothContainer extends Component {
                   )}
                   exact
                 />
-
                 <Route path="*" component={ResourceNotFoundComponent} />
                 <Route component={ResourceNotFoundComponent} />
               </Switch>

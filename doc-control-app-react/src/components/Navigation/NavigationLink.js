@@ -2,7 +2,11 @@ import React from "react";
 import NavLink from "../../components/Utilities/Navigation/NavLink";
 import ZipDownloadHandler from "../DownloadAttachments/ZipDownloadHandler";
 import CsvDownloadHandler from "../DownloadAttachments/CsvDownloadHandler";
+import ResponseMessage from "../Utilities/ResponseMessage";
+import extractFileName from "../DownloadAttachments/ExtractFileName";
+import Axios from "axios";
 export default function NavigationLink(props) {
+  // evepront.preventDefault();
   let allLinks = () => {
     let data = props.navigation.map((nav, index) => {
       let topTab = nav.topTab ? (
@@ -43,15 +47,17 @@ export default function NavigationLink(props) {
                 className="dropdown-menu"
                 aria-labelledby="dropdownMenuButton"
               >
+                {/* <ResponseMessage> */}
                 <p
                   className="dropdown-item text-muted"
-                  onClick={ZipDownloadHandler}
+                  onClick={event => ZipDownloadHandler(event, props)}
                 >
                   Atsisiųsti bylas ZIP formatu.
                 </p>
+                {/* </ResponseMessage> */}
                 <p
                   className="dropdown-item text-muted "
-                  onClick={CsvDownloadHandler}
+                  onClick={event => CsvDownloadHandler(event, props)}
                 >
                   Atsisiųsti dokumentų sąrašą CSV formatu.
                 </p>
