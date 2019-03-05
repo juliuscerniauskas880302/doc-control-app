@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import ButtonComponent from "../../Utilities/ButtonComponent";
+import ResourceNotFoundComponent from "../../Errors/ResourceNotFoundComponent";
 
 export default class EditUserGroups extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ export default class EditUserGroups extends Component {
     )
       .then(res => {
         this.setState({ user: res.data });
+        console.log(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -207,71 +209,76 @@ export default class EditUserGroups extends Component {
   };
 
   render() {
-    return (
-      <div className="page-holder w-100 d-flex flex-wrap">
-        <div className="container-fluid px-xl-5">
-          <section className="pt-5">
-            <div className="col-lg-12 mb-5">
-              <div className="card">
-                <div className="card-header">
-                  <h3 className="h6 text-uppercase mb-0">Grupių priskyrimas</h3>
-                </div>
-                <div className="card-body">
-                  <div className="form-group row">
-                    <label className="col-md-3 form-control-label">
-                      Visos esamos grupės
-                    </label>
-                    <div className="col-md-9 ml-auto select">
-                      <select
-                        className="form-control rounded"
-                        multiple
-                        size="5"
-                        onChange={this.onValueChangeHandler}
-                        name="selectedAddGroup"
-                      >
-                        {this.showAvailableGroups()}
-                      </select>
-                    </div>
-
-                    <ButtonComponent
-                      onClick={() => this.onClickAddGroupToUserHandler()}
-                      type="submit"
-                      value="Pridėti"
-                      className="btn submitButton"
-                    />
+    if (this.state.user.admin) {
+      return <ResourceNotFoundComponent />;
+    } else
+      return (
+        <div className="page-holder w-100 d-flex flex-wrap">
+          <div className="container-fluid px-xl-5">
+            <section className="pt-5">
+              <div className="col-lg-12 mb-5">
+                <div className="card">
+                  <div className="card-header">
+                    <h3 className="h6 text-uppercase mb-0">
+                      Grupių priskyrimas
+                    </h3>
                   </div>
-                </div>
-                <div className="line" />
-                <div className="card-body">
-                  <div className="form-group row">
-                    <label className="col-md-3 form-control-label">
-                      Vartotojo grupės
-                    </label>
-                    <div className="col-md-9 ml-auto select">
-                      <select
-                        className="form-control rounded"
-                        multiple
-                        size="5"
-                        onChange={this.onValueChangeHandler}
-                        name="selectedRemoveGroup"
-                      >
-                        {this.showAllUserGroups()}
-                      </select>
-                    </div>
+                  <div className="card-body">
+                    <div className="form-group row">
+                      <label className="col-md-3 form-control-label">
+                        Visos esamos grupės
+                      </label>
+                      <div className="col-md-9 ml-auto select">
+                        <select
+                          className="form-control rounded"
+                          multiple
+                          size="5"
+                          onChange={this.onValueChangeHandler}
+                          name="selectedAddGroup"
+                        >
+                          {this.showAvailableGroups()}
+                        </select>
+                      </div>
 
-                    <ButtonComponent
-                      onClick={() => this.onClickRemoveGroupFromUserHandler()}
-                      type="submit"
-                      value="Ištrinti"
-                      className="btn deleteButton"
-                    />
+                      <ButtonComponent
+                        onClick={() => this.onClickAddGroupToUserHandler()}
+                        type="submit"
+                        value="Pridėti"
+                        className="btn submitButton"
+                      />
+                    </div>
+                  </div>
+                  <div className="line" />
+                  <div className="card-body">
+                    <div className="form-group row">
+                      <label className="col-md-3 form-control-label">
+                        Vartotojo grupės
+                      </label>
+                      <div className="col-md-9 ml-auto select">
+                        <select
+                          className="form-control rounded"
+                          multiple
+                          size="5"
+                          onChange={this.onValueChangeHandler}
+                          name="selectedRemoveGroup"
+                        >
+                          {this.showAllUserGroups()}
+                        </select>
+                      </div>
+
+                      <ButtonComponent
+                        onClick={() => this.onClickRemoveGroupFromUserHandler()}
+                        type="submit"
+                        value="Ištrinti"
+                        className="btn deleteButton"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
-      </div>
-    );
+      );
   }
 }

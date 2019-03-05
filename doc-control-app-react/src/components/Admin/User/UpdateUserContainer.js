@@ -21,18 +21,13 @@ export default class UpdateUser extends Component {
       "http://localhost:8081/api/users/" + this.props.match.params.username
     )
       .then(res => {
-        this.setState(
-          {
-            firstname: res.data.firstname,
-            lastname: res.data.lastname,
-            email: res.data.email,
-            username: res.data.username,
-            isAdmin: res.data.admin
-          },
-          () => {
-            console.log(this.state);
-          }
-        );
+        this.setState({
+          firstname: res.data.firstname,
+          lastname: res.data.lastname,
+          email: res.data.email,
+          username: res.data.username,
+          isAdmin: res.data.admin
+        });
       })
       .catch(err => {
         console.log(err);
@@ -144,6 +139,18 @@ export default class UpdateUser extends Component {
           </option>
         </React.Fragment>
       );
+  };
+
+  showAddGroupsButton = () => {
+    return !this.state.isAdmin ? (
+      <ButtonComponent
+        disabled={true}
+        onClick={() => this.goEditGroups()}
+        type="submit"
+        value="Pridėti grupes"
+        className="btn submitButtonAlt"
+      />
+    ) : null;
   };
 
   render() {
@@ -259,12 +266,8 @@ export default class UpdateUser extends Component {
                       className="btn submitButton"
                     />
                   </form>
-                  <ButtonComponent
-                    onClick={() => this.goEditGroups()}
-                    type="submit"
-                    value="Pridėti grupes"
-                    className="btn submitButtonAlt"
-                  />
+
+                  {this.showAddGroupsButton()}
 
                   <ButtonComponent
                     onClick={() => this.goBack()}

@@ -1,28 +1,28 @@
 import React from "react";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 
 export default function SemanticUserTable(props) {
-  let confirmDeltetion = () => {
-    Swal.fire({
-      title: "Ar tikrai norite ištrinti?",
-      // text: "You will not be able to recover this imaginary file!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Taip, ištrinti!",
-      cancelButtonText: "Ne, palitki"
-    }).then(result => {
-      if (result.value) {
-        Swal.fire(
-          "Ištrinta!",
-          "Vartotojas pašalintas iš duomenų bazės."
-          // "success"
-        );
-        props.delete();
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire("Atšaukta", "Vartotojo duomenys palikti");
-      }
-    });
-  };
+  // let confirmDeltetion = () => {
+  //   Swal.fire({
+  //     title: "Ar tikrai norite ištrinti?",
+  //     // text: "You will not be able to recover this imaginary file!",
+  //     type: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Taip, ištrinti!",
+  //     cancelButtonText: "Ne, palitki"
+  //   }).then(result => {
+  //     if (result.value) {
+  //       Swal.fire(
+  //         "Ištrinta!",
+  //         "Vartotojas pašalintas iš duomenų bazės."
+  //         // "success"
+  //       );
+  //       props.delete();
+  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //       Swal.fire("Atšaukta", "Vartotojo duomenys palikti");
+  //     }
+  //   });
+  // };
 
   return (
     <tr>

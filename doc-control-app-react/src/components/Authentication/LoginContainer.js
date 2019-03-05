@@ -49,7 +49,6 @@ export default class LoginContainer extends Component {
           .then(ress => {
             localStorage.setItem("user", JSON.stringify(ress.data));
             this.props.setLoggedState();
-            console.log(ress.data);
           })
           .catch(err => {
             console.log(err);
