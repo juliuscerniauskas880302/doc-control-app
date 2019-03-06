@@ -128,7 +128,7 @@ const EditDocumentComponent = props => {
                       <div className="col-md-4">
                         <p>
                           <i
-                            className="fas fa-times-circle fa-2x"
+                            className="fas fa-times-circle fa-2x "
                             id={props.path}
                             name="mainFilePathToDelete"
                             title="Pašalinti failą"
@@ -151,7 +151,7 @@ const EditDocumentComponent = props => {
                   ) : (
                     <div className="form-group row">
                       <label className="col-md-2 col-lg-2 form-control-label">
-                        Pasirinkite pridedamus failus:
+                        Pasirinkite pagrindinį failą:
                       </label>
                       <div className="col-md-6 col-lg-4">
                         {" "}

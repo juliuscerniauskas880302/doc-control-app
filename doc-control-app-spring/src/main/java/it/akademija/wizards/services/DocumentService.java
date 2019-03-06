@@ -128,6 +128,9 @@ public class DocumentService {
         if (allowedToCreateDocument(username, document)) {
             author.addDocument(document);
             try {
+                if(!fileService.validateFiles(multipartFile)){
+                    return new ResponseEntity<>("Invalid files.", HttpStatus.BAD_REQUEST);
+                }
                 fileService.uploadFiles(document, multipartFile);
             } catch (IOException e) {
                 log.error("Vartotojas '" + Auth.getUsername() + "', kurdamas naują dokumentą, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "', bandė pridėti neegzistuojantį failą.");
@@ -137,72 +140,93 @@ public class DocumentService {
             log.info("Vartotojas '" + Auth.getUsername() + "' sukūrė naują dokumentą, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "'.");
         } else {
             log.warn("Vartotojas '" + Auth.getUsername() + "', neturi teisės kurti dokumento, kurio tipas '" + documentCreateCommand.getDocumentTypeTitle() + "'.");
-            throw new BadRequestException("User doesn't have permission to create this type of document");
+            return new ResponseEntity<>("Access is not allowed,", HttpStatus.METHOD_NOT_ALLOWED);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //UPDATE
+
+
+    //UPDATE DOCUMENT BY ID
     @Transactional
     public ResponseEntity<?> updateDocumentById(
             String id,
             DocumentUpdateCommand documentUpdateCommand,
             MultipartFile[] multipartFile) {
         Document document = resourceFinder.getDocument(id);
-//        Allow to edit only CREATED documents
+//          Allow to edit only CREATED documents
         if (document.getDocumentState().equals(DocumentState.CREATED)) {
-//          Delete additional files
-            for (String filePath :
-                    documentUpdateCommand.getAdditionalFilePathsToDelete()
-                    ) {
-                fileService.deleteFileByFileName(document, filePath);
-            }
-
+//            If any file is added, proceed, else go to 179
             if (multipartFile.length != 0) {
-//            Delete main file only and only if a new one is attached
-                System.out.println("_________________________" +
-                        documentUpdateCommand.getMainFilePathToDelete());
-                System.out.println("_________________________" + document.getPath());
-            if(documentUpdateCommand.getMainFilePathToDelete() != null &&
-                    documentUpdateCommand.getMainFilePathToDelete().equals(document.getPath())){
-                try {
-
-                    fileService.deleteMainFile(document);
-                    fileService.uploadFiles(document, multipartFile);
-                } catch (IOException e) {
-                    log.error("Vartotojas '" + Auth.getUsername() + "', redaguodamas dokumentą, kurio id '" + id + "', bandė pridėti neegzistuojantį failą.");
-                    return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
-                }
-            } else {
+                log.error("FileName" + multipartFile[0].getOriginalFilename());
+//              If main file is modified (additional files optionally), proceed
+                if(documentUpdateCommand.getMainFilePathToDelete() != null &&
+                        documentUpdateCommand.getMainFilePathToDelete().equals(document.getPath())){
+                    if(!fileService.validateMainFileType(multipartFile[0])){
+                        return new ResponseEntity<>("Main file type is invalid.", HttpStatus.BAD_REQUEST); }
+                    if(!fileService.validateAdditionalFileTypes(multipartFile)) {
+                        return new ResponseEntity<>("Additional file type is invalid.", HttpStatus.BAD_REQUEST);}
+                    if(!fileService.validateFileNamesMainUpdate(multipartFile, document.getAdditionalFilePaths(),
+                            documentUpdateCommand.getAdditionalFilePathsToDelete())){
+                        return new ResponseEntity<>("Duplicate file names.", HttpStatus.BAD_REQUEST);}
+                    try {
+                            log.error("DocumentService 173");
+                            fileService.deleteFilesByFileName(document, documentUpdateCommand.getAdditionalFilePathsToDelete());
+                            fileService.deleteMainFile(document);
+                            fileService.uploadFiles(document, multipartFile);
+                    } catch (IOException e) {
+                        log.error("Vartotojas '" + Auth.getUsername() + "', redaguodamas dokumentą, kurio id '" + id + "', bandė pridėti neegzistuojantį failą.");
+                        log.error("Exception message: " + e);
+                        return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
+                    }
+                } else {
+//                    If only additional files are modified, proceed
+                    if(!fileService.validateAdditionalFileTypes(multipartFile)) {
+                        return new ResponseEntity<>("Additional file type is invalid.", HttpStatus.BAD_REQUEST);}
+                    if(!fileService.validateFileNamesAdditionalUpdate(
+                            multipartFile,
+                            document.getAdditionalFilePaths(),
+                            documentUpdateCommand.getAdditionalFilePathsToDelete(),
+                            document.getPath())){
+                        return new ResponseEntity<>("Duplicate file names.", HttpStatus.BAD_REQUEST);}
                     try{
-                        for (MultipartFile mf :
-                                multipartFile) {
-                            fileService.uploadAdditionalFile(document, mf);
-                        }
+                       fileService.deleteFilesByFileName(document, documentUpdateCommand.getAdditionalFilePathsToDelete());
+                       fileService.uploadAdditionalFiles(document, multipartFile);
+
                     } catch (IOException e){
                         log.error("Vartotojas '" + Auth.getUsername() + "', redaguodamas dokumentą, kurio id '" + id + "', bandė pridėti neegzistuojantį failą.");
+                        log.error("Exception message: " + e);
                         return new ResponseEntity<>("File upload failed", HttpStatus.BAD_REQUEST);
                     }
                 }
+            } else{
+//               If no files are added, delete additional files.
+                fileService.deleteFilesByFileName(document, documentUpdateCommand.getAdditionalFilePathsToDelete());
             }
+//            Update document info
             documentRepository.save(mapper.updateCommandToEntity(documentUpdateCommand, document));
             log.info("Vartotojas '" + Auth.getUsername() + "' koregavo dokumentą, kurio id '" + id + "'.");
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } else {
             log.warn("Vartotojas '" + Auth.getUsername() + "' norėjo koreguoti jau pateiktą dokumentą, kurio id '" + id + "'.");
-            throw new BadRequestException("Submitted documents cannot be updated");
+            return new ResponseEntity<>("Submitted documents cannot be updated", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     //DELETE
     @Transactional
     public void deleteDocumentById(String id) {
         Document document = resourceFinder.getDocument(id);
-        User author = document.getAuthor();
-        fileService.deleteAllFiles(document);
-        author.removeDocument(document);
-        documentRepository.delete(document);
-        log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė dokumentą, kurio id '" + id + "'.");
+        if(document.getDocumentState().equals(DocumentState.CREATED)) {
+            User author = document.getAuthor();
+            fileService.deleteAllFiles(document);
+            author.removeDocument(document);
+            documentRepository.delete(document);
+            log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė dokumentą, kurio id '" + id + "'.");
+        }
+        else {
+            log.warn("Vartotojas '" + Auth.getUsername() + "' norėjo trinti jau pateiktą dokumentą, kurio id '" + id + "'.");
+        }
     }
 
     //SUBMIT

@@ -337,13 +337,6 @@ class EditDocumentContainer extends React.Component {
   };
 
   componentDidMount() {
-    //nusiskaitau dokumentų tipus
-
-    //let currentUser = JSON.parse(localStorage.getItem("user"));
-    //console.log("Spausdinu userį gautą iš localStorage");
-    //console.log(currentUser);
-    //this.setState({ username: currentUser.username }, () => {
-    //nusiskaitau dokumentų tipus
     axios
       .get("http://localhost:8081/api/users/submissionDocTypes")
       .then(response => {
@@ -357,24 +350,12 @@ class EditDocumentContainer extends React.Component {
         console.log("KLAIDA!!!!" + error);
       });
 
-    //Konkretaus dokumento duomenų nuskaitymas
     const position = this.props.match.params.documentId;
-    //let currentUser = "migle";
     let resourcePath = "http://localhost:8081/api/docs/" + position;
 
     axios
       .get(resourcePath)
       .then(response => {
-        //this.setState(response.data);
-        // console.log(response.data.id);
-        //console.log(response.data.title);
-
-        //TODO
-        //Čia to lyg ir nereikia, nes dabar PATH tik failo pavadinimą ir turi
-        // var realFileName = "";
-        // if (response.data.path.lastIndexOf(response.data.prefix) !== -1) {
-        //   realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
-        // }
         this.setState({ id: response.data.id });
         this.setState({ title: response.data.title });
         this.setState({ description: response.data.description });
@@ -382,16 +363,10 @@ class EditDocumentContainer extends React.Component {
         this.setState({ path: response.data.path });
         this.setState({ paths: response.data.additionalFilePaths });
         this.setState({ prefix: response.data.prefix });
-        //this.setState({ filename: realFileName });
-        console.log("Gavau tokį produktą į redagavimą");
-        console.log(this.state);
-        let currentUser = JSON.parse(localStorage.getItem("user"));
-        console.log("Spausdinu userį gautą iš localStorage");
-        console.log(currentUser);
-        this.setState({ username: currentUser.username });
 
-        //console.log("Pagaminau tokį State ->" + this.state);
-        //console.log("Toks description iš state'o -> " + this.state.id);
+        let currentUser = JSON.parse(localStorage.getItem("user"));
+
+        this.setState({ username: currentUser.username });
       })
       .catch(error => {
         console.log(error);

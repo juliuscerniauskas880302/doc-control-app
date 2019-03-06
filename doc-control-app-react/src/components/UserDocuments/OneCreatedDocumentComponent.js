@@ -75,7 +75,7 @@ const OneCreatedDocumentComponent = props => {
                   </div>
                   <div className="col-9">
                     <p>
-                      {props.path} &nbsp;{" "}
+                      <span className="customFileSpan">{props.path}</span>&nbsp;{" "}
                       <i
                         className="mygtukas fas fa-arrow-circle-down fa-2x"
                         id={props.path}

@@ -1,6 +1,8 @@
 import React from "react";
 import OneReviewDocumentComponent from "./OneReviewDocumentComponent";
 import axios from "axios";
+import RejectReasonPopUp from "./RejectReasonPopUp";
+
 import Swal from "sweetalert2";
 
 class OneReviewDocumentContainer extends React.Component {
@@ -16,15 +18,19 @@ class OneReviewDocumentContainer extends React.Component {
       submissionDate: "2019.01.26",
       rejectionReason: "",
       path: "",
+      paths: null,
       prefix: ""
-      //filename: "Nėra pridėto failo",
-      //isOpen: false
     };
   }
-
-  downloadHandler = event => {
+  fileDownloadHandler = event => {
+    console.log(event.target);
     axios({
-      url: "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+      url:
+        "http://localhost:8081/api/docs/" +
+        this.state.id +
+        "/" +
+        event.target.id +
+        "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -40,6 +46,27 @@ class OneReviewDocumentContainer extends React.Component {
       document.body.removeChild(link);
     });
   };
+
+  // downloadHandler = (event) => {
+  //     axios({
+  //         url:
+  //             "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+  //         method: "GET",
+  //         responseType: "blob" // important
+  //     }).then(response => {
+  //         var filename = this.extractFileName(
+  //             response.headers["content-disposition"]
+  //         );
+  //         const url = window.URL.createObjectURL(new Blob([response.data]));
+  //         const link = document.createElement("a");
+  //         link.href = url;
+  //         link.setAttribute("download", filename); //or any other extension
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //     });
+  // };
+
 
   extractFileName = contentDispositionValue => {
     var filename = "";
@@ -216,6 +243,7 @@ class OneReviewDocumentContainer extends React.Component {
           submissionDate: response.data.submissionDate,
           rejectionReason: response.data.rejectionReason,
           path: response.data.path,
+          paths: response.data.additionalFilePaths,
           prefix: response.data.prefix
           //filename: realFileName
         });
@@ -227,40 +255,32 @@ class OneReviewDocumentContainer extends React.Component {
 
   render() {
     return (
-      <div>
-        <OneReviewDocumentComponent
-          id={this.state.id}
-          author={this.state.author}
-          title={this.state.title}
-          description={this.state.description}
-          type={this.state.documentTypeTitle}
-          state={
-            this.state.documentState
-              .toLowerCase()
-              .charAt(0)
-              .toUpperCase() + this.state.documentState.toLowerCase().slice(1)
-          }
-          submissionDate={
-            this.state.submissionDate
-              ? this.state.submissionDate.substring(0, 10)
-              : ""
-          }
-          path={this.state.path}
-          prefix={this.state.prefix}
-          //filename={this.state.filename}
-          downloadHandler={this.downloadHandler}
-          handleAccept={this.handleAccept}
-          handleReject={this.handleReject}
-          //openPopup={this.openPopup}
-        />
-        {/* <RejectReasonPopUp show={this.state.isOpen}
-                    onClose={this.closePopup}
-                    handleChangeOfRejectionReason={this.handleChangeOfRejectionReason}
-                    closePopupAcceptReject={this.closePopupAcceptReject}
-                    closePopupCancelReject={this.closePopupCancelReject}
-                    >
-                </RejectReasonPopUp> */}
-      </div>
+      <OneReviewDocumentComponent
+        id={this.state.id}
+        author={this.state.author}
+        title={this.state.title}
+        description={this.state.description}
+        type={this.state.documentTypeTitle}
+        state={
+          this.state.documentState
+            .toLowerCase()
+            .charAt(0)
+            .toUpperCase() + this.state.documentState.toLowerCase().slice(1)
+        }
+        submissionDate={
+          this.state.submissionDate
+            ? this.state.submissionDate.substring(0, 10)
+            : ""
+        }
+        path={this.state.path}
+        paths={this.state.paths}
+        prefix={this.state.prefix}
+        //filename={this.state.filename}
+        fileDownloadHandler={this.fileDownloadHandler}
+        handleAccept={this.handleAccept}
+        handleReject={this.handleReject}
+      />
+
     );
   }
 }

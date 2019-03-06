@@ -157,12 +157,12 @@ public class DocumentController {
     }
 
 
-    @ApiOperation(value = "download document main file")
-    @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity downloadMainFile(@PathVariable final String id) throws FileNotFoundException {
-        return fileService.downloadMainFile(id);
-    }
+//    @ApiOperation(value = "download document main file")
+//    @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity downloadMainFile(@PathVariable final String id) throws FileNotFoundException {
+//        return fileService.downloadMainFile(id);
+//    }
 
     @ApiOperation(value = "download csv file")
     @RequestMapping(value = "/csv/download", method = RequestMethod.GET)
@@ -243,7 +243,7 @@ public class DocumentController {
 //    @RequestMapping(value = "/{id}/{filename}", method = RequestMethod.DELETE)
 //    @ResponseStatus(HttpStatus.ACCEPTED)
 //    public void deleteFile(@PathVariable String id, @PathVariable String filename){
-//        fileService.deleteFileByFileName(id, filename);
+//        fileService.deleteFilesByFileName(id, filename);
 //    }
 
 
