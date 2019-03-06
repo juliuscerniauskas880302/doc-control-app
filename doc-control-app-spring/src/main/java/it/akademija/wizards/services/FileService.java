@@ -3,7 +3,6 @@ package it.akademija.wizards.services;
 import it.akademija.wizards.configs.MediaTypeUtils;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.User;
-import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.services.auxiliary.Auth;
 import it.akademija.wizards.services.auxiliary.ResourceFinder;
 import lombok.extern.slf4j.Slf4j;
@@ -42,46 +41,50 @@ public class FileService {
     @Autowired
     private ServletContext servletContext;
 
+    private List<String> allowedFileTypes = new ArrayList<>(Arrays.asList("application/pdf", "image/png",
+            "image/jpg"));
 
-    // DELETES ONE FILE IN DOCUMENT
+    // DELETE ADDITIONAL FILES BY FILENAME
     @Transactional
-    public ResponseEntity<String> deleteFileByFileName(
+    public ResponseEntity<String> deleteFilesByFileName(
             Document document,
-            String fileName) {
+            String[] fileNames) {
+        for (String fileName :
+                fileNames
+        ) {
             deleteAdditionalFiles(document, fileName);
-
-        log.info("Vartotojas '" + Auth.getUsername() + "' dokumentui, kurio id '" + document.getId() + "', ištrynė pridėtą failą '" + fileName + "'.");
-        return new ResponseEntity<>("File " + fileName + " was deleted.", HttpStatus.CREATED);
-    }
-
-    //    DOWNLOAD DOCUMENT MAIN FILE
-    @Transactional
-    public ResponseEntity downloadMainFile(String documentId) throws FileNotFoundException {
-        Document document = resourceFinder.getDocument(documentId);
-        String originalFileName = document.getPath();
-        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
-        File file = new File(getDocumentFolder(document).getPath()
-                + File.separator
-                + document.getPath());
-        if (file.exists()) {
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"");
-            headers.add("Access-Control-Expose-Headers",
-                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
-            headers.setContentType(mediaType);
-            return ResponseEntity.ok().headers(headers).
-                    body(resource);
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>("Files deleted.", HttpStatus.ACCEPTED);
     }
+
+//    // DOWNLOAD DOCUMENT MAIN FILE
+//    @Transactional
+//    public ResponseEntity downloadMainFile(String documentId) throws FileNotFoundException {
+//        Document document = resourceFinder.getDocument(documentId);
+//        String originalFileName = document.getPath();
+//        MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, originalFileName);
+//        File file = new File(getDocumentFolder(document).getPath()
+//                + File.separator
+//                + document.getPath());
+//        if (file.exists()) {
+//            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"");
+//            headers.add("Access-Control-Expose-Headers",
+//                    HttpHeaders.CONTENT_DISPOSITION + "," + HttpHeaders.CONTENT_LENGTH);
+//            headers.setContentType(mediaType);
+//            return ResponseEntity.ok().headers(headers).
+//                    body(resource);
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     //    DOWNLOAD DOCUMENT FILE
     @Transactional
     public ResponseEntity downloadFile(String documentId, String filePath) throws FileNotFoundException {
         Document document = resourceFinder.getDocument(documentId);
-//        String originalFileName = document.getPath();
-        if(filePath.equals(document.getPath())) {
+//      DOWNLOAD MAIN FILE
+        if (filePath.equals(document.getPath())) {
             File file = new File(getDocumentFolder(document).getPath()
                     + File.separator
                     + document.getPath());
@@ -96,8 +99,9 @@ public class FileService {
                 return ResponseEntity.ok().headers(headers).
                         body(resource);
             }
-            log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui failo '" +  file.getName() + "' nėra.");
-        } else if (document.getAdditionalFilePaths().contains(filePath)){
+            log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui failo '" + file.getName() + "' nėra.");
+        } else if (document.getAdditionalFilePaths().contains(filePath)) {
+//            DOWNLAOD ADDITIONAL FILE
             File file = new File(getDocumentFolder(document).getPath()
                     + File.separator
                     + filePath);
@@ -112,13 +116,14 @@ public class FileService {
                 return ResponseEntity.ok().headers(headers).
                         body(resource);
             }
-            log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui failo '" +  file.getName() + "' nėra.");
+            log.error("Vartotojas '" + Auth.getUsername() + "'. Atsisiuntimui failo '" + file.getName() + "' nėra.");
         }
+//        FILE NOT FOUND
         return ResponseEntity.notFound().build();
 
     }
 
-    // GET ALL ATTACHMENTS WITH FOLDERS
+    // DOWNLOAD ARCHIVE OF FILES
     @Transactional
     public ResponseEntity downloadAllDocuments(String username) throws IOException {
         long time1 = System.currentTimeMillis();
@@ -131,10 +136,9 @@ public class FileService {
                 + ".csv";
         File csvFile = createCsv(user);
         List<Document> documents = user.getDocuments();
-        if(documents.isEmpty()){
+        if (documents.isEmpty()) {
             return new ResponseEntity<>("Neturite dokumentų.", HttpStatus.BAD_REQUEST);
-        }
-        else {
+        } else {
 
             if (new File(pathName +
                     File.separator +
@@ -170,6 +174,7 @@ public class FileService {
                 addDirToZipArchive(zs, csvFile, "");
             } catch (Exception e) {
                 log.error("Vartotojas '" + Auth.getUsername() + "'. Nepavyko suformuoti dokumentų archyvo.");
+                log.error("Error message: " + e);
                 return new ResponseEntity<>("Archiving CSV failed", HttpStatus.BAD_REQUEST);
             }
             zs.flush();
@@ -190,65 +195,70 @@ public class FileService {
 
     }
 
+    //    @Transactional
+//    public void uploadMainFile(Document document, MultipartFile multipartFile) throws IOException {
+//        File folder = getDocumentFolder(document);
+//
+//        boolean mkdirs = folder.mkdirs();
+//        String originalFileName = multipartFile.getOriginalFilename();
+//        document.setPath(originalFileName);
+//        byte[] buf = new byte[1024];
+//        assert originalFileName != null;
+//        File file = new File(folder.getPath(), originalFileName);
+//        try (InputStream inputStream = multipartFile.getInputStream();
+//             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+//            int numRead;
+//            while ((numRead = inputStream.read(buf)) >= 0) {
+//                fileOutputStream.write(buf, 0, numRead);
+//            }
+//        }
+//        Set<PosixFilePermission> perms = new HashSet<>();
+//        // add owners permission
+//        perms.add(PosixFilePermission.OWNER_READ);
+//        perms.add(PosixFilePermission.OWNER_WRITE);
+//        perms.add(PosixFilePermission.GROUP_READ);
+//        perms.add(PosixFilePermission.GROUP_WRITE);
+//        // add others permissions
+//        perms.add(PosixFilePermission.OTHERS_READ);
+//        Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
+//    }
     @Transactional
-    public void uploadMainFile(Document document, MultipartFile multipartFile) throws IOException {
+    public void uploadAdditionalFiles(Document document, MultipartFile[] multipartFiles) throws IOException {
         File folder = getDocumentFolder(document);
+        boolean mkdirs = folder.mkdirs();
+        for (MultipartFile multipartFile :
+                multipartFiles) {
+            String originalFileName = multipartFile.getOriginalFilename();
+            List<String> additionalFilePaths = document.getAdditionalFilePaths();
+            additionalFilePaths.add(originalFileName);
+            document.setAdditionalFilePaths(additionalFilePaths);
+            byte[] buf = new byte[1024];
+            assert originalFileName != null;
+            File file = new File(folder.getPath(), originalFileName);
+            try (InputStream inputStream = multipartFile.getInputStream();
+                 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                int numRead;
+                while ((numRead = inputStream.read(buf)) >= 0) {
+                    fileOutputStream.write(buf, 0, numRead);
+                }
+            }
+            Set<PosixFilePermission> perms = new HashSet<>();
+            // add owners permission
+            perms.add(PosixFilePermission.OWNER_READ);
+            perms.add(PosixFilePermission.OWNER_WRITE);
+            perms.add(PosixFilePermission.GROUP_READ);
+            perms.add(PosixFilePermission.GROUP_WRITE);
+            // add others permissions
+            perms.add(PosixFilePermission.OTHERS_READ);
+            Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
+        }
+    }
 
-        boolean mkdirs = folder.mkdirs();
-        String originalFileName = multipartFile.getOriginalFilename();
-        document.setPath(originalFileName);
-        byte[] buf = new byte[1024];
-        assert originalFileName != null;
-        File file = new File(folder.getPath(), originalFileName);
-        try (InputStream inputStream = multipartFile.getInputStream();
-             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            int numRead;
-            while ((numRead = inputStream.read(buf)) >= 0) {
-                fileOutputStream.write(buf, 0, numRead);
-            }
-        }
-        Set<PosixFilePermission> perms = new HashSet<>();
-        // add owners permission
-        perms.add(PosixFilePermission.OWNER_READ);
-        perms.add(PosixFilePermission.OWNER_WRITE);
-        perms.add(PosixFilePermission.GROUP_READ);
-        perms.add(PosixFilePermission.GROUP_WRITE);
-        // add others permissions
-        perms.add(PosixFilePermission.OTHERS_READ);
-        Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
-    }
-    @Transactional
-    public void uploadAdditionalFile(Document document, MultipartFile multipartFile) throws IOException {
-        File folder = getDocumentFolder(document);
-        boolean mkdirs = folder.mkdirs();
-        String originalFileName = multipartFile.getOriginalFilename();
-        List<String> additionalFilePaths = document.getAdditionalFilePaths();
-        additionalFilePaths.add(originalFileName);
-        document.setAdditionalFilePaths(additionalFilePaths);
-        byte[] buf = new byte[1024];
-        assert originalFileName != null;
-        File file = new File(folder.getPath(), originalFileName);
-        try (InputStream inputStream = multipartFile.getInputStream();
-             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            int numRead;
-            while ((numRead = inputStream.read(buf)) >= 0) {
-                fileOutputStream.write(buf, 0, numRead);
-            }
-        }
-        Set<PosixFilePermission> perms = new HashSet<>();
-        // add owners permission
-        perms.add(PosixFilePermission.OWNER_READ);
-        perms.add(PosixFilePermission.OWNER_WRITE);
-        perms.add(PosixFilePermission.GROUP_READ);
-        perms.add(PosixFilePermission.GROUP_WRITE);
-        // add others permissions
-        perms.add(PosixFilePermission.OTHERS_READ);
-        Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
-    }
+//    Uploads Main File (always first in an array when creating document) and Additional Files
     @Transactional
     public void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
         File folder = getDocumentFolder(document);
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             boolean mkdirs = folder.mkdirs();
         }
         File path = new File(pathName
@@ -289,20 +299,14 @@ public class FileService {
     //    DELETES ONLY CREATED DOCUMENT FILES
     @Transactional
     public void deleteAllFiles(Document document) {
-        if (document.getDocumentState().equals(DocumentState.CREATED)) {
-            document.setAdditionalFilePaths(null);
-            document.setPath(null);
-            File folder = getDocumentFolder(document);
-            deleteFolder(folder);
-        } else {
-            log.warn("Vartotojas '" + Auth.getUsername() + "' bandė ištrinti pridėtą failą iš dokumento, kurio id '" + document.getId() + "', kai dokumentas jau yra pateiktas.");
-            throw new IllegalArgumentException("Cannot delete file that is already submitted.");
-        }
+        document.setAdditionalFilePaths(null);
+        document.setPath(null);
+        File folder = getDocumentFolder(document);
+        deleteFolder(folder);
     }
 
     @Transactional
     public void deleteMainFile(Document document) {
-        if (document.getDocumentState().equals(DocumentState.CREATED)) {
             File folder = getDocumentFolder(document);
             File file = new File(folder.getPath()
                     + File.separator
@@ -311,33 +315,23 @@ public class FileService {
             if (Objects.requireNonNull(folder.list()).length == 0) {
                 deleteFolder(folder);
             }
-        } else {
-            throw new IllegalArgumentException("Cannot delete file that is already submitted.");
-        }
     }
 
     @Transactional
     public void deleteAdditionalFiles(Document document, String fileName) {
-        if (document.getDocumentState().equals(DocumentState.CREATED)) {
-            if (document.getAdditionalFilePaths() != null) {
-                File folder = getDocumentFolder(document);
-                for (String p :
-                        document.getAdditionalFilePaths()) {
-                    File files = new File(folder.getPath()
-                            + File.separator
-                            + p);
-                    boolean delete = files.delete();
-                }
-                document.getAdditionalFilePaths().remove(fileName);
-                if (Objects.requireNonNull(folder.list()).length == 0) {
-                    deleteFolder(folder);
-                }
-
-            } else {
-                throw new IllegalArgumentException("There is no attachment named \"" + fileName + "\".");
+        if (document.getAdditionalFilePaths() != null) {
+            File folder = getDocumentFolder(document);
+            File files = new File(folder.getPath()
+                    + File.separator
+                    + fileName);
+            boolean delete = files.delete();
+            document.getAdditionalFilePaths().remove(fileName);
+            if (Objects.requireNonNull(folder.list()).length == 0) {
+                deleteFolder(folder);
             }
+            log.info("Vartotojas '" + Auth.getUsername() + "' dokumentui, kurio id '" + document.getId() + "', ištrynė pridėtą failą '" + fileName + "'.");
         } else {
-            throw new IllegalArgumentException("Cannot delete file that is already submitted.");
+            throw new IllegalArgumentException("There is no attachment named \"" + fileName + "\".");
         }
     }
 
@@ -355,9 +349,9 @@ public class FileService {
 
     @Transactional
     public ResponseEntity downloadCSV(User user) {
-        if(!user.getDocuments().isEmpty()){
-        try{
-            File file = createCsv(user);
+        if (!user.getDocuments().isEmpty()) {
+            try {
+                File file = createCsv(user);
                 MediaType mediaType = MediaTypeUtils.getMediaTypeForFile(this.servletContext, file.getPath());
                 InputStreamResource resource = new InputStreamResource(new FileInputStream(file.getPath()));
                 HttpHeaders headers = new HttpHeaders();
@@ -377,14 +371,15 @@ public class FileService {
             return new ResponseEntity<>("User does not have any documents.", HttpStatus.NOT_FOUND);
         }
     }
-//  Create CSV
+
+    //  Create CSV
     private File createCsv(User user) {
 
         File folder = new File(pathName
                 + File.separator
                 + user.getUsername()
                 + File.separator);
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             boolean mkdirs = folder.mkdirs();
         }
         String csvFilePath = pathName
@@ -484,7 +479,8 @@ public class FileService {
             }
             boolean delete = folder.delete();
         } else {
-            throw new IllegalArgumentException("Folder by this name does not exist");
+            log.error("Bandyta ištrinti neegzistuojantį aplanką pavadinimu "
+                    + folder.getAbsolutePath());
         }
     }
 
@@ -500,7 +496,96 @@ public class FileService {
         DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss", Locale.US);
         return localDateTime.format(dataTimeFormatter);
     }
+    //    Check file extensions
 
 
+    //  Validates additionalFiles.
+    boolean validateFiles(MultipartFile[] multipartFiles) {
+        List<String> fileNames = getFileNames(multipartFiles);
+        log.error("validate mainfiletype" + validateMainFileType(multipartFiles[0]));
+        log.error("validate FileNames " + validaFileNamesCreateDocument(fileNames));
+        return validateMainFileType(multipartFiles[0]) && validaFileNamesCreateDocument(fileNames) && validateAdditionalFileTypes(multipartFiles);
+    }
 
+    //  Validates only additional Files
+    public boolean validateAdditionalFiles(MultipartFile[] multipartFile) {
+        List<String> fileNames = getFileNames(multipartFile);
+        return validaFileNamesCreateDocument(fileNames) && validateAdditionalFileTypes(multipartFile);
+    }
+
+    //  Validates Main file.
+    boolean validateMainFileType(MultipartFile multipartFile) {
+        return Objects.equals(multipartFile.getContentType(), "application/pdf");
+    }
+
+    //  Adds all file names to a List
+    private List<String> getFileNames(MultipartFile[] multipartFiles) {
+        List<String> fileNames = new ArrayList<>();
+        for (MultipartFile multipartFile :
+                multipartFiles) {
+            fileNames.add(multipartFile.getOriginalFilename());
+        }
+        return fileNames;
+    }
+
+    //  Returns false if files are of invalid type.
+    boolean validateAdditionalFileTypes(MultipartFile[] multipartFiles) {
+        for (MultipartFile multipartFile :
+                multipartFiles) {
+            if (!this.allowedFileTypes.contains(multipartFile.getContentType())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //  Returns false if there are duplicate file names.
+    private boolean validaFileNamesCreateDocument(List<String> fileNames) {
+        Set<String> names = new HashSet<>();
+        for (String name :
+                fileNames) {
+            if (names.contains(name)) {
+                return false;
+            }
+            names.add(name);
+        }
+        return true;
+    }
+    //  When updating main file, checks for duplicates
+    boolean validateFileNamesMainUpdate(MultipartFile[] multipartFiles,
+                                        List<String> additionalFilePaths,
+                                        String[] additionalFilePathsToDelete) {
+        List<String> fileNames = new ArrayList<>(additionalFilePaths);
+        fileNames.removeAll(Arrays.asList(additionalFilePathsToDelete));
+        fileNames.addAll(getFileNames(multipartFiles));
+        Set<String> names = new HashSet<>();
+        for (String name :
+                fileNames) {
+            if (names.contains(name)) {
+                return false;
+            }
+            names.add(name);
+        }
+        return true;
+    }
+
+//  When updating only additional files, checks for duplicates
+    boolean validateFileNamesAdditionalUpdate(MultipartFile[] multipartFiles,
+                                                     List<String> additionalFilePaths,
+                                                     String[] additionalFilePathsToDelete,
+                                                     String mainFilePath) {
+        List<String> fileNames = new ArrayList<>(additionalFilePaths);
+        fileNames.removeAll(Arrays.asList(additionalFilePathsToDelete));
+        fileNames.addAll(getFileNames(multipartFiles));
+        fileNames.add(mainFilePath);
+        Set<String> names = new HashSet<>();
+        for (String name :
+                fileNames) {
+            if (names.contains(name)) {
+                return false;
+            }
+            names.add(name);
+        }
+        return true;
+    }
 }
