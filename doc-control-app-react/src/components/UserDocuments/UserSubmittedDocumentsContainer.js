@@ -2,7 +2,6 @@ import React from "react";
 import UserSubmittedDocumentsComponent from "./UserSubmittedDocumentsComponent";
 import SearchField from "../ReviewDocuments/SearchField";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { Pagination } from "semantic-ui-react";
 
 class UserSubmittedDocumentsContainer extends React.Component {
@@ -30,7 +29,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
 
   handleChangeOfSearchField = event => {
     this.setState({ searchField: event.target.value });
-    this.setState({activePage: 1});
+    this.setState({ activePage: 1 });
     clearInterval(this.updateDelay);
     this.updateDelay = setInterval(
       () =>
@@ -42,7 +41,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
       1000
     );
   };
-  
+
   getAllDocumentsFromServer = (pageNumber, pageLimit, searchFor) => {
     clearInterval(this.updateDelay);
     this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
@@ -51,7 +50,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
         params: {
           searchFor: searchFor,
           pageNumber: pageNumber - 1,
-          pageLimit: pageLimit,
+          pageLimit: pageLimit
         }
       })
       .then(res => {
@@ -188,9 +187,11 @@ class UserSubmittedDocumentsContainer extends React.Component {
                     <div className="row">
                       <div className="col-12">
                         <SearchField
-                         searchField={this.state.searchField}
-                         handleChangeOfSearchField={this.handleChangeOfSearchField}
-                        />  
+                          searchField={this.state.searchField}
+                          handleChangeOfSearchField={
+                            this.handleChangeOfSearchField
+                          }
+                        />
                         <table
                           className="ui celled table"
                           style={{ width: "100%" }}

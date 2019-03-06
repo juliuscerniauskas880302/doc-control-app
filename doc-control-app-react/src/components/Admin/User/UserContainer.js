@@ -3,6 +3,7 @@ import Axios from "axios";
 import { Pagination } from "semantic-ui-react";
 import SemanticUserTable from "./SemanticUserTable";
 import SearchField from "../../ReviewDocuments/SearchField";
+import Loading from "../../Utilities/Loading";
 
 export class UserContainer extends Component {
   constructor(props) {
@@ -14,7 +15,8 @@ export class UserContainer extends Component {
       activePage: 1,
       searchField: "",
       dataLoaded: false,
-      pageCount: 0
+      pageCount: 0,
+      loaded: true
     };
     this.typingTimeout = null;
   }
@@ -57,6 +59,7 @@ export class UserContainer extends Component {
   };
 
   getAllUsersFromServer = (pageNumber, pageLimit, searchBy) => {
+    this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
     Axios.get("http://localhost:8081/api/users/", {
       params: {
         searchFor: searchBy,
@@ -65,6 +68,11 @@ export class UserContainer extends Component {
       }
     })
       .then(res => {
+        this.setState({ loaded: true });
+        if (this.timer) {
+          clearTimeout(this.timer);
+          this.timer = 0;
+        }
         this.setState(
           {
             users: res.data.userList,
@@ -92,7 +100,7 @@ export class UserContainer extends Component {
 
   showAllUsersSemanticUI = () => {
     if (this.state.users.length === 0 && this.state.dataLoaded === false) {
-      return <h2 className="">Duomenys yra kraunami iš serverio....</h2>;
+      return <Loading />;
     } else if (
       this.state.users.length === 0 &&
       this.state.dataLoaded === true &&
@@ -118,22 +126,26 @@ export class UserContainer extends Component {
         />
       );
     });
-    return (
-      <table className="ui celled table" style={{ width: "100%" }}>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Vardas</th>
-            <th>Pavardė</th>
-            <th>Vartotojo vardas</th>
-            <th>El. paštas</th>
-            <th>Teisės</th>
-            <th>Veiksmai</th>
-          </tr>
-        </thead>
-        <tbody>{users}</tbody>
-      </table>
-    );
+    if (this.state.loaded) {
+      return (
+        <table className="ui celled table" style={{ width: "100%" }}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Vardas</th>
+              <th>Pavardė</th>
+              <th>Vartotojo vardas</th>
+              <th>El. paštas</th>
+              <th>Teisės</th>
+              <th>Veiksmai</th>
+            </tr>
+          </thead>
+          <tbody>{users}</tbody>
+        </table>
+      );
+    } else {
+      return <Loading />;
+    }
   };
 
   onDeleteClickHandler = id => {
