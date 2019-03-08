@@ -46,6 +46,14 @@ public interface DocumentRepository extends JpaRepository <Document, String> {
                                                           @Param(value = "searchFor") String searchFor,
                                                           Pageable pageable, @Param(value = "docTypes") List<DocumentType> docTypes);
 
+    @Query("SELECT new it.akademija.wizards.models.document.DocumentGetReviewCommand(" +
+            "d.author.firstname, d.author.lastname, d.id, d.title, d.description, d.documentType.title, d.submissionDate)" +
+            " FROM Document d WHERE d.documentType IN :docTypes" +
+            " AND d.documentState = it.akademija.wizards.enums.DocumentState.SUBMITTED" +
+            " AND :username <> d.author.username")
+    Page<DocumentGetReviewCommand> getDocumentsForReview(@Param(value = "username") String username,
+                                                         Pageable pageable, @Param(value = "docTypes") List<DocumentType> docTypes);
+
     @Query("SELECT d FROM Document d WHERE d.author = :user AND d.documentState IN :documentStates" +
             " AND (lower(d.title) like %:searchFor%" +
             " OR lower(d.description) like %:searchFor%" +

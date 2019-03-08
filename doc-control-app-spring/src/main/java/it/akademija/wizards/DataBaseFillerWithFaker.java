@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -184,13 +185,25 @@ public class DataBaseFillerWithFaker {
                         docsForUser : (int) Math.floor(Math.random() * ((documentsToCreate - documents.size()) + 1));
                 for (int i = 1; i <= docsToCreate; i++) {
                     Document document = new Document();
+                    Date creationDate = faker.date().past(60, 5, TimeUnit.DAYS);
                     document.setAuthor(user);
+                    document.setCreationDate(creationDate);
                     if (i % 5 == 0) {
                         document.setDocumentState(DocumentState.REJECTED);
+                        Date submissionDate = faker.date().between(creationDate, new Date());
+                        document.setSubmissionDate(submissionDate);
+                        Date rejectionDate = faker.date().between(submissionDate, new Date());
+                        document.setRejectionDate(rejectionDate);
                     } else if (i % 3 == 0) {
                         document.setDocumentState(DocumentState.ACCEPTED);
+                        Date submissionDate = faker.date().between(creationDate, new Date());
+                        document.setSubmissionDate(submissionDate);
+                        Date approvalDate = faker.date().between(submissionDate, new Date());
+                        document.setApprovalDate(approvalDate);
                     } else if (i % 2 == 0) {
                         document.setDocumentState(DocumentState.SUBMITTED);
+                        Date submissionDate = faker.date().between(creationDate, new Date());
+                        document.setSubmissionDate(submissionDate);
                     } else {
                         document.setDocumentState(DocumentState.CREATED);
                     }
