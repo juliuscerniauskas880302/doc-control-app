@@ -69,7 +69,12 @@ public class DocumentService {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             List<DocumentType> documentTypeList = documentTypeRepository.findAllByGroupsAndUser(user);
-            Page<DocumentGetReviewCommand> pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable, documentTypeList);
+            Page<DocumentGetReviewCommand> pageDocument;
+            if (searchable.equals("")) {
+                pageDocument = documentRepository.getDocumentsForReview(username, pageable, documentTypeList);
+            } else {
+                pageDocument = documentRepository.getDocumentsForReview(username, searchable, pageable, documentTypeList);
+            }
             return new DocumentForReviewPage(pageDocument.getContent(), pageDocument.getTotalElements(), pageDocument.getTotalPages());
         } else {
             throw new NullPointerException("User " + username + " not found");
