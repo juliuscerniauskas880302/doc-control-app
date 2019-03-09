@@ -14,6 +14,8 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FileDownloadComponent from "../Utilities/FileDownloadComponent";
+import Things from "../Utilities/Things";
 
 // Register the plugins
 registerPlugin(
@@ -32,22 +34,29 @@ const EditDocumentComponent = props => {
     props.paths.map((path, i) => {
       return (
         path && (
-          <p key={i}>
-            <i
-              className="fas fa-times-circle fa-2x"
-              title="Pašalinti failą"
-              id={path}
-              name="additionalFilePathsToDelete"
-              onClick={event => props.deleteAdditionalFileHandler(event)}
-            />{" "}
-            &nbsp; <span className="customFileSpan">{path}</span> &nbsp;{" "}
-            <i
-              className="mygtukas fas fa-arrow-circle-down fa-2x"
-              id={path}
-              title="Atsisiųsti pridėtą failą"
-              onClick={event => props.fileDownloadHandler(event)}
-            />
-          </p>
+          <FileDownloadComponent
+            name="additionalFilePathsToDelete"
+            key={i}
+            onClickDelete={event => props.deleteAdditionalFileHandler(event)}
+            path={path}
+            onClickDownload={event => props.fileDownloadHandler(event)}
+          />
+          // <p key={i}>
+          //   <i
+          //     className="fas fa-times-circle fa-2x"
+          //     title="Pašalinti failą"
+          //     id={path}
+          //     name="additionalFilePathsToDelete"
+          //     onClick={event => props.deleteAdditionalFileHandler(event)}
+          //   />{" "}
+          //   &nbsp; <span className="customFileSpan">{path}</span> &nbsp;{" "}
+          //   <i
+          //     className="mygtukas fas fa-arrow-circle-down fa-2x"
+          //     id={path}
+          //     title="Atsisiųsti pridėtą failą"
+          //     onClick={event => props.fileDownloadHandler(event)}
+          //   />
+          // </p>
         )
       );
     });
@@ -127,23 +136,16 @@ const EditDocumentComponent = props => {
                       </label>
                       <div className="col-md-4">
                         <p>
-                          <i
-                            className="fas fa-times-circle fa-2x "
+                          <FileDownloadComponent
                             id={props.path}
-                            name="mainFilePathToDelete"
-                            title="Pašalinti failą"
-                            onClick={event =>
+                            deleteName="mainFilePathToDelete"
+                            onClickDelete={event =>
                               props.deleteMainFileHandler(event)
                             }
-                          />
-                          &nbsp;{" "}
-                          <span className="customFileSpan">{props.path}</span>{" "}
-                          &nbsp;{" "}
-                          <i
-                            className="mygtukas fas fa-arrow-circle-down fa-2x"
-                            title="Atsisiųsti pridėtą failą"
-                            id={props.path}
-                            onClick={event => props.fileDownloadHandler(event)}
+                            path={props.path}
+                            onClickDownload={event =>
+                              props.fileDownloadHandler(event)
+                            }
                           />
                         </p>
                       </div>

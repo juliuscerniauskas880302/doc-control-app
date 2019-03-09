@@ -67,19 +67,13 @@
     height: auto;
 }
 
-.customFilePond {
-    background-color: grey;
-}
+
 .customFileSpan {
-    vertical-align: 30%;
-    
+    color:white;
 }
+
 .filepond--panel-root {
-    border-radius: 5em;
-}
-.filepond--panel-root {
-    background-color: transparent;
-    border: 1.2px outset #2c33406b;
+    background-color: rgb(245, 245, 245);
 }
 .filepond--root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -91,3 +85,20 @@
 .dropdown-item{
      font-size: 12px;
 }
+
+.fileDownloadButton{
+    transform: rotate(180deg);
+}
+
+.fileDownloadComponent{
+    /* padding: 8px; */
+    /* width: 33px; */
+    height:50px;
+}
+
+.filepond--file-action-button:focus {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0) !important;
+  }
+  .filepond--file-action-button:hover {
+    box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9) !important;
+  }
