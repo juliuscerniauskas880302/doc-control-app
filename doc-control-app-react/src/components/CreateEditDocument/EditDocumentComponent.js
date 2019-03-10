@@ -15,7 +15,6 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FileDownloadComponent from "../Utilities/FileDownloadComponent";
-import Things from "../Utilities/Things";
 
 // Register the plugins
 registerPlugin(
@@ -36,33 +35,18 @@ const EditDocumentComponent = props => {
         path && (
           <FileDownloadComponent
             name="additionalFilePathsToDelete"
+            delete="yes"
             key={i}
             onClickDelete={event => props.deleteAdditionalFileHandler(event)}
             path={path}
             onClickDownload={event => props.fileDownloadHandler(event)}
           />
-          // <p key={i}>
-          //   <i
-          //     className="fas fa-times-circle fa-2x"
-          //     title="Pašalinti failą"
-          //     id={path}
-          //     name="additionalFilePathsToDelete"
-          //     onClick={event => props.deleteAdditionalFileHandler(event)}
-          //   />{" "}
-          //   &nbsp; <span className="customFileSpan">{path}</span> &nbsp;{" "}
-          //   <i
-          //     className="mygtukas fas fa-arrow-circle-down fa-2x"
-          //     id={path}
-          //     title="Atsisiųsti pridėtą failą"
-          //     onClick={event => props.fileDownloadHandler(event)}
-          //   />
-          // </p>
         )
       );
     });
 
   return (
-    <div className="page-holder w-100 d-flex flex-wrap">
+    <div className="page-holder w-100 d-flex flex-wrap justify-content-center">
       <div className="container-fluid px-xl-5">
         <section className="py-5">
           <div className="col-lg-12 mb-5">
@@ -78,7 +62,7 @@ const EditDocumentComponent = props => {
                     <label className="col-md-2 form-control-label">
                       Dokumento pavadinimas:
                     </label>
-                    <div className="col-md-4">
+                    <div className="col-md-4 col-lg-4">
                       <input
                         type="text"
                         className="form-control form-control-success"
@@ -97,7 +81,7 @@ const EditDocumentComponent = props => {
                     <label className="col-md-2 form-control-label">
                       Dokumento aprašymas:
                     </label>
-                    <div className="col-md-4">
+                    <div className="col-md-4 col-lg-4">
                       <textarea
                         rows="4"
                         cols="50"
@@ -132,13 +116,14 @@ const EditDocumentComponent = props => {
                   {props.path ? (
                     <div className="form-group row">
                       <label className="col-md-2 form-control-label">
-                        Pridėtas failas:
+                        Pagrindinė byla:
                       </label>
-                      <div className="col-md-4">
+                      <div className="col-md-4 col-lg-4">
                         <p>
                           <FileDownloadComponent
                             id={props.path}
                             deleteName="mainFilePathToDelete"
+                            delete="yes"
                             onClickDelete={event =>
                               props.deleteMainFileHandler(event)
                             }
@@ -153,9 +138,9 @@ const EditDocumentComponent = props => {
                   ) : (
                     <div className="form-group row">
                       <label className="col-md-2 col-lg-2 form-control-label">
-                        Pasirinkite pagrindinį failą:
+                        Pagrindinė byla:
                       </label>
-                      <div className="col-md-6 col-lg-4">
+                      <div className="col-md-4 col-lg-4">
                         {" "}
                         <FilePond
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
@@ -181,19 +166,24 @@ const EditDocumentComponent = props => {
                       </div>
                     </div>
                   )}
-                  <div className="form-group row">
-                    <label className="col-md-2 form-control-label ">
-                      {props.paths && props.paths.length === 0
-                        ? ""
-                        : "Pridėti papildomi failai:"}
-                    </label>
-                    <div className="col-md-4">{AdditionalFiles}</div>
-                  </div>
+                  {props.paths && props.paths.length === 0 ? (
+                    ""
+                  ) : (
+                    <div className="form-group row">
+                      <label className="col-md-2 form-control-label ">
+                        Papildomos bylos:
+                      </label>
+                      <div className="col-md-4">{AdditionalFiles}</div>
+                    </div>
+                  )}
+
                   <div className="row">
                     <label className="col-md-2 form-control-label ">
-                      Pasirinkite pridedamus failus:
+                      {props.paths && props.paths.length === 0
+                        ? "Papildomos bylos:"
+                        : ""}
                     </label>
-                    <div className="col-md-6 col-lg-4">
+                    <div className="col-md-4 col-lg-4">
                       <FilePond
                         labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                         labelFileTypeNotAllowed=""
@@ -214,8 +204,8 @@ const EditDocumentComponent = props => {
                   </div>
 
                   <div className="form-group row">
-                    <div className="col-md-9">
-                      <button className="btn submitButton" type="submit">
+                    <div className="col-md-8 d-flex justify-content-center">
+                      <button className="btn submitButton " type="submit">
                         Išsaugoti
                       </button>
                     </div>

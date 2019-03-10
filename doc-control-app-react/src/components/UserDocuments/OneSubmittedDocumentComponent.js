@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import FileDownloadComponent from "../Utilities/FileDownloadComponent";
 
 const OneSubmittedDocumentComponent = props => {
   let AdditionalFiles =
@@ -7,15 +8,11 @@ const OneSubmittedDocumentComponent = props => {
     props.paths.map((path, i) => {
       return (
         path && (
-          <p key={i}>
-            <span className="customFileSpan"> {path}</span> &nbsp;{" "}
-            <i
-              className="mygtukas fas fa-arrow-circle-down fa-2x"
-              id={path}
-              title="Atsisiųsti pridėtą failą"
-              onClick={event => props.fileDownloadHandler(event)}
-            />
-          </p>
+          <FileDownloadComponent
+            key={i}
+            path={path}
+            onClickDownload={event => props.fileDownloadHandler(event)}
+          />
         )
       );
     });
@@ -30,86 +27,86 @@ const OneSubmittedDocumentComponent = props => {
               </div>
               <div className="card-body">
                 <div className=" form-group row">
-                  <div className="col-3">
+                  <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Numeris:</p>
                   </div>
-                  <div className="col-9">
+                  <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.id}</p>
                   </div>
                 </div>
                 <div className="form-group row">
-                  <div className="col-3">
+                  <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Pavadinimas:</p>
                   </div>
-                  <div className="col-9">
+                  <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.title}</p>
                   </div>
                 </div>
                 <div className="form-group row">
-                  <div className="col-3">
+                  <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Aprašymas:</p>
                   </div>
-                  <div className="col-9">
+                  <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.description}</p>
                   </div>
                 </div>
                 <div className="form-group row">
-                  <div className="col-3">
+                  <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Tipas:</p>
                   </div>
-                  <div className="col-9">
+                  <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.type}</p>
                   </div>
                 </div>
                 <div className="form-group row">
-                  <div className="col-3">
+                  <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Pateikimo data:</p>
                   </div>
-                  <div className="col-9">
+                  <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.submissionDate}</p>
                   </div>
                 </div>
                 <div className="form-group row">
-                  <div className="col-3">
+                  <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Būsena:</p>
                   </div>
-                  <div className="col-9">
+                  <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.state}</p>
                   </div>
                 </div>
                 {props.state === "Atmestas" && (
                   <div className="form-group row">
-                    <div className="col-3">
+                    <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Atmetimo priežastis:</p>
                     </div>
-                    <div className="col-9">
+                    <div className="col-md-4  col-sm-4 col-lg-4">
                       <p>{props.rejectionReason}</p>
                     </div>
                   </div>
                 )}
                 {props.state === "Priimtas" && (
                   <div className="form-group row">
-                    <div className="col-3">
+                    <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Priėmė:</p>
                     </div>
-                    <div className="col-9">
+                    <div className="col-md-4  col-sm-4 col-lg-4">
                       <p>{props.reviewer}</p>
                     </div>
                   </div>
                 )}
                 {props.approvalDate !== "" && (
                   <div className="form-group row">
-                    <div className="col-3">
+                    <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Priėmimo data:</p>
                     </div>
-                    <div className="col-9">
+                    <div className="col-md-4  col-sm-4 col-lg-4">
                       <p>{props.approvalDate}</p>
                     </div>
                   </div>
                 )}
                 {props.state === "Atmestas" && (
                   <div className="form-group row">
-                    <div className="col-3">
+                    <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Atmetė:</p>
                     </div>
                     <div className="col-9">
@@ -119,36 +116,35 @@ const OneSubmittedDocumentComponent = props => {
                 )}
                 {props.rejectionDate !== "" && (
                   <div className="form-grouprow">
-                    <div className="col-3">
+                    <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Atmetimo data:</p>
                     </div>
-                    <div className="col-9">
+                    <div className="col-md-4  col-sm-4 col-lg-4">
                       <p>{props.rejectionDate}</p>
                     </div>
                   </div>
                 )}
                 <div className="form-group row">
-                  <div className="col-3">
-                    <p>Pridėtas failas:</p>
-                  </div>
-                  <div className="col-9">
-                    <p>
-                      {props.path} &nbsp;{" "}
-                      <i
-                        className="mygtukas fas fa-arrow-circle-down fa-2x"
-                        id={props.path}
-                        title="Atsisiųsti pridėtą failą"
-                        onClick={event => props.fileDownloadHandler(event)}
-                      />
-                    </p>
+                  <label className="col-md-3  col-lg-3 col-sm-3 form-control-label">
+                    Pagrindinė byla:
+                  </label>
+                  <div className="col-md-4 col-lg-4 col-sm-6">
+                    <FileDownloadComponent
+                      path={props.path}
+                      onClickDownload={event =>
+                        props.fileDownloadHandler(event)
+                      }
+                    />
                   </div>
                 </div>
                 {props.paths && props.paths.length !== 0 ? (
                   <div className="form-group row">
-                    <div className="col-3">
+                    <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Papildomos bylos:</p>
                     </div>
-                    <div className="col-9 ">{AdditionalFiles} </div>
+                    <div className="col-md-4 col-lg-4 col-sm-6">
+                      {AdditionalFiles}{" "}
+                    </div>
                   </div>
                 ) : (
                   ""

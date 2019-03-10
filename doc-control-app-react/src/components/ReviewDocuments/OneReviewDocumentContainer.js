@@ -1,7 +1,7 @@
 import React from "react";
 import OneReviewDocumentComponent from "./OneReviewDocumentComponent";
 import axios from "axios";
-import RejectReasonPopUp from "./RejectReasonPopUp";
+// import RejectReasonPopUp from "./RejectReasonPopUp";
 
 import Swal from "sweetalert2";
 
@@ -66,7 +66,6 @@ class OneReviewDocumentContainer extends React.Component {
   //         document.body.removeChild(link);
   //     });
   // };
-
 
   extractFileName = contentDispositionValue => {
     var filename = "";
@@ -280,7 +279,6 @@ class OneReviewDocumentContainer extends React.Component {
         handleAccept={this.handleAccept}
         handleReject={this.handleReject}
       />
-
     );
   }
 }

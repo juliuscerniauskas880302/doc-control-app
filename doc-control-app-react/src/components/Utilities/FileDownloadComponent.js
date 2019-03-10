@@ -26,43 +26,60 @@ const FileDownloadComponent = props => {
             <legend>{props.path}</legend>
 
             <div class="filepond--file">
-              <button
-                class="filepond--file-action-button filepond--action-remove-item"
-                type="button"
-                title="Pašalinti"
-                data-align="left"
-                id={props.path}
-                name={props.name}
-                onClick={event => props.onClickDelete(event)}
-                style={{
-                  transform: "translate3d(0px, 0px, 0) scale3d(1, 1, 1)",
-                  opacity: "1"
-                }}
-              >
-                <svg
-                  width="26"
-                  height="26"
-                  viewBox="0 0 26 26"
-                  xmlns="http://www.w3.org/2000/svg"
+              {props.delete === "yes" ? (
+                <React.Fragment>
+                  <button
+                    class="filepond--file-action-button filepond--action-remove-item"
+                    type="button"
+                    title="Pašalinti"
+                    data-align="left"
+                    id={props.path}
+                    name={props.name}
+                    onClick={event => props.onClickDelete(event)}
+                    style={{
+                      transform: "translate3d(0px, 0px, 0) scale3d(1, 1, 1)",
+                      opacity: "1"
+                    }}
+                  >
+                    <svg
+                      width="26"
+                      height="26"
+                      viewBox="0 0 26 26"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11.586 13l-2.293 2.293a1 1 0 0 0 1.414 1.414L13 14.414l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 13l2.293-2.293a1 1 0 0 0-1.414-1.414L13 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L11.586 13z"
+                        fill="currentColor"
+                        fill-rule="nonzero"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    class="filepond--file-info"
+                    style={{ transform: "translate3d(34px, 0px, 0) " }}
+                  >
+                    <span class="filepond--file-info-main" aria-hidden="true">
+                      {props.path}
+                    </span>
+                    <span class="filepond--file-info-sub">
+                      Atsisiųskite norėdami peržiūrėti.
+                    </span>
+                  </div>
+                </React.Fragment>
+              ) : (
+                <div
+                  class="filepond--file-info"
+                  style={{ transform: "translate3d(0px, 0px, 0) " }}
                 >
-                  <path
-                    d="M11.586 13l-2.293 2.293a1 1 0 0 0 1.414 1.414L13 14.414l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 13l2.293-2.293a1 1 0 0 0-1.414-1.414L13 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L11.586 13z"
-                    fill="currentColor"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-              </button>
-              <div
-                class="filepond--file-info"
-                style={{ transform: "translate3d(34px, 0px, 0) " }}
-              >
-                <span class="filepond--file-info-main" aria-hidden="true">
-                  {props.path}
-                </span>
-                <span class="filepond--file-info-sub">
-                  Failo dydis (NOT IMPLEMENTED)
-                </span>
-              </div>
+                  <span class="filepond--file-info-main" aria-hidden="true">
+                    {props.path}
+                  </span>
+                  <span class="filepond--file-info-sub">
+                    Atsisiųskite norėdami peržiūrėti.
+                  </span>
+                </div>
+              )}
+
               <div
                 class="filepond--file-status"
                 style={{
@@ -101,7 +118,7 @@ const FileDownloadComponent = props => {
                   />
                 </svg>
               </button>
-              <div
+              {/* <div
                 class="filepond--progress-indicator filepond--load-indicator"
                 style={{
                   opacity: "0",
@@ -112,8 +129,8 @@ const FileDownloadComponent = props => {
                 <svg>
                   <path stroke-width="2" stroke-linecap="round" />
                 </svg>
-              </div>
-              <div
+              </div> */}
+              {/* <div
                 class="filepond--progress-indicator filepond--process-indicator"
                 style={{
                   opacity: "0",
@@ -123,7 +140,7 @@ const FileDownloadComponent = props => {
                 <svg>
                   <path stroke-width="2" stroke-linecap="round" />
                 </svg>
-              </div>
+              </div> */}
             </div>
           </fieldset>
           <div
