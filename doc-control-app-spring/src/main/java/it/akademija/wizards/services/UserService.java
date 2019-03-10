@@ -300,4 +300,29 @@ public class UserService {
             return userGetGroupDocTypes;
         }).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void addGroupToUser(String username, String groupID) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            UserGroup userGroup = userGroupRepository.findById(groupID).orElse(null);
+            if (userGroup != null) {
+                user.addOneGroup(userGroup);
+                userRepository.save(user);
+            }
+        }
+    }
+
+    @Transactional
+    public void removeGroupFromUser(String username, String groupID) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            UserGroup userGroup = userGroupRepository.findById(groupID).orElse(null);
+            if (userGroup != null) {
+                user.removeOneGroup(userGroup);
+                userRepository.save(user);
+            }
+
+        }
+    }
 }

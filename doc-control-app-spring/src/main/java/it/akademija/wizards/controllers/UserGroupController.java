@@ -69,6 +69,20 @@ public class UserGroupController {
         return userGroupService.addUsersToGroup(groupAddUsersCommand, id);
     }
 
+    @ApiOperation(value = "Add user to group")
+    @RequestMapping(value = "/{groupID}/users/{username}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addUserToGroup(@PathVariable("groupID") final String groupID, @PathVariable("username") final String username){
+        userGroupService.addUserToGroup(groupID, username);
+    }
+
+    @ApiOperation(value = "Remove user from group")
+    @RequestMapping(value = "/{groupID}/users/{username}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void removeUserFromGroup(@PathVariable("groupID") final String groupID, @PathVariable("username") final String username){
+        userGroupService.removeUserFromGroup(groupID, username);
+    }
+
     @ApiOperation(value = "get users in group")
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)

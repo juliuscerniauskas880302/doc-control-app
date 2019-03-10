@@ -269,12 +269,12 @@ export default class UpdateUser extends Component {
 
                   {this.showAddGroupsButton()}
 
-                  <ButtonComponent
+                  {/* <ButtonComponent
                     onClick={() => this.goBack()}
                     type="submit"
                     value="Grįžti atgal"
                     className="btn goBackButton"
-                  />
+                  /> */}
                 </div>
               </div>
             </div>

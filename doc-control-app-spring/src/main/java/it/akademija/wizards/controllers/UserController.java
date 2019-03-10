@@ -106,6 +106,20 @@ public class UserController {
         userService.removeGroupsFromUser(userRemoveGroupsCommand, username);
     }
 
+    @ApiOperation(value = "add one group to user")
+    @RequestMapping(value = "/{username}/groups/{groupID}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addGroupToUser(@PathVariable("username") final String username, @PathVariable("groupID") final String groupID){
+        userService.addGroupToUser(username, groupID);
+    }
+
+    @ApiOperation(value = "remove one group from user")
+    @RequestMapping(value = "/{username}/groups/{groupID}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void removeGroupFromUser(@PathVariable("username") final String username, @PathVariable("groupID") final String groupID){
+        userService.removeGroupFromUser(username, groupID);
+    }
+
     @ApiOperation(value = "get user groups")
     @RequestMapping(value = "/{username}/groups", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.ACCEPTED)

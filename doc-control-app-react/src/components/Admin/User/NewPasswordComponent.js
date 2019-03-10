@@ -45,12 +45,12 @@ export default function NewPasswordComponent(props) {
         </form>
         <div className="form-group row">
           <div className="col-md-9 ml-auto">
-            <input
+            {/* <input
               onClick={() => props.goBack()}
               type="submit"
               value="Grįžti atgal"
               className="btn goBackButton"
-            />
+            /> */}
           </div>
         </div>
       </div>

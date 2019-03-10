@@ -253,12 +253,12 @@ export default class NewGroupForm extends Component {
           <tbody>{data}</tbody>
         </table>
 
-        <ButtonComponent
+        {/* <ButtonComponent
           onClick={this.onClickAddUsersToGroup}
           type="submit"
           value="Atnaujinti"
           className="btn submitButton"
-        />
+        /> */}
       </div>
     );
   };
@@ -268,9 +268,57 @@ export default class NewGroupForm extends Component {
     options.forEach(option => {
       if (option.username === e.target.value) {
         option.isChecked = !option.isChecked;
+        if (option.isChecked) {
+          console.log("Hellow");
+          this.addOneUserToGroup(option.username);
+        } else {
+          console.log("wow");
+          this.removeOneUserFromGroup(option.username);
+        }
       }
+
       this.setState({ groupUsers: options });
     });
+  };
+
+  removeOneUserFromGroup = user => {
+    Axios.delete(
+      "http://localhost:8081/api/groups/" +
+        this.state.selectedGroupForAddUsers +
+        "/users/" +
+        user
+    )
+      .then(res => {
+        this.props.showResponseMessage(
+          "Vartotojas pasalintas is grupes",
+          "success",
+          2500
+        );
+        this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
+      })
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
+  };
+
+  addOneUserToGroup = user => {
+    Axios.post(
+      "http://localhost:8081/api/groups/" +
+        this.state.selectedGroupForAddUsers +
+        "/users/" +
+        user
+    )
+      .then(res => {
+        this.props.showResponseMessage(
+          "Vartotojas priskyrtas",
+          "success",
+          2500
+        );
+        this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
+      })
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
   };
 
   onClickAddUsersToGroup = () => {

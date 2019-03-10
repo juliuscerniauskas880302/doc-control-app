@@ -122,4 +122,30 @@ public class UserGroupService {
             throw new NullPointerException("User group does not exist");
         }
     }
+    @Transactional
+    public void addUserToGroup(String groupID, String username) {
+        UserGroup userGroup =  userGroupRepository.findById(groupID).orElse(null);
+        if(userGroup != null){
+            User user = userRepository.findByUsername(username);
+            if(user != null){
+                userGroup.addUser(user);
+                userGroupRepository.save(userGroup);
+            }
+        }else {
+            throw new NullPointerException("Group with id: " + groupID + " does not exists");
+        }
+    }
+    @Transactional
+    public void removeUserFromGroup(String groupID, String username) {
+        UserGroup userGroup =  userGroupRepository.findById(groupID).orElse(null);
+        if(userGroup != null){
+            User user = userRepository.findByUsername(username);
+            if(user != null){
+                userGroup.removeUser(user);
+                userGroupRepository.save(userGroup);
+            }
+        }else {
+            throw new NullPointerException("Group with id: " + groupID + " does not exists");
+        }
+    }
 }
