@@ -40,12 +40,12 @@ export default function NewDocumentTypeComponent(props) {
                     className="btn submitButton"
                   />
                 </form>
-                <ButtonComponent
+                {/* <ButtonComponent
                   onClick={() => props.goBack()}
                   type="submit"
                   value="Grįžti atgal"
                   className="btn goBackButton"
-                />
+                /> */}
               </div>
             </div>
           </div>
@@ -113,12 +113,12 @@ export default function NewDocumentTypeComponent(props) {
                   className="btn deleteButton"
                 />
 
-                <ButtonComponent
+                {/* <ButtonComponent
                   onClick={() => props.goBack()}
                   type="submit"
                   value="Grįžti atgal"
                   className="btn goBackButton"
-                />
+                /> */}
               </div>
             </div>
           </div>

@@ -39,12 +39,12 @@ export default function NewGroupComponent(props) {
                 />
               </form>
 
-              <ButtonComponent
+              {/* <ButtonComponent
                 type="submit"
                 value="Grįžti atgal"
                 className="btn goBackButton"
                 onClick={props.onClickGoBack}
-              />
+              /> */}
             </div>
           </div>
         </div>
@@ -111,12 +111,12 @@ export default function NewGroupComponent(props) {
                 className="btn deleteButton"
               />
 
-              <ButtonComponent
+              {/* <ButtonComponent
                 onClick={props.onClickGoBack}
                 type="submit"
                 value="Grįžti atgal"
                 className="btn goBackButton"
-              />
+              /> */}
             </div>
           </div>
         </div>

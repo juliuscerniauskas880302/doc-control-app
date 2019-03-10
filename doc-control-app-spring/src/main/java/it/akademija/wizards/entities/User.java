@@ -170,4 +170,19 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    public void addOneGroup(UserGroup userGroup) {
+        if(userGroups == null){
+            userGroups = new HashSet<>();
+        }
+        userGroups.add(userGroup);
+    }
+
+    public void removeOneGroup(UserGroup userGroup){
+        if(userGroups != null){
+            userGroups.remove(userGroup);
+        }
+    }
+
+
 }

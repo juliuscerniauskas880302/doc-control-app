@@ -26,6 +26,11 @@ export default class TypesInGroups extends Component {
     options.forEach(option => {
       if (option.id === e.target.value) {
         option.isChecked = !option.isChecked;
+        if (option.isChecked) {
+          this.addOneGroupToDocType("review", option.id);
+        } else {
+          this.removeOneGroupFromDocType("review", option.id);
+        }
       }
       this.setState({ review: options });
     });
@@ -36,9 +41,64 @@ export default class TypesInGroups extends Component {
     options.forEach(option => {
       if (option.id === e.target.value) {
         option.isChecked = !option.isChecked;
+        if (option.isChecked) {
+          this.addOneGroupToDocType("submission", option.id);
+        } else {
+          this.removeOneGroupFromDocType("submission", option.id);
+        }
       }
       this.setState({ submission: options });
     });
+  };
+
+  addOneGroupToDocType = (groupFor, groupID) => {
+    let groupIdListToAdd = {
+      id: []
+    };
+    groupIdListToAdd.id.push(groupID);
+    Axios.post(
+      "http://localhost:8081/api/doctypes/" +
+        this.state.selectedType +
+        "/groups/" +
+        groupFor,
+      groupIdListToAdd
+    )
+      .then(res => {
+        this.props.showResponseMessage("Duomenys atnaujinti", "success", 2500);
+        if (groupFor === "review") {
+          this.loadReviewGroups(this.state.selectedType);
+        } else {
+          this.loadSubmmisionGroups(this.state.selectedType);
+        }
+      })
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida" + err, "danger", 2500)
+      );
+  };
+
+  removeOneGroupFromDocType = (groupFor, groupID) => {
+    let groupIdListToRemove = {
+      id: []
+    };
+    groupIdListToRemove.id.push(groupID);
+    Axios.delete(
+      "http://localhost:8081/api/doctypes/" +
+        this.state.selectedType +
+        "/groups/" +
+        groupFor,
+      { data: groupIdListToRemove }
+    )
+      .then(res => {
+        this.props.showResponseMessage("Duomenys atnaujinti", "success", 2500);
+        if (groupFor === "review") {
+          this.loadReviewGroups(this.state.selectedType);
+        } else {
+          this.loadSubmmisionGroups(this.state.selectedType);
+        }
+      })
+      .catch(err =>
+        this.props.showResponseMessage("Įvyko klaida", "danger", 2500)
+      );
   };
 
   //Get all document types from server
@@ -195,11 +255,12 @@ export default class TypesInGroups extends Component {
     };
     if (groupType === "review") {
       this.state.review.forEach(el => {
-        if (el.isChecked) {
-          groupIdListToAdd.id.push(el.id);
-        } else {
-          groupIdListToRemove.id.push(el.id);
-        }
+        if (el.name)
+          if (el.isChecked) {
+            groupIdListToAdd.id.push(el.id);
+          } else {
+            groupIdListToRemove.id.push(el.id);
+          }
       });
     } else {
       this.state.submission.forEach(el => {
@@ -317,7 +378,7 @@ export default class TypesInGroups extends Component {
                         <div className="line" />
                         {this.showSubmissionCheckBoxes()}
                       </div>
-                      <ButtonComponent
+                      {/* <ButtonComponent
                         onClick={() => this.onClickAddGroups("submission")}
                         type="submit"
                         value="Atnaujinti"
@@ -328,7 +389,7 @@ export default class TypesInGroups extends Component {
                         type="submit"
                         value="Grįžti atgal"
                         className="btn goBackButton"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
@@ -350,7 +411,7 @@ export default class TypesInGroups extends Component {
                       <div className="line" />
                       {this.showReviewCheckBoxes()}
                     </div>
-                    <ButtonComponent
+                    {/* <ButtonComponent
                       onClick={() => this.onClickAddGroups("review")}
                       type="submit"
                       value="Atnaujinti"
@@ -362,7 +423,7 @@ export default class TypesInGroups extends Component {
                       type="submit"
                       value="Grįžti atgal"
                       className="btn goBackButton"
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
