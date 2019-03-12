@@ -101,7 +101,6 @@ class OneCreatedDocumentContainer extends React.Component {
       });
   };
   fileDownloadHandler = event => {
-    console.log(event.target);
     axios({
       url: "/api/docs/" + this.state.id + "/" + event.target.id + "/download", //doc id
       method: "GET",

@@ -164,8 +164,8 @@ const OneSubmittedDocumentComponent = props => {
                     </p>
                   </div>
                 </div> */}
-                <div className="row">
-                  <div className="col-6 mx-auto">
+                <div className="form-group row">
+                  <div className="col-md-10 d-flex justify-content-center">
                     <Link to={`/`} className="btn goBackButton" type="button">
                       Atgal
                     </Link>{" "}

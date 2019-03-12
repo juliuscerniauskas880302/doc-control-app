@@ -77,7 +77,7 @@ class NewDocumentContainer extends React.Component {
   /************************************************************************************* */
   // Auxiliary methods
   uploadMainFile = (file, model) => {
-    if (this.state.mainFile[0].size > 100000000) {
+    if (this.state.mainFile[0].size > 100000001) {
       this.props.showResponseMessage(
         "Prisegta byla per didelė.",
         "danger",
@@ -95,11 +95,6 @@ class NewDocumentContainer extends React.Component {
               (progressEvent.loaded / progressEvent.total) * 100
             )
           });
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
@@ -108,7 +103,8 @@ class NewDocumentContainer extends React.Component {
   };
 
   uploadMultipleFiles = (file, model) => {
-    if (this.state.mainFile[0].size > 100000000) {
+    let totalFileSize = this.state.mainFile[0].size;
+    if (this.state.mainFile[0].size > 100000001) {
       this.props.showResponseMessage(
         "Prisegta byla per didelė.",
         "danger",
@@ -118,9 +114,18 @@ class NewDocumentContainer extends React.Component {
     }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
-      if (this.state.selectedAdditionalFiles[i].size > 100000000) {
+      if (this.state.selectedAdditionalFiles[i].size > 100000001) {
         this.props.showResponseMessage(
           "Prisegta byla per didelė.",
+          "danger",
+          2500
+        );
+        return;
+      }
+      totalFileSize += this.state.selectedAdditionalFiles[i].size;
+      if (totalFileSize > 200000001) {
+        this.props.showResponseMessage(
+          "Bendras bylų dydis neturi viršyti 200MB.",
           "danger",
           2500
         );
@@ -136,11 +141,11 @@ class NewDocumentContainer extends React.Component {
     axios
       .post("/api/docs", file, {
         onUploadProgress: progressEvent => {
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
+          this.setState({
+            percentage: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
         }
       })
       .then(() => this.props.history.push(`/createdDocuments`))
