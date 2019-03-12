@@ -141,6 +141,11 @@ class UserSubmittedDocumentsContainer extends React.Component {
         return (
           <UserSubmittedDocumentsComponent
             key={index}
+            documentId={
+              index +
+              1 +
+              this.state.recordsPerPage * (this.state.activePage - 1)
+            }
             id={document.id}
             title={document.title}
             description={document.description}

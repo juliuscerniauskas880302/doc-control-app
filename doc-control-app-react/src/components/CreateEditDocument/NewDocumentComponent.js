@@ -7,7 +7,7 @@ import { FilePond, registerPlugin } from "react-filepond";
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 // Import the Image EXIF Orientation and Image Preview plugins
 // Note: These need to be installed separately
 // `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
@@ -19,7 +19,8 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
-  FilePondPluginFileValidateType
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize
 );
 
 const NewDocumentComponent = props => {
@@ -104,6 +105,9 @@ const NewDocumentComponent = props => {
                     </label>
                     <div className="col-md-6 col-lg-4">
                       <FilePond
+                        maxFileSize="100MB"
+                        labelMaxFileSizeExceeded="Neleistinas bylos dydis."
+                        labelMaxFileSize="Maksimalus bylos dydis yra 100MB."
                         labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
                         // labelIdle="Įkelkite pagrindinę bylą."
                         labelFileTypeNotAllowed="Netinkamas bylos formatas."
@@ -121,6 +125,9 @@ const NewDocumentComponent = props => {
                     <div className="col-md-6 offset-md-2 col-lg-4">
                       {props.mainFileUploaded && (
                         <FilePond
+                          maxFileSize="100MB"
+                          labelMaxFileSizeExceeded="Neleistinas bylos dydis."
+                          labelMaxFileSize="Maksimalus bylos dydis yra 100MB."
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                           labelFileTypeNotAllowed="Netinkamas bylos formatas."
                           fileValidateTypeLabelExpectedTypes=""

@@ -47,26 +47,6 @@ class OneReviewDocumentContainer extends React.Component {
     });
   };
 
-  // downloadHandler = (event) => {
-  //     axios({
-  //         url:
-  //             "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
-  //         method: "GET",
-  //         responseType: "blob" // important
-  //     }).then(response => {
-  //         var filename = this.extractFileName(
-  //             response.headers["content-disposition"]
-  //         );
-  //         const url = window.URL.createObjectURL(new Blob([response.data]));
-  //         const link = document.createElement("a");
-  //         link.href = url;
-  //         link.setAttribute("download", filename); //or any other extension
-  //         document.body.appendChild(link);
-  //         link.click();
-  //         document.body.removeChild(link);
-  //     });
-  // };
-
   extractFileName = contentDispositionValue => {
     var filename = "";
     if (

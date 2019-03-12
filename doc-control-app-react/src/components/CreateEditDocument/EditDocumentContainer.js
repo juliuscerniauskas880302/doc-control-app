@@ -136,6 +136,14 @@ class EditDocumentContainer extends React.Component {
       .catch(err => console.log("KLAIDA SUBMITE" + err));
   };
   uploadMainFile = (file, model) => {
+    if (this.state.mainFile[0].size > 100000000) {
+      this.props.showResponseMessage(
+        "Prisegta byla per didelė.",
+        "danger",
+        2500
+      );
+      return;
+    }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     file.append("model", JSON.stringify(model));
     axios
@@ -158,8 +166,24 @@ class EditDocumentContainer extends React.Component {
   };
 
   uploadMultipleFiles = (file, model) => {
+    if (this.state.mainFile[0].size > 100000000) {
+      this.props.showResponseMessage(
+        "Prisegta byla per didelė.",
+        "danger",
+        2500
+      );
+      return;
+    }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+      if (this.state.selectedAdditionalFiles[i].size > 100000000) {
+        this.props.showResponseMessage(
+          "Prisegta byla per didelė.",
+          "danger",
+          2500
+        );
+        return;
+      }
       file.append(
         "file",
         this.state.selectedAdditionalFiles[i],
@@ -183,6 +207,14 @@ class EditDocumentContainer extends React.Component {
   uploadAdditionalFiles = (file, model) => {
     file.append("model", JSON.stringify(model));
     for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+      if (this.state.selectedAdditionalFiles[i].size > 100000000) {
+        this.props.showResponseMessage(
+          "Prisegta byla per didelė.",
+          "danger",
+          2500
+        );
+        return;
+      }
       file.append(
         "file",
         this.state.selectedAdditionalFiles[i],
