@@ -58,7 +58,7 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentForReviewPage getDocumentsToReview(String username, String searchFor, Integer pageNumber, Integer pageLimit) {
-        String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
+        String searchable = searchFor != null ? searchFor.toLowerCase().trim().replace("%", "\\%") : "";
         Pageable pageable;
         Sort sort = Sort.by("submissionDate").descending();
         if (pageNumber != null && pageLimit != null) {
@@ -103,7 +103,7 @@ public class DocumentService {
                 log.warn("Vartotojas '" + Auth.getUsername() + "' nepadavė tinkamos dokumento būklės, norint gauti visų dokumentų sąrašą.");
                 throw new IllegalArgumentException("Correct document state must be provided");
             }
-            String searchable = searchFor != null ? searchFor.toLowerCase().trim() : "";
+            String searchable = searchFor != null ? searchFor.toLowerCase().trim().replace("%", "\\%") : "";
             Pageable pageable;
             if (pageNumber != null && pageLimit != null) {
                 pageable = PageRequest.of(pageNumber, pageLimit, sort);

@@ -2,11 +2,14 @@ package it.akademija.wizards.configs;
 
 import it.akademija.wizards.security.jwt.JwtAuthenticationEntryPoint;
 import it.akademija.wizards.security.jwt.JwtAuthenticationFilter;
+import it.akademija.wizards.security.services.CustomUserDetailsChecker;
 import it.akademija.wizards.security.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -41,9 +44,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .authenticationProvider(getAuthProvider());
+//                .userDetailsService(customUserDetailsService)
+//                .passwordEncoder(passwordEncoder());
     }
+
+    // Start of test version of auth provider
+    private AuthenticationProvider getAuthProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPreAuthenticationChecks(new CustomUserDetailsChecker());
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(customUserDetailsService);
+        return provider;
+    }
+    // End of test version of auth provider
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override

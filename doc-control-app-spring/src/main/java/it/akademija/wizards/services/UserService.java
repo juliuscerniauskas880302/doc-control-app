@@ -58,7 +58,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserPageGetCommand getUsers(String searchFor, Integer pageNumber, Integer pageLimit) {
-        String searchable = searchFor != null ? searchFor.trim().toLowerCase() : "";
+        String searchable = searchFor != null ? searchFor.trim().toLowerCase().replace("%", "\\%") : "";
         Pageable pageable;
         Sort sort = Sort.by(Sort.Order.asc("firstname").ignoreCase()).and(Sort.by(Sort.Order.asc("lastname").ignoreCase()));
         if (pageNumber != null && pageLimit != null) {
@@ -324,5 +324,29 @@ public class UserService {
             }
 
         }
+    }
+
+    @Transactional
+    public boolean toggleLockUser(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            log.error("Vartotojas {} nerastas", username);
+            throw new NullPointerException("User does not exist");
+        }
+        String targetUsername = user.getUsername();
+        String lockerUsername = Auth.getUsername();
+        if (!lockerUsername.equals(targetUsername)) {
+            boolean status = user.isLocked();
+            user.setLocked(!status);
+
+            userRepository.save(user);
+
+            String logAction = status ? " atrakino " : " užrakino ";
+            log.info(lockerUsername + logAction + targetUsername);
+        } else {
+            log.error(lockerUsername + " bandė užrakinti save");
+            throw new IllegalArgumentException("Can not lock own user");
+        }
+        return user.isLocked();
     }
 }
