@@ -22,9 +22,7 @@ export default class EditUserGroups extends Component {
   };
 
   getUser = () => {
-    Axios.get(
-      "http://localhost:8081/api/users/" + this.props.match.params.username
-    )
+    Axios.get("/api/users/" + this.props.match.params.username)
       .then(res => {
         this.setState({ user: res.data });
         console.log(res.data);
@@ -35,11 +33,7 @@ export default class EditUserGroups extends Component {
   };
 
   getAllUserGroups = () => {
-    Axios.get(
-      "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/groups"
-    )
+    Axios.get("/api/users/" + this.props.match.params.username + "/groups")
       .then(res => {
         this.setState({ userGroups: res.data });
       })
@@ -49,7 +43,7 @@ export default class EditUserGroups extends Component {
   };
 
   getAllGroups = () => {
-    Axios.get("http://localhost:8081/api/groups")
+    Axios.get("/api/groups")
       .then(res => {
         this.setState({ allGroups: res.data });
       })
@@ -144,9 +138,7 @@ export default class EditUserGroups extends Component {
       groupIdList.id.push(el);
     });
     Axios.put(
-      "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/groups",
+      "/api/users/" + this.props.match.params.username + "/groups",
       groupIdList
     )
       .then(res => {
@@ -181,12 +173,9 @@ export default class EditUserGroups extends Component {
     this.state.selectedRemoveGroup.forEach(el => {
       groupIdList.id.push(el);
     });
-    Axios.delete(
-      "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/groups",
-      { data: groupIdList }
-    )
+    Axios.delete("/api/users/" + this.props.match.params.username + "/groups", {
+      data: groupIdList
+    })
       .then(res => {
         if (groupIdList.id.length === 1) {
           this.props.showResponseMessage(

@@ -3,7 +3,7 @@ import extractFileName from "./ExtractFileName";
 export default function zipDownloadHandler(event, props) {
   event.preventDefault();
   Axios({
-    url: "http://localhost:8081/api/docs/download/all",
+    url: "/api/docs/download/all",
     method: "GET",
     responseType: "blob" // important
   })

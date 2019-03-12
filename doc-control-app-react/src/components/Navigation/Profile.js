@@ -11,7 +11,7 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount = () => {
-    Axios.get("http://localhost:8081/api/users/groupDetails")
+    Axios.get("/api/users/groupDetails")
       .then(res => {
         console.log(res.data);
         this.setState({ userGroupsData: res.data });
