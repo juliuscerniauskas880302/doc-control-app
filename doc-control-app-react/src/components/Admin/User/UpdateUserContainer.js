@@ -176,7 +176,7 @@ export default class UpdateUser extends Component {
                           type="text"
                           name="firstname"
                           value={this.state.firstname}
-                          pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                          //pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                           required
                           className="form-control form-control-success"
                         />
@@ -194,7 +194,7 @@ export default class UpdateUser extends Component {
                           type="text"
                           name="lastname"
                           value={this.state.lastname}
-                          pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                          //pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                           required
                           className="form-control form-control-warning"
                         />

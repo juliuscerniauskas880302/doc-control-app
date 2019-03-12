@@ -254,7 +254,7 @@ public class FileService {
         }
     }
 
-//    Uploads Main File (always first in an array when creating document) and Additional Files
+    //    Uploads Main File (always first in an array when creating document) and Additional Files
     @Transactional
     public void uploadFiles(Document document, MultipartFile[] multipartFile) throws IOException {
         File folder = getDocumentFolder(document);
@@ -307,14 +307,14 @@ public class FileService {
 
     @Transactional
     public void deleteMainFile(Document document) {
-            File folder = getDocumentFolder(document);
-            File file = new File(folder.getPath()
-                    + File.separator
-                    + document.getPath());
-            boolean delete = file.delete();
-            if (Objects.requireNonNull(folder.list()).length == 0) {
-                deleteFolder(folder);
-            }
+        File folder = getDocumentFolder(document);
+        File file = new File(folder.getPath()
+                + File.separator
+                + document.getPath());
+        boolean delete = file.delete();
+        if (Objects.requireNonNull(folder.list()).length == 0) {
+            deleteFolder(folder);
+        }
     }
 
     @Transactional
@@ -397,15 +397,15 @@ public class FileService {
                         .withHeader(
                                 "Autorius",
                                 "Pavadinimas",
-                                "Aprasymas",
-                                "Sukurimo data",
+                                "Aprašymas",
+                                "Sukūrimo data",
                                 "Dokumento tipas",
-                                "Dokumento busena",
-                                "Issiuntimo data",
+                                "Dokumento būsena",
+                                "Išsiuntimo data",
+                                "Peržiūrėjo",
                                 "Patvirtinimo data",
-                                "Atmetimo data",
-                                "Perziurejo",
-                                "Atmetimo prizastis"
+                                "Atmėtimo data",
+                                "Atmetimo priežastis"
                         )
                 )
         ) {
@@ -415,17 +415,37 @@ public class FileService {
                 if (reviewer != null) {
                     reviewerFullName = reviewer.getFirstname() + " " + reviewer.getLastname();
                 }
+                String documentState = "";
+
+                switch (doc.getDocumentState()) {
+                    case CREATED:
+                        documentState = "Sukurtas";
+                        break;
+                    case SUBMITTED:
+                        documentState = "Išsiųstas";
+                        break;
+                    case ACCEPTED:
+                        documentState = "Priimtas";
+                        break;
+                    case REJECTED:
+                        documentState = "Atmestas";
+                        break;
+                    default:
+                        break;
+                }
+
+
                 csvPrinter.printRecord(
                         doc.getAuthor().getFirstname() + " " + doc.getAuthor().getLastname(),
                         doc.getTitle(),
                         doc.getDescription(),
                         doc.getCreationDate(),
                         doc.getDocumentType().getTitle(),
-                        doc.getDocumentState(),
+                        documentState,
                         doc.getSubmissionDate(),
+                        reviewerFullName,
                         doc.getApprovalDate(),
                         doc.getRejectionDate(),
-                        reviewerFullName,
                         doc.getRejectionReason()
                 );
             }
@@ -551,6 +571,7 @@ public class FileService {
         }
         return true;
     }
+
     //  When updating main file, checks for duplicates
     boolean validateFileNamesMainUpdate(MultipartFile[] multipartFiles,
                                         List<String> additionalFilePaths,
@@ -569,11 +590,11 @@ public class FileService {
         return true;
     }
 
-//  When updating only additional files, checks for duplicates
+    //  When updating only additional files, checks for duplicates
     boolean validateFileNamesAdditionalUpdate(MultipartFile[] multipartFiles,
-                                                     List<String> additionalFilePaths,
-                                                     String[] additionalFilePathsToDelete,
-                                                     String mainFilePath) {
+                                              List<String> additionalFilePaths,
+                                              String[] additionalFilePathsToDelete,
+                                              String mainFilePath) {
         List<String> fileNames = new ArrayList<>(additionalFilePaths);
         fileNames.removeAll(Arrays.asList(additionalFilePathsToDelete));
         fileNames.addAll(getFileNames(multipartFiles));

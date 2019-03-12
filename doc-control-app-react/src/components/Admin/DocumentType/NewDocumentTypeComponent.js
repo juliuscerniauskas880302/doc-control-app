@@ -95,7 +95,7 @@ export default function NewDocumentTypeComponent(props) {
                         name="newTitle"
                         value={props.state.newTitle}
                         className="form-control form-control-success"
-                        pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                        //pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
                         required
                       />
                     </div>
