@@ -57,10 +57,7 @@ export default class TypesInGroups extends Component {
     };
     groupIdListToAdd.id.push(groupID);
     Axios.post(
-      "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupFor,
+      "/api/doctypes/" + this.state.selectedType + "/groups/" + groupFor,
       groupIdListToAdd
     )
       .then(res => {
@@ -82,10 +79,7 @@ export default class TypesInGroups extends Component {
     };
     groupIdListToRemove.id.push(groupID);
     Axios.delete(
-      "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupFor,
+      "/api/doctypes/" + this.state.selectedType + "/groups/" + groupFor,
       { data: groupIdListToRemove }
     )
       .then(res => {
@@ -103,7 +97,7 @@ export default class TypesInGroups extends Component {
 
   //Get all document types from server
   getAllDocTypes = () => {
-    Axios.get("http://localhost:8081/api/doctypes")
+    Axios.get("/api/doctypes")
       .then(res => {
         this.setState({ doctypes: res.data });
       })
@@ -113,7 +107,7 @@ export default class TypesInGroups extends Component {
   };
   //Get all groups from server
   getAllGroups = () => {
-    Axios.get("http://localhost:8081/api/groups")
+    Axios.get("/api/groups")
       .then(res => {
         this.setState({ groups: res.data });
       })
@@ -147,7 +141,7 @@ export default class TypesInGroups extends Component {
   };
   //Load document's type "review" and "submmit" groups
   loadReviewGroups(type) {
-    Axios.get("http://localhost:8081/api/doctypes/" + type + "/groups/review")
+    Axios.get("/api/doctypes/" + type + "/groups/review")
       .then(res => {
         let allList = [];
         this.state.groups.forEach(type => {
@@ -166,9 +160,7 @@ export default class TypesInGroups extends Component {
   }
 
   loadSubmmisionGroups(type) {
-    Axios.get(
-      "http://localhost:8081/api/doctypes/" + type + "/groups/submission"
-    )
+    Axios.get("/api/doctypes/" + type + "/groups/submission")
       .then(res => {
         let allList = [];
         this.state.groups.forEach(type => {
@@ -272,19 +264,13 @@ export default class TypesInGroups extends Component {
       });
     }
     Axios.delete(
-      "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
+      "/api/doctypes/" + this.state.selectedType + "/groups/" + groupType,
       { data: groupIdListToRemove }
     )
       .then()
       .catch();
     Axios.post(
-      "http://localhost:8081/api/doctypes/" +
-        this.state.selectedType +
-        "/groups/" +
-        groupType,
+      "/api/doctypes/" + this.state.selectedType + "/groups/" + groupType,
       groupIdListToAdd
     )
       .then(res => {

@@ -25,12 +25,12 @@ export default class Authentication extends Component {
   };
 
   getUserGroups = () => {
-    Axios.get("http://localhost:8081/api/users/action/review")
+    Axios.get("/api/users/action/review")
       .then(res => {
         this.setState({ review: res.data });
       })
       .catch(err => console.log(err));
-    Axios.get("http://localhost:8081/api/users/action/submit")
+    Axios.get("/api/users/action/submit")
       .then(res => {
         this.setState({ submit: res.data });
       })

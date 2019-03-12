@@ -42,7 +42,7 @@ export default class NewDocumentTypeForm extends Component {
   };
 
   getAllDocumentTypes = () => {
-    Axios.get("http://localhost:8081/api/doctypes")
+    Axios.get("/api/doctypes")
       .then(res => {
         this.setState({ allDocumentTypes: res.data });
       })
@@ -86,7 +86,7 @@ export default class NewDocumentTypeForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
-    Axios.post("http://localhost:8081/api/doctypes", title)
+    Axios.post("/api/doctypes", title)
       .then(res => {
         this.props.showResponseMessage(
           "Naujas dokumento tipas buvo pridėtas",
@@ -117,9 +117,7 @@ export default class NewDocumentTypeForm extends Component {
   onDeleteCLickHandler = () => {
     console.log(this.getSelectedDocTypeID());
     this.getSelectedDocTypeID();
-    Axios.delete(
-      "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID()
-    )
+    Axios.delete("/api/doctypes/" + this.getSelectedDocTypeID())
       .then(res => {
         this.props.showResponseMessage(
           "Dokumento tipas buvo sėkmingai ištrintas",
@@ -138,10 +136,7 @@ export default class NewDocumentTypeForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.newTitle;
-    Axios.put(
-      "http://localhost:8081/api/doctypes/" + this.getSelectedDocTypeID(),
-      title
-    )
+    Axios.put("/api/doctypes/" + this.getSelectedDocTypeID(), title)
       .then(res => {
         this.props.showResponseMessage(
           "Dokumento tipas buvo sėkmingai atnaujintas",

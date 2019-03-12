@@ -34,7 +34,7 @@ export default class NewUserContainer extends Component {
         email: email
       },
       () => {
-        Axios.post("http://localhost:8081/api/users", this.state)
+        Axios.post("/api/users", this.state)
           .then(res => {
             this.props.showResponseMessage(
               "Vartotojas sėkmingai sukurtas",

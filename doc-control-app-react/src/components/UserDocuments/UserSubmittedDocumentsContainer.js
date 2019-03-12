@@ -46,7 +46,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
     clearInterval(this.updateDelay);
     this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
     axios
-      .get("http://localhost:8081/api/docs/user/submitted", {
+      .get("/api/docs/user/submitted", {
         params: {
           searchFor: searchFor,
           pageNumber: pageNumber - 1,
@@ -78,7 +78,7 @@ class UserSubmittedDocumentsContainer extends React.Component {
     let currentUser = JSON.parse(localStorage.getItem("user")).username;
     //api/docs/{username}/download/all
     axios({
-      url: "http://localhost:8081/api/docs/" + currentUser + "/download/all",
+      url: "/api/docs/" + currentUser + "/download/all",
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -119,8 +119,8 @@ class UserSubmittedDocumentsContainer extends React.Component {
     );
 
     //let currentUser = JSON.parse(localStorage.getItem('user')).username;
-    //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/submitted';
-    // let resourcePath = "http://localhost:8081/api/users/docs/submitted";
+    //let resourcePath = '/api/users/' + currentUser + '/docs/submitted';
+    // let resourcePath = "/api/users/docs/submitted";
     // axios
     //   .get(resourcePath)
     //   .then(response => {

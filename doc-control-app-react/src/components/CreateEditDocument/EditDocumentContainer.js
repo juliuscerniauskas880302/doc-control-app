@@ -59,7 +59,7 @@ class EditDocumentContainer extends React.Component {
 
   downloadHandler = event => {
     axios({
-      url: "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+      url: "/api/docs/" + this.state.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -78,12 +78,7 @@ class EditDocumentContainer extends React.Component {
   fileDownloadHandler = event => {
     console.log(event.target);
     axios({
-      url:
-        "http://localhost:8081/api/docs/" +
-        this.state.id +
-        "/" +
-        event.target.id +
-        "/download", //doc id
+      url: "/api/docs/" + this.state.id + "/" + event.target.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -118,7 +113,7 @@ class EditDocumentContainer extends React.Component {
     file.append("", "blob", "");
     file.append("model", JSON.stringify(model));
     axios
-      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+      .put("/api/docs/" + this.state.id, file, {
         onUploadProgress: progressEvent => {
           this.setState({
             percentage: Math.round(
@@ -139,7 +134,7 @@ class EditDocumentContainer extends React.Component {
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     file.append("model", JSON.stringify(model));
     axios
-      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+      .put("/api/docs/" + this.state.id, file, {
         onUploadProgress: progressEvent => {
           this.setState({
             percentage: Math.round(
@@ -168,7 +163,7 @@ class EditDocumentContainer extends React.Component {
       file.append("model", JSON.stringify(model));
     }
     axios
-      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+      .put("/api/docs/" + this.state.id, file, {
         onUploadProgress: progressEvent => {
           console.log(
             "Upload progress: " +
@@ -190,7 +185,7 @@ class EditDocumentContainer extends React.Component {
       );
     }
     axios
-      .put("http://localhost:8081/api/docs/" + this.state.id, file, {
+      .put("/api/docs/" + this.state.id, file, {
         onUploadProgress: progressEvent => {
           this.setState({
             percentage: Math.round(
@@ -338,7 +333,7 @@ class EditDocumentContainer extends React.Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:8081/api/users/submissionDocTypes")
+      .get("/api/users/submissionDocTypes")
       .then(response => {
         this.setState({ typeList: response.data.map(item => item.title) });
         console.log(
@@ -351,7 +346,7 @@ class EditDocumentContainer extends React.Component {
       });
 
     const position = this.props.match.params.documentId;
-    let resourcePath = "http://localhost:8081/api/docs/" + position;
+    let resourcePath = "/api/docs/" + position;
 
     axios
       .get(resourcePath)

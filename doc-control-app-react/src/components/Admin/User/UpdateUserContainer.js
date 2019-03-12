@@ -17,9 +17,7 @@ export default class UpdateUser extends Component {
   }
 
   componentDidMount = () => {
-    Axios.get(
-      "http://localhost:8081/api/users/" + this.props.match.params.username
-    )
+    Axios.get("/api/users/" + this.props.match.params.username)
       .then(res => {
         this.setState({
           firstname: res.data.firstname,
@@ -52,10 +50,7 @@ export default class UpdateUser extends Component {
         isAdmin: JSON.parse(this.state.isAdmin)
       },
       () => {
-        Axios.put(
-          "http://localhost:8081/api/users/" + this.props.match.params.username,
-          this.state
-        )
+        Axios.put("/api/users/" + this.props.match.params.username, this.state)
           .then(res => {
             console.log(res.data);
             console.log(this.props);
@@ -83,9 +78,7 @@ export default class UpdateUser extends Component {
     let newPassword = { password: this.state.password };
     event.preventDefault();
     Axios.put(
-      "http://localhost:8081/api/users/" +
-        this.props.match.params.username +
-        "/changepassword",
+      "/api/users/" + this.props.match.params.username + "/changepassword",
       newPassword
     )
       .then(res => {
