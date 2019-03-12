@@ -8,7 +8,8 @@ export default class LoginContainer extends Component {
     this.state = {
       wrongUsernameOrPassword: false,
       password: "",
-      username: ""
+      username: "",
+      errorMessage: ""
     };
   }
 
@@ -55,13 +56,18 @@ export default class LoginContainer extends Component {
           });
       })
       .catch(e => {
-        this.setState({ wrongUsernameOrPassword: true });
+        console.log(e.response.data.message);
+        this.setState({
+          wrongUsernameOrPassword: true,
+          errorMessage: e.response.data.message
+        });
       });
   };
 
   render() {
     return (
       <Login
+        error={this.state.errorMessage}
         wrongUsernameOrPassword={this.state.wrongUsernameOrPassword}
         username={this.state.username}
         password={this.state.password}

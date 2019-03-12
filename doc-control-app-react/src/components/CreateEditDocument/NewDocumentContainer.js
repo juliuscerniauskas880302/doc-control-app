@@ -13,7 +13,7 @@ class NewDocumentContainer extends React.Component {
       typeList: [],
       mainFile: null,
       selectedAdditionalFiles: null,
-      isOpen: true,
+      isOpen: false,
       percentage: 0
     };
   }

@@ -7,15 +7,20 @@ const Login = ({
   onUsernameChange,
   onPassChange,
   onSubmit,
-  wrongUsernameOrPassword
+  wrongUsernameOrPassword,
+  error
 }) => {
   let wrongData = () => {
-    if (wrongUsernameOrPassword)
-      return (
-        <h6 className="wrong-pass-or-username text-danger">
-          Neteisingai įvedėte vartotojo vardą arba slaptažodį
-        </h6>
-      );
+    if (error)
+      if (error.includes("Bad"))
+        return (
+          <h6 className="wrong-pass-or-username text-danger">
+            Neteisingai įvedėte vartotojo vardą arba slaptažodį
+          </h6>
+        );
+      else {
+        return <h6 className="wrong-pass-or-username text-danger">{error}</h6>;
+      }
     else {
       return <div />;
     }

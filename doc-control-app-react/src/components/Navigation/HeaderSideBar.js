@@ -3,6 +3,7 @@ import NavigationLink from "./NavigationLink";
 import { withRouter } from "react-router";
 import flagLT from "../../css/images/lt-flag.png";
 import ResponseMessage from "../Utilities/ResponseMessage";
+
 class HeaderSideBar extends React.Component {
   constructor(props) {
     super(props);
