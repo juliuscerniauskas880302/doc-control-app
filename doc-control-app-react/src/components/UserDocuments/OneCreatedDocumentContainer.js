@@ -20,7 +20,7 @@ class OneCreatedDocumentContainer extends React.Component {
 
   downloadHandler = event => {
     axios({
-      url: "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+      url: "/api/docs/" + this.state.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -55,18 +55,16 @@ class OneCreatedDocumentContainer extends React.Component {
 
   handleDelete = event => {
     //let currentUser = "migle";
-    //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
+    //let resourcePath = '/api/users/' + currentUser + '/docs/created';
     console.log(
       "Atėjau į handleDelete metodą OneCreatedDocumentContainer faile"
     );
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(this.state.id);
-    axios
-      .delete("http://localhost:8081/api/docs/" + this.state.id)
-      .then(response => {
-        this.props.history.push(`/createdDocuments`);
-      });
+    axios.delete("/api/docs/" + this.state.id).then(response => {
+      this.props.history.push(`/createdDocuments`);
+    });
   };
 
   handleSubmit = event => {
@@ -74,11 +72,11 @@ class OneCreatedDocumentContainer extends React.Component {
     console.log("Dokumento ID yra:");
     console.log(this.state.id);
     axios
-      .put("http://localhost:8081/api/docs/" + this.state.id + "/submit")
+      .put("/api/docs/" + this.state.id + "/submit")
       .then(response => {
         console.log("Pakeičiau dokumento statusą");
         axios
-          .get("http://localhost:8081/api/docs/" + this.state.id)
+          .get("/api/docs/" + this.state.id)
           .then(response => {
             //if (this.mounted) {
             this.setState({
@@ -105,12 +103,7 @@ class OneCreatedDocumentContainer extends React.Component {
   fileDownloadHandler = event => {
     console.log(event.target);
     axios({
-      url:
-        "http://localhost:8081/api/docs/" +
-        this.state.id +
-        "/" +
-        event.target.id +
-        "/download", //doc id
+      url: "/api/docs/" + this.state.id + "/" + event.target.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -130,7 +123,7 @@ class OneCreatedDocumentContainer extends React.Component {
     this.mounted = true;
     const position = this.props.match.params.documentId;
     //let currentUser = "migle";
-    let resourcePath = "http://localhost:8081/api/docs/" + position;
+    let resourcePath = "/api/docs/" + position;
     axios
       .get(resourcePath)
       .then(response => {

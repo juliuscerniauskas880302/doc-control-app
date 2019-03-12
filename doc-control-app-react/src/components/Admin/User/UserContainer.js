@@ -49,7 +49,7 @@ export class UserContainer extends Component {
   };
 
   getUserCount = () => {
-    Axios.get("http://localhost:8081/api/users/total")
+    Axios.get("/api/users/total")
       .then(res => {
         this.setState({ totalUsers: res.data });
       })
@@ -60,7 +60,7 @@ export class UserContainer extends Component {
 
   getAllUsersFromServer = (pageNumber, pageLimit, searchBy) => {
     this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
-    Axios.get("http://localhost:8081/api/users/", {
+    Axios.get("/api/users/", {
       params: {
         searchFor: searchBy,
         pageNumber: pageNumber - 1,
@@ -149,7 +149,7 @@ export class UserContainer extends Component {
   };
 
   onDeleteClickHandler = id => {
-    Axios.delete("http://localhost:8081/api/users/" + id)
+    Axios.delete("/api/users/" + id)
       .then(() =>
         this.getAllUsersFromServer(
           this.state.activePage,
@@ -167,7 +167,10 @@ export class UserContainer extends Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllUsersFromServer(activePage, this.state.recordsPerPage);
+      this.getAllUsersFromServer(
+        this.state.activePage,
+        this.state.recordsPerPage
+      );
     });
   };
 

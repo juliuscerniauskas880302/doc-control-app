@@ -25,7 +25,7 @@ class OneSubmittedDocumentContainer extends React.Component {
 
   // downloadHandler = event => {
   //   axios({
-  //     url: "http://localhost:8081/api/docs/" + this.state.id + "/download", //doc id
+  //     url: "/api/docs/" + this.state.id + "/download", //doc id
   //     method: "GET",
   //     responseType: "blob" // important
   //   }).then(response => {
@@ -45,12 +45,7 @@ class OneSubmittedDocumentContainer extends React.Component {
   fileDownloadHandler = event => {
     console.log(event.target);
     axios({
-      url:
-        "http://localhost:8081/api/docs/" +
-        this.state.id +
-        "/" +
-        event.target.id +
-        "/download", //doc id
+      url: "/api/docs/" + this.state.id + "/" + event.target.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -85,7 +80,7 @@ class OneSubmittedDocumentContainer extends React.Component {
   componentDidMount() {
     const position = this.props.match.params.documentId;
     //let currentUser = "migle";
-    let resourcePath = "http://localhost:8081/api/docs/" + position;
+    let resourcePath = "/api/docs/" + position;
     axios
       .get(resourcePath)
       .then(response => {

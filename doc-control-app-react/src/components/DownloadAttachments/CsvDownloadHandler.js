@@ -3,7 +3,7 @@ import extractFileName from "./ExtractFileName";
 export default function csvDownloadHandler(event, props) {
   event.preventDefault();
   Axios({
-    url: "http://localhost:8081/api/docs/csv/download",
+    url: "/api/docs/csv/download",
     method: "GET",
     responseType: "blob" // important
   })

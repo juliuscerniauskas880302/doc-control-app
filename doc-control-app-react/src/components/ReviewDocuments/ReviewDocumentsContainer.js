@@ -52,7 +52,7 @@ class ReviewDocumentsContainer extends React.Component {
     clearInterval(this.updateDelay);
     this.timer = setTimeout(() => this.setState({ loaded: false }), 1000);
     axios
-      .get("http://localhost:8081/api/docs/review", {
+      .get("/api/docs/review", {
         //wrong path
         params: {
           searchFor: searchFor,
@@ -124,29 +124,27 @@ class ReviewDocumentsContainer extends React.Component {
           console.log("docInfo yra " + docInfo.rejectionReason);
           console.log("Spausdinu id " + id);
           this.setState({ documentId: "aaa" });
-          axios
-            .post("http://localhost:8081/api/docs/review/" + id, docInfo)
-            .then(response => {
-              axios
-                .get("http://localhost:8081/api/docs/review", {
-                  //wrong path
-                  params: {
-                    searchFor: "",
-                    pageNumber: this.state.activePage - 1,
-                    pageLimit: this.state.recordsPerPage
-                  }
-                })
-                .then(res => {
-                  console.log(res.data);
-                  this.setState({
-                    documents: res.data.documentList,
-                    totalDocs: res.data.totalPages
-                  });
-                })
-                .catch(err => {
-                  console.log(err);
+          axios.post("/api/docs/review/" + id, docInfo).then(response => {
+            axios
+              .get("/api/docs/review", {
+                //wrong path
+                params: {
+                  searchFor: "",
+                  pageNumber: this.state.activePage - 1,
+                  pageLimit: this.state.recordsPerPage
+                }
+              })
+              .then(res => {
+                console.log(res.data);
+                this.setState({
+                  documents: res.data.documentList,
+                  totalDocs: res.data.totalPages
                 });
-            });
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          });
         } else {
           // swalWithBootstrapButtons.fire(
           //     'Cancelled',
@@ -171,9 +169,9 @@ class ReviewDocumentsContainer extends React.Component {
     //     reviewerUsername: JSON.parse(localStorage.getItem('user')).username
     // }
     // console.log("docInfo yra " + docInfo.documentState);
-    // axios.post("http://localhost:8081/api/docs/review/" + this.state.documentId, docInfo)
+    // axios.post("/api/docs/review/" + this.state.documentId, docInfo)
     //     .then((response) => {
-    //         axios.get('http://localhost:8081/api/docs/review')
+    //         axios.get('/api/docs/review')
     //             .then((response) => {
     //                 this.setState({ documents: response.data });
 
@@ -193,29 +191,27 @@ class ReviewDocumentsContainer extends React.Component {
       reviewerUsername: JSON.parse(localStorage.getItem("user")).username
     };
     console.log("docInfo yra " + docInfo.documentState);
-    axios
-      .post("http://localhost:8081/api/docs/review/" + id, docInfo)
-      .then(response => {
-        axios
-          .get("http://localhost:8081/api/docs/review", {
-            //wrong path
-            params: {
-              searchFor: this.searchField,
-              pageNumber: this.state.activePage - 1,
-              pageLimit: this.state.recordsPerPage
-            }
-          })
-          .then(res => {
-            console.log(res.data);
-            this.setState({
-              documents: res.data.documentList,
-              totalDocs: res.data.totalPages
-            });
-          })
-          .catch(err => {
-            console.log(err);
+    axios.post("/api/docs/review/" + id, docInfo).then(response => {
+      axios
+        .get("/api/docs/review", {
+          //wrong path
+          params: {
+            searchFor: this.searchField,
+            pageNumber: this.state.activePage - 1,
+            pageLimit: this.state.recordsPerPage
+          }
+        })
+        .then(res => {
+          console.log(res.data);
+          this.setState({
+            documents: res.data.documentList,
+            totalDocs: res.data.totalPages
           });
-      });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
   };
 
   componentDidMount = () => {
@@ -226,7 +222,7 @@ class ReviewDocumentsContainer extends React.Component {
     );
 
     // axios
-    //   .get("http://localhost:8081/api/docs/review")
+    //   .get("/api/docs/review")
     //   .then(response => {
     //     this.setState({ documents: response.data });
     //     console.log("Koks atiduodamas dokumentų sąrašas?");

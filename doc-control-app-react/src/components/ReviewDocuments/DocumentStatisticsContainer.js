@@ -45,7 +45,7 @@ class DocumentStatisticsContainer extends React.Component {
     console.log("Atnaujinu diagramų duomenis. Iš handleChartUpdate");
     //Nusiskaitau statistikos duomenis
     axios
-      .post("http://localhost:8081/api/stats/docTypes", {
+      .post("/api/stats/docTypes", {
         documentTypes: this.state.selectedDocTypes,
         fromDate: this.state.startDate,
         toDate: this.state.endDate
@@ -67,7 +67,7 @@ class DocumentStatisticsContainer extends React.Component {
 
     //Nuskaitau dokumentų tipus
     axios
-      .get("http://localhost:8081/api/users/reviewDocTypes")
+      .get("/api/users/reviewDocTypes")
       .then(response => {
         //Anksčiau iš dokumentų tipo atsakymo išrinkdavau tik pavadinimus
         //this.setState({ typeList: response.data.map(item => item.title) });

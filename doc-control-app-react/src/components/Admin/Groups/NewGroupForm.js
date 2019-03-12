@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Axios from "axios";
 import NewGroupComponent from "./NewGroupComponent";
 import EditGroupUsers from "./EditGroupUsers";
-import ButtonComponent from "../../Utilities/ButtonComponent";
 import { Pagination } from "semantic-ui-react";
 
 export default class NewGroupForm extends Component {
@@ -28,7 +27,7 @@ export default class NewGroupForm extends Component {
   };
 
   getAllGroups = () => {
-    Axios.get("http://localhost:8081/api/groups")
+    Axios.get("/api/groups")
       .then(res => {
         this.setState({ allGroups: res.data });
       })
@@ -38,7 +37,7 @@ export default class NewGroupForm extends Component {
   };
 
   getAllUsers = (pageNumber, pageLimit) => {
-    Axios.get("http://localhost:8081/api/users/", {
+    Axios.get("/api/users/", {
       params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
     })
       .then(res => {
@@ -104,7 +103,7 @@ export default class NewGroupForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
-    Axios.post("http://localhost:8081/api/groups", title)
+    Axios.post("/api/groups", title)
       .then(res => {
         this.props.showResponseMessage(
           "Nauja grupė buvo sėkmingai pridėta",
@@ -121,9 +120,7 @@ export default class NewGroupForm extends Component {
 
   onDeleteCLickHandler = () => {
     console.log(this.getSelectedGroupID());
-    Axios.delete(
-      "http://localhost:8081/api/groups/" + this.getSelectedGroupID()
-    )
+    Axios.delete("/api/groups/" + this.getSelectedGroupID())
       .then(res => {
         this.props.showResponseMessage(
           "Grupė buvo sėkmingai ištrinta",
@@ -142,10 +139,7 @@ export default class NewGroupForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.newTitle;
-    Axios.put(
-      "http://localhost:8081/api/groups/" + this.getSelectedGroupID(),
-      title
-    )
+    Axios.put("/api/groups/" + this.getSelectedGroupID(), title)
       .then(res => {
         this.props.showResponseMessage(
           "Grupė buvo sėkmingai atnaujinta",
@@ -172,7 +166,7 @@ export default class NewGroupForm extends Component {
   };
 
   loadSelectedGroupUsers = selectedId => {
-    Axios.get("http://localhost:8081/api/groups/" + selectedId + "/users")
+    Axios.get("/api/groups/" + selectedId + "/users")
       .then(res => {
         let allList = [];
         this.state.allUsers.forEach(user => {
@@ -230,8 +224,8 @@ export default class NewGroupForm extends Component {
     return (
       <div className="col-md-12">
         <p>
-          Pažymėkite vartotojus, kuriuos noriti pridėti ir spauskite mygtuką
-          "Atnaujinti".
+          Pažymėkite vartotojus, kuriuos noriti pridėti arba pašalinti iš
+          grupės.
         </p>
         <Pagination
           activePage={activePage}
@@ -283,10 +277,7 @@ export default class NewGroupForm extends Component {
 
   removeOneUserFromGroup = user => {
     Axios.delete(
-      "http://localhost:8081/api/groups/" +
-        this.state.selectedGroupForAddUsers +
-        "/users/" +
-        user
+      "/api/groups/" + this.state.selectedGroupForAddUsers + "/users/" + user
     )
       .then(res => {
         this.props.showResponseMessage(
@@ -303,10 +294,7 @@ export default class NewGroupForm extends Component {
 
   addOneUserToGroup = user => {
     Axios.post(
-      "http://localhost:8081/api/groups/" +
-        this.state.selectedGroupForAddUsers +
-        "/users/" +
-        user
+      "/api/groups/" + this.state.selectedGroupForAddUsers + "/users/" + user
     )
       .then(res => {
         this.props.showResponseMessage(
@@ -335,9 +323,7 @@ export default class NewGroupForm extends Component {
     });
 
     Axios.post(
-      "http://localhost:8081/api/groups/" +
-        this.state.selectedGroupForAddUsers +
-        "/users",
+      "/api/groups/" + this.state.selectedGroupForAddUsers + "/users",
       { users: userIdListToAdd }
     )
       .then(res => {

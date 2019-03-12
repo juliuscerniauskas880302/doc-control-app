@@ -78,12 +78,12 @@ public class UserController {
         userService.updateUser(username, userUpdateCommand);
     }
 
-    @ApiOperation(value = "delete user by username")
-    @RequestMapping(value = "/{username}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUserByUsername(@PathVariable String username) {
-        userService.deleteUser(username);
-    }
+//    @ApiOperation(value = "delete user by username")
+//    @RequestMapping(value = "/{username}", method = RequestMethod.DELETE)
+//    @ResponseStatus(HttpStatus.ACCEPTED)
+//    public void deleteUserByUsername(@PathVariable String username) {
+//        userService.deleteUser(username);
+//    }
 
     @ApiOperation(value = "change user's password")
     @RequestMapping(value = "/{username}/changepassword", method = RequestMethod.PUT)

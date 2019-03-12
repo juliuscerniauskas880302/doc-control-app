@@ -13,7 +13,7 @@ class NewDocumentContainer extends React.Component {
       typeList: [],
       mainFile: null,
       selectedAdditionalFiles: null,
-      isOpen: false,
+      isOpen: true,
       percentage: 0
     };
   }
@@ -25,7 +25,7 @@ class NewDocumentContainer extends React.Component {
   };
   componentDidMount() {
     axios
-      .get("http://localhost:8081/api/users/submissionDocTypes")
+      .get("/api/users/submissionDocTypes")
       .then(response => {
         this.setState({ typeList: response.data.map(item => item.title) });
       })
@@ -88,7 +88,7 @@ class NewDocumentContainer extends React.Component {
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     file.append("model", JSON.stringify(model));
     axios
-      .post("http://localhost:8081/api/docs", file, {
+      .post("/api/docs", file, {
         onUploadProgress: progressEvent => {
           this.setState({
             percentage: Math.round(
@@ -134,7 +134,7 @@ class NewDocumentContainer extends React.Component {
       file.append("model", JSON.stringify(model));
     }
     axios
-      .post("http://localhost:8081/api/docs", file, {
+      .post("/api/docs", file, {
         onUploadProgress: progressEvent => {
           console.log(
             "Upload progress: " +

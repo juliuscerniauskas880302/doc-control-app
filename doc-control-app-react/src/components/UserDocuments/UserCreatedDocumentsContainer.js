@@ -55,7 +55,7 @@ class UserCreatedDocumentsContainer extends React.Component {
 
   getAllDocumentsFromServer = (pageNumber, pageLimit) => {
     axios
-      .get("http://localhost:8081/api/docs/user/created", {
+      .get("/api/docs/user/created", {
         params: { pageNumber: pageNumber - 1, pageLimit: pageLimit }
       })
       .then(res => {
@@ -77,12 +77,14 @@ class UserCreatedDocumentsContainer extends React.Component {
   handleDelete = id => {
     //let currentUser = JSON.parse(localStorage.getItem("user")).username;
     //let resourcePath =
-    //  "http://localhost:8081/api/users/" + currentUser + "/docs/created";
+    //  "/api/users/" + currentUser + "/docs/created";
     console.log("Atėjau į handleDelete metodą");
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(id);
-    axios.delete("http://localhost:8081/api/docs/" + id).then(response => {
+
+    axios.delete("/api/docs/" + id).then(response => {
+
       this.getAllDocumentsFromServer(
         this.state.activePage,
         this.state.recordsPerPage
@@ -93,19 +95,17 @@ class UserCreatedDocumentsContainer extends React.Component {
   handleSubmit = id => {
     //let currentUser = JSON.parse(localStorage.getItem("user")).username;
     //let resourcePath =
-    //  "http://localhost:8081/api/users/" + currentUser + "/docs/created";
+    //  "/api/users/" + currentUser + "/docs/created";
     //console.log("Atėjau į handleSubmit metodą");
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(id);
-    axios
-      .put("http://localhost:8081/api/docs/" + id + "/submit")
-      .then(response => {
-        this.getAllDocumentsFromServer(
-          this.state.activePage,
-          this.state.recordsPerPage
-        );
-      });
+    axios.put("/api/docs/" + id + "/submit").then(response => {
+      this.getAllDocumentsFromServer(
+        this.state.activePage,
+        this.state.recordsPerPage
+      );
+    });
   };
 
   componentDidMount() {
@@ -116,8 +116,8 @@ class UserCreatedDocumentsContainer extends React.Component {
     );
 
     //let currentUser = JSON.parse(localStorage.getItem('user')).username;
-    //let resourcePath = 'http://localhost:8081/api/users/' + currentUser + '/docs/created';
-    // let resourcePath = "http://localhost:8081/api/users/docs/created";
+    //let resourcePath = '/api/users/' + currentUser + '/docs/created';
+    // let resourcePath = "/api/users/docs/created";
     // axios
     //   .get(resourcePath)
     //   .then(response => {

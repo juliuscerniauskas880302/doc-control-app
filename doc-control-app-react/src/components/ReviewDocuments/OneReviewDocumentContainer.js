@@ -25,12 +25,7 @@ class OneReviewDocumentContainer extends React.Component {
   fileDownloadHandler = event => {
     console.log(event.target);
     axios({
-      url:
-        "http://localhost:8081/api/docs/" +
-        this.state.id +
-        "/" +
-        event.target.id +
-        "/download", //doc id
+      url: "/api/docs/" + this.state.id + "/" + event.target.id + "/download", //doc id
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
@@ -46,6 +41,26 @@ class OneReviewDocumentContainer extends React.Component {
       document.body.removeChild(link);
     });
   };
+
+  // downloadHandler = (event) => {
+  //     axios({
+  //         url:
+  //             "/api/docs/" + this.state.id + "/download", //doc id
+  //         method: "GET",
+  //         responseType: "blob" // important
+  //     }).then(response => {
+  //         var filename = this.extractFileName(
+  //             response.headers["content-disposition"]
+  //         );
+  //         const url = window.URL.createObjectURL(new Blob([response.data]));
+  //         const link = document.createElement("a");
+  //         link.href = url;
+  //         link.setAttribute("download", filename); //or any other extension
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //     });
+  // };
 
   extractFileName = contentDispositionValue => {
     var filename = "";
@@ -119,21 +134,19 @@ class OneReviewDocumentContainer extends React.Component {
           console.log("docInfo yra " + docInfo.rejectionReason);
           console.log("Spausdinu id " + id);
           this.setState({ documentId: "aaa" });
-          axios
-            .post("http://localhost:8081/api/docs/review/" + id, docInfo)
-            .then(response => {
-              axios
-                .get("http://localhost:8081/api/docs/review")
-                .then(response => {
-                  this.setState({ documents: response.data });
-                })
-                .then(response => {
-                  this.props.history.push(`/reviewDocuments`);
-                })
-                .catch(error => {
-                  console.log("KLAIDA BANDANT ATMESTI" + error);
-                });
-            });
+          axios.post("/api/docs/review/" + id, docInfo).then(response => {
+            axios
+              .get("/api/docs/review")
+              .then(response => {
+                this.setState({ documents: response.data });
+              })
+              .then(response => {
+                this.props.history.push(`/reviewDocuments`);
+              })
+              .catch(error => {
+                console.log("KLAIDA BANDANT ATMESTI" + error);
+              });
+          });
         } else {
           // swalWithBootstrapButtons.fire(
           //     'Cancelled',
@@ -151,9 +164,9 @@ class OneReviewDocumentContainer extends React.Component {
     //     reviewerUsername: JSON.parse(localStorage.getItem('user')).username
     // }
     // console.log("docInfo yra " + docInfo.documentState);
-    // axios.post("http://localhost:8081/api/docs/review/" + this.state.id, docInfo)
+    // axios.post("/api/docs/review/" + this.state.id, docInfo)
     //     .then((response) => {
-    //         axios.get('http://localhost:8081/api/docs/review')
+    //         axios.get('/api/docs/review')
     //             .then((response) => {
     //                 this.setState({ documents: response.data });
     //             })
@@ -175,25 +188,23 @@ class OneReviewDocumentContainer extends React.Component {
       reviewerUsername: JSON.parse(localStorage.getItem("user")).username
     };
     console.log("docInfo yra " + docInfo.documentState);
-    axios
-      .post("http://localhost:8081/api/docs/review/" + this.state.id, docInfo)
-      .then(response => {
-        axios
-          .get("http://localhost:8081/api/docs/review")
-          .then(response => {
-            this.setState({ documents: response.data });
-          })
-          .then(response => this.props.history.push(`/reviewDocuments`))
-          .catch(error => {
-            console.log(error);
-          });
-      });
+    axios.post("/api/docs/review/" + this.state.id, docInfo).then(response => {
+      axios
+        .get("/api/docs/review")
+        .then(response => {
+          this.setState({ documents: response.data });
+        })
+        .then(response => this.props.history.push(`/reviewDocuments`))
+        .catch(error => {
+          console.log(error);
+        });
+    });
   };
 
   componentDidMount() {
     const position = this.props.match.params.documentId;
     //let currentUser = "migle";
-    let resourcePath = "http://localhost:8081/api/docs/" + position;
+    let resourcePath = "/api/docs/" + position;
     axios
       .get(resourcePath)
       .then(response => {

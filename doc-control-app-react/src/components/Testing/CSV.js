@@ -4,7 +4,7 @@ import axios from "axios";
 export default class CSV extends Component {
   downloadHandler = event => {
     axios({
-      url: "http://localhost:8081/api/docs/csv/download",
+      url: "/api/docs/csv/download",
       method: "GET",
       responseType: "blob" // important
     }).then(response => {
