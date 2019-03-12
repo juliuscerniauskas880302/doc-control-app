@@ -26,14 +26,14 @@ const OneCreatedDocumentComponent = props => {
                 <h6 className="text-uppercase mb-0">Sukurtas dokumentas</h6>
               </div>
               <div className="card-body">
-                <div className="form-group row">
+                {/* <div className="form-group row">
                   <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Numeris:</p>
                   </div>
                   <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.id}</p>
                   </div>
-                </div>
+                </div> */}
                 <div className="form-group row">
                   <div className="col-md-3 col-sm-3 form-control-label">
                     Dokumento pavadinimas:

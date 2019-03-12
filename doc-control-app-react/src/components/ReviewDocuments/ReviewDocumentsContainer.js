@@ -241,6 +241,9 @@ class ReviewDocumentsContainer extends React.Component {
       return (
         <ReviewDocumentsComponent
           key={index}
+          documentId={
+            index + 1 + this.state.recordsPerPage * (this.state.activePage - 1)
+          }
           id={document.id}
           author={document.authorFirstname + " " + document.authorLastname}
           title={document.title}

@@ -5,7 +5,7 @@ const UserCreatedDocumentsComponent = props => {
   var linkas = "/createdDocuments/" + props.id;
   return (
     <tr>
-      <td>{props.id}</td>
+      <td className="font-weight-bold">{props.documentId}</td>
       <td>{props.title}</td>
       <td>{props.description}</td>
       <td>{props.type}</td>
@@ -41,7 +41,7 @@ const UserCreatedDocumentsComponent = props => {
         &nbsp;
         <i
           className="mygtukas blue fas fa-check-circle fa-2x"
-          title="Dokumneto pateikimas"
+          title="Dokumento pateikimas"
           onClick={() => {
             props.handleSubmit(props.id);
           }}

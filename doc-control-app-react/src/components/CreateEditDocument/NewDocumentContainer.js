@@ -35,7 +35,7 @@ class NewDocumentContainer extends React.Component {
   }
   closeFileTransferPopup = () => {
     this.setState({
-      isOpen: false
+      isOpen: true
     });
   };
 
@@ -49,7 +49,6 @@ class NewDocumentContainer extends React.Component {
     this.setState({
       mainFile: fileItems.map(fileItem => fileItem.file)
     });
-    console.log(this.state.mainFile);
   };
   onUpdateAdditionalFiles = fileItems => {
     this.setState({
@@ -68,7 +67,6 @@ class NewDocumentContainer extends React.Component {
 
   checkFileExtensions = (array, acceptedTypesArray) => {
     let stopSubmit = false;
-    console.log(acceptedTypesArray);
     array.forEach(element => {
       if (!acceptedTypesArray.includes(element.split(".").pop())) {
         stopSubmit = true;
@@ -79,6 +77,14 @@ class NewDocumentContainer extends React.Component {
   /************************************************************************************* */
   // Auxiliary methods
   uploadMainFile = (file, model) => {
+    if (this.state.mainFile[0].size > 100000000) {
+      this.props.showResponseMessage(
+        "Prisegta byla per didelė.",
+        "danger",
+        2500
+      );
+      return;
+    }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     file.append("model", JSON.stringify(model));
     axios
@@ -98,12 +104,28 @@ class NewDocumentContainer extends React.Component {
       })
       .then(response => this.props.history.push(`/createdDocuments`))
       .then(res => console.log(res))
-      .catch(err => console.log("KLAIDA SUBMITE" + err));
+      .catch(err => console.log(err));
   };
 
   uploadMultipleFiles = (file, model) => {
+    if (this.state.mainFile[0].size > 100000000) {
+      this.props.showResponseMessage(
+        "Prisegta byla per didelė.",
+        "danger",
+        2500
+      );
+      return;
+    }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
+      if (this.state.selectedAdditionalFiles[i].size > 100000000) {
+        this.props.showResponseMessage(
+          "Prisegta byla per didelė.",
+          "danger",
+          2500
+        );
+        return;
+      }
       file.append(
         "file",
         this.state.selectedAdditionalFiles[i],
@@ -130,7 +152,7 @@ class NewDocumentContainer extends React.Component {
   };
   checkFileExtensions = (array, acceptedTypesArray) => {
     let stopSubmit = false;
-    console.log(acceptedTypesArray);
+
     array.forEach(element => {
       if (!acceptedTypesArray.includes(element.split(".").pop())) {
         stopSubmit = true;
@@ -164,9 +186,10 @@ class NewDocumentContainer extends React.Component {
     let file = new FormData();
     let fileNames = this.gatherAllFileNames();
     // Check if mainFile is added
+
     if (this.state.mainFile === null || this.state.mainFile.length === 0) {
       this.props.showResponseMessage(
-        "Prisegkite pagrindinę bylą.",
+        "Prisegkite tinkamą pagrindinę bylą.",
         "danger",
         2500
       );
