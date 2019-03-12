@@ -82,7 +82,9 @@ class UserCreatedDocumentsContainer extends React.Component {
     //const position = this.props.match.params.documentId;
     console.log("Dokumento ID yra:");
     console.log(id);
+
     axios.delete("/api/docs/" + id).then(response => {
+
       this.getAllDocumentsFromServer(
         this.state.activePage,
         this.state.recordsPerPage
@@ -136,6 +138,11 @@ class UserCreatedDocumentsContainer extends React.Component {
         return (
           <UserCreatedDocumentsComponent
             key={index}
+            documentId={
+              index +
+              1 +
+              this.state.recordsPerPage * (this.state.activePage - 1)
+            }
             id={document.id}
             title={document.title}
             description={document.description}

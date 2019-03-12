@@ -7,7 +7,7 @@ import { FilePond, registerPlugin } from "react-filepond";
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 // Import the Image EXIF Orientation and Image Preview plugins
 // Note: These need to be installed separately
 // `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
@@ -20,7 +20,8 @@ import FileDownloadComponent from "../Utilities/FileDownloadComponent";
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
-  FilePondPluginFileValidateType
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize
 );
 
 const EditDocumentComponent = props => {
@@ -143,6 +144,9 @@ const EditDocumentComponent = props => {
                       <div className="col-md-4 col-lg-4">
                         {" "}
                         <FilePond
+                          maxFileSize="100MB"
+                          labelMaxFileSizeExceeded="Neleistinas bylos dydis."
+                          labelMaxFileSize="Maksimalus bylos dydis yra 100MB."
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
                           // labelIdle="Įkelkite pagrindinę bylą."
                           labelFileTypeNotAllowed=""
@@ -185,6 +189,9 @@ const EditDocumentComponent = props => {
                     </label>
                     <div className="col-md-4 col-lg-4">
                       <FilePond
+                        maxFileSize="100MB"
+                        labelMaxFileSizeExceeded="Neleistinas bylos dydis."
+                        labelMaxFileSize="Maksimalus bylos dydis yra 100MB."
                         labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
                         labelFileTypeNotAllowed=""
                         fileValidateTypeLabelExpectedTypes=""

@@ -34,14 +34,14 @@ const OneReviewDocumentComponent = props => {
                     <p>{props.author}</p>
                   </div>
                 </div>
-                <div className="form-group row">
+                {/* <div className="form-group row">
                   <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Numeris:</p>
                   </div>
                   <div className="col-md-4  col-sm-4 col-lg-4">
                     <p>{props.id}</p>
                   </div>
-                </div>
+                </div> */}
                 <div className="form-group row">
                   <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Pavadinimas:</p>
