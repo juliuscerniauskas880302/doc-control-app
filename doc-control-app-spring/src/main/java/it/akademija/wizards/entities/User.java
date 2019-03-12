@@ -48,6 +48,8 @@ public class User {
 
     private boolean isAdmin;
 
+    private boolean isLocked;
+
     @OneToMany(mappedBy = "author")
     private List<Document> documents;
 
@@ -60,6 +62,7 @@ public class User {
                 @NotNull String lastname,
                 @NotNull String email,
                 boolean isAdmin,
+                boolean isLocked,
                 List<Document> documents) {
         this.username = username;
         this.password = password;
@@ -68,6 +71,7 @@ public class User {
         this.email = email;
         this.userGroups = new HashSet<>();
         this.isAdmin = isAdmin;
+        this.isLocked = isLocked;
         this.documents = documents;
     }
 
@@ -184,5 +188,11 @@ public class User {
         }
     }
 
+    public boolean isLocked() {
+        return isLocked;
+    }
 
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
 }
