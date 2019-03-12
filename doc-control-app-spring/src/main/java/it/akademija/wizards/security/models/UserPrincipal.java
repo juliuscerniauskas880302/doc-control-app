@@ -18,6 +18,7 @@ public class UserPrincipal implements UserDetails {
     private String lastname;
     private String username;
     private boolean isAdmin;
+    private boolean isLocked;
 
     @JsonIgnore
     private String email;
@@ -29,7 +30,7 @@ public class UserPrincipal implements UserDetails {
 
     public UserPrincipal(String id, String firstname, String lastname,
                          String username, String email, String password,
-                         Collection<? extends GrantedAuthority> authorities, boolean isAdmin) {
+                         Collection<? extends GrantedAuthority> authorities, boolean isAdmin, boolean isLocked) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -38,6 +39,7 @@ public class UserPrincipal implements UserDetails {
         this.password = password;
         this.authorities = authorities;
         this.isAdmin = isAdmin;
+        this.isLocked = isLocked;
     }
 
     public static UserPrincipal create(User user) {
@@ -52,7 +54,8 @@ public class UserPrincipal implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 authorities,
-                user.isAdmin()
+                user.isAdmin(),
+                user.isLocked()
         );
     }
 
@@ -95,7 +98,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isLocked;
     }
 
     @Override

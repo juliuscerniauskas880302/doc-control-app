@@ -159,5 +159,12 @@ public class UserController {
        return userService.getUserGroupsWithDocTypes(userPrincipal.getUsername());
     }
 
+    @ApiOperation(value = "lock/unlock user")
+    @PutMapping("/{username}/toggleLock")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public boolean toggleLockUser(@PathVariable String username) {
+        return userService.toggleLockUser(username);
+    }
+
 
 }
