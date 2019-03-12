@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Axios from "axios";
 import NewGroupComponent from "./NewGroupComponent";
 import EditGroupUsers from "./EditGroupUsers";
-import ButtonComponent from "../../Utilities/ButtonComponent";
 import { Pagination } from "semantic-ui-react";
 
 export default class NewGroupForm extends Component {
@@ -225,8 +224,8 @@ export default class NewGroupForm extends Component {
     return (
       <div className="col-md-12">
         <p>
-          Pažymėkite vartotojus, kuriuos noriti pridėti ir spauskite mygtuką
-          "Atnaujinti".
+          Pažymėkite vartotojus, kuriuos noriti pridėti arba pašalinti iš
+          grupės.
         </p>
         <Pagination
           activePage={activePage}
