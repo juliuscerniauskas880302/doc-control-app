@@ -167,7 +167,10 @@ export class UserContainer extends Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllUsersFromServer(activePage, this.state.recordsPerPage);
+      this.getAllUsersFromServer(
+        this.state.activePage,
+        this.state.recordsPerPage
+      );
     });
   };
 
