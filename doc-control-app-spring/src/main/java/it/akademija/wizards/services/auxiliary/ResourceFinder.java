@@ -3,7 +3,7 @@ package it.akademija.wizards.services.auxiliary;
 import it.akademija.wizards.entities.Document;
 import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.User;
-import it.akademija.wizards.exception.ResourceNotFoundException;
+import it.akademija.wizards.exception.model.ResourceNotFoundException;
 import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.repositories.DocumentTypeRepository;
 import it.akademija.wizards.repositories.UserGroupRepository;

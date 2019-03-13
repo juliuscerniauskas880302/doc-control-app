@@ -5,7 +5,7 @@ import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
 import it.akademija.wizards.enums.DocumentState;
-import it.akademija.wizards.exception.BadRequestException;
+import it.akademija.wizards.exception.model.BadRequestException;
 import it.akademija.wizards.models.document.*;
 import it.akademija.wizards.repositories.DocumentRepository;
 import it.akademija.wizards.repositories.DocumentTypeRepository;

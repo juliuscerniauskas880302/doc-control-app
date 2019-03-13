@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import it.akademija.wizards.entities.*;
 import it.akademija.wizards.enums.DocumentState;
 import it.akademija.wizards.enums.RoleName;
-import it.akademija.wizards.exception.AppException;
+import it.akademija.wizards.exception.model.AppException;
 import it.akademija.wizards.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

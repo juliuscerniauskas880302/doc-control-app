@@ -73,9 +73,11 @@ export class UserContainer extends Component {
             );
           })
           .catch(err => {
-            console.log(err);
+            let errorMsg = err.response.data.message === "OWN_USER_LOCK" ?
+              "vartotojas bandė  " + lockMsg + " save" :
+              "vartotojas nebuvo " + actionAfter;
             Swal.fire(
-              "Klaida, vartotojas nebuvo " + actionAfter
+              "Klaida: " + errorMsg
             );
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {

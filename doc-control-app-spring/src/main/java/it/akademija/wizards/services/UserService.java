@@ -2,7 +2,10 @@ package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.*;
 import it.akademija.wizards.enums.RoleName;
-import it.akademija.wizards.exception.AppException;
+import it.akademija.wizards.exception.ExceptionFactory;
+import it.akademija.wizards.exception.model.AppException;
+import it.akademija.wizards.exception.model.BadRequestException;
+import it.akademija.wizards.exception.model.ResourceNotFoundException;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.*;
 import it.akademija.wizards.models.usergroup.UserGroupGetCommand;
@@ -35,16 +38,21 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserGroupRepository userGroupRepository;
+    private ExceptionFactory exceptionFactory;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
 
+
     @Autowired
-    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository) {
+    public UserService(final UserRepository userRepository,
+                       final UserGroupRepository userGroupRepository,
+                       final ExceptionFactory exceptionFactory) {
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
+        this.exceptionFactory = exceptionFactory;
     }
 
     public UserRepository getUserRepository() {
@@ -331,7 +339,7 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             log.error("Vartotojas {} nerastas", username);
-            throw new NullPointerException("User does not exist");
+            throw new ResourceNotFoundException("User does not exist");
         }
         String targetUsername = user.getUsername();
         String lockerUsername = Auth.getUsername();
@@ -345,7 +353,7 @@ public class UserService {
             log.info(lockerUsername + logAction + targetUsername);
         } else {
             log.error(lockerUsername + " bandė užrakinti save");
-            throw new IllegalArgumentException("Can not lock own user");
+            this.exceptionFactory.badRequestException("OWN_USER_LOCK");
         }
         return user.isLocked();
     }
