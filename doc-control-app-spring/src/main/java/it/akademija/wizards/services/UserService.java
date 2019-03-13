@@ -91,7 +91,8 @@ public class UserService {
             BeanUtils.copyProperties(user, userGetCommand);
             return userGetCommand;
         } else {
-            throw new NullPointerException("User does not exist");
+            this.exceptionFactory.resourceNotFoundException("User does not exist");
+            return null;
         }
     }
 
@@ -189,7 +190,7 @@ public class UserService {
             userRepository.delete(user);
             log.info("Vartotojas '" + Auth.getUsername() + "' ištrynė vartotoją '" + user.getUsername() + "'.");
         } else {
-            throw new NullPointerException("User does not exist");
+            this.exceptionFactory.resourceNotFoundException("User does not exist");
         }
     }
 
@@ -245,7 +246,8 @@ public class UserService {
                 return userGroupGetCommand;
             }).collect(Collectors.toList());
         } else {
-            throw new NullPointerException("User does not exist");
+            this.exceptionFactory.resourceNotFoundException("User does not exist");
+            return null;
         }
     }
 
@@ -264,7 +266,8 @@ public class UserService {
                 return documentTypeGetCommand;
             }).collect(Collectors.toSet());
         }
-        throw new NullPointerException("User does not exist");
+        this.exceptionFactory.resourceNotFoundException("User does not exist");
+        return null;
     }
 
     @Transactional
@@ -280,7 +283,8 @@ public class UserService {
             }
             return false;
         } else {
-            throw new NullPointerException("User does not exist");
+            this.exceptionFactory.resourceNotFoundException("User does not exist");
+            return false;
         }
     }
 
