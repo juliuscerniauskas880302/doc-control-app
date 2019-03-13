@@ -111,8 +111,11 @@ export default class UpdateUser extends Component {
         this.setState({ isLocked: locked });
       })
       .catch(err => {
+        let errorMsg = err.response.data.message === "OWN_USER_LOCK" ?
+          "Įvyko klaida. Vartotojas bandė  " + (this.state.islocked ? "atrakinti" : "užrakinti") + " save" :
+          "Įvyko klaida rakinant vartotoją";
         this.props.showResponseMessage(
-          "Įvyko klaida rakinant vartotoją",
+          errorMsg,
           "warning",
           2500
         );
