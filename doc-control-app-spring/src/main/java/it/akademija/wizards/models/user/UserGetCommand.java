@@ -7,17 +7,19 @@ public class UserGetCommand {
     private String lastname;
     private String email;
     private boolean isAdmin;
+    private boolean isLocked;
 
     public UserGetCommand() {
 
     }
 
-    public UserGetCommand(String username, String firstname, String lastname, String email, boolean isAdmin) {
+    public UserGetCommand(String username, String firstname, String lastname, String email, boolean isAdmin, boolean isLocked) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.isAdmin = isAdmin;
+        this.isLocked = isLocked;
     }
 
     public String getUsername() {
@@ -58,5 +60,13 @@ public class UserGetCommand {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 }
