@@ -5,6 +5,8 @@ import SemanticUserTable from "./SemanticUserTable";
 import SearchField from "../../ReviewDocuments/SearchField";
 import Loading from "../../Utilities/Loading";
 
+import Swal from "sweetalert2";
+
 export class UserContainer extends Component {
   constructor(props) {
     super(props);
@@ -47,6 +49,40 @@ export class UserContainer extends Component {
       }
     });
   };
+
+  toggleLock = (username, locked) => {
+    let lockMsg = locked ? "atrakinti" : "užrakinti";
+    let actionAfter = locked ? "atrakintas" : "užrakintas";
+    Swal.fire({
+      title: "Ar tikrai norite " + lockMsg + " vartotoją?",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Taip, " + lockMsg + "!",
+      cancelButtonText: "Ne, atšaukti"
+    }).then(result => {
+      if (result.value) {
+        Axios.put("/api/users/" + username + "/toggleLock")
+          .then(res => {
+            this.getAllUsersFromServer(
+              this.state.activePage,
+              this.state.recordsPerPage,
+              this.state.searchField
+            );
+            Swal.fire(
+              "Vartotojas buvo " + actionAfter
+            );
+          })
+          .catch(err => {
+            console.log(err);
+            Swal.fire(
+              "Klaida, vartotojas nebuvo " + actionAfter
+            );
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire("Atšaukta", "Vartotojas nebuvo " + actionAfter);
+      }
+    });
+  }
 
   getUserCount = () => {
     Axios.get("/api/users/total")
@@ -122,7 +158,9 @@ export class UserContainer extends Component {
           username={user.username}
           email={user.email}
           isAdmin={isAdmin}
+          isLocked={user.locked}
           update={() => this.onUpdateClickHandler(user.username)}
+          toggleLock={() => this.toggleLock(user.username, user.locked)}
         />
       );
     });
@@ -137,6 +175,7 @@ export class UserContainer extends Component {
               <th>Vartotojo vardas</th>
               <th>El. paštas</th>
               <th>Teisės</th>
+              <th>Statusas</th>
               <th>Veiksmai</th>
             </tr>
           </thead>
