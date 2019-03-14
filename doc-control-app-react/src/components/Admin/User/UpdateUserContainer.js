@@ -12,7 +12,8 @@ export default class UpdateUser extends Component {
       email: "",
       password: "",
       username: "",
-      isAdmin: false
+      isAdmin: false,
+      isLocked: false
     };
   }
 
@@ -24,7 +25,8 @@ export default class UpdateUser extends Component {
           lastname: res.data.lastname,
           email: res.data.email,
           username: res.data.username,
-          isAdmin: res.data.admin
+          isAdmin: res.data.admin,
+          isLocked: res.data.locked
         });
       })
       .catch(err => {
@@ -97,6 +99,29 @@ export default class UpdateUser extends Component {
       });
   };
 
+  toggleLockUser = (username) => {
+    Axios.put("/api/users/" + username + "/toggleLock")
+      .then(res => {
+        let locked = res.data;
+        this.props.showResponseMessage(
+          "Vartotojas sėkmingai " + (locked ? "užrakintas" : "atrakintas"),
+          "success",
+          2500
+        );
+        this.setState({ isLocked: locked });
+      })
+      .catch(err => {
+        let errorMsg = err.response.data.message === "OWN_USER_LOCK" ?
+          "Įvyko klaida. Vartotojas bandė  " + (this.state.islocked ? "atrakinti" : "užrakinti") + " save" :
+          "Įvyko klaida rakinant vartotoją";
+        this.props.showResponseMessage(
+          errorMsg,
+          "warning",
+          2500
+        );
+      });
+  }
+
   onValueChangeHandler = event => {
     if (event.target.name === "isAdmin") {
       this.setState({
@@ -145,6 +170,16 @@ export default class UpdateUser extends Component {
       />
     ) : null;
   };
+
+  showToggleLockButton = () => {
+    return <ButtonComponent
+      disabled={true}
+      onClick={() => this.toggleLockUser(this.state.username, this.state.isLocked)}
+      type="submit"
+      value={(this.state.isLocked ? "Atrakinti" : "Užrakinti")}
+      className={"btn " + (this.state.isLocked ? "submitButton" : "deleteButton")}
+    />
+  }
 
   render() {
     return (
@@ -261,6 +296,7 @@ export default class UpdateUser extends Component {
                   </form>
 
                   {this.showAddGroupsButton()}
+                  {this.showToggleLockButton()}
 
                   {/* <ButtonComponent
                     onClick={() => this.goBack()}

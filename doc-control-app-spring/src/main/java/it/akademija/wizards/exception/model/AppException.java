@@ -1,4 +1,4 @@
-package it.akademija.wizards.exception;
+package it.akademija.wizards.exception.model;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

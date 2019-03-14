@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletContext;
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -127,7 +128,7 @@ public class DocumentController {
     public ResponseEntity<String> updateDocumentById(
             @PathVariable String id,
             @RequestPart("model") String model,
-            @RequestPart("file") MultipartFile [] multipartFile) {
+            @RequestPart("file") MultipartFile[] multipartFile) {
 
         /*   String model:
     {
@@ -157,6 +158,12 @@ public class DocumentController {
     }
 
 
+    @ApiOperation(value = "get document attachment sizes")
+    @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Map<String, Long> getDocumentFileInfoById(@PathVariable String id) {
+        return documentService.getDocumentFileInfoById(id);
+    }
 //    @ApiOperation(value = "download document main file")
 //    @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
 //    @ResponseStatus(HttpStatus.OK)
@@ -167,7 +174,7 @@ public class DocumentController {
     @ApiOperation(value = "download csv file")
     @RequestMapping(value = "/csv/download", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity downloadCSV(@CurrentUser UserPrincipal userPrincipal){
+    public ResponseEntity downloadCSV(@CurrentUser UserPrincipal userPrincipal) {
         return documentService.downloadCSV(userPrincipal.getUsername());
     }
 
@@ -177,6 +184,7 @@ public class DocumentController {
     public ResponseEntity downloadFile(@PathVariable final String id, @PathVariable final String fileName) throws FileNotFoundException {
         return fileService.downloadFile(id, fileName);
     }
+
     @ApiOperation(value = "download additionalFiles")
     @RequestMapping(value = "/{id}/download/attachments", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)

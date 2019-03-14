@@ -32,8 +32,10 @@ export default function SemanticUserTable(props) {
       <td>{props.username}</td>
       <td>{props.email}</td>
       <td>{props.isAdmin}</td>
+      <td>{props.isLocked ? "Užrakintas" : "Atrakintas"}</td>
       <td>
         <i className="fas fa-info mx-1 fa-3x" onClick={props.update} />
+        <i className={"fas mx-1 fa-3x " + (props.isLocked ? "fa-lock-open" : "fa-lock")} onClick={props.toggleLock}></i>
       </td>
     </tr>
   );

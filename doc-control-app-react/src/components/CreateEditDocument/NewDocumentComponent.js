@@ -105,7 +105,7 @@ const NewDocumentComponent = props => {
                     </label>
                     <div className="col-md-6 col-lg-4">
                       <FilePond
-                        maxFileSize="100MB"
+                        maxFileSize="101MB"
                         labelMaxFileSizeExceeded="Neleistinas bylos dydis."
                         labelMaxFileSize="Maksimalus bylos dydis yra 100MB."
                         labelIdle='<span class="filepond--label-action"> Įkelkite</span> pagrindinę bylą.'
@@ -125,7 +125,7 @@ const NewDocumentComponent = props => {
                     <div className="col-md-6 offset-md-2 col-lg-4">
                       {props.mainFileUploaded && (
                         <FilePond
-                          maxFileSize="100MB"
+                          maxFileSize="101MB"
                           labelMaxFileSizeExceeded="Neleistinas bylos dydis."
                           labelMaxFileSize="Maksimalus bylos dydis yra 100MB."
                           labelIdle='<span class="filepond--label-action"> Įkelkite</span> papildomas bylas.'
@@ -149,16 +149,22 @@ const NewDocumentComponent = props => {
                         />
                       )}
                     </div>
-
-                    <FileTransferPopup
-                      show={props.isOpen}
-                      onClose={props.closeFileTransferPopup}
-                      percentage={props.percentage}
-                    />
+                    <div className="col-md-2 col-lg-2 form-control-label" />
+                    <div className="col-md-6 offset-md-2 col-lg-4">
+                      {props.percentage ? (
+                        <FileTransferPopup
+                          show={true}
+                          onClose={props.closeFileTransferPopup}
+                          percentage={props.percentage}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
 
                   <div className="form-group row">
-                    <div className="col-md-9">
+                    <div className="col-md-8 d-flex justify-content-center">
                       <button className="btn submitButton" type="submit">
                         Išsaugoti
                       </button>

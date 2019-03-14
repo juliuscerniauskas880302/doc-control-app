@@ -23,7 +23,8 @@ class EditDocumentContainer extends React.Component {
       mainFile: null,
       selectedAdditionalFiles: null,
       additionalFilePathsToDelete: [],
-      mainFilePathToDelete: null
+      mainFilePathToDelete: null,
+      fileInfo: new Map()
     };
   }
   acceptedFileTypes = ["pdf", "jpg", "png"];
@@ -45,38 +46,36 @@ class EditDocumentContainer extends React.Component {
   };
 
   onFileSelectHandler = event => {
-    console.log(event.target.files);
     this.setState({ [event.target.name]: event.target.files });
   };
 
-  openFileTransferPopup = () => {
-    this.setState({ isOpen: true });
-  };
+  // openFileTransferPopup = () => {
+  //   this.setState({ isOpen: true });
+  // };
 
-  closeFileTransferPopup = () => {
-    this.setState({ isOpen: false });
-  };
+  // closeFileTransferPopup = () => {
+  //   this.setState({ isOpen: false });
+  // };
 
-  downloadHandler = event => {
-    axios({
-      url: "/api/docs/" + this.state.id + "/download", //doc id
-      method: "GET",
-      responseType: "blob" // important
-    }).then(response => {
-      var filename = this.extractFileName(
-        response.headers["content-disposition"]
-      );
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", filename); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  };
+  // downloadHandler = event => {
+  //   axios({
+  //     url: "/api/docs/" + this.state.id + "/download", //doc id
+  //     method: "GET",
+  //     responseType: "blob" // important
+  //   }).then(response => {
+  //     var filename = this.extractFileName(
+  //       response.headers["content-disposition"]
+  //     );
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", filename); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   });
+  // };
   fileDownloadHandler = event => {
-    console.log(event.target);
     axios({
       url: "/api/docs/" + this.state.id + "/" + event.target.id + "/download", //doc id
       method: "GET",
@@ -120,25 +119,12 @@ class EditDocumentContainer extends React.Component {
               (progressEvent.loaded / progressEvent.total) * 100
             )
           });
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
-      .catch(err => console.log("KLAIDA SUBMITE" + err));
+      .catch(err => console.log(err));
   };
   uploadMainFile = (file, model) => {
-    if (this.state.mainFile[0].size > 100000000) {
-      this.props.showResponseMessage(
-        "Prisegta byla per didelė.",
-        "danger",
-        2500
-      );
-      return;
-    }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     file.append("model", JSON.stringify(model));
     axios
@@ -149,19 +135,15 @@ class EditDocumentContainer extends React.Component {
               (progressEvent.loaded / progressEvent.total) * 100
             )
           });
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
-      .catch(err => console.log("KLAIDA SUBMITE" + err));
+      .catch(err => console.log(err));
   };
 
   uploadMultipleFiles = (file, model) => {
-    if (this.state.mainFile[0].size > 100000000) {
+    let totalFileSize = this.state.mainFile[0].size;
+    if (this.state.mainFile[0].size > 100000001) {
       this.props.showResponseMessage(
         "Prisegta byla per didelė.",
         "danger",
@@ -171,9 +153,18 @@ class EditDocumentContainer extends React.Component {
     }
     file.append("file", this.state.mainFile[0], this.state.mainFile[0].name);
     for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
-      if (this.state.selectedAdditionalFiles[i].size > 100000000) {
+      if (this.state.selectedAdditionalFiles[i].size > 100000001) {
         this.props.showResponseMessage(
           "Prisegta byla per didelė.",
+          "danger",
+          2500
+        );
+        return;
+      }
+      totalFileSize += this.state.selectedAdditionalFiles[i].size;
+      if (totalFileSize > 200000001) {
+        this.props.showResponseMessage(
+          "Bendras bylų dydis neturi viršyti 200MB.",
           "danger",
           2500
         );
@@ -189,11 +180,11 @@ class EditDocumentContainer extends React.Component {
     axios
       .put("/api/docs/" + this.state.id, file, {
         onUploadProgress: progressEvent => {
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
+          this.setState({
+            percentage: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
         }
       })
       .then(() => this.props.history.push(`/createdDocuments`))
@@ -201,10 +192,20 @@ class EditDocumentContainer extends React.Component {
   };
   uploadAdditionalFiles = (file, model) => {
     file.append("model", JSON.stringify(model));
+    let totalFileSize = this.state.fileInfo[this.state.path];
     for (let i = 0; i < this.state.selectedAdditionalFiles.length; i++) {
-      if (this.state.selectedAdditionalFiles[i].size > 100000000) {
+      if (this.state.selectedAdditionalFiles[i].size > 100000001) {
         this.props.showResponseMessage(
           "Prisegta byla per didelė.",
+          "danger",
+          2500
+        );
+        return;
+      }
+      totalFileSize += this.state.selectedAdditionalFiles[i].size;
+      if (totalFileSize > 200000001) {
+        this.props.showResponseMessage(
+          "Bendras bylų dydis neturi viršyti 200MB.",
           "danger",
           2500
         );
@@ -224,23 +225,45 @@ class EditDocumentContainer extends React.Component {
               (progressEvent.loaded / progressEvent.total) * 100
             )
           });
-          console.log(
-            "Upload progress: " +
-              (progressEvent.loaded / progressEvent.total) * 100 +
-              "%"
-          );
         }
       })
       .then(response => this.props.history.push(`/createdDocuments`))
-      .catch(err => console.log("KLAIDA SUBMITE" + err));
+      .catch(err => console.log(err));
   };
 
+  checkTotalFileSize = () => {
+    let totalFileSize = 0;
+    if (this.state.mainFile && this.state.mainFile[0]) {
+      totalFileSize += this.state.mainFile[0].size;
+    }
+    if (
+      this.state.selectedAdditionalFiles !== null &&
+      this.state.selectedAdditionalFiles.length !== 0
+    ) {
+      this.state.selectedAdditionalFiles.forEach(additionalPath => {
+        totalFileSize += additionalPath.size;
+      });
+    }
+    if (this.state.path && this.state.fileInfo) {
+      totalFileSize += this.state.fileInfo[this.state.path];
+    }
+    if (this.state.paths && this.state.fileInfo) {
+      this.state.paths.forEach(path => {
+        totalFileSize += this.state.fileInfo[path];
+      });
+    }
+    console.log(totalFileSize);
+    if (totalFileSize > 200000001) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   checkDuplicates = array => {
     return new Set(array).size !== array.length;
   };
   checkFileExtensions = (array, acceptedTypesArray) => {
     let stopSubmit = false;
-    console.log(acceptedTypesArray);
     array.forEach(element => {
       if (!acceptedTypesArray.includes(element.split(".").pop())) {
         stopSubmit = true;
@@ -267,10 +290,11 @@ class EditDocumentContainer extends React.Component {
     }
     return fileNames;
   };
+
   /************************************************************************************* */
   handleSubmit = event => {
     event.preventDefault();
-
+    // Generate model
     let model = {
       description: this.state.description,
       documentTypeTitle: this.state.documentTypeTitle,
@@ -278,20 +302,22 @@ class EditDocumentContainer extends React.Component {
       mainFilePathToDelete: this.state.mainFilePathToDelete,
       additionalFilePathsToDelete: this.state.additionalFilePathsToDelete
     };
-    let file = new FormData();
 
+    let file = new FormData();
+    // Validating files
     let fileNames = this.gatherAllFileNames();
-    console.log(this.checkFileExtensions(fileNames, this.acceptedFileTypes));
     if (
       this.state.path === null &&
       (this.state.mainFile === null || this.state.mainFile.length === 0)
     ) {
+      // No main file is added.
       this.props.showResponseMessage(
         "Įkelkite pagrindinę bylą.",
         "danger",
         2500
       );
     } else if (this.checkDuplicates(fileNames)) {
+      // Duplicate file names.
       this.props.showResponseMessage(
         "Bylų pavadinimai vienodi. Pasirinkite kitas bylas arba jas pervadinkite.",
         "danger",
@@ -304,33 +330,55 @@ class EditDocumentContainer extends React.Component {
         2500
       );
     } else if (
-      // Update only additonalFile
+      this.state.mainFile &&
+      this.state.mainFile[0] &&
+      this.state.mainFile[0].size > 100000001
+    ) {
+      this.props.showResponseMessage(
+        "Prisegta byla per didelė.",
+        "danger",
+        2500
+      );
+      return;
+    } else if (
+      // Validate main file type.
+      this.state.mainFile &&
+      this.state.mainFile[0] &&
+      this.checkFileExtensions([this.state.mainFile[0].name], ["pdf"])
+    ) {
+      this.props.showResponseMessage(
+        "Prisegta byla nėra teisingo formato.",
+        "danger",
+        2500
+      );
+    } else if (this.checkTotalFileSize()) {
+      console.log(this.checkTotalFileSize());
+      this.props.showResponseMessage(
+        "Bendras bylų dydis neturi viršyti 200 MB",
+        "danger",
+        2500
+      );
+    } else if (
+      // Uploads only additional files
       this.state.selectedAdditionalFiles !== null &&
       this.state.mainFile === null
     ) {
       this.uploadAdditionalFiles(file, model);
     } else if (
-      // Update only mainFile
+      // Uploads only main file
       this.state.mainFile !== null &&
       (this.state.selectedAdditionalFiles === null ||
         this.state.selectedAdditionalFiles.length === 0)
     ) {
-      if (this.checkFileExtensions([this.state.mainFile[0].name], ["pdf"])) {
-        this.props.showResponseMessage(
-          "Prisegta byla nėra teisingo formato.",
-          "danger",
-          2500
-        );
-      } else {
-        this.uploadMainFile(file, model);
-      }
+      this.uploadMainFile(file, model);
     } else if (
-      // Update both additionalFiles and mainFile
+      // Update both additional files and main file
       this.state.selectedAdditionalFiles !== null &&
       this.state.mainFile !== null
     ) {
       this.uploadMultipleFiles(file, model);
     } else {
+      // Update only document info
       this.updateDocumentInfo(file, model);
     }
   };
@@ -368,13 +416,9 @@ class EditDocumentContainer extends React.Component {
       .get("/api/users/submissionDocTypes")
       .then(response => {
         this.setState({ typeList: response.data.map(item => item.title) });
-        console.log(
-          "Koks atiduodamas dokumentų tipų sąrašas (naujame dokumente)?"
-        );
-        console.log(this.state.typeList);
       })
       .catch(error => {
-        console.log("KLAIDA!!!!" + error);
+        console.log(error);
       });
 
     const position = this.props.match.params.documentId;
@@ -398,6 +442,14 @@ class EditDocumentContainer extends React.Component {
       .catch(error => {
         console.log(error);
       });
+    let uriForFileInfo = "/api/docs/info/" + position;
+    axios
+      .get(uriForFileInfo)
+      .then(response => {
+        console.log(response);
+        this.setState({ fileInfo: response.data });
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -416,13 +468,14 @@ class EditDocumentContainer extends React.Component {
         handleChangeOfType={this.handleChangeOfType}
         handleSubmit={this.handleSubmit}
         handleDelete={this.handleDelete}
-        downloadHandler={this.downloadHandler}
+        fileInfo={this.state.fileInfo}
+        // downloadHandler={this.downloadHandler}
         fileDownloadHandler={this.fileDownloadHandler}
         onFileSelectHandler={this.onFileSelectHandler}
         isOpen={this.state.isOpen}
         percentage={this.state.percentage}
-        openFileTransferPopup={this.openFileTransferPopup}
-        closeFileTransferPopup={this.closeFileTransferPopup}
+        // openFileTransferPopup={this.openFileTransferPopup}
+        // closeFileTransferPopup={this.closeFileTransferPopup}
         deleteMainFileHandler={this.deleteMainFileHandler}
         deleteAdditionalFileHandler={this.deleteAdditionalFileHandler}
         onUpdateAdditionalFiles={this.onUpdateAdditionalFiles}

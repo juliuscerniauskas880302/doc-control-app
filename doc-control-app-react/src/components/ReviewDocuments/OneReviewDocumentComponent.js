@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import FileDownloadComponent from "../Utilities/FileDownloadComponent";
+import getBytes from "../Utilities/getBytes";
 
 const OneReviewDocumentComponent = props => {
   let AdditionalFiles =
@@ -9,6 +10,7 @@ const OneReviewDocumentComponent = props => {
       return (
         path && (
           <FileDownloadComponent
+            fileSize={getBytes(props.fileInfo[path])}
             key={i}
             path={path}
             onClickDownload={event => props.fileDownloadHandler(event)}
@@ -66,14 +68,7 @@ const OneReviewDocumentComponent = props => {
                     <p>{props.type}</p>
                   </div>
                 </div>
-                <div className="form-group row">
-                  <div className="col-md-3 col-sm-3 form-control-label">
-                    <p>Būsena:</p>
-                  </div>
-                  <div className="col-md-4  col-sm-4 col-lg-4">
-                    <p>{props.state}</p>
-                  </div>
-                </div>
+
                 <div className="form-group row">
                   <div className="col-md-3 col-sm-3 form-control-label">
                     <p>Pateikimo data:</p>
@@ -88,6 +83,7 @@ const OneReviewDocumentComponent = props => {
                   </label>
                   <div className="col-md-4 col-lg-4 col-sm-6">
                     <FileDownloadComponent
+                      fileSize={getBytes(props.fileInfo[props.path])}
                       path={props.path}
                       onClickDownload={event =>
                         props.fileDownloadHandler(event)

@@ -18,7 +18,8 @@ class OneSubmittedDocumentContainer extends React.Component {
       rejectionReason: "",
       path: "",
       paths: null,
-      prefix: ""
+      prefix: "",
+      fileInfo: new Map()
       //filename: "Nėra pridėto failo"
     };
   }
@@ -116,6 +117,15 @@ class OneSubmittedDocumentContainer extends React.Component {
       .catch(error => {
         console.log(error);
       });
+
+    let uriForFileInfo = "/api/docs/info/" + position;
+    axios
+      .get(uriForFileInfo)
+      .then(response => {
+        console.log(response);
+        this.setState({ fileInfo: response.data });
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -125,8 +135,7 @@ class OneSubmittedDocumentContainer extends React.Component {
         title={this.state.title}
         description={this.state.description}
         type={this.state.documentTypeTitle}
-        //sena versija su agliškomis būsenomis
-        //state={this.state.documentState.toLowerCase().charAt(0).toUpperCase() + this.state.documentState.toLowerCase().slice(1)}
+        fileInfo={this.state.fileInfo}
         state={
           this.state.documentState === "SUBMITTED"
             ? "Pateiktas"

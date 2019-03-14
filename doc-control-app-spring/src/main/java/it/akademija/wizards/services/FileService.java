@@ -295,6 +295,41 @@ public class FileService {
             Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
         }
     }
+//    @Transactional
+//    public Map<String, String> getDocumentFileInfo(Document document) {
+//        Map<String, String> map = new HashMap<>();
+//        String username = document.getAuthor().getUsername();
+//        String documentPath = getDocumentFolder(document).getPath();
+//        map.put(document.getPath(), formatFileSize(new File(documentPath
+//                + File.separator
+//                + document.getPath()).length()));
+//        for (String pathName :
+//                document.getAdditionalFilePaths()) {
+//            map.put(pathName,formatFileSize(new File(documentPath
+//                    + File.separator
+//                    + pathName).length()));
+//        }
+//        System.out.println(map);
+//        return map;
+//    }
+    @Transactional
+    public Map<String, Long> getDocumentFileInfo(Document document) {
+        Map<String, Long> map = new HashMap<>();
+        String username = document.getAuthor().getUsername();
+        String documentPath = getDocumentFolder(document).getPath();
+        map.put(document.getPath(),new File(documentPath
+                + File.separator
+                + document.getPath()).length());
+        for (String pathName :
+                document.getAdditionalFilePaths()) {
+            map.put(pathName,new File(documentPath
+                    + File.separator
+                    + pathName).length());
+        }
+        System.out.println(map);
+        return map;
+    }
+
 
     //    DELETES ONLY CREATED DOCUMENT FILES
     @Transactional
@@ -609,4 +644,17 @@ public class FileService {
         }
         return true;
     }
+
+
+//        public String formatFileSize(Long bytes) {
+//            String[] dictionary = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+//            int index = 0;
+//            for (index = 0; index < dictionary.length; index++) {
+//                if (bytes < 1000) {
+//                    break;
+//                }
+//                bytes = bytes / 1000;
+//            }
+//            return String.format( "%d", bytes) + " " +  dictionary[index];
+//        }
 }
