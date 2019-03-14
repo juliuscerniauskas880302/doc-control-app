@@ -125,6 +125,10 @@ public class DocumentService {
     }
 
 
+    @Transactional(readOnly = true)
+    public Map<String, Long> getDocumentFileInfoById(String id) {
+        return fileService.getDocumentFileInfo(resourceFinder.getDocument(id));
+    }
     //CREATE
     @Transactional
     public ResponseEntity<?> createDocument(String username, DocumentCreateCommand documentCreateCommand, MultipartFile[] multipartFile) {

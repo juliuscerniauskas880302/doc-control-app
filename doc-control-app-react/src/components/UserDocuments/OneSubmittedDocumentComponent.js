@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import FileDownloadComponent from "../Utilities/FileDownloadComponent";
+import getBytes from "../Utilities/getBytes";
 
 const OneSubmittedDocumentComponent = props => {
   let AdditionalFiles =
@@ -9,6 +10,7 @@ const OneSubmittedDocumentComponent = props => {
       return (
         path && (
           <FileDownloadComponent
+            fileSize={getBytes(props.fileInfo[path])}
             key={i}
             path={path}
             onClickDownload={event => props.fileDownloadHandler(event)}
@@ -130,6 +132,7 @@ const OneSubmittedDocumentComponent = props => {
                   </label>
                   <div className="col-md-4 col-lg-4 col-sm-6">
                     <FileDownloadComponent
+                      fileSize={getBytes(props.fileInfo[props.path])}
                       path={props.path}
                       onClickDownload={event =>
                         props.fileDownloadHandler(event)

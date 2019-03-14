@@ -15,6 +15,7 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FileDownloadComponent from "../Utilities/FileDownloadComponent";
+import getBytes from "../Utilities/getBytes";
 
 // Register the plugins
 registerPlugin(
@@ -36,6 +37,7 @@ const EditDocumentComponent = props => {
         path && (
           <FileDownloadComponent
             name="additionalFilePathsToDelete"
+            fileSize={getBytes(props.fileInfo[path])}
             delete="yes"
             key={i}
             onClickDelete={event => props.deleteAdditionalFileHandler(event)}
@@ -121,6 +123,7 @@ const EditDocumentComponent = props => {
                       </label>
                       <div className="col-md-4 col-lg-4">
                         <FileDownloadComponent
+                          fileSize={getBytes(props.fileInfo[props.path])}
                           id={props.path}
                           deleteName="mainFilePathToDelete"
                           delete="yes"

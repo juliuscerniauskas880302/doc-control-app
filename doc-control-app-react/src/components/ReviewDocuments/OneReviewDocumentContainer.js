@@ -19,7 +19,8 @@ class OneReviewDocumentContainer extends React.Component {
       rejectionReason: "",
       path: "",
       paths: null,
-      prefix: ""
+      prefix: "",
+      fileInfo: new Map()
     };
   }
   fileDownloadHandler = event => {
@@ -42,26 +43,6 @@ class OneReviewDocumentContainer extends React.Component {
     });
   };
 
-  // downloadHandler = (event) => {
-  //     axios({
-  //         url:
-  //             "/api/docs/" + this.state.id + "/download", //doc id
-  //         method: "GET",
-  //         responseType: "blob" // important
-  //     }).then(response => {
-  //         var filename = this.extractFileName(
-  //             response.headers["content-disposition"]
-  //         );
-  //         const url = window.URL.createObjectURL(new Blob([response.data]));
-  //         const link = document.createElement("a");
-  //         link.href = url;
-  //         link.setAttribute("download", filename); //or any other extension
-  //         document.body.appendChild(link);
-  //         link.click();
-  //         document.body.removeChild(link);
-  //     });
-  // };
-
   extractFileName = contentDispositionValue => {
     var filename = "";
     if (
@@ -76,26 +57,6 @@ class OneReviewDocumentContainer extends React.Component {
     }
     return filename;
   };
-
-  // openPopup = () => {
-  //     this.setState({
-  //         isOpen: true
-  //     });
-  // }
-
-  // closePopupCancelReject = () => {
-  //     this.setState({
-  //         isOpen: false,
-  //         rejectionReason: ""
-  //     });
-  // }
-
-  // closePopupAcceptReject = () => {
-  //     this.setState({
-  //         isOpen: false,
-  //     });
-  //     this.handleReject();
-  // }
 
   handleChangeOfRejectionReason = event => {
     this.setState({ rejectionReason: event.target.value });
@@ -241,6 +202,14 @@ class OneReviewDocumentContainer extends React.Component {
       .catch(error => {
         console.log(error);
       });
+    let uriForFileInfo = "/api/docs/info/" + position;
+    axios
+      .get(uriForFileInfo)
+      .then(response => {
+        console.log(response);
+        this.setState({ fileInfo: response.data });
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -265,6 +234,7 @@ class OneReviewDocumentContainer extends React.Component {
         path={this.state.path}
         paths={this.state.paths}
         prefix={this.state.prefix}
+        fileInfo={this.state.fileInfo}
         //filename={this.state.filename}
         fileDownloadHandler={this.fileDownloadHandler}
         handleAccept={this.handleAccept}

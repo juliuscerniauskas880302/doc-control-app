@@ -5,6 +5,7 @@ import axios from "axios";
 class OneCreatedDocumentContainer extends React.Component {
   constructor(props, context) {
     super(props, context);
+
     this.state = {
       id: "kodas1s",
       title: "Title1s",
@@ -14,8 +15,39 @@ class OneCreatedDocumentContainer extends React.Component {
       path: "",
       paths: null,
       prefix: "",
-      filename: "Nėra pridėto failo"
+      filename: "Nėra pridėto failo",
+      fileInfo: new Map()
     };
+    const position = this.props.match.params.documentId;
+    //let currentUser = "migle";
+    let resourcePath = "/api/docs/" + position;
+    axios
+      .get(resourcePath)
+      .then(response => {
+        if (this.mounted) {
+          //buvo naudota, kai PATH buvo ne vien tik failo pavadinimas, bet dar ir PREFIX katu
+          //var realFileName = "";
+          //if(response.data.path.lastIndexOf(response.data.prefix) !== -1){
+          //    realFileName = response.data.path.substring(0, response.data.path.lastIndexOf(response.data.prefix));
+          //    console.log("Tikras failo pavadinimas yra " + realFileName);
+          //}
+          this.setState({
+            id: response.data.id,
+            title: response.data.title,
+            description: response.data.description,
+            documentTypeTitle: response.data.documentTypeTitle,
+            creationDate: response.data.creationDate,
+            path: response.data.path,
+            paths: response.data.additionalFilePaths,
+            prefix: response.data.prefix
+          });
+        } else {
+          console.log("SetState nebuvo padarytas");
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   downloadHandler = event => {
@@ -108,7 +140,7 @@ class OneCreatedDocumentContainer extends React.Component {
     }).then(response => {
       var filename = this.extractFileName(
         response.headers["content-disposition"]
-      );
+      ).catch(err => console.log(err));
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -150,6 +182,15 @@ class OneCreatedDocumentContainer extends React.Component {
       .catch(error => {
         console.log(error);
       });
+
+    let uriForFileInfo = "/api/docs/info/" + position;
+    axios
+      .get(uriForFileInfo)
+      .then(response => {
+        console.log(response);
+        this.setState({ fileInfo: response.data });
+      })
+      .catch(err => console.log(err));
   }
 
   componentWillUnmount() {
@@ -167,7 +208,7 @@ class OneCreatedDocumentContainer extends React.Component {
         path={this.state.path}
         paths={this.state.paths}
         prefix={this.state.prefix}
-        //filename={this.state.filename}
+        fileInfo={this.state.fileInfo}
         downloadHandler={this.downloadHandler}
         handleDelete={this.handleDelete}
         handleSubmit={this.handleSubmit}

@@ -65,7 +65,9 @@ const FileDownloadComponent = props => {
                       {props.path}
                     </span>
                     <span className="filepond--file-info-sub">
-                      Atsisiųskite norėdami peržiūrėti.
+                      {props.fileSize
+                        ? props.fileSize
+                        : "Atsisiųskite norėdami peržiūrėti."}
                     </span>
                   </div>
                 </React.Fragment>
@@ -78,7 +80,9 @@ const FileDownloadComponent = props => {
                     {props.path}
                   </span>
                   <span className="filepond--file-info-sub">
-                    Atsisiųskite norėdami peržiūrėti.
+                    {props.fileSize
+                      ? props.fileSize
+                      : "Atsisiųskite norėdami peržiūrėti."}
                   </span>
                 </div>
               )}

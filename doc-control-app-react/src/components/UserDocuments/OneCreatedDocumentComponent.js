@@ -2,14 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import FileDownloadComponent from "../Utilities/FileDownloadComponent";
 import { Button } from "semantic-ui-react";
-
+import getBytes from "../Utilities/getBytes";
 const OneCreatedDocumentComponent = props => {
   let AdditionalFiles =
     props.paths &&
     props.paths.map((path, i) => {
+      console.log(props.fileInfo[path]);
       return (
         path && (
           <FileDownloadComponent
+            fileSize={getBytes(props.fileInfo[path])}
             key={i}
             path={path}
             onClickDownload={event => props.fileDownloadHandler(event)}
@@ -70,6 +72,7 @@ const OneCreatedDocumentComponent = props => {
 
                   <div className="col-md-4 col-lg-4 col-sm-6">
                     <FileDownloadComponent
+                      fileSize={getBytes(props.fileInfo[props.path])}
                       path={props.path}
                       onClickDownload={event =>
                         props.fileDownloadHandler(event)
