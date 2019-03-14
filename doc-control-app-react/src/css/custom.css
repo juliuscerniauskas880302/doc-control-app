@@ -96,9 +96,9 @@
     height:50px;
 }
 
-.filepond--file-action-button:focus {
+/* .filepond--file-action-button:focus {
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0) !important;
   }
   .filepond--file-action-button:hover {
     box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9) !important;
-  }
+  } */
