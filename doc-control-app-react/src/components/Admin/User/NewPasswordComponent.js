@@ -28,7 +28,7 @@ export default function NewPasswordComponent(props) {
               />
               <small className="form-text text-muted ml-3">
                 Turi būti bent vienas skaičius, viena mažoji ir viena didžioji
-                raidė, ir mažiausiai sudidėti iš 8 simbolių
+                raidė, ir mažiausiai susidėti iš 8 simbolių
               </small>
             </div>
           </div>

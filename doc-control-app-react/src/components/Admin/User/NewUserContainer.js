@@ -85,8 +85,8 @@ export default class NewUserContainer extends Component {
           onChange={this.onValueChangeHandler}
           namePattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
           namePatternTitle="Please enter only letters"
-          usernamePattern=""
-          usernamePatternTitle=""
+          usernamePattern="^[a-zA-Z][a-zA-Z0-9-_\.]{2,15}$"
+          usernamePatternTitle="Vartotojo vardas turi prasidėti raide, jokių specialių simbolių, nuo 2 iki 15 simbolių."
           emailPattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           emailPatternTitle=""
           passwordPattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"

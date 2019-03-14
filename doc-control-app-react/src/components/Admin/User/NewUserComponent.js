@@ -69,8 +69,8 @@ export default function NewUserComponent(props) {
                         name="username"
                         placeholder="Vartotojo vardas"
                         onChange={event => props.onChange(event)}
-                        // pattern={props.usernamePattern}
-                        // title={props.usernamePatternTitle}
+                        pattern={props.usernamePattern}
+                        title={props.usernamePatternTitle}
                         required
                         className="form-control form-control-warning"
                       />
@@ -115,7 +115,7 @@ export default function NewUserComponent(props) {
                       />
                       <small className="form-text text-muted ml-3">
                         Turi būti bent vienas skaičius, viena mažoji ir viena
-                        didžioji raidė, ir mažiausiai sudidėti iš 8 simbolių
+                        didžioji raidė, ir mažiausiai susidėti iš 8 simbolių
                       </small>
                     </div>
                   </div>
