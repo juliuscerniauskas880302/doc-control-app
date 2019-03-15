@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import FileDownloadComponent from "../Utilities/FileDownloadComponent";
-import { Button } from "semantic-ui-react";
 import getBytes from "../Utilities/getBytes";
 const OneCreatedDocumentComponent = props => {
   let AdditionalFiles =
