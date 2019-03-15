@@ -37,18 +37,18 @@ export default class UserNavigationSubmitContainer extends Component {
             },
             {
               to: "/",
-              name: "Pateikti",
+              name: "Pateikti dokumentai",
               icon: "fas fa-file-alt mr-3 text-gray"
             },
             {
               to: "/createdDocuments",
-              name: "Sukurti",
+              name: "Sukurti dokumentai",
               icon: "fas fa-file mr-3 text-gray"
             },
 
             {
               to: "",
-              name: "Bylų atsisiuntimas",
+              name: "Archyvų atsisiuntimas",
               icon: "fas fa-copy mr-3 text-gray",
               type: "dropdown"
             }
