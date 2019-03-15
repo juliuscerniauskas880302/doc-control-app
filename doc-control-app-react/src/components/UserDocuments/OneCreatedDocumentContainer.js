@@ -140,7 +140,7 @@ class OneCreatedDocumentContainer extends React.Component {
     }).then(response => {
       var filename = this.extractFileName(
         response.headers["content-disposition"]
-      ).catch(err => console.log(err));
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;

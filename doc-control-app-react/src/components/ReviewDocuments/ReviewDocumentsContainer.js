@@ -266,8 +266,8 @@ class ReviewDocumentsContainer extends React.Component {
           <table className="ui celled table" style={{ width: "100%" }}>
             <thead className="thead-inverse">
               <tr>
-                <th>Autorius</th>
                 <th>Numeris</th>
+                <th>Autorius</th>
                 <th>Pavadinimas</th>
                 <th>Aprašymas</th>
                 <th>Tipas</th>
