@@ -18,7 +18,7 @@ export default function NavigationLink(props) {
           {topTab}
           <NavLink to={nav.to} style={{ textDecoration: "none" }}>
             <li className="sidebar-list-item ">
-              <div className="sidebar-link text-muted ">
+              <div className="sidebar-link text-muted">
                 <i className={nav.icon} />
                 <span className="mx-auto">{nav.name}</span>
               </div>
@@ -49,14 +49,14 @@ export default function NavigationLink(props) {
                   className="dropdown-item text-muted"
                   onClick={event => ZipDownloadHandler(event, props)}
                 >
-                  Atsisiųsti bylas ZIP formatu.
+                  Atsisiųsti bylas ZIP formatu
                 </p>
                 {/* </ResponseMessage> */}
                 <p
                   className="dropdown-item text-muted "
                   onClick={event => CsvDownloadHandler(event, props)}
                 >
-                  Atsisiųsti dokumentų sąrašą CSV formatu.
+                  Atsisiųsti dokumentų sąrašą CSV formatu
                 </p>
               </div>
             </li>
