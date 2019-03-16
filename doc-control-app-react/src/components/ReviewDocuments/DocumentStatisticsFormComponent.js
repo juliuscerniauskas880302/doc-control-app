@@ -1,9 +1,9 @@
 import React from "react";
 
 const DocumentStatisticsFormComponent = props => {
-  for (var i = 0; i < 3; i++) {
-    console.log("Masyvo elementas " + props.typeList[i]);
-  }
+  // for (var i = 0; i < 3; i++) {
+  //   console.log("Masyvo elementas " + props.typeList[i]);
+  // }
 
   let optionList = props.typeList.map(v => (
     <option key={v.id} value={v.id}>
