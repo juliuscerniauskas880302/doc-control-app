@@ -27,7 +27,7 @@ export default class NewGroupForm extends Component {
   };
 
   getAllGroups = () => {
-    Axios.get("/api/groups")
+    Axios.get("/api/groups/")
       .then(res => {
         this.setState({ allGroups: res.data });
       })
@@ -103,7 +103,7 @@ export default class NewGroupForm extends Component {
     e.preventDefault();
     let title = { title: "" };
     title.title = this.state.title;
-    Axios.post("/api/groups", title)
+    Axios.post("/api/groups/", title)
       .then(res => {
         this.props.showResponseMessage(
           "Nauja grupė buvo sėkmingai pridėta",
@@ -166,7 +166,7 @@ export default class NewGroupForm extends Component {
   };
 
   loadSelectedGroupUsers = selectedId => {
-    Axios.get("/api/groups/" + selectedId + "/users")
+    Axios.get("/api/groups/" + selectedId + "/users/")
       .then(res => {
         let allList = [];
         this.state.allUsers.forEach(user => {

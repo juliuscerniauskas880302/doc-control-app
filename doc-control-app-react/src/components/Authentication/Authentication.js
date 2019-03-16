@@ -21,16 +21,17 @@ export default class Authentication extends Component {
     this.getUserGroups();
   };
   componentDidMount = () => {
+    // Axios.defaults.baseURL = "/app";
     this.getUserGroups();
   };
 
   getUserGroups = () => {
-    Axios.get("/api/users/action/review")
+    Axios.get("/api/users/action/review/")
       .then(res => {
         this.setState({ review: res.data });
       })
       .catch(err => console.log(err));
-    Axios.get("/api/users/action/submit")
+    Axios.get("/api/users/action/submit/")
       .then(res => {
         this.setState({ submit: res.data });
       })
@@ -46,7 +47,7 @@ export default class Authentication extends Component {
 
   render() {
     let localData = JSON.parse(localStorage.getItem("user"));
-    // this.getUserGroups();
+    //this.getUserGroups();
     if (localData === null) {
       return (
         <LoginContainer {...this.props} setLoggedState={this.setLoggedState} />
