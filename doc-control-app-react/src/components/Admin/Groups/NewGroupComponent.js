@@ -25,7 +25,7 @@ export default function NewGroupComponent(props) {
                       type="text"
                       name={props.newTitle}
                       value={props.newTitleValue}
-                      className="form-control form-control-success rounded"
+                      className="form-control form-control-success"
                       pattern={props.pattern}
                       required
                     />

@@ -39,5 +39,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy" :"http://127.0.0.1:8081/app/"
+  "proxy" :"http://127.0.0.1:808ą/app/"
 }

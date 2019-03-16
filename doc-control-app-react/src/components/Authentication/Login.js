@@ -53,6 +53,7 @@ const Login = ({
                     required="required"
                     placeholder="Vartotojo vardas"
                     className="form-control border-0 shadow form-control-lg"
+                    title="Įveskite vartotojo vardą."
                   />
                 </div>
                 <div className="form-group mb-4">
@@ -63,6 +64,7 @@ const Login = ({
                     placeholder="Slaptažodis"
                     required="required"
                     className="form-control border-0 shadow form-control-lg"
+                    title="Įveskite vartotojo slaptažodį."
                   />
                 </div>
                 <div className="form-group mb-4" />

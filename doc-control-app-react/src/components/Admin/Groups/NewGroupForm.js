@@ -45,6 +45,7 @@ export default class NewGroupForm extends Component {
           allUsers: res.data.userList,
           totalUsers: res.data.totalElements
         });
+        this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
       })
       .catch(err => {
         console.log(err);
@@ -53,8 +54,8 @@ export default class NewGroupForm extends Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.getAllUsers(activePage, this.state.recordsPerPage);
-      this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
+      this.getAllUsers(this.state.activePage, this.state.recordsPerPage);
+      // this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
     });
   };
 
@@ -158,9 +159,15 @@ export default class NewGroupForm extends Component {
     console.log("Target value", e.target.value);
     this.state.allGroups.forEach(element => {
       if (element.title === e.target.value) {
-        this.setState({ selectedGroupForAddUsers: element.id }, () => {
-          this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
-        });
+        this.setState(
+          {
+            selectedGroupForAddUsers: element.id,
+            selectedGroupTitle: element.title
+          },
+          () => {
+            this.loadSelectedGroupUsers(this.state.selectedGroupForAddUsers);
+          }
+        );
       }
     });
   };
@@ -224,8 +231,8 @@ export default class NewGroupForm extends Component {
     return (
       <div className="col-md-12">
         <p>
-          Pažymėkite vartotojus, kuriuos noriti pridėti arba pašalinti iš
-          grupės.
+          Pažymėkite vartotojus, kuriuos noriti pridėti arba pašalinti iš grupės{" "}
+          <b>&laquo;{this.state.selectedGroupTitle}&raquo;</b>
         </p>
         <Pagination
           activePage={activePage}
@@ -263,10 +270,8 @@ export default class NewGroupForm extends Component {
       if (option.username === e.target.value) {
         option.isChecked = !option.isChecked;
         if (option.isChecked) {
-          console.log("Hellow");
           this.addOneUserToGroup(option.username);
         } else {
-          console.log("wow");
           this.removeOneUserFromGroup(option.username);
         }
       }
