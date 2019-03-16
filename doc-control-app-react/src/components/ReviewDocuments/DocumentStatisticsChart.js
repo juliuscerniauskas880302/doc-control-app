@@ -11,12 +11,21 @@ let label3 = "Atmesta";
 
 class DocumentStatisticsChart extends React.Component {
   componentDidMount() {
-    console.log("Spausdinu iš ChartComponent");
-    console.log("Chart konteinerio vardas yra " + this.props.idName);
-    console.log("Submitted yra - " + this.props.submitted);
+    // console.log("Spausdinu iš ChartComponent");
+    // console.log("Chart konteinerio vardas yra " + this.props.idName);
+    // console.log("Submitted yra - " + this.props.submitted);
     // Originali eilutė -> var chart = new CanvasJS.Chart("chartContainer", {
+    CanvasJS.addColorSet("greenShades", [
+      //colorSet Array
+
+      "#4f82d6",
+      "#2E8B57",
+      "#d83417",
+      "#90EE90"
+    ]);
     var chart = new CanvasJS.Chart(this.props.idName, {
       animationEnabled: true,
+      colorSet: "greenShades",
       title: {
         text: this.props.documentType
       },
