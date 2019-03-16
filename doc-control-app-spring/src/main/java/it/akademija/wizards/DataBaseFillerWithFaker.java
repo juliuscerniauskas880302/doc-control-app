@@ -11,12 +11,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 public class DataBaseFillerWithFaker {
+    private static final String pathName = "documents";
 
     // REPOSITORIES
     @Autowired
@@ -34,7 +45,7 @@ public class DataBaseFillerWithFaker {
     private PasswordEncoder passwordEncoder;
 
 
-    public void fillInDatabaseWithData(int groups, int users, int docTypes, int avgDocsForUser) {
+    public void fillInDatabaseWithData(int groups, int users, int docTypes, int avgDocsForUser) throws IOException {
         final int groupsCount = groups;
         final int usersCount = users;
         final int docTypesCount = docTypes;
@@ -104,7 +115,7 @@ public class DataBaseFillerWithFaker {
         List<UserGroup> newUserGroups = new ArrayList<>();
         for (int i = 1; i <= groupsCount; i++) {
             UserGroup userGroup = new UserGroup();
-            userGroup.setTitle(faker.company().industry()+i);
+            userGroup.setTitle(faker.company().industry() + i);
             newUserGroups.add(userGroup);
         }
         userGroupRepository.saveAll(newUserGroups);
@@ -116,7 +127,7 @@ public class DataBaseFillerWithFaker {
         List<DocumentType> documentTypes = new ArrayList<>();
         for (int i = 1; i <= docTypesCount; i++) {
             DocumentType documentType = new DocumentType();
-            documentType.setTitle(faker.book().title()+i);
+            documentType.setTitle(faker.book().title() + i);
             documentTypes.add(documentType);
         }
         documentTypeRepository.saveAll(documentTypes);
@@ -170,7 +181,7 @@ public class DataBaseFillerWithFaker {
     }
 
     @Transactional
-    public void createDocuments(int avgDocsPerUser) {
+    public void createDocuments(int avgDocsPerUser) throws IOException {
         Faker faker = new Faker();
         List<User> users = userRepository.findAll().stream().filter(user -> !user.isAdmin()).collect(Collectors.toList());
         List<DocumentType> documentTypes = documentTypeRepository.findAll();
@@ -189,13 +200,18 @@ public class DataBaseFillerWithFaker {
                     document.setAuthor(user);
                     document.setCreationDate(creationDate);
                     if (i % 5 == 0) {
+                        int index = (int) (Math.random() * users.size() );
+                        document.setReviewer(users.get(index));
                         document.setDocumentState(DocumentState.REJECTED);
                         Date submissionDate = faker.date().between(creationDate, new Date());
                         document.setSubmissionDate(submissionDate);
                         Date rejectionDate = faker.date().between(submissionDate, new Date());
                         document.setRejectionDate(rejectionDate);
+                        document.setRejectionReason(faker.lebowski().quote());
                     } else if (i % 3 == 0) {
                         document.setDocumentState(DocumentState.ACCEPTED);
+                        int index = (int) (Math.random() * users.size() );
+                        document.setReviewer(users.get(index));
                         Date submissionDate = faker.date().between(creationDate, new Date());
                         document.setSubmissionDate(submissionDate);
                         Date approvalDate = faker.date().between(submissionDate, new Date());
@@ -211,14 +227,69 @@ public class DataBaseFillerWithFaker {
                     document.setDocumentType(documentType);
                     document.setTitle(faker.company().industry());
                     document.setDescription(faker.chuckNorris().fact());
-                    document.setCreationDate(new Date());
+                    document.setCreationDate(creationDate);
                     document.setPrefix(UUID.randomUUID().toString());
 
+                    Faker titleFaker = new Faker();
+                    Faker textFaker = new Faker();
+
+                    File folder = getDocumentFolder(document);
+                    if (!folder.exists()) {
+                        boolean mkdirs = folder.mkdirs();
+                    }
+
+                    File path = new File(pathName
+                            + File.separator
+                            + document.getAuthor().getUsername()
+                            + File.separator
+                            + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(creationDate)));
+                    String originalFileName = titleFaker.name().title() + ".pdf";
+                    File file = new File(path.getPath(), originalFileName);
+
+                    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+
+                        fileOutputStream.write(textFaker.lorem().character());
+                    }
+
+
+                    Set<PosixFilePermission> perms = new HashSet<>();
+                    // add owners permission
+                    perms.add(PosixFilePermission.OWNER_READ);
+                    perms.add(PosixFilePermission.OWNER_WRITE);
+                    perms.add(PosixFilePermission.GROUP_READ);
+                    perms.add(PosixFilePermission.GROUP_WRITE);
+                    // add others permissions
+                    perms.add(PosixFilePermission.OTHERS_READ);
+                    Files.setPosixFilePermissions(Paths.get(file.toString()), perms);
+
+                    document.setPath(originalFileName);
                     documents.add(document);
                 }
             }
         }
         documentRepository.saveAll(documents);
+    }
+
+    private String formatLocalDateTime(LocalDateTime localDateTime) {
+        DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss", Locale.US);
+        return localDateTime.format(dataTimeFormatter);
+    }
+
+    private LocalDateTime convertToLocalDateTimeViaMilisecond(Date dateToConvert) {
+        return Instant.ofEpochMilli(dateToConvert.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    public File getDocumentFolder(Document document) {
+        return new File(pathName
+                + File.separator
+                + document.getAuthor().getUsername()
+                + File.separator
+                + formatLocalDateTime(
+                convertToLocalDateTimeViaMilisecond(document.getCreationDate()
+                )
+        ));
     }
 
 }

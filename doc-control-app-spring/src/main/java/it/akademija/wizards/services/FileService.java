@@ -274,6 +274,7 @@ public class FileService {
             } else {
                 document.getAdditionalFilePaths().add(originalFileName);
             }
+
             byte[] buf = new byte[1024];
             assert originalFileName != null;
             File file = new File(path.getPath(), originalFileName);
