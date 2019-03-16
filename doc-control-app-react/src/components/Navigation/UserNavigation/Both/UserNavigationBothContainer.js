@@ -39,18 +39,18 @@ export default class UserNavigationBothContainer extends Component {
                     icon: "far fa-address-book mr-2 text-gray"
                   },
                   to: "/",
-                  name: "Pateikti",
+                  name: "Pateikti dokumentai",
                   icon: "fas fa-file-alt mr-3 text-gray"
                 },
 
                 {
                   to: "/createdDocuments",
-                  name: "Sukurti",
+                  name: "Sukurti dokumentai",
                   icon: "fas fa-file mr-3 text-gray"
                 },
                 {
                   bottomTab: "true",
-                  name: "Bylų atsisiuntimas",
+                  name: "Archyvų atsisiuntimas",
                   icon: "fas fa-copy mr-3 text-gray",
                   type: "dropdown"
                 },
@@ -60,7 +60,7 @@ export default class UserNavigationBothContainer extends Component {
                     icon: "far fa-address-book mr-2 text-gray"
                   },
                   to: "/reviewDocuments",
-                  name: "Peržiūrėti",
+                  name: "Dokumentai peržiūrai",
                   icon: "fas fa-file-contract  mr-3 text-gray"
                 },
                 {

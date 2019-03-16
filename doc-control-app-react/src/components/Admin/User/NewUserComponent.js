@@ -130,8 +130,8 @@ export default function NewUserComponent(props) {
                         required
                         className="form-control form-control-warning"
                       >
-                        <option value={true}>Administratorius</option>
-                        <option value={false}>Paprastas vartotojas</option>
+                        <option value={true}>Paprastas vartotojas</option>
+                        <option value={false}>Administratorius</option>
                       </select>
                     </div>
                   </div>
