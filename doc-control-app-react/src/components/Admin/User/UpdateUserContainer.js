@@ -13,7 +13,8 @@ export default class UpdateUser extends Component {
       password: "",
       username: "",
       isAdmin: false,
-      isLocked: false
+      isLocked: false,
+      showAddGroupsButton: false
     };
   }
 
@@ -26,7 +27,8 @@ export default class UpdateUser extends Component {
           email: res.data.email,
           username: res.data.username,
           isAdmin: res.data.admin,
-          isLocked: res.data.locked
+          isLocked: res.data.locked,
+          showAddGroupsButton: res.data.admin
         });
       })
       .catch(err => {
@@ -49,7 +51,8 @@ export default class UpdateUser extends Component {
         firstname: firstname,
         lastname: lastname,
         email: email,
-        isAdmin: JSON.parse(this.state.isAdmin)
+        isAdmin: JSON.parse(this.state.isAdmin),
+        showAddGroupsButton: this.state.isAdmin
       },
       () => {
         Axios.put("/api/users/" + this.props.match.params.username, this.state)
@@ -99,7 +102,7 @@ export default class UpdateUser extends Component {
       });
   };
 
-  toggleLockUser = (username) => {
+  toggleLockUser = username => {
     Axios.put("/api/users/" + username + "/toggleLock")
       .then(res => {
         let locked = res.data;
@@ -111,16 +114,15 @@ export default class UpdateUser extends Component {
         this.setState({ isLocked: locked });
       })
       .catch(err => {
-        let errorMsg = err.response.data.message === "OWN_USER_LOCK" ?
-          "Įvyko klaida. Vartotojas bandė  " + (this.state.islocked ? "atrakinti" : "užrakinti") + " save" :
-          "Įvyko klaida rakinant vartotoją";
-        this.props.showResponseMessage(
-          errorMsg,
-          "warning",
-          2500
-        );
+        let errorMsg =
+          err.response.data.message === "OWN_USER_LOCK"
+            ? "Įvyko klaida. Vartotojas bandė  " +
+              (this.state.islocked ? "atrakinti" : "užrakinti") +
+              " save"
+            : "Įvyko klaida rakinant vartotoją";
+        this.props.showResponseMessage(errorMsg, "warning", 2500);
       });
-  }
+  };
 
   onValueChangeHandler = event => {
     if (event.target.name === "isAdmin") {
@@ -160,7 +162,7 @@ export default class UpdateUser extends Component {
   };
 
   showAddGroupsButton = () => {
-    return !this.state.isAdmin ? (
+    return !this.state.showAddGroupsButton ? (
       <ButtonComponent
         disabled={true}
         onClick={() => this.goEditGroups()}
@@ -172,14 +174,20 @@ export default class UpdateUser extends Component {
   };
 
   showToggleLockButton = () => {
-    return <ButtonComponent
-      disabled={true}
-      onClick={() => this.toggleLockUser(this.state.username, this.state.isLocked)}
-      type="submit"
-      value={(this.state.isLocked ? "Atrakinti" : "Užrakinti")}
-      className={"btn " + (this.state.isLocked ? "submitButton" : "deleteButton")}
-    />
-  }
+    return (
+      <ButtonComponent
+        disabled={true}
+        onClick={() =>
+          this.toggleLockUser(this.state.username, this.state.isLocked)
+        }
+        type="submit"
+        value={this.state.isLocked ? "Atrakinti" : "Užrakinti"}
+        className={
+          "btn " + (this.state.isLocked ? "submitButton" : "deleteButton")
+        }
+      />
+    );
+  };
 
   render() {
     return (
