@@ -1,5 +1,4 @@
 import React from "react";
-import nonImage from "../../css/images/no-profile-image.png";
 import Axios from "axios";
 
 export default class Profile extends React.Component {
@@ -104,9 +103,13 @@ export default class Profile extends React.Component {
                 </div>
                 <div className="card-body">
                   <div className="form-group row d-flex justify-content-center ">
-                    <div className="ui card" style={{ width: "500px" }}>
+                    <div className="ui card" style={{ width: "200px" }}>
                       <div className="image">
-                        <img src={nonImage} alt="profile" />
+                        <img
+                          src={"/image/profile.png"}
+                          height="50px"
+                          alt="profile"
+                        />
                       </div>
                       <div className="content">
                         <div className="header">{`${userDetails.firstname} ${

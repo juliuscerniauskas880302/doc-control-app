@@ -33,23 +33,23 @@ export default class UserNavigationSubmitContainer extends Component {
             {
               to: "/newDocument",
               name: "Naujas dokumentas",
-              icon: "fas fa-file-signature  mr-3 text-gray"
+              icon: "fas fa-file-signature  mr-3 text-gray blue"
             },
             {
               to: "/",
               name: "Pateikti dokumentai",
-              icon: "fas fa-file-alt mr-3 text-gray"
+              icon: "fas fa-file-alt mr-3 text-gray blue"
             },
             {
               to: "/createdDocuments",
               name: "Sukurti dokumentai",
-              icon: "fas fa-file mr-3 text-gray"
+              icon: "fas fa-file mr-3 text-gray blue"
             },
 
             {
               to: "",
               name: "Archyvų atsisiuntimas",
-              icon: "fas fa-copy mr-3 text-gray",
+              icon: "fas fa-copy mr-3 text-gray blue",
               type: "dropdown"
             }
           ]}

@@ -31,47 +31,47 @@ export default class UserNavigationBothContainer extends Component {
                 {
                   to: "/newDocument",
                   name: "Naujas dokumentas",
-                  icon: "fas fa-file-signature  mr-3 text-gray"
+                  icon: "fas fa-file-signature  mr-3 text-gray blue"
                 },
                 {
                   topTab: {
                     title: "Dokumentų pateikimas",
-                    icon: "far fa-address-book mr-2 text-gray"
+                    icon: "far fa-address-book mr-2 text-gray blue"
                   },
                   to: "/",
                   name: "Pateikti dokumentai",
-                  icon: "fas fa-file-alt mr-3 text-gray"
+                  icon: "fas fa-file-alt mr-3 text-gray blue"
                 },
 
                 {
                   to: "/createdDocuments",
                   name: "Sukurti dokumentai",
-                  icon: "fas fa-file mr-3 text-gray"
+                  icon: "fas fa-file mr-3 text-gray blue"
                 },
                 {
                   bottomTab: "true",
                   name: "Archyvų atsisiuntimas",
-                  icon: "fas fa-copy mr-3 text-gray",
+                  icon: "fas fa-copy mr-3 text-gray blue",
                   type: "dropdown"
                 },
                 {
                   topTab: {
                     title: "Dokumentų peržiūra",
-                    icon: "far fa-address-book mr-2 text-gray"
+                    icon: "far fa-address-book mr-2 text-gray blue"
                   },
                   to: "/reviewDocuments",
                   name: "Dokumentai peržiūrai",
-                  icon: "fas fa-file-contract  mr-3 text-gray"
+                  icon: "fas fa-file-contract  mr-3 text-gray blue"
                 },
                 {
                   to: "/documentStatistics",
                   name: "Dokumentų statistika",
-                  icon: "fas fa-chart-pie mr-3 text-gray"
+                  icon: "fas fa-chart-pie mr-3 text-gray blue"
                 },
                 {
                   to: "/userStatistics",
                   name: "Vartotojų statistika",
-                  icon: "fas fa-chart-line mr-3 text-gray"
+                  icon: "fas fa-chart-line mr-3 text-gray blue"
                 }
               ]}
               {...this.props}

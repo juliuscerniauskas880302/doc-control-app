@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import avatar from "../../css/images/avatar.png";
 import HeaderSideBar from "./HeaderSideBar";
 
 export default class NavigationComponent extends Component {
@@ -17,7 +16,7 @@ export default class NavigationComponent extends Component {
         <HeaderSideBar
           title="Dokumentų valdymas"
           user={user}
-          avatar={avatar}
+          avatar={"/image/avatar.png"}
           logout={this.props.logout}
           role={user.admin ? "Administratorius" : "Paprastas vartotojas"}
           nav={this.props.navigation}

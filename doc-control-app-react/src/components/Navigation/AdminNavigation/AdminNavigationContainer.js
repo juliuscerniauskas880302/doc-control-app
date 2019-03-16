@@ -22,26 +22,30 @@ export default class AdminNavigationContainer extends Component {
       <BrowserRouter>
         <NavigationComponent
           navigation={[
-            { to: "/", name: "Pagrindinis", icon: "fas fa-users text-gray" },
+            {
+              to: "/",
+              name: "Pagrindinis",
+              icon: "fas fa-users text-gray blue"
+            },
             {
               to: "/users/add",
               name: "Naujas vartotojas",
-              icon: "fas fa-user ml-1 text-gray"
+              icon: "fas fa-user ml-1 text-gra blue"
             },
             {
               to: "/groups/add",
               name: "Grupės",
-              icon: "fas fa-clipboard-list  ml-1 text-gray"
+              icon: "fas fa-clipboard-list  ml-1 text-gray blue"
             },
             {
               to: "/types/add",
               name: "Dokumentų tipai",
-              icon: "fas fa-file-signature ml-1 text-gray"
+              icon: "fas fa-file-signature ml-1 text-gray blue"
             },
             {
               to: "/document_types/groups",
               name: "Siųsti / Peržiūrėti",
-              icon: "fas fa-clipboard ml-1 text-gray"
+              icon: "fas fa-clipboard ml-1 text-gray blue"
             }
           ]}
           {...this.props}
