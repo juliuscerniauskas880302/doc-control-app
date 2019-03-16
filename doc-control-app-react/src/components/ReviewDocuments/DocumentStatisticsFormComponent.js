@@ -46,7 +46,7 @@ const DocumentStatisticsFormComponent = props => {
         </div>
       </div>
       <div className="row justify-content-md-center">
-        <button className="btn btn-primary" type="submit">
+        <button className="btn submitButton" type="submit">
           Gauti duomenis
         </button>
       </div>

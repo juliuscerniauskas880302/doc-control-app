@@ -1,5 +1,4 @@
 import React from "react";
-import svg from "../../css/images/documentas.png";
 
 const Login = ({
   username,
@@ -7,7 +6,6 @@ const Login = ({
   onUsernameChange,
   onPassChange,
   onSubmit,
-  wrongUsernameOrPassword,
   error
 }) => {
   let wrongData = () => {
@@ -32,7 +30,11 @@ const Login = ({
           <div className="row align-items-center py-5">
             <div className="col-lg-7 col-md-6 col-sm-6 mx-auto my-4 my-lg-0">
               <div className="pr-lg-5">
-                <img src={svg} alt="" className="img-fluid" />
+                <img
+                  src={"/image/documentas.png"}
+                  alt=""
+                  className="img-fluid"
+                />
               </div>
             </div>
             <div className="col-lg-5 px-lg-3 mt-5">

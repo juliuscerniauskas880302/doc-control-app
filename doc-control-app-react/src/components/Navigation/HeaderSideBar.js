@@ -1,7 +1,6 @@
 import React from "react";
 import NavigationLink from "./NavigationLink";
 import { withRouter } from "react-router";
-import flagLT from "../../css/images/lt-flag.png";
 import ResponseMessage from "../Utilities/ResponseMessage";
 
 class HeaderSideBar extends React.Component {
@@ -24,13 +23,13 @@ class HeaderSideBar extends React.Component {
     return (
       <React.Fragment>
         <header className="header">
-          <nav className="navbar navbar-expand-lg px-4 py-2 bg-white shadow">
+          <nav className="navbar navbar-expand-lg px-4 py-2 shadow background">
             <div
               onClick={() => this.toggleMenu()}
               className="sidebar-toggler text-gray-600 mr-4 mr-lg-5 "
             >
               <i className="flag-lt">
-                <img src={flagLT} alt="flag" />
+                <img src={"/image/logo.png"} alt="flag" />
               </i>
             </div>
             <div className="font-weight-bold text-uppercase ">
@@ -65,7 +64,6 @@ class HeaderSideBar extends React.Component {
                     className="dropdown-item"
                     onClick={() => {
                       this.props.history.push("/user/profile");
-                      // this.props.history.go();
                     }}
                   >
                     Profilis

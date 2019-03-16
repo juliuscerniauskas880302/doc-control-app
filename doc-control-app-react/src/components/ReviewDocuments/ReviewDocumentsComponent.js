@@ -18,13 +18,13 @@ const ReviewDocumentsComponent = props => {
         >
           {" "}
           <i
-            className="fas fa-info-circle fa-2x"
+            className="fas fa-info-circle fa-2x blue"
             title="Dokumento informacija"
           />{" "}
         </Link>{" "}
         &nbsp;
         <i
-          className="fas fa-check-circle fa-2x"
+          className="fas fa-check-circle fa-2x green"
           title="Priimti dokumentą"
           onClick={() => {
             props.handleAccept(props.id);
@@ -32,7 +32,7 @@ const ReviewDocumentsComponent = props => {
         />{" "}
         &nbsp;
         <i
-          className="fas fa-times-circle fa-2x"
+          className="fas fa-times-circle fa-2x red"
           title="Atmesti dokumentą"
           onClick={() => props.handleReject(props.id)}
         />

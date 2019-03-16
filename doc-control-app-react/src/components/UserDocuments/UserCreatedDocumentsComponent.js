@@ -16,7 +16,7 @@ const UserCreatedDocumentsComponent = props => {
           to={linkas}
         >
           <i
-            className="mygtukas fas fa-info-circle fa-2x"
+            className="mygtukas fas fa-info-circle fa-2x blue"
             title="Dokumento informacija"
           />
         </Link>
@@ -26,13 +26,13 @@ const UserCreatedDocumentsComponent = props => {
           to={`/admin/Documents/${props.id}`}
         >
           <i
-            className="mygtukas far fa-edit fa-2x"
+            className="mygtukas far fa-edit fa-2x text-warning"
             title="Dokumento redagavimas"
           />
         </Link>
         &nbsp;
         <i
-          className="mygtukas fas fa-trash fa-2x"
+          className="mygtukas fas fa-trash fa-2x red"
           title="Dokumento trynimas"
           onClick={() => {
             props.handleDelete(props.id);
@@ -40,7 +40,7 @@ const UserCreatedDocumentsComponent = props => {
         />
         &nbsp;
         <i
-          className="mygtukas blue fas fa-check-circle fa-2x"
+          className="mygtukas blue fas fa-check-circle fa-2x green"
           title="Dokumento pateikimas"
           onClick={() => {
             props.handleSubmit(props.id);

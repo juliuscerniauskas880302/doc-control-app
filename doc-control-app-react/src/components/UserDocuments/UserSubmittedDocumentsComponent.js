@@ -19,7 +19,7 @@ const UserSubmittedDocumentsComponent = props => {
         >
           {" "}
           <i
-            className="fas fa-info-circle fa-2x"
+            className="fas fa-info-circle fa-2x blue"
             title="Dokumento informacija"
           />{" "}
         </Link>{" "}

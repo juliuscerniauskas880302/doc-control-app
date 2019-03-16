@@ -102,3 +102,11 @@
   .filepond--file-action-button:hover {
     box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9) !important;
   } */
+
+
+  /* 
+  Navigation header
+  */
+  .navbar.background{
+      background-color: #b898b4;
+  }

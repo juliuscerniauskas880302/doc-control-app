@@ -23,17 +23,17 @@ export default class UserNavigationReviewContainer extends Component {
                 {
                   to: "/",
                   name: "Dokumentai peržiūrai",
-                  icon: "fas fa-file-alt mr-3 text-gray"
+                  icon: "fas fa-file-alt mr-3 text-gray blue"
                 },
                 {
                   to: "/documentStatistics",
                   name: "Dokumentų statistika",
-                  icon: "fas fa-chart-pie mr-3 text-gray"
+                  icon: "fas fa-chart-pie mr-3 text-gray blue"
                 },
                 {
                   to: "/userStatistics",
                   name: "Vartotojų statistika",
-                  icon: "fas fa-chart-line mr-3 text-gray"
+                  icon: "fas fa-chart-line mr-3 text-gray blue"
                 }
               ]}
               {...this.props}
