@@ -178,9 +178,9 @@ public class DataBaseFillerWithFaker {
         for (DocumentType documentType : documentTypeList) {
             Set<UserGroup> submissionGroups = new HashSet<>();
             Set<UserGroup> reviewGroups = new HashSet<>();
-            int sumissionGroupsToAdd = (int) Math.floor(Math.random() * userGroupListSize + 1);
+            int submissionGroupsToAdd = (int) Math.floor(Math.random() * userGroupListSize + 1);
             int reviewGroupsToAdd = (int) Math.floor(Math.random() * userGroupListSize + 1);
-            for (int i = 0; i < sumissionGroupsToAdd; i++) {
+            for (int i = 0; i < submissionGroupsToAdd; i++) {
                 UserGroup userGroup = userGroupList.get((int) Math.floor(Math.random() * userGroupListSize));
                 submissionGroups.add(userGroup);
             }
@@ -257,7 +257,7 @@ public class DataBaseFillerWithFaker {
                             + File.separator
                             + document.getAuthor().getUsername()
                             + File.separator
-                            + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(creationDate)));
+                            + formatLocalDateTime(convertToLocalDateTimeViaMillisecond(creationDate)));
                     String originalFileName = titleFaker.name().title() + ".pdf";
                     File file = new File(path.getPath(), originalFileName);
 
@@ -290,7 +290,7 @@ public class DataBaseFillerWithFaker {
         return localDateTime.format(dataTimeFormatter);
     }
 
-    private LocalDateTime convertToLocalDateTimeViaMilisecond(Date dateToConvert) {
+    private LocalDateTime convertToLocalDateTimeViaMillisecond(Date dateToConvert) {
         return Instant.ofEpochMilli(dateToConvert.getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
@@ -302,7 +302,7 @@ public class DataBaseFillerWithFaker {
                 + document.getAuthor().getUsername()
                 + File.separator
                 + formatLocalDateTime(
-                convertToLocalDateTimeViaMilisecond(document.getCreationDate()
+                convertToLocalDateTimeViaMillisecond(document.getCreationDate()
                 )
         ));
     }

@@ -61,9 +61,9 @@ public class CommandLineAppRunner implements CommandLineRunner {
 
         // Change if you want to fill in databse with random data on startup
         boolean fillInDatabase = false;
-        int groups = 11;
-        int users = 1000;
-        int docTypes = 15;
+        int groups = 17;
+        int users = 381;
+        int docTypes = 19;
         int avqDocsForUser = 19;
 
         // ONLY FOR FIRST RUN WITH EMPTY DATABASE AND FILL IN ENABLED
