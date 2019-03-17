@@ -13,4 +13,6 @@ public interface DocumentTypeRepository extends JpaRepository<DocumentType, Stri
 
     @Query("SELECT DISTINCT dt FROM User u JOIN u.userGroups ug JOIN ug.reviewDocumentType dt WHERE u = :user")
     List<DocumentType> findAllByGroupsAndUser(@Param(value = "user") User user);
+
+    boolean existsByTitle(String title);
 }

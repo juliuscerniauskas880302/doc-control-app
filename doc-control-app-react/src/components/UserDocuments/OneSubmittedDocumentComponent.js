@@ -117,11 +117,11 @@ const OneSubmittedDocumentComponent = props => {
                   </div>
                 )}
                 {props.rejectionDate !== "" && (
-                  <div className="form-grouprow">
+                  <div className="form-group row">
                     <div className="col-md-3 col-sm-3 form-control-label">
                       <p>Atmetimo data:</p>
                     </div>
-                    <div className="col-md-4  col-sm-4 col-lg-4">
+                    <div className="col-9">
                       <p>{props.rejectionDate}</p>
                     </div>
                   </div>

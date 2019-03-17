@@ -60,10 +60,10 @@ public class CommandLineAppRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Change if you want to fill in databse with random data on startup
-        boolean fillInDatabase = true;
-        int groups = 12;
+        boolean fillInDatabase = false;
+        int groups = 17;
         int users = 381;
-        int docTypes = 17;
+        int docTypes = 19;
         int avqDocsForUser = 19;
 
         // ONLY FOR FIRST RUN WITH EMPTY DATABASE AND FILL IN ENABLED

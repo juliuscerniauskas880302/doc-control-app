@@ -76,7 +76,7 @@ public class DataBaseFillerWithFaker {
     @Transactional
     public void createUsers(int usersCount) {
         Faker faker = new Faker();
-        List<User> users = new ArrayList<>();
+        //List<User> users = new ArrayList<>();
         Role roleAdmin = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(
                 () -> new AppException("Admin Role not set")
         );
@@ -94,7 +94,8 @@ public class DataBaseFillerWithFaker {
             user.setAdmin(isAdmin);
             Role userRole = isAdmin ? roleAdmin : roleUser;
             user.getRoles().add(userRole);
-            users.add(user);
+            //users.add(user);
+            userRepository.save(user);
         }
         // Add root admin
         User user = new User();
@@ -105,32 +106,46 @@ public class DataBaseFillerWithFaker {
         user.setEmail("rootas@rooteninc.com");
         user.setAdmin(true);
         user.getRoles().add(roleAdmin);
-        users.add(user);
-        userRepository.saveAll(users);
+        //users.add(user);
+        userRepository.save(user);
     }
 
     @Transactional
     public void createUserGroups(int groupsCount) {
         Faker faker = new Faker();
-        List<UserGroup> newUserGroups = new ArrayList<>();
-        for (int i = 1; i <= groupsCount; i++) {
-            UserGroup userGroup = new UserGroup();
-            userGroup.setTitle(faker.company().industry() + i);
-            newUserGroups.add(userGroup);
+        //List<UserGroup> newUserGroups = new ArrayList<>();
+        int i =1;
+        while (i <= groupsCount) {
+            String newTitle = faker.company().industry();
+            if(!userGroupRepository.existsByTitle(newTitle)){
+                UserGroup userGroup = new UserGroup();
+                userGroup.setTitle(newTitle);
+                userGroupRepository.save(userGroup);
+                i++;
+                //newUserGroups.add(userGroup);
+            }
+
         }
-        userGroupRepository.saveAll(newUserGroups);
+        //userGroupRepository.saveAll(newUserGroups);
     }
 
     @Transactional
     public void createDocTypes(int docTypesCount) {
         Faker faker = new Faker();
-        List<DocumentType> documentTypes = new ArrayList<>();
-        for (int i = 1; i <= docTypesCount; i++) {
-            DocumentType documentType = new DocumentType();
-            documentType.setTitle(faker.book().title() + i);
-            documentTypes.add(documentType);
+        int i = 1;
+        //List<DocumentType> documentTypes = new ArrayList<>();
+        while (i <= docTypesCount) {
+            String newTitle = faker.book().title();
+            if(!documentTypeRepository.existsByTitle(newTitle)){
+                DocumentType documentType = new DocumentType();
+                documentType.setTitle(newTitle);
+                documentTypeRepository.save(documentType);
+                i++;
+            }
+
+            //documentTypes.add(documentType);
         }
-        documentTypeRepository.saveAll(documentTypes);
+        //documentTypeRepository.saveAll(documentTypes);
     }
 
     @Transactional
@@ -163,9 +178,9 @@ public class DataBaseFillerWithFaker {
         for (DocumentType documentType : documentTypeList) {
             Set<UserGroup> submissionGroups = new HashSet<>();
             Set<UserGroup> reviewGroups = new HashSet<>();
-            int sumissionGroupsToAdd = (int) Math.floor(Math.random() * userGroupListSize + 1);
+            int submissionGroupsToAdd = (int) Math.floor(Math.random() * userGroupListSize + 1);
             int reviewGroupsToAdd = (int) Math.floor(Math.random() * userGroupListSize + 1);
-            for (int i = 0; i < sumissionGroupsToAdd; i++) {
+            for (int i = 0; i < submissionGroupsToAdd; i++) {
                 UserGroup userGroup = userGroupList.get((int) Math.floor(Math.random() * userGroupListSize));
                 submissionGroups.add(userGroup);
             }
@@ -242,7 +257,7 @@ public class DataBaseFillerWithFaker {
                             + File.separator
                             + document.getAuthor().getUsername()
                             + File.separator
-                            + formatLocalDateTime(convertToLocalDateTimeViaMilisecond(creationDate)));
+                            + formatLocalDateTime(convertToLocalDateTimeViaMillisecond(creationDate)));
                     String originalFileName = titleFaker.name().title() + ".pdf";
                     File file = new File(path.getPath(), originalFileName);
 
@@ -275,7 +290,7 @@ public class DataBaseFillerWithFaker {
         return localDateTime.format(dataTimeFormatter);
     }
 
-    private LocalDateTime convertToLocalDateTimeViaMilisecond(Date dateToConvert) {
+    private LocalDateTime convertToLocalDateTimeViaMillisecond(Date dateToConvert) {
         return Instant.ofEpochMilli(dateToConvert.getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
@@ -287,7 +302,7 @@ public class DataBaseFillerWithFaker {
                 + document.getAuthor().getUsername()
                 + File.separator
                 + formatLocalDateTime(
-                convertToLocalDateTimeViaMilisecond(document.getCreationDate()
+                convertToLocalDateTimeViaMillisecond(document.getCreationDate()
                 )
         ));
     }
