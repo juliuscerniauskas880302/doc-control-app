@@ -9,6 +9,7 @@ import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
 import Profile from "../../Profile";
+import About from "../../About/About";
 export default class UserNavigationReviewContainer extends Component {
   render() {
     if (!checkToken()) {
@@ -26,14 +27,24 @@ export default class UserNavigationReviewContainer extends Component {
                   icon: "fas fa-file-alt mr-3 text-gray blue"
                 },
                 {
+                  topTab: {
+                    title: "Dokumentų peržiūra",
+                    icon: "far fa-address-book mr-2 text-gray blue"
+                  },
                   to: "/documentStatistics",
                   name: "Dokumentų statistika",
                   icon: "fas fa-chart-pie mr-3 text-gray blue"
                 },
                 {
+                  bottomTab: "true",
                   to: "/userStatistics",
                   name: "Vartotojų statistika",
                   icon: "fas fa-chart-line mr-3 text-gray blue"
+                },
+                {
+                  to: "/about",
+                  name: "Apie komandą",
+                  icon: "fas fa-user-graduate ml-1 text-gray blue"
                 }
               ]}
               {...this.props}
@@ -45,6 +56,15 @@ export default class UserNavigationReviewContainer extends Component {
                   render={props => (
                     <ResponseMessage>
                       <ReviewDocumentsContainer {...props} />
+                    </ResponseMessage>
+                  )}
+                />
+                <Route
+                  exact
+                  path="/about"
+                  render={props => (
+                    <ResponseMessage>
+                      <About {...props} />
                     </ResponseMessage>
                   )}
                 />

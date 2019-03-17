@@ -12,6 +12,7 @@ import { checkToken } from "../../Utilities/CheckToken";
 import NavigationComponent from "../NavigationComponent";
 import ResponseMessage from "../../Utilities/ResponseMessage";
 import Profile from "../Profile";
+import About from "../About/About";
 
 export default class AdminNavigationContainer extends Component {
   render() {
@@ -43,8 +44,14 @@ export default class AdminNavigationContainer extends Component {
               icon: "fas fa-file-signature ml-1 text-gray blue"
             },
             {
+              bottomTab: "true",
               to: "/document_types/groups",
               name: "Siųsti / Peržiūrėti",
+              icon: "fas fa-clipboard ml-1 text-gray blue"
+            },
+            {
+              to: "/about",
+              name: "Apie komandą",
               icon: "fas fa-clipboard ml-1 text-gray blue"
             }
           ]}
@@ -56,6 +63,15 @@ export default class AdminNavigationContainer extends Component {
               render={props => (
                 <ResponseMessage>
                   <UserContainer {...props} />
+                </ResponseMessage>
+              )}
+              exact
+            />
+            <Route
+              path="/about"
+              render={props => (
+                <ResponseMessage>
+                  <About {...props} />
                 </ResponseMessage>
               )}
               exact

@@ -11,6 +11,7 @@ import Axios from "axios";
 import NavigationComponent from "../../NavigationComponent";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
 import Profile from "../../Profile";
+import About from "../../About/About";
 export default class UserNavigationSubmitContainer extends Component {
   checkToken = () => {
     let token = JSON.parse(localStorage.getItem("accessToken"));
@@ -36,6 +37,10 @@ export default class UserNavigationSubmitContainer extends Component {
               icon: "fas fa-file-signature  mr-3 text-gray blue"
             },
             {
+              topTab: {
+                title: "Dokumentų pateikimas",
+                icon: "far fa-address-book mr-2 text-gray blue"
+              },
               to: "/",
               name: "Pateikti dokumentai",
               icon: "fas fa-file-alt mr-3 text-gray blue"
@@ -47,10 +52,16 @@ export default class UserNavigationSubmitContainer extends Component {
             },
 
             {
+              bottomTab: "true",
               to: "",
               name: "Archyvų atsisiuntimas",
               icon: "fas fa-copy mr-3 text-gray blue",
               type: "dropdown"
+            },
+            {
+              to: "/about",
+              name: "Apie komandą",
+              icon: "fas fa-user-graduate ml-1 text-gray blue"
             }
           ]}
           {...this.props}
@@ -62,6 +73,15 @@ export default class UserNavigationSubmitContainer extends Component {
               render={props => (
                 <ResponseMessage>
                   <UserSubmittedDocumentsContainer {...props} />
+                </ResponseMessage>
+              )}
+            />
+            <Route
+              exact
+              path="/about"
+              render={props => (
+                <ResponseMessage>
+                  <About {...props} />
                 </ResponseMessage>
               )}
             />

@@ -20,6 +20,8 @@ class HeaderSideBar extends React.Component {
   };
 
   render() {
+    let date = new Date();
+
     return (
       <React.Fragment>
         <header className="header">
@@ -88,6 +90,13 @@ class HeaderSideBar extends React.Component {
           </div>
           {this.props.children}
         </div>
+        <footer className="footer">
+          <nav className="navbar navbar-expand-lg px-4 py-5 shadow background  d-flex justify-content-center">
+            <div className="font-weight-bold">
+              © {date.getFullYear()} Akademija.IT Visos teisės saugomos.
+            </div>
+          </nav>
+        </footer>
       </React.Fragment>
     );
   }
