@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./ResourceNotFound.css";
-import music from "./home.mp3";
 
 export default class ResourceNotFoundCompoentn extends React.Component {
   componentDidMount = () => {};
@@ -9,7 +8,7 @@ export default class ResourceNotFoundCompoentn extends React.Component {
     return (
       <div className="page-holder w-100 d-flex flex-wrap">
         <div className="container-fluid px-xl-5">
-          <iframe
+          {/* <iframe
             title="player"
             src={music}
             allow="autoplay"
@@ -17,7 +16,7 @@ export default class ResourceNotFoundCompoentn extends React.Component {
             width="0"
             height="0"
             loop
-          />
+          /> */}
 
           <section className="page_404">
             <div className="col-sm-12 ">

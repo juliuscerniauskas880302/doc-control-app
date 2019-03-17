@@ -5,6 +5,7 @@ import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
 import Profile from "../../Profile";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
+
 export default class UserNavigationNoneContainer extends Component {
   render() {
     if (!checkToken()) {
