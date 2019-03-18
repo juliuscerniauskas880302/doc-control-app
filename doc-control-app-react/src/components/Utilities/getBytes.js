@@ -1,4 +1,3 @@
-import React from "react";
 const sufixes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 function getBytes(bytes) {
   const i = Math.floor(Math.log(bytes) / Math.log(1000));
