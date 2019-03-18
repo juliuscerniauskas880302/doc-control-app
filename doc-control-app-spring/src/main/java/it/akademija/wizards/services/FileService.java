@@ -558,8 +558,6 @@ public class FileService {
     //  Validates additionalFiles.
     boolean validateFiles(MultipartFile[] multipartFiles) {
         List<String> fileNames = getFileNames(multipartFiles);
-        log.error("validate mainfiletype" + validateMainFileType(multipartFiles[0]));
-        log.error("validate FileNames " + validaFileNamesCreateDocument(fileNames));
         return validateMainFileType(multipartFiles[0]) && validaFileNamesCreateDocument(fileNames) && validateAdditionalFileTypes(multipartFiles);
     }
 
