@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import ButtonComponent from "../../Utilities/ButtonComponent";
 
 export default class TypesInGroups extends Component {
   constructor(props) {
