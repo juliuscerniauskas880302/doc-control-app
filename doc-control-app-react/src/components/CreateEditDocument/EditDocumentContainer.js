@@ -251,7 +251,6 @@ class EditDocumentContainer extends React.Component {
         totalFileSize += this.state.fileInfo[path];
       });
     }
-    console.log(totalFileSize);
     if (totalFileSize > 200000001) {
       return true;
     } else {
@@ -351,7 +350,6 @@ class EditDocumentContainer extends React.Component {
         2500
       );
     } else if (this.checkTotalFileSize()) {
-      console.log(this.checkTotalFileSize());
       this.props.showResponseMessage(
         "Bendras bylų dydis neturi viršyti 200 MB",
         "danger",
