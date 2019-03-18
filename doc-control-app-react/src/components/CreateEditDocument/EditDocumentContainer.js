@@ -109,7 +109,6 @@ class EditDocumentContainer extends React.Component {
   };
   /************************************************************************************* */
   updateDocumentInfo = (file, model) => {
-    file.append("", "blob", "");
     file.append("model", JSON.stringify(model));
     axios
       .put("/api/docs/" + this.state.id, file, {
