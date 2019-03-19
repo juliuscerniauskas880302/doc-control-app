@@ -43,7 +43,7 @@ export default class UserNavigationReviewContainer extends Component {
                 },
                 {
                   to: "/about",
-                  name: "Apie komandą",
+                  name: "Apie",
                   icon: "fas fa-user-graduate ml-1 text-gray blue"
                 }
               ]}
