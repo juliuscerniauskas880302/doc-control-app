@@ -351,12 +351,13 @@ export default class TypesInGroups extends Component {
                 <div className="card">
                   <div className="card-header">
                     <h3 className="h6 text-uppercase mb-0">
-                      Dokumentų siuntimui
+                      Dokumentų kūrimui
                     </h3>
                   </div>
                   <div className="card-body">
                     <p>
-                      Pasirinkite grupę, kuri galės siųsti dokumentus peržiūrai.
+                      Pasirinkite grupę, kuri galės kurti ir siųsti dokumentus
+                      peržiūrai.
                     </p>
                     <div className="col-md-9">
                       <div>

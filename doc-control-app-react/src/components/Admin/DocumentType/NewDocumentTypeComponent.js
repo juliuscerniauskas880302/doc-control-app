@@ -29,7 +29,7 @@ export default function NewDocumentTypeComponent(props) {
                         type="text"
                         name="title"
                         className="form-control form-control-success"
-                        pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                        pattern="^([A-Za-zĄČĘĖĮŠŲŪŽąčęėįšųūž]+[ĄČĘĖĮŠŲŪŽąčęėįšųūž]?[ ]?|[A-Za-z]+['-]?)+$"
                         required
                       />
                     </div>

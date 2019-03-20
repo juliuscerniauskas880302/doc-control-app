@@ -30,7 +30,7 @@ export default function NewUserComponent(props) {
                         type="text"
                         name="firstname"
                         placeholder="Vardas"
-                        //pattern={props.namePattern}
+                        pattern={props.namePattern}
                         title={props.namePatternTitle}
                         onChange={event => props.onChange(event)}
                         required

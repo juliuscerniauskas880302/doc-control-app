@@ -21,7 +21,7 @@ export default class Authentication extends Component {
     this.getUserGroups();
   };
   componentDidMount = () => {
-    // Axios.defaults.baseURL = "/app";
+    //Axios.defaults.baseURL = "/app";
     this.getUserGroups();
   };
 

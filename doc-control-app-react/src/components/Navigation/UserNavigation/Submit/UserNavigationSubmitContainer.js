@@ -61,7 +61,7 @@ export default class UserNavigationSubmitContainer extends Component {
             {
               to: "/about",
               name: "Apie",
-              icon: "fas fa-user-graduate ml-1 text-gray blue"
+              icon: "fas fa-question-circle ml-1 text-gray blue"
             }
           ]}
           {...this.props}

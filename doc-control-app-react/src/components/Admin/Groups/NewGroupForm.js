@@ -173,30 +173,32 @@ export default class NewGroupForm extends Component {
   };
 
   loadSelectedGroupUsers = selectedId => {
-    Axios.get("/api/groups/" + selectedId + "/users/")
-      .then(res => {
-        let allList = [];
-        this.state.allUsers.forEach(user => {
-          allList.push({
-            username: user.username,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            isChecked: false
+    if (selectedId) {
+      Axios.get("/api/groups/" + selectedId + "/users/")
+        .then(res => {
+          let allList = [];
+          this.state.allUsers.forEach(user => {
+            allList.push({
+              username: user.username,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              email: user.email,
+              isChecked: false
+            });
           });
-        });
-        allList.forEach(listEl => {
-          res.data.forEach(resEl => {
-            if (listEl.username === resEl.username) {
-              listEl.isChecked = true;
-            }
+          allList.forEach(listEl => {
+            res.data.forEach(resEl => {
+              if (listEl.username === resEl.username) {
+                listEl.isChecked = true;
+              }
+            });
           });
+          this.setState({ groupUsers: allList });
+        })
+        .catch(err => {
+          console.log(err);
         });
-        this.setState({ groupUsers: allList });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    }
   };
 
   showUsersCheckBox = () => {
@@ -356,7 +358,7 @@ export default class NewGroupForm extends Component {
                 onChange={e => this.onValueChangeHandler(e)}
                 newTitle="title"
                 newTitleValue={this.state.title}
-                pattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
+                pattern="^([A-Za-zĄČĘĖĮŠŲŪŽąčęėįšųūž]+[ĄČĘĖĮŠŲŪŽąčęėįšųūž]?[ ]?|[A-Za-z]+['-]?)+$"
                 onClickGoBack={() => this.goBack()}
                 onDeleteClick={() => this.onDeleteCLickHandler()}
                 onSubmitUpdate={e => this.onClickUpdateHandler(e)}

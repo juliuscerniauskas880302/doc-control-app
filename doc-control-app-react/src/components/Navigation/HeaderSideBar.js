@@ -62,14 +62,19 @@ class HeaderSideBar extends React.Component {
                     </strong>
                     <small>{this.props.role}</small>
                   </div>
-                  <div
-                    className="dropdown-item"
-                    onClick={() => {
-                      this.props.history.push("/user/profile");
-                    }}
-                  >
-                    Profilis
-                  </div>
+                  {this.props.user.admin ? (
+                    ""
+                  ) : (
+                    <div
+                      className="dropdown-item"
+                      onClick={() => {
+                        this.props.history.push("/user/profile");
+                      }}
+                    >
+                      Profilis
+                    </div>
+                  )}
+
                   <div className="dropdown-divider" />
                   <button
                     className="dropdown-item"

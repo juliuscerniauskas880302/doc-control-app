@@ -86,14 +86,15 @@ export default class NewUserContainer extends Component {
         <NewUserComponent
           onSubmit={this.onSubmitHandler}
           onChange={this.onValueChangeHandler}
-          namePattern="^([A-Za-z]+[,.]?[ ]?|[A-Za-z]+['-]?)+$"
-          namePatternTitle="Please enter only letters"
+          namePattern="^([A-Za-z]+[ąčęėįšųūĄČĘĖĮŠŲŪ]?)+$"
+          namePatternTitle="Naudokite tik raides"
           usernamePattern="^[a-zA-Z][a-zA-Z0-9-_\.]{2,15}$"
           usernamePatternTitle="Vartotojo vardas turi prasidėti raide, jokių specialių simbolių, nuo 2 iki 15 simbolių."
           emailPattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           emailPatternTitle=""
           passwordPattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-          passwordPatternTitle="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+          passwordPatternTitle="Turi būti bent vienas skaičius, viena mažoji ir viena didžioji
+                raidė, ir mažiausiai susidėti iš 8 simbolių"
         />
       </React.Fragment>
     );

@@ -30,11 +30,7 @@ const Login = ({
           <div className="row align-items-center py-5">
             <div className="col-lg-7 col-md-6 col-sm-6 mx-auto my-4 my-lg-0">
               <div className="pr-lg-5">
-                <img
-                  src={"/image/documentas.png"}
-                  alt=""
-                  className="img-fluid"
-                />
+                <img src={"/image/logo2.svg"} alt="" className="img-fluid" />
               </div>
             </div>
             <div className="col-lg-5 px-lg-3 mt-5">
@@ -52,7 +48,7 @@ const Login = ({
                     onChange={onUsernameChange}
                     required="required"
                     placeholder="Vartotojo vardas"
-                    className="form-control border-0 shadow form-control-lg"
+                    className="form-control border-3 shadow"
                     title="Įveskite vartotojo vardą."
                   />
                 </div>
@@ -63,7 +59,7 @@ const Login = ({
                     onChange={onPassChange}
                     placeholder="Slaptažodis"
                     required="required"
-                    className="form-control border-0 shadow form-control-lg"
+                    className="form-control border-3 shadow "
                     title="Įveskite vartotojo slaptažodį."
                   />
                 </div>
