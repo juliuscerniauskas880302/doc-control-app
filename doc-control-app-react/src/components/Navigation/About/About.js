@@ -101,40 +101,41 @@ export default function About() {
                 <h3 className="h6 text-uppercase mb-0">Apie</h3>
               </div>
 
-              <section class="my-2 px-5 pb-5">
-                <h2 class="h1-responsive font-weight-bold text-center my-5">
+              <section className="my-2 px-5 pb-5">
+                <h2 className="h1-responsive font-weight-bold text-center my-5">
                   Kodėl rinktis mus?
                 </h2>
 
-                <p class="lead grey-text text-center w-responsive mx-auto mb-5">
+                <p className="lead grey-text text-center w-responsive mx-auto mb-5">
                   Dokumentų valdymo sistema buvo sukurta Akademija.it studentų
-                  komandos "Wizards", naudojant šiuolaikines technologijas.
+                  komandos "Software Wizards", naudojant šiuolaikines
+                  technologijas.
                 </p>
 
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="row mb-3">
-                      <div class="col-2">
-                        <i class="fas fa-2x fa-shield-alt blue" />
+                <div className="row">
+                  <div className="col-md-4">
+                    <div className="row mb-3">
+                      <div className="col-2">
+                        <i className="fas fa-2x fa-shield-alt blue" />
                       </div>
 
-                      <div class="col-10">
-                        <h5 class="font-weight-bold mb-3">Saugi</h5>
-                        <p class="grey-text">
+                      <div className="col-10">
+                        <h5 className="font-weight-bold mb-3">Saugi</h5>
+                        <p className="grey-text">
                           Saugumu rūpinasi "Spring Srcurity" karkasas, kuris
                           užtikrina vartotojų autorizaciją ir autentifikaciją.
                         </p>
                       </div>
                     </div>
 
-                    <div class="row mb-md-0 mb-3">
-                      <div class="col-2">
-                        <i class="fas fa-2x fa-glass-martini blue" />
+                    <div className="row mb-md-0 mb-3">
+                      <div className="col-2">
+                        <i className="fas fa-2x fa-glass-martini blue" />
                       </div>
 
-                      <div class="col-10">
-                        <h5 class="font-weight-bold mb-3">Paprasta</h5>
-                        <p class="grey-text mb-md-0">
+                      <div className="col-10">
+                        <h5 className="font-weight-bold mb-3">Paprasta</h5>
+                        <p className="grey-text mb-md-0">
                           Sistema lengva naudotis, nes pasirinktas
                           minimalistinis dizainas, kuris neklaidina vartotojo ir
                           lengva suprasti.
@@ -143,19 +144,19 @@ export default function About() {
                     </div>
                   </div>
 
-                  <div class="col-md-4 text-center">
-                    <img alt="" class="img-fluid" src="/image/logo.png" />
+                  <div className="col-md-4 text-center">
+                    <img alt="" className="img-fluid" src="/image/logo.svg" />
                   </div>
 
-                  <div class="col-md-4">
-                    <div class="row mb-3">
-                      <div class="col-2">
-                        <i class="far fa-2x fa-file-code blue" />
+                  <div className="col-md-4">
+                    <div className="row mb-3">
+                      <div className="col-2">
+                        <i className="far fa-2x fa-file-code blue" />
                       </div>
 
-                      <div class="col-10">
-                        <h5 class="font-weight-bold mb-3">Atviro kodo</h5>
-                        <p class="grey-text">
+                      <div className="col-10">
+                        <h5 className="font-weight-bold mb-3">Atviro kodo</h5>
+                        <p className="grey-text">
                           Sistema yra atviro kodo ir prieinama visiems,
                           norintiems išmokti daugiau.
                           <a
@@ -168,28 +169,28 @@ export default function About() {
                       </div>
                     </div>
 
-                    <div class="row mb-3">
-                      <div class="col-2">
-                        <i class="fas fa-2x fa-bolt blue" />
+                    <div className="row mb-3">
+                      <div className="col-2">
+                        <i className="fas fa-2x fa-bolt blue" />
                       </div>
 
-                      <div class="col-10">
-                        <h5 class="font-weight-bold mb-3">Greita</h5>
-                        <p class="grey-text">
+                      <div className="col-10">
+                        <h5 className="font-weight-bold mb-3">Greita</h5>
+                        <p className="grey-text">
                           Programos kodas optimizuotas, kad būtų galima dirbti
                           su dideliais duomenų kiekiais.
                         </p>
                       </div>
                     </div>
 
-                    <div class="row">
-                      <div class="col-2">
-                        <i class="fas fa-2x fa-magic blue" />
+                    <div className="row">
+                      <div className="col-2">
+                        <i className="fas fa-2x fa-magic blue" />
                       </div>
 
-                      <div class="col-10">
-                        <h5 class="font-weight-bold mb-3">Interaktyvi</h5>
-                        <p class="grey-text mb-0">
+                      <div className="col-10">
+                        <h5 className="font-weight-bold mb-3">Interaktyvi</h5>
+                        <p className="grey-text mb-0">
                           Sistemos interaktyvumą užtikrina "Bootstrap 4" bei
                           "Semantic-ui" bibliotekos.
                         </p>

@@ -5,11 +5,12 @@ import { checkToken } from "../../../Utilities/CheckToken";
 import NavigationComponent from "../../NavigationComponent";
 import Profile from "../../Profile";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
+import Login from "../../../Authentication/Login";
 
 export default class UserNavigationNoneContainer extends Component {
   render() {
-    if (!checkToken()) {
-      this.props.history.push("/login");
+    if (checkToken() === false) {
+      return <Login />;
     }
     return (
       <div>

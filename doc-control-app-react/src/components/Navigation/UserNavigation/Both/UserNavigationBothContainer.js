@@ -16,11 +16,12 @@ import NavigationComponent from "../../NavigationComponent";
 import ResponseMessage from "../../../Utilities/ResponseMessage";
 import Profile from "../../Profile";
 import About from "../../About/About";
+import Login from "../../../Authentication/Login";
 
 export default class UserNavigationBothContainer extends Component {
   render() {
-    if (!checkToken()) {
-      this.props.history.push("/login");
+    if (checkToken() === false) {
+      return <Login />;
     }
 
     return (
@@ -78,7 +79,7 @@ export default class UserNavigationBothContainer extends Component {
                 {
                   to: "/about",
                   name: "Apie",
-                  icon: "fas fa-user-graduate ml-1 text-gray blue"
+                  icon: "fas fa-question-circle ml-1 text-gray blue"
                 }
               ]}
               {...this.props}
