@@ -158,12 +158,12 @@ const FileDownloadComponent = props => {
             <div
               className="filepond--panel-center filepond--item-panel"
               style={{
-                transform: "translate3d(0px, 8px, 0) scale3d(1, 0.25, 1)"
+                transform: "translate3d(0px, 7px, 0) scale3d(1, 0.25, 1)"
               }}
             />
             <div
               className="filepond--panel-bottom filepond--item-panel"
-              style={{ transform: "translate3d(0px, 33px, 0)" }}
+              style={{ transform: "translate3d(0px, 32px, 0)" }}
             />
           </div>
         </div>
