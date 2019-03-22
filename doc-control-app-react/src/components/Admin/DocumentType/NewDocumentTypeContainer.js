@@ -97,6 +97,12 @@ export default class NewDocumentTypeForm extends Component {
         this.getAllDocumentTypes();
       })
       .catch(err => {
+        this.props.showResponseMessage(
+          err.response.data.message == "ERR_DOCTYPE_EXISTS" ?
+            "Dokumento tipas " + title.title + " jau egzistuoja!" : "Įvyko klaida!",
+          "danger",
+          2500
+        );
         console.log(err);
       });
   };
@@ -147,7 +153,12 @@ export default class NewDocumentTypeForm extends Component {
         this.getAllDocumentTypes();
       })
       .catch(err => {
-        this.props.showResponseMessage("Įvyko klaida", "danger", 2500);
+        this.props.showResponseMessage(
+          err.response.data.message == "ERR_DOCTYPE_EXISTS" ?
+            "Dokumento tipas " + title.title + " jau egzistuoja!" : "Įvyko klaida!",
+          "danger",
+          2500
+        );
       });
   };
 

@@ -2,6 +2,7 @@ package it.akademija.wizards.services;
 
 import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.UserGroup;
+import it.akademija.wizards.exception.ExceptionFactory;
 import it.akademija.wizards.models.documenttype.DocumentTypeCreateCommand;
 import it.akademija.wizards.models.documenttype.DocumentTypeGetCommand;
 import it.akademija.wizards.models.user.UserAddGroupsCommand;
@@ -29,6 +30,8 @@ public class DocumentTypeService {
     private DocumentTypeRepository documentTypeRepository;
     @Autowired
     private UserGroupRepository userGroupRepository;
+    @Autowired
+    private ExceptionFactory exceptionFactory;
 
     //GET
     @Transactional(readOnly = true)
@@ -50,6 +53,16 @@ public class DocumentTypeService {
     //CREATE
     @Transactional
     public void createDocumentType(DocumentTypeCreateCommand documentTypeCreateCommand) {
+        if (documentTypeCreateCommand == null) {
+            this.exceptionFactory.badRequestException("Document type object not provided");
+        }
+        if (documentTypeCreateCommand.getTitle() == null) {
+            this.exceptionFactory.badRequestException("Document type title not provided");
+        }
+        String title = documentTypeCreateCommand.getTitle().trim();
+        if (this.documentTypeRepository.existsByTitleIgnoreCase(title)) {
+            this.exceptionFactory.badRequestException("ERR_DOCTYPE_EXISTS");
+        }
         DocumentType documentType = new DocumentType();
         BeanUtils.copyProperties(documentTypeCreateCommand, documentType);
         documentTypeRepository.save(documentType);
@@ -59,6 +72,16 @@ public class DocumentTypeService {
     //UPDATE
     @Transactional
     public void updateDocumentType(String id, DocumentTypeCreateCommand documentTypeCreateCommand) {
+        if (documentTypeCreateCommand == null) {
+            this.exceptionFactory.badRequestException("Document type object not provided");
+        }
+        if (documentTypeCreateCommand.getTitle() == null) {
+            this.exceptionFactory.badRequestException("Document type title not provided");
+        }
+        String title = documentTypeCreateCommand.getTitle().trim();
+        if (this.documentTypeRepository.existsByTitleIgnoreCase(title)) {
+            this.exceptionFactory.badRequestException("ERR_DOCTYPE_EXISTS");
+        }
         DocumentType documentType = this.getDocTypeFromDB(id);
         String oldDocumentTypeTitle = documentType.getTitle();
         BeanUtils.copyProperties(documentTypeCreateCommand, documentType);

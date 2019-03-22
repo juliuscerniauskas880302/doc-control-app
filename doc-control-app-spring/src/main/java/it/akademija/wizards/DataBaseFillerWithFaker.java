@@ -117,7 +117,7 @@ public class DataBaseFillerWithFaker {
         int i =1;
         while (i <= groupsCount) {
             String newTitle = faker.company().industry();
-            if(!userGroupRepository.existsByTitle(newTitle)){
+            if(!userGroupRepository.existsByTitleIgnoreCase(newTitle)){
                 UserGroup userGroup = new UserGroup();
                 userGroup.setTitle(newTitle);
                 userGroupRepository.save(userGroup);
@@ -136,7 +136,7 @@ public class DataBaseFillerWithFaker {
         //List<DocumentType> documentTypes = new ArrayList<>();
         while (i <= docTypesCount) {
             String newTitle = faker.book().title();
-            if(!documentTypeRepository.existsByTitle(newTitle)){
+            if(!documentTypeRepository.existsByTitleIgnoreCase(newTitle)){
                 DocumentType documentType = new DocumentType();
                 documentType.setTitle(newTitle);
                 documentTypeRepository.save(documentType);
