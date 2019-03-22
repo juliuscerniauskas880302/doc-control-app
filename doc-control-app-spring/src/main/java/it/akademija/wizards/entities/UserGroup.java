@@ -11,13 +11,17 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(name = "user_group", indexes = {
+        @Index(name = "idx_usergroup_title", columnList = "title", unique = true)
+})
 public class UserGroup {
 
     @Id
     @GeneratedValue(generator ="uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    @NotNull
+
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @ManyToMany

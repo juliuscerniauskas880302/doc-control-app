@@ -115,6 +115,12 @@ export default class NewGroupForm extends Component {
         this.getAllGroups();
       })
       .catch(err => {
+        this.props.showResponseMessage(
+          err.response.data.message == "ERR_GROUP_EXISTS" ?
+            "Grupė " + title.title + " jau egzistuoja!" : "Įvyko klaida!",
+          "danger",
+          2500
+        );
         console.log(err);
       });
   };
@@ -151,7 +157,12 @@ export default class NewGroupForm extends Component {
         this.getAllGroups();
       })
       .catch(err => {
-        this.props.showResponseMessage("Įvyko klaida", "danger", 2500);
+        this.props.showResponseMessage(
+          err.response.data.message == "ERR_GROUP_EXISTS" ?
+            "Grupė " + title.title + " jau egzistuoja!" : "Įvyko klaida!",
+          "danger",
+          2500
+        );
       });
   };
 

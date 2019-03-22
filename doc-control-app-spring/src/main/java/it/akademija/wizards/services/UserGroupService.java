@@ -3,6 +3,7 @@ package it.akademija.wizards.services;
 import it.akademija.wizards.entities.DocumentType;
 import it.akademija.wizards.entities.User;
 import it.akademija.wizards.entities.UserGroup;
+import it.akademija.wizards.exception.ExceptionFactory;
 import it.akademija.wizards.models.user.UserGetCommand;
 import it.akademija.wizards.models.usergroup.GroupAddUsersCommand;
 import it.akademija.wizards.models.usergroup.UserGroupCreateCommand;
@@ -28,11 +29,13 @@ public class UserGroupService {
 
     private UserGroupRepository userGroupRepository;
     private UserRepository userRepository;
+    private ExceptionFactory exceptionFactory;
 
     @Autowired
-    public UserGroupService(UserGroupRepository userGroupRepository, UserRepository userRepository) {
+    public UserGroupService(final UserGroupRepository userGroupRepository, final UserRepository userRepository, final ExceptionFactory exceptionFactory) {
         this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
+        this.exceptionFactory = exceptionFactory;
     }
 
     public UserGroupRepository getUserGroupRepository() {
@@ -62,6 +65,17 @@ public class UserGroupService {
 
     @Transactional
     public void createUserGroup(UserGroupCreateCommand userGroupCreateCommand) {
+        if (userGroupCreateCommand == null) {
+            this.exceptionFactory.badRequestException("User group creation object is missing");
+        }
+        if (userGroupCreateCommand.getTitle() == null) {
+            this.exceptionFactory.badRequestException("User group title is not provided");
+        }
+        String title = userGroupCreateCommand.getTitle().trim();
+        if (this.userGroupRepository.existsByTitleIgnoreCase(title)) {
+            this.exceptionFactory.badRequestException("ERR_GROUP_EXISTS");
+        }
+
         UserGroup userGroup = new UserGroup();
         BeanUtils.copyProperties(userGroupCreateCommand, userGroup);
         userGroupRepository.save(userGroup);
@@ -70,7 +84,18 @@ public class UserGroupService {
 
     @Transactional
     public void updateUserGroup(UserGroupCreateCommand userGroupCreateCommand, String id) {
-        UserGroup userGroup = userGroupRepository.findById(id).orElse(null);
+        UserGroup userGroup = userGroupRepository.findById(id)
+                .orElseThrow(() -> this.exceptionFactory.resourceNotFoundException("User group not found"));
+        if (userGroupCreateCommand == null) {
+            this.exceptionFactory.badRequestException("User group creation object is missing");
+        }
+        if (userGroupCreateCommand.getTitle() == null) {
+            this.exceptionFactory.badRequestException("User group title is not provided");
+        }
+        String title = userGroupCreateCommand.getTitle().trim();
+        if (this.userGroupRepository.existsByTitleIgnoreCase(title)) {
+            this.exceptionFactory.badRequestException("ERR_GROUP_EXISTS");
+        }
         String oldUserGroupTitle = userGroup.getTitle();
         BeanUtils.copyProperties(userGroupCreateCommand, userGroup);
         userGroupRepository.save(userGroup);

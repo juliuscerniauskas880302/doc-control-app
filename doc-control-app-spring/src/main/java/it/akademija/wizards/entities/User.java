@@ -12,7 +12,8 @@ import java.util.Set;
 @Table(name = "user", indexes = {
         @Index(name = "idx_user_name", columnList = "username", unique = true),
         @Index(name = "idx_user_firstname", columnList = "firstname"),
-        @Index(name = "idx_user_lastname", columnList = "lastname")
+        @Index(name = "idx_user_lastname", columnList = "lastname"),
+        @Index(name = "idx_user_email", columnList = "email", unique = true)
 
 })
 public class User {
@@ -36,6 +37,7 @@ public class User {
     private String lastname;
 
     @NotNull
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @ManyToMany
